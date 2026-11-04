@@ -161,10 +161,20 @@
     flex-wrap: wrap;
   }
 
-  cursor: default; transition: background 0.2s ease, border-color 0.2s ease;
+  .dash-kpi-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: default;
+    transition: background 0.2s ease, border-color 0.2s ease;
   }
 
-  transform: none;
+  .dash-kpi-card:hover {
+    transform: none;
     background: rgba(255, 255, 255, 0.12);
   }
 
@@ -567,7 +577,7 @@
      -------------------------------------------------------- */
   .metrics-grid-four {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
   }
 
@@ -1086,8 +1096,25 @@
     .dash-kpi-row {
       width: 100%;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 6px;
+    }
+    .dash-kpi-card {
+      padding: 6px 8px;
+      gap: 6px;
+    }
+    .dash-kpi-card .kpi-icon-wrap {
+      width: 24px;
+      height: 24px;
+      font-size: 12px;
+      border-radius: 6px;
+    }
+    .dash-kpi-card .kpi-stat-number {
+      font-size: 13px;
+    }
+    .dash-kpi-card .kpi-stat-title {
+      font-size: 8px;
+      letter-spacing: 0.2px;
     }
     .about-hub-bar {
       flex-direction: column;
@@ -1152,7 +1179,7 @@
           </div>
           <div class="kpi-details">
             <div class="kpi-stat-number">{{ site_config.about_metric1_val|default:"10,000+" }}</div>
-            <div class="kpi-stat-title">{{ site_config.about_metric1_label|default:"Attendees" }}</div>
+            <div class="kpi-stat-title">{{ site_config.about_metric1_label|default:"Projected Visitors" }}</div>
           </div>
         </div>
 
@@ -1161,8 +1188,8 @@
             <i class="ti ti-building-bank"></i>
           </div>
           <div class="kpi-details">
-            <div class="kpi-stat-number">{{ site_config.about_metric2_val|default:"150+" }}</div>
-            <div class="kpi-stat-title">{{ site_config.about_metric2_label|default:"Partner Unis" }}</div>
+            <div class="kpi-stat-number">{{ site_config.about_metric2_val|default:"50+" }}</div>
+            <div class="kpi-stat-title">{{ site_config.about_metric2_label|default:"Universities" }}</div>
           </div>
         </div>
 
@@ -1171,18 +1198,8 @@
             <i class="ti ti-award"></i>
           </div>
           <div class="kpi-details">
-            <div class="kpi-stat-number">{{ site_config.about_metric4_val|default:"$2.5M+" }}</div>
-            <div class="kpi-stat-title">{{ site_config.about_metric4_label|default:"Aid Pool" }}</div>
-          </div>
-        </div>
-
-        <div class="dash-kpi-card kpi-dest">
-          <div class="kpi-icon-wrap">
-            <i class="ti ti-world"></i>
-          </div>
-          <div class="kpi-details">
-            <div class="kpi-stat-number">{{ site_config.about_metric3_val|default:"18+" }}</div>
-            <div class="kpi-stat-title">{{ site_config.about_metric3_label|default:"Destinations" }}</div>
+            <div class="kpi-stat-number">{{ site_config.about_metric4_val|default:"50+" }}</div>
+            <div class="kpi-stat-title">{{ site_config.about_metric4_label|default:"Unlock Scholarships" }}</div>
           </div>
         </div>
       </div>
@@ -1312,39 +1329,30 @@
       <h2 class="panel-title">{{ site_config.about_metrics_heading|default:"Scale & Proven Impact Across the Region" }}</h2>
       <p style="font-size: 13.5px; color: #64748b; margin-top: -8px; margin-bottom: 20px;">{{ site_config.about_metrics_desc|default:"Verified data from our annual summits, university partnerships, and student placement audits." }}</p>
       <div class="metrics-grid-four">
-        <div class="impact-stat-card c-blue">
-          <div class="impact-icon-sq"><i class="ti ti-building-bank"></i></div>
-          <div class="impact-info">
-            <div class="num">{{ site_config.about_metric2_val|default:"120+" }}</div>
-            <div class="title">{{ site_config.about_metric2_label|default:"Partner Universities" }}</div>
-            <div class="sub">Accredited institutions from across the globe</div>
-          </div>
-        </div>
-
-        <div class="impact-stat-card c-sky">
-          <div class="impact-icon-sq"><i class="ti ti-world"></i></div>
-          <div class="impact-info">
-            <div class="num">{{ site_config.about_metric3_val|default:"35+" }}</div>
-            <div class="title">{{ site_config.about_metric3_label|default:"Destinations" }}</div>
-            <div class="sub">USA, UK, Canada, Europe, Asia & Australia</div>
-          </div>
-        </div>
-
         <div class="impact-stat-card c-green">
           <div class="impact-icon-sq"><i class="ti ti-users"></i></div>
           <div class="impact-info">
-            <div class="num">{{ site_config.about_metric1_val|default:"25,000+" }}</div>
-            <div class="title">{{ site_config.about_metric1_label|default:"Students & Parents" }}</div>
-            <div class="sub">Active annual attendees and delegates</div>
+            <div class="num">{{ site_config.about_metric1_val|default:"10,000+" }}</div>
+            <div class="title">{{ site_config.about_metric1_label|default:"Projected Visitors" }}</div>
+            <div class="sub">Students, parents, and delegates across GCC</div>
+          </div>
+        </div>
+
+        <div class="impact-stat-card c-blue">
+          <div class="impact-icon-sq"><i class="ti ti-building-bank"></i></div>
+          <div class="impact-info">
+            <div class="num">{{ site_config.about_metric2_val|default:"50+" }}</div>
+            <div class="title">{{ site_config.about_metric2_label|default:"Universities" }}</div>
+            <div class="sub">Accredited global institutions &amp; admissions deans</div>
           </div>
         </div>
 
         <div class="impact-stat-card c-purple">
           <div class="impact-icon-sq"><i class="ti ti-award"></i></div>
           <div class="impact-info">
-            <div class="num">{{ site_config.about_metric4_val|default:"$50M+" }}</div>
-            <div class="title">{{ site_config.about_metric4_label|default:"Scholarships & Aid" }}</div>
-            <div class="sub">Merit grants & full tuition waivers</div>
+            <div class="num">{{ site_config.about_metric4_val|default:"50+" }}</div>
+            <div class="title">{{ site_config.about_metric4_label|default:"Unlock Scholarships" }}</div>
+            <div class="sub">Merit grants, fee waivers &amp; funding opportunities</div>
           </div>
         </div>
       </div>
