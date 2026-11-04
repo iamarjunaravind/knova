@@ -3462,6 +3462,18 @@
 }
 
 /* Feature cards in Why KNOVA (Eventor Expo Style) */
+.why-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.who-attend-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
 .why-feat-card {
   margin: 0;
   background: #f4f6fb !important;
@@ -5401,6 +5413,8 @@
   }
 
   /* Section 1: Why Attend KNOVA - Mobile 2 Columns In A Row Redesign */
+  div.why-cards-grid,
+  .why-cards-container .why-cards-grid,
   .why-cards-grid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
@@ -5669,6 +5683,14 @@
     padding: 26px 20px !important;
     margin: 28px 0 !important;
     color: #ffffff !important;
+  }
+
+  .mobile-who-should-attend .who-attend-grid,
+  div.who-attend-grid,
+  .who-attend-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
   }
 
   .mobile-who-should-attend h3 {
@@ -6974,7 +6996,7 @@
             View All &rarr;
           </a>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;" class="why-cards-grid eventor-stagger-parent">
+        <div class="why-cards-grid eventor-stagger-parent">
 
           <!-- Card 1: Explore Programmes (Soft Blue) -->
           <a href="{% url 'courses_list' %}" class="why-feat-card why-card-blue eventor-reveal" style="text-decoration: none; margin: 0; background: #f0f7ff; border: 1.5px solid #dbeafe; border-radius: 18px; padding: 24px 18px; box-shadow: 0 4px 18px rgba(23, 104, 255, 0.05); min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); cursor: pointer;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 10px 24px rgba(23,104,255,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 18px rgba(23,104,255,0.05)';">
@@ -7874,7 +7896,7 @@
       <p style="font-size: 11px; color: rgba(255,255,255,0.7); margin: 0 0 16px 0;">
         {{ site_config.who_attend_subtitle|default:"KNOVA is designed for all students, parents and education seekers exploring global university pathways, scholarships, and international career credentials." }}
       </p>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+      <div class="who-attend-grid">
 
         <!-- Card 1 -->
         <div class="who-attend-card" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 12px 8px; text-align: center;">
