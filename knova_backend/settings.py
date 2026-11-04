@@ -31,6 +31,17 @@ DEBUG = os.environ.get('DEBUG', '1') == '1'
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(' ')
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://netixa.in',
+    'https://www.netixa.in',
+    'https://netixa.tech',
+    'https://*.netixa.in',
+    'http://187.77.188.25',
+    'http://187.77.188.25:8000',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+]
+
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
