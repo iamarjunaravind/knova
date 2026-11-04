@@ -5307,6 +5307,13 @@
     max-width: 100% !important;
   }
 
+  .why-intro-text-col .why-kicker-bar,
+  .why-intro-text-col > div:first-child {
+    border-top: 1px solid #e2e8f0 !important;
+    padding-top: 16px !important;
+    margin-top: 8px !important;
+  }
+
   .why-intro-text-col .desktop-only {
     display: inline !important;
     font-size: 10.5px !important;
@@ -6917,7 +6924,7 @@
       <div class="why-intro-block">
         <div class="why-intro-flex-wrapper">
           <div class="why-intro-text-col eventor-reveal-left">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+            <div class="why-kicker-bar" style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
               <div style="width: 22px; height: 3.5px; background: #1768ff; border-radius: 2px;"></div>
               <span class="desktop-only" style="font-size: 11px; font-weight: 800; color: #1768ff; letter-spacing: 1.5px; text-transform: uppercase;">{{ site_config.why_badge|default:"WHY KNOVA EXPO" }}</span>
             </div>
