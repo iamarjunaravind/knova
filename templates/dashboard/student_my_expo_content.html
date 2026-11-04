@@ -1,0 +1,1304 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+<style>
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .myexpo-hero {
+    background: radial-gradient(circle at 85% 15%, rgba(23, 104, 255, 0.28) 0%, transparent 55%),
+                radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.18) 0%, transparent 50%),
+                linear-gradient(135deg, #061022 0%, #0a1c3f 50%, #102e6b 100%);
+    color: #fff;
+    padding: 28px 26px;
+    border-radius: 18px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(6, 16, 34, 0.15);
+  }
+  .myexpo-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(6, 16, 34, 0.45) 100%);
+    pointer-events: none;
+  }
+
+  .myexpo-hero-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .myexpo-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(23, 104, 255, 0.22);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #7dd3fc;
+    margin-bottom: 8px;
+  }
+
+  .myexpo-hero-title {
+    margin: 0 0 6px 0;
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 900;
+    letter-spacing: -0.8px;
+    color: #ffffff;
+  }
+
+  .title-gradient {
+    background: linear-gradient(135deg, #67e8f9 0%, #ffffff 50%, #93c5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .myexpo-hero-desc {
+    margin: 0;
+    font-size: 13.5px;
+    color: rgba(241,245,249,0.85);
+    max-width: 580px;
+    line-height: 1.45;
+  }
+
+  .myexpo-hero-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-btn-challenge {
+    background: #1bd8df;
+    color: #0a1936;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hero-btn-map {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Desktop 2-column layout (OLD DESKTOP VIEW) */
+  .myexpo-grid {
+    display: grid;
+    grid-template-columns: 285px 1fr;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  .myexpo-left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .myexpo-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .myexpo-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+
+  /* Original Physical-Style ID Card Container */
+  .id-card-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 285px;
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px -8px rgba(23, 104, 255, 0.18), 0 4px 16px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .id-card-wrapper:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 48px -8px rgba(23, 104, 255, 0.24), 0 6px 20px rgba(15, 23, 42, 0.10);
+  }
+
+  /* Physical Lanyard Punch Slot */
+  .id-card-lanyard-slot {
+    width: 100%;
+    background: #f8fafc;
+    border-bottom: 1px dashed #cbd5e1;
+    padding: 8px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .lanyard-hole {
+    width: 50px;
+    height: 9px;
+    background: #e2e8f0;
+    border: 1px solid #94a3b8;
+    border-radius: 9999px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.18);
+  }
+
+  /* Top Banner Strip */
+  .id-card-top-bar {
+    background: #1768ff;
+    color: #ffffff;
+    text-align: center;
+    padding: 9px 12px;
+    font-size: 11.5px;
+    font-weight: 850;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+  }
+
+  /* Main ID Card Content Body */
+  .id-card-body {
+    padding: 16px 14px 8px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: #ffffff;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Expo Branding: Knova / 2027 */
+  .id-card-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.05;
+    margin-bottom: 12px;
+  }
+  .id-card-brand .brand-knova {
+    font-size: 27px;
+    font-weight: 750;
+    color: #4b5563;
+    letter-spacing: -0.5px;
+    line-height: 1.05;
+  }
+  .id-card-brand .brand-year {
+    font-size: 27px;
+    font-weight: 850;
+    color: #1768ff;
+    letter-spacing: -0.5px;
+    line-height: 1.05;
+  }
+
+  /* Attendee Full Name */
+  .id-card-name {
+    font-size: 17.5px;
+    font-weight: 850;
+    color: #0f172a;
+    margin: 0 0 4px 0;
+    letter-spacing: 0.2px;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+
+  /* Organization / School Subtitle */
+  .id-card-subtitle {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #475569;
+    margin: 0 0 12px 0;
+    line-height: 1.35;
+    max-width: 240px;
+    word-break: break-word;
+  }
+
+  /* Centered Clean QR Code */
+  .id-card-qr-box {
+    width: 145px;
+    height: 145px;
+    margin: 0 auto 12px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .id-card-qr-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  /* Role Badge Title: VISITOR / STUDENT */
+  .id-card-role {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: #0f172a;
+    margin: 0 0 4px 0;
+    line-height: 1;
+  }
+
+  /* Student ID Pill Tag */
+  .id-card-student-id {
+    font-family: 'SF Mono', 'Roboto Mono', 'Inter', monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #475569;
+    margin: 0 0 10px 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    padding: 3px 10px;
+    border-radius: 10px;
+    line-height: 1.3;
+  }
+  .id-card-student-id .id-label {
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+  }
+  .id-card-student-id .id-val {
+    color: #0f172a;
+    font-weight: 850;
+    letter-spacing: 1px;
+  }
+
+  /* Bottom Wavy Graphic Shape matching reference style */
+  .id-card-bottom-waves {
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    background: #ffffff;
+    margin-top: -4px;
+    position: relative;
+    z-index: 1;
+  }
+  .id-card-bottom-waves svg {
+    display: block;
+    width: 100%;
+    height: 46px;
+  }
+
+  .id-card-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 14px;
+    flex-wrap: wrap;
+    max-width: 285px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .btn-card-action {
+    background: #ffffff;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-card-action:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+    color: #0f172a;
+  }
+  .btn-card-primary {
+    background: #1768ff;
+    color: #ffffff;
+    border: 1px solid #1768ff;
+  }
+  .btn-card-primary:hover {
+    background: #0d54d9;
+    border-color: #0d54d9;
+    color: #ffffff;
+  }
+
+  /* Optimized Mobile View */
+  @media (max-width: 900px) {
+    .myexpo-hero {
+      padding: 16px 14px 14px 14px !important;
+      border-radius: 14px !important;
+      margin-bottom: 12px !important;
+    }
+    .myexpo-hero-inner {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 10px !important;
+    }
+    .myexpo-hero-badge {
+      font-size: 9px !important;
+      padding: 2.5px 8px !important;
+      margin-bottom: 4px !important;
+    }
+    .myexpo-hero-title {
+      font-size: 19px !important;
+      margin-bottom: 3px !important;
+    }
+    .myexpo-hero-desc {
+      font-size: 11.5px !important;
+      line-height: 1.35 !important;
+      color: rgba(241, 245, 249, 0.85) !important;
+    }
+    .myexpo-hero-actions {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 8px !important;
+      width: 100% !important;
+      margin-top: 4px !important;
+    }
+    .hero-btn-challenge,
+    .hero-btn-map {
+      padding: 8px 6px !important;
+      font-size: 11px !important;
+      justify-content: center !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      white-space: nowrap !important;
+      border-radius: 7px !important;
+    }
+    .hero-btn-challenge i,
+    .hero-btn-map i {
+      font-size: 13px !important;
+    }
+
+    .myexpo-grid {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 12px !important;
+    }
+    .myexpo-left-col,
+    .myexpo-right-col {
+      display: contents !important;
+    }
+    .mobile-order-badge {
+      order: 1 !important;
+    }
+    .mobile-order-unis {
+      order: 2 !important;
+    }
+    .mobile-order-seminars {
+      order: 3 !important;
+    }
+    .mobile-order-zones {
+      order: 4 !important;
+    }
+    .mobile-order-score {
+      order: 5 !important;
+      margin-top: 0 !important;
+      padding: 16px 14px !important;
+      border-radius: 12px !important;
+    }
+
+    /* ID Card on mobile */
+    .id-card-wrapper {
+      max-width: 100% !important;
+      border-radius: 14px !important;
+    }
+    .id-card-top-bar {
+      padding: 9px 12px !important;
+      font-size: 12px !important;
+      letter-spacing: 1.8px !important;
+    }
+    .id-card-body {
+      padding: 16px 14px 6px 14px !important;
+    }
+    .id-card-brand {
+      margin-bottom: 10px !important;
+    }
+    .id-card-brand .brand-knova,
+    .id-card-brand .brand-year {
+      font-size: 28px !important;
+    }
+    .id-card-name {
+      font-size: 18px !important;
+      margin-bottom: 2px !important;
+    }
+    .id-card-subtitle {
+      font-size: 12px !important;
+      margin-bottom: 10px !important;
+    }
+    .id-card-qr-box {
+      width: 145px !important;
+      height: 145px !important;
+      margin-bottom: 8px !important;
+    }
+    .id-card-role {
+      font-size: 15px !important;
+      margin-bottom: 4px !important;
+    }
+    .id-card-student-id {
+      font-size: 10.5px !important;
+      padding: 3px 10px !important;
+      margin-bottom: 8px !important;
+    }
+    .id-card-actions {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 8px !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-top: 8px !important;
+    }
+    .btn-card-action {
+      padding: 8px 10px !important;
+      font-size: 11.5px !important;
+      justify-content: center !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Cards general on mobile */
+    .myexpo-card {
+      padding: 14px 12px !important;
+      border-radius: 12px !important;
+      margin-bottom: 0 !important;
+    }
+    .myexpo-card h3 {
+      font-size: 15px !important;
+    }
+
+    /* Shortlisted Universities rows */
+    .uni-row-mobile {
+      padding: 9px 10px !important;
+      border-radius: 8px !important;
+    }
+    .uni-row-name {
+      font-size: 13px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 170px !important;
+    }
+
+    /* Attended Seminars rows */
+    .seminar-row-mobile {
+      padding: 10px 11px !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 6px !important;
+    }
+    .seminar-meta-bar {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      border-top: 1px solid #e2e8f0 !important;
+      padding-top: 5px !important;
+    }
+
+    /* Floor Zones Grid */
+    .zones-grid-mobile {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 7px !important;
+    }
+    .zone-box-mobile {
+      padding: 8px 9px !important;
+    }
+    .zone-box-mobile .zone-name {
+      font-size: 11.5px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 105px !important;
+    }
+    .zone-box-mobile .zone-loc {
+      font-size: 9.5px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 105px !important;
+    }
+  }
+
+  /* Print Stylesheet: Isolates badge on physical print or PDF save */
+  @media print {
+    body, html {
+      background: #ffffff !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    .sidebar, .topbar, .myexpo-hero, .id-card-actions, .myexpo-card, footer, nav, button, a {
+      display: none !important;
+    }
+    .main-wrapper, .main-content, .container, .myexpo-grid, .myexpo-left-col {
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      display: block !important;
+    }
+    .id-card-wrapper {
+      box-shadow: none !important;
+      border: 1px solid #cbd5e1 !important;
+      margin: 20px auto !important;
+      page-break-inside: avoid;
+    }
+  }
+  /* ==========================================================
+     FLOOR ACTIVITY ZONES - MODERN WAYPOINT GRID
+     ========================================================== */
+  .faz-section-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+
+  .faz-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .faz-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .faz-header-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    background: #eff6ff;
+    background: color-mix(in srgb, #1768ff 12%, transparent);
+    border: 1px solid rgba(23, 104, 255, 0.2);
+    color: #1768ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .faz-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .faz-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.01em;
+  }
+
+  .faz-live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 750;
+    padding: 2.5px 8.5px;
+    border-radius: 20px;
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+  }
+
+  .faz-pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.7);
+  }
+
+  .faz-subtitle {
+    margin: 3px 0 0 0;
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.35;
+  }
+
+  .faz-map-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 9999px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1d4ed8;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(23, 104, 255, 0.08);
+  }
+
+  .faz-map-btn:hover {
+    background: #1768ff;
+    border-color: #1768ff;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(23, 104, 255, 0.25);
+  }
+
+  .faz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+    gap: 12px;
+  }
+
+  .faz-card {
+    position: relative;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 3.5px solid var(--zone-color, #1768ff);
+    border-radius: 11px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+    min-width: 0;
+  }
+
+  .faz-card:hover {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    border-left-color: var(--zone-color, #1768ff);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.1), 0 2px 6px rgba(15, 23, 42, 0.04);
+  }
+
+  .faz-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #f8fafc;
+    background: color-mix(in srgb, var(--zone-color, #1768ff) 12%, transparent);
+    color: var(--zone-color, #1768ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .faz-card:hover .faz-icon-box {
+    transform: scale(1.08);
+  }
+
+  .faz-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .faz-zone-name {
+    font-size: 13px;
+    font-weight: 750;
+    color: #0f172a;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .faz-zone-hall {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .faz-zone-hall i {
+    font-size: 12px;
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+
+  .faz-arrow {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f8fafc;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    border: 1px solid #f1f5f9;
+  }
+
+  .faz-card:hover .faz-arrow {
+    background: color-mix(in srgb, var(--zone-color, #1768ff) 15%, transparent);
+    color: var(--zone-color, #1768ff);
+    border-color: color-mix(in srgb, var(--zone-color, #1768ff) 30%, transparent);
+    transform: translate(1px, -1px);
+  }
+
+  .faz-footer-strip {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 11.5px;
+    color: #64748b;
+  }
+
+  .faz-footer-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+
+  .faz-footer-hint i {
+    color: #1768ff;
+    font-size: 13px;
+  }
+
+  .faz-footer-link {
+    color: #1768ff;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s ease;
+  }
+
+  .faz-footer-link:hover {
+    color: #0f52cc;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .faz-section-card {
+      padding: 14px 12px !important;
+    }
+    .faz-grid {
+      grid-template-columns: 1fr !important;
+      gap: 8px !important;
+    }
+    .faz-card {
+      padding: 10px 12px !important;
+    }
+    .faz-map-btn {
+      width: 100% !important;
+      justify-content: center !important;
+    }
+  }
+
+</style>
+
+<!-- HERO HEADER -->
+<div class="myexpo-hero">
+  <div class="container" style="position: relative; z-index: 2;">
+    <div class="myexpo-hero-inner">
+      <div class="myexpo-hero-text">
+        <div class="myexpo-hero-badge">
+          <i class="ti ti-compass"></i> Student Command Center
+        </div>
+        <h1 class="myexpo-hero-title">
+          My Expo <span class="title-gradient">Portal</span>
+        </h1>
+        <p class="myexpo-hero-desc">
+          Your personalized attendee dashboard. View your entry QR badge, monitor KNOVA Challenge points, review bookmarked universities, and plan your expo floor journey.
+        </p>
+      </div>
+
+      <div class="myexpo-hero-actions">
+        <a href="{% url 'knova_challenge' %}" class="btn hero-btn-challenge">
+          <i class="ti ti-target"></i> KNOVA Challenge Hub &rarr;
+        </a>
+        <a href="{% url 'public_expo_map' %}" class="btn hero-btn-map">
+          <i class="ti ti-map"></i> Expo Map &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT GRID (2-Columns on Desktop, Ordered Stream on Mobile) -->
+<div style="padding: 0 0 40px 0;">
+  <div class="container">
+    {% if profile and not profile.is_profile_complete %}
+      <div style="background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; border-radius: 14px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(245, 158, 11, 0.08);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 38px; height: 38px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 19px;">
+            <i class="ti ti-lock"></i>
+          </div>
+          <div>
+            <div style="font-weight: 800; font-size: 13.5px; color: #92400e;">Complete Your Student Profile to Unlock Your Official ID Badge</div>
+            <div style="font-size: 12px; color: #b45309; margin-top: 2px;">Your official attendee digital badge &amp; fast-track entry QR code will be generated once your profile is completed.</div>
+          </div>
+        </div>
+        <a href="{% url 'dashboard_student_profile' %}" style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: #ffffff; font-weight: 700; font-size: 12.5px; padding: 8px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.25);">
+          <i class="ti ti-user-edit"></i> Complete Profile &rarr;
+        </a>
+      </div>
+    {% endif %}
+    
+    <div class="myexpo-grid">
+      
+      <!-- LEFT COLUMN (Desktop: 340px Sidebar | Mobile: Elements Unwrapped via display:contents) -->
+      <div class="myexpo-left-col">
+        
+        <!-- Attendee Digital Badge (Mobile Order 1) -->
+        <div class="mobile-order-badge">
+          {% if profile and profile.is_profile_complete %}
+          <div class="id-card-wrapper" id="idBadgeCard">
+            <!-- Physical Lanyard Punch Slot -->
+            <div class="id-card-lanyard-slot" aria-hidden="true">
+              <div class="lanyard-hole"></div>
+            </div>
+
+            <!-- Top Strip Banner -->
+            <div class="id-card-top-bar">
+              DIGITAL BADGE
+            </div>
+
+            <!-- Card Content -->
+            <div class="id-card-body">
+              <!-- Expo Branding: Knova / 2027 -->
+              <div class="id-card-brand">
+                <span class="brand-knova">Knova</span>
+                <span class="brand-year">2027</span>
+              </div>
+
+              <!-- Attendee Name -->
+              <h2 class="id-card-name">
+                {{ full_name|default:passport.student_name|default:request.user.get_full_name|default:request.user.username|title }}
+              </h2>
+
+              <!-- Organization / School / Subtitle -->
+              <p class="id-card-subtitle">
+                {% if school_or_org %}{{ school_or_org }}{% elif profile and profile.school_college %}{{ profile.school_college }}{% elif profile and profile.current_education %}{{ profile.current_education }}{% elif display_email %}{{ display_email }}{% elif profile and profile.user.email %}{{ profile.user.email }}{% elif passport.student_email %}{{ passport.student_email }}{% elif request.user.email %}{{ request.user.email }}{% else %}Registered Student{% endif %}
+              </p>
+
+              <!-- Center Clean QR Code -->
+              <div class="id-card-qr-box">
+                <img src="data:image/png;base64,{{ qr_base64 }}" alt="Attendee QR Badge" class="id-card-qr-img">
+              </div>
+
+              <!-- Role Label -->
+              <div class="id-card-role">
+                {{ role|default:"STUDENT"|upper }}
+              </div>
+
+              <!-- Student / Attendee ID -->
+              <div class="id-card-student-id">
+                <span class="id-label">{% if role == 'STUDENT' or not role %}STUDENT ID:{% else %}ATTENDEE ID:{% endif %}</span>
+                <strong class="id-val">{{ student_id|default:passport.badge_id|default:badge_id|default:request.user.username|upper }}</strong>
+              </div>
+
+              <!-- Fast Track Pill -->
+              <div style="display: inline-flex; align-items: center; gap: 5px; background: #ecfdf5; color: #059669; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;">
+                <i class="ti ti-circle-check"></i> Fast-Track Verified
+              </div>
+            </div>
+
+            <!-- Bottom Wavy Curve in KNOVA Theme Color -->
+            <div class="id-card-bottom-waves" aria-hidden="true">
+              <svg viewBox="0 0 350 75" preserveAspectRatio="none">
+                <path d="M 0,42 C 20,32 50,34 82,52 C 102,63 118,72 126,75 L 0,75 Z" fill="#1768ff"></path>
+                <path d="M 142,75 C 175,72 215,58 255,50 C 295,42 328,30 350,24 L 350,75 Z" fill="#1768ff"></path>
+              </svg>
+            </div>
+          </div>
+
+          <!-- ID Card Quick Action Buttons -->
+          <div class="id-card-actions">
+            <button onclick="window.print()" class="btn-card-action btn-card-primary" title="Print or Save Badge as PDF" style="width: 100%; justify-content: center;">
+              <i class="ti ti-printer"></i> Print ID Card
+            </button>
+          </div>
+          {% else %}
+            <!-- Locked State Card: Profile Incomplete -->
+            <div class="id-card-wrapper id-card-locked" id="idBadgeCardLocked" style="position: relative; width: 100%; max-width: 285px; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.9); margin: 0 auto; text-align: center; border: 1.5px dashed #cbd5e1;">
+              
+              <!-- Physical Lanyard Punch Slot (Locked) -->
+              <div class="id-card-lanyard-slot" aria-hidden="true" style="background: #f8fafc; border-bottom: 1px dashed #cbd5e1; padding: 6px 0; display: flex; justify-content: center;">
+                <div class="lanyard-hole" style="width: 44px; height: 7px; background: #e2e8f0; border-radius: 9999px;"></div>
+              </div>
+
+              <!-- Top Strip Banner (Amber / Locked) -->
+              <div class="id-card-top-bar" style="background: #f59e0b; color: #ffffff; font-weight: 800; font-size: 11px; letter-spacing: 1px; padding: 8px 10px; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                <i class="ti ti-lock"></i> ID CARD LOCKED
+              </div>
+
+              <!-- Card Body -->
+              <div class="id-card-body" style="padding: 22px 18px 20px 18px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                
+                <!-- Lock Icon Ring -->
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: #fef3c7; border: 2px solid #fde68a; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.18);">
+                  <i class="ti ti-lock" style="font-size: 26px; color: #d97706;"></i>
+                </div>
+
+                <h3 style="font-size: 15px; font-weight: 800; color: #0f172a; margin: 0 0 5px 0; line-height: 1.3;">
+                  ID Card Visible After Profile Completion
+                </h3>
+
+                <p style="font-size: 11.5px; color: #64748b; line-height: 1.45; margin: 0 0 14px 0;">
+                  Your official attendee digital badge &amp; QR entry code will be generated once your profile is completed.
+                </p>
+
+                <!-- Profile Checklist -->
+                <div style="width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; margin-bottom: 16px; text-align: left; box-sizing: border-box;">
+                  <div style="font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+                    Required Fields
+                  </div>
+                  
+                  <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding: 2.5px 0; color: #334155;">
+                    <span>Mobile / WhatsApp</span>
+                    {% if profile.mobile %}
+                      <span style="color: #10b981; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-check"></i> Done</span>
+                    {% else %}
+                      <span style="color: #f59e0b; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-alert-circle"></i> Pending</span>
+                    {% endif %}
+                  </div>
+
+                  <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding: 2.5px 0; color: #334155;">
+                    <span>Country of Residence</span>
+                    {% if profile.country_of_residence %}
+                      <span style="color: #10b981; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-check"></i> Done</span>
+                    {% else %}
+                      <span style="color: #f59e0b; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-alert-circle"></i> Pending</span>
+                    {% endif %}
+                  </div>
+
+                  <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding: 2.5px 0; color: #334155;">
+                    <span>School &amp; Education</span>
+                    {% if profile.current_education or profile.school_college %}
+                      <span style="color: #10b981; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-check"></i> Done</span>
+                    {% else %}
+                      <span style="color: #f59e0b; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-alert-circle"></i> Pending</span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Complete Profile CTA Button -->
+                <a href="{% url 'dashboard_student_profile' %}" class="btn-card-action btn-card-primary" style="width: 100%; justify-content: center; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-sizing: border-box; background: linear-gradient(135deg, #1768ff 0%, #0d58e8 100%); color: #ffffff; padding: 10px 14px; border-radius: 8px; font-weight: 750; font-size: 12px; box-shadow: 0 4px 14px rgba(23, 104, 255, 0.35);">
+                  <i class="ti ti-user-edit"></i> Complete Profile Now &rarr;
+                </a>
+
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- QUICK CHALLENGE CALLOUT (Desktop: Under Badge | Mobile: Order 5 at bottom) -->
+        <div class="mobile-order-score" style="background: linear-gradient(135deg, #0a1936 0%, #1768ff 100%); color: #fff; padding: 22px; border-radius: 16px; box-shadow: 0 8px 20px rgba(23,104,255,0.15);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; color: #1bd8df; text-transform: uppercase;">
+              <i class="ti ti-trophy" style="font-size: 15px;"></i> Challenge Score
+            </div>
+            <span style="background: rgba(255,255,255,0.2); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px;">{{ passport.completed_missions_count }}/6 Missions</span>
+          </div>
+          <div style="font-size: 32px; font-weight: 900; margin-bottom: 4px;">{{ passport.total_points }} <span style="font-size: 14px; font-weight: 600; color: #1bd8df;">PTS</span></div>
+          <p style="font-size: 12px; color: rgba(255,255,255,0.85); margin: 0 0 14px 0;">Rank: <strong>{{ passport.rank_title }}</strong></p>
+          <a href="{% url 'knova_challenge' %}" class="btn" style="width: 100%; background: #1bd8df; color: #0a1936; font-weight: 800; font-size: 13px; padding: 10px; border-radius: 8px; text-decoration: none; text-align: center; display: block; box-sizing: border-box;">
+            Complete Missions &amp; Win Rewards &rarr;
+          </a>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN (Desktop: 1fr Main Content | Mobile: Elements Unwrapped via display:contents) -->
+      <div class="myexpo-right-col">
+        
+        <!-- Saved Universities (Mobile Order 2) -->
+        <div class="myexpo-card mobile-order-unis">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <div>
+              <h3 style="margin: 0; font-size: 17px; font-weight: 800; color: #0a1936;">Shortlisted Universities</h3>
+              <p style="margin: 2px 0 0 0; font-size: 12px; color: #64748b;">Institutions you plan to consult with at the expo</p>
+            </div>
+            <a href="{% url 'public_exhibitors' %}" style="font-size: 12px; font-weight: 700; color: #1768ff; text-decoration: none;">+ Discover More</a>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            {% for saved in saved_universities %}
+              <div class="uni-row-mobile" style="display: flex; justify-content: space-between; align-items: center; padding: 11px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+                  <div style="width: 34px; height: 34px; border-radius: 6px; background: #fff; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                    {% if saved.university.profile.logo %}
+                      <img src="{{ saved.university.profile.logo.url }}" alt="" style="width: 100%; height: 100%; object-fit: contain;">
+                    {% else %}
+                      <i class="ti ti-building" style="color: #1768ff;"></i>
+                    {% endif %}
+                  </div>
+                  <div style="min-width: 0;">
+                    <div class="uni-row-name" style="font-weight: 700; color: #0a1936; font-size: 13.5px;">{{ saved.university.name }}</div>
+                    <div style="font-size: 11px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ saved.university.profile.location_city|default:'' }}{% if saved.university.profile.location_city and saved.university.profile.location_state_country %}, {% endif %}{{ saved.university.profile.location_state_country|default:'' }}</div>
+                  </div>
+                </div>
+                <div style="flex-shrink: 0; margin-left: 8px;">
+                  <a href="{% url 'university_detail' saved.university.slug %}" class="btn" style="background: #eff6ff; color: #1768ff; font-size: 11.5px; font-weight: 700; padding: 5px 12px; border-radius: 6px; text-decoration: none;">Profile</a>
+                </div>
+              </div>
+            {% empty %}
+              <div style="padding: 20px; text-align: center; color: #64748b; font-size: 13px; background: #f8fafc; border-radius: 10px;">
+                You haven't bookmarked any universities yet. Browse exhibitors to shortlist top universities!
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Attended Keynotes & Seminars (Mobile Order 3) -->
+        {% if attended_seminars %}
+        <div class="myexpo-card mobile-order-seminars" style="border-left: 4px solid #10b981;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <div>
+              <h3 style="margin: 0; font-size: 17px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px;">
+                <i class="ti ti-microphone-2" style="color: #10b981;"></i> Attended Seminars &amp; Keynotes
+              </h3>
+              <p style="margin: 2px 0 0 0; font-size: 12px; color: #64748b;">Keynote sessions verified and punched into your official attendee record</p>
+            </div>
+            <span style="background: #ecfdf5; color: #059669; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 20px; border: 1px solid #a7f3d0; flex-shrink: 0;">
+              {{ attended_seminars|length }} Punched
+            </span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            {% for att in attended_seminars %}
+              <div class="seminar-row-mobile" style="display: flex; justify-content: space-between; align-items: center; padding: 11px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;">
+                <div>
+                  <div style="font-weight: 800; color: #0a1936; font-size: 13.5px;">{{ att.session.title }}</div>
+                  <div style="font-size: 11.5px; color: #64748b; margin-top: 2px;">
+                    <i class="ti ti-map-pin" style="color: #1768ff;"></i> {{ att.session.hall_name }} &bull; Speaker: {{ att.session.speaker.name|default:'Keynote Speaker' }}
+                  </div>
+                </div>
+                <div class="seminar-meta-bar" style="text-align: right; flex-shrink: 0;">
+                  <span style="background: #ecfdf5; color: #059669; font-weight: 750; font-size: 11px; padding: 2px 7px; border-radius: 6px;">✓ Verified (+25 pts)</span>
+                  <div style="font-size: 10px; color: #94a3b8; margin-top: 2px;">{{ att.attended_at|date:"M j • g:i A" }}</div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+                <!-- FLOOR ACTIVITY ZONES QUICK GUIDE (Mobile Order 4) -->
+        <div class="myexpo-card mobile-order-zones faz-section-card">
+          <div class="faz-header-row">
+            <div class="faz-header-left">
+              <div class="faz-header-icon">
+                <i class="ti ti-map-pin-filled"></i>
+              </div>
+              <div>
+                <div class="faz-title-wrap">
+                  <h3 class="faz-title">Floor Activity Zones</h3>
+                  <span class="faz-live-pill"><span class="faz-pulse-dot"></span> 10 Active Stations</span>
+                </div>
+                <p class="faz-subtitle">Navigate experiential stations, counseling hubs, and keynote stages across Halls 1 &amp; 2</p>
+              </div>
+            </div>
+            <a href="{% url 'public_expo_map' %}" class="faz-map-btn" title="View interactive map">
+              <i class="ti ti-map-2"></i>
+              <span>Interactive Floor Map</span>
+              <i class="ti ti-arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="faz-grid">
+            {% for zone in floor_zones %}
+              <a href="{% url 'public_expo_map' %}" class="faz-card" style="--zone-color: {{ zone.color_accent|default:'#1768ff' }};" title="Click to view {{ zone.name }} on floor map">
+                <div class="faz-icon-box">
+                  <i class="ti ti-{{ zone.icon_class|cut:'ti-'|default:'compass' }}"></i>
+                </div>
+                <div class="faz-content">
+                  <div class="faz-zone-name">{{ zone.name }}</div>
+                  <div class="faz-zone-hall">
+                    <i class="ti ti-map-pin"></i>
+                    <span>{{ zone.hall_location|default:'Expo Hall' }}</span>
+                  </div>
+                </div>
+                <div class="faz-arrow">
+                  <i class="ti ti-arrow-up-right"></i>
+                </div>
+              </a>
+            {% empty %}
+              <a href="{% url 'public_expo_map' %}" class="faz-card" style="--zone-color: #1768ff;">
+                <div class="faz-icon-box"><i class="ti ti-school"></i></div>
+                <div class="faz-content">
+                  <div class="faz-zone-name">University Discovery</div>
+                  <div class="faz-zone-hall"><i class="ti ti-map-pin"></i> Pavilions A &amp; B &bull; Booths 01–60</div>
+                </div>
+                <div class="faz-arrow"><i class="ti ti-arrow-up-right"></i></div>
+              </a>
+              <a href="{% url 'public_expo_map' %}" class="faz-card" style="--zone-color: #10b981;">
+                <div class="faz-icon-box"><i class="ti ti-users"></i></div>
+                <div class="faz-content">
+                  <div class="faz-zone-name">Counselling Hub</div>
+                  <div class="faz-zone-hall"><i class="ti ti-map-pin"></i> Central Pavilion &bull; Desks C1–C10</div>
+                </div>
+                <div class="faz-arrow"><i class="ti ti-arrow-up-right"></i></div>
+              </a>
+              <a href="{% url 'public_expo_map' %}" class="faz-card" style="--zone-color: #f59e0b;">
+                <div class="faz-icon-box"><i class="ti ti-certificate"></i></div>
+                <div class="faz-content">
+                  <div class="faz-zone-name">Aptitude Lab</div>
+                  <div class="faz-zone-hall"><i class="ti ti-map-pin"></i> Hall 2 &bull; Stations 1–8</div>
+                </div>
+                <div class="faz-arrow"><i class="ti ti-arrow-up-right"></i></div>
+              </a>
+              <a href="{% url 'public_expo_map' %}" class="faz-card" style="--zone-color: #8b5cf6;">
+                <div class="faz-icon-box"><i class="ti ti-cpu"></i></div>
+                <div class="faz-content">
+                  <div class="faz-zone-name">Technology Arena</div>
+                  <div class="faz-zone-hall"><i class="ti ti-map-pin"></i> Future Hall &bull; Tech Stage T1</div>
+                </div>
+                <div class="faz-arrow"><i class="ti ti-arrow-up-right"></i></div>
+              </a>
+              <a href="{% url 'public_expo_map' %}" class="faz-card" style="--zone-color: #ec4899;">
+                <div class="faz-icon-box"><i class="ti ti-device-gamepad-2"></i></div>
+                <div class="faz-content">
+                  <div class="faz-zone-name">Game &amp; Puzzle Arena</div>
+                  <div class="faz-zone-hall"><i class="ti ti-map-pin"></i> Zone G &bull; Interactive Arcade</div>
+                </div>
+                <div class="faz-arrow"><i class="ti ti-arrow-up-right"></i></div>
+              </a>
+              <a href="{% url 'public_expo_map' %}" class="faz-card" style="--zone-color: #06b6d4;">
+                <div class="faz-icon-box"><i class="ti ti-gift"></i></div>
+                <div class="faz-content">
+                  <div class="faz-zone-name">KNOVA Reward Desk</div>
+                  <div class="faz-zone-hall"><i class="ti ti-map-pin"></i> Main Concourse &bull; Exit Zone</div>
+                </div>
+                <div class="faz-arrow"><i class="ti ti-arrow-up-right"></i></div>
+              </a>
+            {% endfor %}
+          </div>
+
+          <div class="faz-footer-strip">
+            <div class="faz-footer-hint">
+              <i class="ti ti-info-circle"></i>
+              <span>All stations are open throughout the expo &bull; Tap any zone to preview its position on the floor plan</span>
+            </div>
+            <a href="{% url 'public_expo_map' %}" class="faz-footer-link">
+              <span>View Hall Directory</span>
+              <i class="ti ti-external-link"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<script>
+function punchSeminarAttendance(sessionId, btnElement) {
+    if (!sessionId) return;
+    btnElement.disabled = true;
+    const originalText = btnElement.innerHTML;
+    btnElement.innerHTML = `Punching...`;
+
+    fetch(`/dashboard/student/seminar/${sessionId}/punch/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : ''
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            const container = document.getElementById(`attendanceContainer${sessionId}`);
+            if (container) {
+                container.innerHTML = `
+                    <span style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 12px;">
+                        ✓ Attendance Punched (+25 pts)
+                    </span>
+                    <span style="font-size: 11px; color: #059669; font-weight: 700;">✓ Attendance verified!</span>
+                `;
+            }
+            alert(`🎉 ${data.message}`);
+        } else {
+            btnElement.disabled = false;
+            btnElement.innerHTML = originalText;
+            alert(data.message || "Failed to mark attendance.");
+        }
+    })
+    .catch(err => {
+        btnElement.disabled = false;
+        btnElement.innerHTML = originalText;
+        alert("Error punching attendance: " + err);
+    });
+}
+</script>

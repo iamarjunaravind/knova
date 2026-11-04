@@ -1,0 +1,713 @@
+{% extends base_template|default:'dashboard/base.html' %}
+{% block nav_scholarships %}active{% endblock %}
+{% block page_title %}AI Scholarship Matcher{% endblock %}
+{% block title %}Scholarships | KNOVA{% endblock %}
+
+{% block content %}
+<!-- ============================================== -->
+<!-- CENTRAL COMMON EXAMINATION STATUS BANNER       -->
+<!-- ============================================== -->
+{% if has_completed_common_exam %}
+<div class="glass-card" style="padding: 22px 26px; border-radius: 16px; margin-bottom: 24px; background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border: 1.5px solid #bfdbfe; box-shadow: 0 4px 18px rgba(37,99,235,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+  <div style="display: flex; align-items: flex-start; gap: 16px;">
+    <div style="width: 48px; height: 48px; border-radius: 12px; background: #1768ff; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(23,104,255,0.25);">
+      <i data-feather="check-circle" style="width: 24px; height: 24px;"></i>
+    </div>
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+        <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 12px; border: 1px solid #93c5fd;">
+          Common Examination Verified
+        </span>
+        <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 12px; border: 1px solid #86efac;">
+          {% if common_attempt.is_passed %}Qualified To Apply{% else %}Completed{% endif %}
+        </span>
+      </div>
+      <h3 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 800; color: #0f172a;">
+        Central Common Assessment Score: {{ common_attempt.score }} / {{ common_exam.total_marks|default:100 }} Marks
+      </h3>
+      <p style="margin: 0; font-size: 13.5px; color: #475569; max-width: 760px; line-height: 1.5;">
+        Your verified common aptitude scorecard is attached to your candidate profile. Review instructions on any scholarship below to submit your application.
+      </p>
+    </div>
+  </div>
+  <div style="display: flex; gap: 10px; align-items: center;">
+    <a href="{% url 'dashboard_exam_result' common_attempt.id %}" target="_blank" class="btn" style="background: #ffffff; border: 1.5px solid #cbd5e1; color: #0f172a; font-weight: 700; font-size: 13px; padding: 10px 18px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+      <i data-feather="file-text" style="width: 15px; height: 15px;"></i> View Scorecard &rarr;
+    </a>
+  </div>
+</div>
+{% else %}
+<div class="glass-card" style="padding: 22px 26px; border-radius: 16px; margin-bottom: 24px; background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1.5px solid #a7f3d0; box-shadow: 0 4px 18px rgba(16,185,129,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+  <div style="display: flex; align-items: flex-start; gap: 16px;">
+    <div style="width: 48px; height: 48px; border-radius: 12px; background: #10b981; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(16,185,129,0.3);">
+      <i data-feather="award" style="width: 24px; height: 24px;"></i>
+    </div>
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+        <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 12px; border: 1px solid #86efac;">
+          Single Central Assessment
+        </span>
+        <span style="font-size: 11px; font-weight: 700; color: #b45309; background: #fef3c7; padding: 2px 8px; border-radius: 12px;">
+          Assessment Required Before Applying
+        </span>
+      </div>
+      <h3 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 800; color: #064e3b;">
+        KNOVA Central Common Scholarship Aptitude Exam
+      </h3>
+      <p style="margin: 0; font-size: 13.5px; color: #047857; max-width: 760px; line-height: 1.5;">
+        All participating universities evaluate candidates based on this single centralized common examination. Take the common test once to establish your verified score and qualify for all university scholarships.
+      </p>
+    </div>
+  </div>
+  <a href="{% url 'dashboard_take_exam' common_exam.id|default:2 %}" class="btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-weight: 800; font-size: 14px; padding: 12px 24px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(16,185,129,0.35);">
+    <i data-feather="play-circle" style="width: 17px; height: 17px;"></i> Take Common Examination &rarr;
+  </a>
+</div>
+{% endif %}
+
+<div class="glass-card" style="margin-bottom: 24px; display:flex; align-items:center; justify-content:space-between;">
+    <div>
+        <h3 style="margin-top:0; color:var(--text-main); font-size:18px; margin-bottom:8px;">Your Personalized Matches</h3>
+        <p style="margin:0; font-size:13px; color:var(--text-muted);">We've analyzed your profile against hundreds of funding opportunities. Click any card to review full eligibility and details.</p>
+    </div>
+    <div style="text-align:right;">
+        <div style="font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-bottom:4px;">Profile Completeness</div>
+        <div style="background:#e2e8f0; border-radius:10px; width:150px; height:8px; overflow:hidden; margin-left:auto;">
+            <div style="background:var(--primary); height:100%; width:{% if profile.is_profile_complete %}100%{% else %}40%{% endif %};"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+.scholarship-matches-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+    align-items: stretch;
+}
+@media (max-width: 1280px) {
+    .scholarship-matches-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 16px !important;
+    }
+}
+@media (max-width: 900px) {
+    .scholarship-matches-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 14px !important;
+    }
+}
+@media (max-width: 600px) {
+    .scholarship-matches-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+}
+.scholarship-match-card {
+    padding: 20px 18px !important;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+.scholarship-match-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.12), 0 4px 10px rgba(23, 104, 255, 0.08) !important;
+    border-color: #93c5fd !important;
+}
+.scholarship-match-card:hover .detail-cue-arrow {
+    transform: translateX(3px);
+}
+
+/* Modal Styling */
+.sch-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(6px);
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+}
+.sch-modal-content {
+    background: #ffffff;
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    border-radius: 20px;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: schPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes schPopIn {
+    from { opacity: 0; transform: scale(0.96) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.sch-modal-header {
+    padding: 18px 24px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.sch-modal-uni {
+    font-size: 13px;
+    font-weight: 750;
+    color: #475569;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.sch-modal-match {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 2px 9px;
+    border-radius: 12px;
+}
+.sch-modal-close {
+    background: transparent;
+    border: none;
+    font-size: 26px;
+    line-height: 1;
+    color: #64748b;
+    cursor: pointer;
+    padding: 0 4px;
+    border-radius: 6px;
+    transition: color 0.15s ease;
+}
+.sch-modal-close:hover {
+    color: #0f172a;
+}
+.sch-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.sch-modal-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 850;
+    color: #0a1936;
+    line-height: 1.3;
+    letter-spacing: -0.3px;
+}
+.sch-modal-amount {
+    font-size: 24px;
+    font-weight: 850;
+    color: #059669;
+    letter-spacing: -0.5px;
+}
+.sch-tag {
+    font-size: 11.5px;
+    font-weight: 750;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+}
+.tag-coverage {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+}
+.sch-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+@media (max-width: 520px) {
+    .sch-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.sch-info-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+}
+.sch-info-label {
+    font-size: 11px;
+    font-weight: 750;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 3px;
+}
+.sch-info-val {
+    font-size: 13px;
+    font-weight: 750;
+    color: #0f172a;
+}
+.sch-section-title {
+    margin: 0 0 6px 0;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.sch-section-text {
+    margin: 0;
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.6;
+}
+.sch-modal-footer {
+    padding: 16px 24px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+</style>
+
+<div class="scholarship-matches-grid">
+    {% for match in matched_scholarships %}
+    <div class="glass-card scholarship-match-card" 
+         onclick="openScholarshipDetailModal(this)"
+         data-id="{{ match.scholarship.id }}"
+         data-name="{{ match.scholarship.name|escape }}"
+         data-uni="{{ match.scholarship.university.name|escape }}"
+         data-country="{{ match.scholarship.university.country|default:'Global Partner'|escape }}"
+         data-uni-slug="{{ match.scholarship.university.slug|default:'' }}"
+         data-amount="{{ match.scholarship.amount|escape }}"
+         data-coverage="{{ match.scholarship.coverage_type|default:'Full Tuition & Aid'|escape }}"
+         data-category="{{ match.scholarship.category|default:'Merit-Based'|escape }}"
+         data-level="{{ match.scholarship.level|default:'All Degree Levels'|escape }}"
+         data-field="{{ match.scholarship.field_of_study|default:'All Disciplines'|escape }}"
+         data-deadline="{% if match.scholarship.deadline %}{{ match.scholarship.deadline|date:'F j, Y' }}{% else %}Rolling Admissions / Fall 2027{% endif %}" data-applied="{% if match.is_applied %}1{% else %}0{% endif %}"
+         data-description="{{ match.scholarship.description|default:'Merit scholarship award offered for qualifying students in the upcoming academic session.'|escape }}"
+         data-eligibility="{{ match.scholarship.eligibility|default:'Standard academic prerequisites, minimum GPA standards, and language proficiency.'|escape }}"
+         data-match="{{ match.match_score }}"
+         data-is-high="{% if match.is_high_match %}true{% else %}false{% endif %}"
+         data-exam-id="{{ match.exam_id|default:1 }}"
+         data-registered="{% if match.is_registered %}true{% else %}false{% endif %}"
+         data-cantake="{% if match.can_take_exam %}true{% else %}false{% endif %}"
+         data-search-text="{{ match.scholarship.name|lower }} {{ match.scholarship.university.name|lower }} {{ match.scholarship.category|lower }} {{ match.scholarship.amount|lower }}" 
+         style="position:relative; display:flex; flex-direction:column; justify-content:space-between; border-radius:16px; border:1.5px solid #e2e8f0; background:#ffffff; box-shadow:0 2px 10px rgba(15,23,42,0.04); transition:all 0.2s ease;">
+        
+        <div>
+            <!-- Top Meta Strip: University & Match Badge -->
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px;">
+                <span style="font-size:12px; font-weight:700; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:inline-flex; align-items:center; gap:4px;">
+                    <i data-feather="book" style="width:12px; height:12px; color:#1768ff; flex-shrink:0;"></i>
+                    <span style="overflow:hidden; text-overflow:ellipsis;">{{ match.scholarship.university.name }}</span>
+                </span>
+                
+                {% if match.is_high_match %}
+                <span style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; font-size:11px; font-weight:800; padding:2px 8px; border-radius:12px; flex-shrink:0; display:inline-flex; align-items:center; gap:3px;">
+                    <span style="width:6px; height:6px; border-radius:50%; background:#10b981;"></span>
+                    {{ match.match_score }}% Match
+                </span>
+                {% else %}
+                <span style="background:#eff6ff; color:#1768ff; border:1px solid #bfdbfe; font-size:11px; font-weight:800; padding:2px 8px; border-radius:12px; flex-shrink:0;">
+                    {{ match.match_score }}% Match
+                </span>
+                {% endif %}
+            </div>
+
+            <!-- Prominent Scholarship Title (Hero of Card) -->
+            <h4 style="margin:0 0 8px 0; font-size:16px; font-weight:800; color:#0a1936; line-height:1.32; letter-spacing:-0.2px; min-height:44px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
+                {{ match.scholarship.name }}
+            </h4>
+
+            <!-- Award Value / Funding Amount -->
+            <div style="font-size:18px; font-weight:850; color:#059669; margin-bottom:8px; letter-spacing:-0.3px; line-height:1.25;">
+                {{ match.scholarship.amount }}
+            </div>
+
+            <!-- Description -->
+            <div style="font-size:12.5px; color:#475569; line-height:1.5; margin-bottom:10px; min-height:38px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                {{ match.scholarship.description|default:"Merit scholarship award offered for qualifying students in the upcoming academic session." }}
+            </div>
+
+            <!-- Click Detail Hint -->
+            <div style="font-size:11.5px; font-weight:750; color:#1768ff; display:inline-flex; align-items:center; gap:4px; margin-bottom:12px;">
+                <span>View Full Details &amp; Criteria</span>
+                <i data-feather="arrow-up-right" class="detail-cue-arrow" style="width:12px; height:12px; transition:transform 0.15s ease;"></i>
+            </div>
+        </div>
+
+        <div>
+            <!-- Deadline & Category Meta Strip -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-top:10px; border-top:1px solid #f1f5f9; font-size:11.5px;">
+                <span style="font-weight:700; color:#b45309; display:inline-flex; align-items:center; gap:4px;">
+                    <i data-feather="calendar" style="width:12px; height:12px;"></i>
+                    {% if match.scholarship.deadline %}{{ match.scholarship.deadline|date:"M j, Y" }}{% else %}Rolling / Fall '27{% endif %}
+                </span>
+                <span style="font-weight:600; color:#64748b; background:#f8fafc; padding:2px 6px; border-radius:4px; border:1px solid #e2e8f0;">
+                    {{ match.scholarship.category|default:"Merit-Based" }}
+                </span>
+            </div>
+        
+        <div onclick="event.stopPropagation()">
+            {% if role == 'parent' or request.user.parent_profile %}
+                <div style="text-align:center; padding:10px 12px; font-size:12.5px; font-weight:700; color:#64748b; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px;">
+                    <i data-feather="lock" style="width:14px; height:14px; display:inline-block; vertical-align:middle; color:#94a3b8; margin-right:4px;"></i> View Only Mode
+                </div>
+            {% elif match.is_applied %}
+                <div id="cardAppliedBadge_{{ match.scholarship.id }}" style="width:100%; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-sizing:border-box; background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; font-weight:750; padding:10px 0; border-radius:10px; font-size:13px;">
+                    <i data-feather="check-circle" style="width:15px; height:15px;"></i> <span>Application Submitted</span>
+                </div>
+            {% else %}
+                <button type="button" class="btn btn-primary" id="cardActionBtn_{{ match.scholarship.id }}" onclick="openScholarshipDetailModal(this.closest('.scholarship-match-card'))" style="width:100%; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-sizing:border-box; background:linear-gradient(135deg, #1768ff 0%, #2563eb 100%); border:none; color:#ffffff; font-weight:750; padding:10px 0; border-radius:10px; box-shadow:0 4px 12px rgba(23, 104, 255, 0.25); font-size:13px; cursor:pointer;">
+                    <i data-feather="file-text" style="width:15px; height:15px;"></i> <span>Review &amp; Apply</span>
+                </button>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+    {% empty %}
+    <div style="grid-column: 1 / -1; text-align:center; padding:40px; background:white; border-radius:16px; border:1px dashed #cbd5e1;">
+        <svg style="width:48px; height:48px; margin:0 auto 16px; color:#94a3b8;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <h4 style="margin:0 0 8px; font-size:16px; color:var(--text-main);">No Scholarships Found</h4>
+        <p style="margin:0; font-size:14px; color:var(--text-muted);">We couldn't find active scholarships matching your profile at this time.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- ============================================== -->
+<!-- SCHOLARSHIP DETAILED VIEW MODAL                -->
+<!-- ============================================== -->
+<div id="scholarshipDetailModal" class="sch-modal-overlay" onclick="closeScholarshipDetailModal(event)">
+  <div class="sch-modal-content" onclick="event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="sch-modal-header">
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <span class="sch-modal-uni" id="modalUni">
+          <i data-feather="book" style="width: 14px; height: 14px; color: #1768ff;"></i>
+          <span id="modalUniText">University Name</span>
+        </span>
+        <span class="sch-modal-match" id="modalMatchBadge">96% Match</span>
+      </div>
+      <button type="button" class="sch-modal-close" onclick="closeScholarshipDetailModal()" aria-label="Close modal">&times;</button>
+    </div>
+
+    <!-- Modal Scrollable Body -->
+    <div class="sch-modal-body">
+      <!-- Title & Amount -->
+      <h3 class="sch-modal-title" id="modalTitle">Scholarship Title</h3>
+      
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 6px;">
+        <div class="sch-modal-amount" id="modalAmount">$55,000 / Year</div>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;" id="modalTags">
+          <span class="sch-tag" id="modalCategoryTag">Merit-Based</span>
+          <span class="sch-tag tag-coverage" id="modalCoverageTag">Full Tuition</span>
+        </div>
+      </div>
+
+      <!-- 4-Box Key Metadata Grid -->
+      <div class="sch-info-grid">
+        <div class="sch-info-box">
+          <div class="sch-info-label"><i data-feather="award" style="width:13px; height:13px; color:#1768ff;"></i> Degree Level</div>
+          <div class="sch-info-val" id="modalLevel">All Levels</div>
+        </div>
+        <div class="sch-info-box">
+          <div class="sch-info-label"><i data-feather="compass" style="width:13px; height:13px; color:#10b981;"></i> Field of Study</div>
+          <div class="sch-info-val" id="modalField">STEM & Business</div>
+        </div>
+        <div class="sch-info-box">
+          <div class="sch-info-label"><i data-feather="calendar" style="width:13px; height:13px; color:#f59e0b;"></i> Application Deadline</div>
+          <div class="sch-info-val" id="modalDeadline">Rolling / Fall 2027</div>
+        </div>
+        <div class="sch-info-box">
+          <div class="sch-info-label"><i data-feather="map-pin" style="width:13px; height:13px; color:#8b5cf6;"></i> Campus Location</div>
+          <div class="sch-info-val" id="modalCountry">Global Partner</div>
+        </div>
+      </div>
+
+      <!-- Overview Section -->
+      <div class="sch-section">
+        <h5 class="sch-section-title"><i data-feather="file-text" style="width:14px; height:14px; color:#1768ff;"></i> Scholarship Overview</h5>
+        <p class="sch-section-text" id="modalDesc"></p>
+      </div>
+
+      <!-- Eligibility Section -->
+      <div class="sch-section">
+        <h5 class="sch-section-title"><i data-feather="check-circle" style="width:14px; height:14px; color:#10b981;"></i> Candidate Eligibility &amp; Criteria</h5>
+        <p class="sch-section-text" id="modalEligibility"></p>
+      </div>
+
+      <!-- AI Match Insights -->
+      <div class="sch-section" style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:14px 16px;">
+        <h5 class="sch-section-title" style="color:#1e40af; margin-bottom:4px;">
+          <i data-feather="zap" style="width:14px; height:14px; color:#1768ff;"></i> AI Recommendation Breakdown
+        </h5>
+        <p style="margin:0; font-size:12.5px; color:#1e3a8a; line-height:1.5;">
+          Recommended based on profile academic history, intended discipline, target country, and current funding availability.
+        </p>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="sch-modal-footer" style="padding:16px 24px; border-top:1px solid #edf2f7; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <div id="modalExamRequirementInfo" style="display:flex; align-items:center; gap:8px;">
+        {% if not has_completed_common_exam %}
+        <span style="font-size:12px; color:#b45309; font-weight:700; background:#fef3c7; border:1px solid #fde68a; padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:5px;">
+          <i data-feather="alert-circle" style="width:13px; height:13px;"></i> Common Test Required To Apply
+        </span>
+        {% else %}
+        <span style="font-size:12px; color:#065f46; font-weight:750; background:#ecfdf5; border:1px solid #a7f3d0; padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:5px;">
+          <i data-feather="check-circle" style="width:13px; height:13px;"></i> Verified Score: {{ common_attempt.score }}/{{ common_exam.total_marks|default:100 }} (Attached)
+        </span>
+        {% endif %}
+      </div>
+
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button type="button" class="btn" onclick="closeScholarshipDetailModal()" style="background:#f1f5f9; color:#475569; font-weight:700; font-size:12.5px; padding:9px 18px; border-radius:8px; border:1px solid #cbd5e1; cursor:pointer;">
+          Close
+        </button>
+
+        {% if role == 'parent' or request.user.parent_profile %}
+        <!-- Parents view only mode -->
+        {% elif not has_completed_common_exam %}
+        <a href="{% url 'dashboard_take_exam' common_exam.id|default:2 %}" class="btn btn-primary" style="font-weight:750; font-size:13px; padding:9px 20px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; background:#10b981; color:#fff; text-decoration:none;">
+          <i data-feather="play-circle" style="width:15px; height:15px;"></i> Take Common Test &rarr;
+        </a>
+        {% else %}
+        <button type="button" id="modalApplyBtn" onclick="submitScholarshipApplication()" class="btn btn-primary" style="font-weight:750; font-size:13px; padding:10px 22px; border-radius:8px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#fff; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:7px; box-shadow:0 4px 14px rgba(16,185,129,0.3);">
+          <i data-feather="send" style="width:14px; height:14px;"></i> Submit Scholarship Application
+        </button>
+        <span id="modalAppliedBadge" style="display:none; background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-weight:750; font-size:13px; padding:9px 18px; border-radius:8px; align-items:center; gap:6px;">
+          <i data-feather="check-circle" style="width:15px; height:15px;"></i> Application Submitted
+        </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentModalScholarshipId = null;
+
+function openScholarshipDetailModal(card) {
+  if (!card) return;
+  const d = card.dataset;
+  currentModalScholarshipId = d.id;
+
+  document.getElementById('modalUniText').textContent = d.uni || 'Institution';
+  document.getElementById('modalMatchBadge').textContent = (d.match || '90') + '% Match';
+  document.getElementById('modalTitle').textContent = d.name || 'Scholarship Award';
+  document.getElementById('modalAmount').textContent = d.amount || 'Award Amount Available';
+  document.getElementById('modalCategoryTag').textContent = d.category || 'Merit-Based';
+  document.getElementById('modalCoverageTag').textContent = d.coverage || 'Tuition Coverage';
+  document.getElementById('modalLevel').textContent = d.level || 'All Levels';
+  document.getElementById('modalField').textContent = d.field || 'All Fields';
+  document.getElementById('modalDeadline').textContent = d.deadline || 'Rolling Admissions';
+  document.getElementById('modalCountry').textContent = d.country || 'Global Partner';
+  document.getElementById('modalDesc').textContent = d.description || 'Comprehensive financial aid grant awarded to qualifying candidates.';
+  document.getElementById('modalEligibility').textContent = d.eligibility || 'Academic prerequisites, entrance qualification, and complete documentation.';
+
+  const uniLink = document.getElementById('modalUniLink');
+  if (uniLink) {
+    if (d.uniSlug) {
+      uniLink.href = '/university/' + encodeURIComponent(d.uniSlug) + '/';
+      uniLink.style.display = 'inline-flex';
+    } else {
+      uniLink.style.display = 'none';
+    }
+  }
+
+  // Check if already applied
+  const applyBtn = document.getElementById('modalApplyBtn');
+  const appliedBadge = document.getElementById('modalAppliedBadge');
+  if (d.applied === '1') {
+    if (applyBtn) applyBtn.style.display = 'none';
+    if (appliedBadge) appliedBadge.style.display = 'inline-flex';
+  } else {
+    if (applyBtn) {
+      applyBtn.style.display = 'inline-flex';
+      applyBtn.disabled = false;
+      applyBtn.innerHTML = '<i data-feather="send" style="width:14px; height:14px;"></i> Submit Scholarship Application';
+    }
+    if (appliedBadge) appliedBadge.style.display = 'none';
+  }
+
+  const modal = document.getElementById('scholarshipDetailModal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  if (window.feather) feather.replace();
+}
+
+function submitScholarshipApplication() {
+  if (!currentModalScholarshipId) return;
+
+  const btn = document.getElementById('modalApplyBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = 'Submitting Application...';
+  }
+
+  fetch('/dashboard/scholarships/' + currentModalScholarshipId + '/apply/', {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': '{{ csrf_token }}',
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      const applyBtn = document.getElementById('modalApplyBtn');
+      const appliedBadge = document.getElementById('modalAppliedBadge');
+      if (applyBtn) applyBtn.style.display = 'none';
+      if (appliedBadge) appliedBadge.style.display = 'inline-flex';
+
+      // Update card on page
+      const cardActionBtn = document.getElementById('cardActionBtn_' + currentModalScholarshipId);
+      if (cardActionBtn) {
+        cardActionBtn.parentNode.innerHTML = '<div style="width:100%; display:inline-flex; align-items:center; justify-content:center; gap:6px; box-sizing:border-box; background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; font-weight:750; padding:10px 0; border-radius:10px; font-size:13px;"><i data-feather="check-circle" style="width:15px; height:15px;"></i> <span>Application Submitted</span></div>';
+      }
+
+      const card = document.querySelector(`.scholarship-match-card[data-id="${currentModalScholarshipId}"]`);
+      if (card) card.dataset.applied = '1';
+
+      if (window.feather) feather.replace();
+      alert(data.message || 'Scholarship application successfully submitted!');
+    } else {
+      alert(data.message || 'Could not submit application.');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = 'Submit Scholarship Application';
+      }
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert('Network error while submitting application.');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = 'Submit Scholarship Application';
+    }
+  });
+}
+
+function closeScholarshipDetailModal(e) {
+  if (e && e.target && e.target.id !== 'scholarshipDetailModal' && !e.target.classList.contains('sch-modal-close') && e.target.tagName !== 'BUTTON') {
+    return;
+  }
+  const modal = document.getElementById('scholarshipDetailModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('scholarshipDetailModal');
+    if (modal && modal.style.display === 'flex') {
+      closeScholarshipDetailModal();
+    }
+  }
+});
+</script>
+
+{% if role == 'parent' %}
+<!-- PARENT BUDGET & ROI CALCULATOR -->
+<div class="glass-card" style="margin-top: 32px; border-top: 4px solid var(--primary);">
+    <h3 style="margin-top:0; color:var(--text-main); font-size:18px; margin-bottom:8px;"><i data-feather="pie-chart" style="width:20px; height:20px; vertical-align:middle; margin-right:8px; color:var(--primary);"></i>Parent Budget & ROI Calculator</h3>
+    <p style="margin:0; font-size:13px; color:var(--text-muted); margin-bottom:24px;">Estimate the total out-of-pocket cost for your child's education and calculate the Return on Investment (ROI) based on projected post-graduation salary.</p>
+    
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:24px;">
+        <div>
+            <div class="form-group" style="margin-bottom:16px;">
+                <label class="form-label" style="font-size:13px; font-weight:600;">Annual Tuition Fees ($)</label>
+                <input type="number" id="calcTuition" class="form-control" value="45000" style="padding:10px 14px;">
+            </div>
+            <div class="form-group" style="margin-bottom:16px;">
+                <label class="form-label" style="font-size:13px; font-weight:600;">Annual Living & Accommodation ($)</label>
+                <input type="number" id="calcLiving" class="form-control" value="15000" style="padding:10px 14px;">
+            </div>
+            <div class="form-group" style="margin-bottom:16px;">
+                <label class="form-label" style="font-size:13px; font-weight:600;">Annual Scholarship Award ($)</label>
+                <input type="number" id="calcScholarship" class="form-control" value="25000" style="padding:10px 14px;">
+            </div>
+            <div class="form-group" style="margin-bottom:16px;">
+                <label class="form-label" style="font-size:13px; font-weight:600;">Expected Starting Annual Salary ($)</label>
+                <input type="number" id="calcSalary" class="form-control" value="65000" style="padding:10px 14px;">
+            </div>
+            <div class="form-group">
+                <label class="form-label" style="font-size:13px; font-weight:600;">Degree Duration (Years)</label>
+                <input type="number" id="calcYears" class="form-control" value="4" style="padding:10px 14px;">
+            </div>
+        </div>
+        
+        <div style="display:flex; flex-direction:column; justify-content:center; gap:16px;">
+            <div style="background:#f8fafc; padding:20px; border-radius:12px; border:1px solid #e2e8f0;">
+                <div style="font-size:12px; font-weight:600; color:#64748b; text-transform:uppercase; margin-bottom:4px;">Total Cost Before Scholarship</div>
+                <div id="resGross" style="font-size:28px; font-weight:800; color:#0f172a;">$240,000</div>
+            </div>
+            
+            <div style="background:#f0fdf4; padding:20px; border-radius:12px; border:1px solid #bbf7d0;">
+                <div style="font-size:12px; font-weight:600; color:#166534; text-transform:uppercase; margin-bottom:4px;">Total Out-of-Pocket (Net)</div>
+                <div id="resNet" style="font-size:32px; font-weight:800; color:#15803d;">$140,000</div>
+            </div>
+            
+            <div style="background:#eff6ff; padding:20px; border-radius:12px; border:1px solid #bfdbfe;">
+                <div style="font-size:12px; font-weight:600; color:#1e40af; text-transform:uppercase; margin-bottom:4px;">Estimated ROI Break-Even</div>
+                <div style="display:flex; align-items:baseline; gap:8px;">
+                    <div id="resRoi" style="font-size:32px; font-weight:800; color:#1d4ed8;">2.1</div>
+                    <div style="font-size:16px; font-weight:600; color:#1e40af;">Years</div>
+                </div>
+                <div style="font-size:12px; color:#3b82f6; margin-top:4px;">*Post-graduation years to earn back the net cost.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const tuition = document.getElementById('calcTuition');
+    const living = document.getElementById('calcLiving');
+    const scholarship = document.getElementById('calcScholarship');
+    const salary = document.getElementById('calcSalary');
+    const years = document.getElementById('calcYears');
+    
+    const resGross = document.getElementById('resGross');
+    const resNet = document.getElementById('resNet');
+    const resRoi = document.getElementById('resRoi');
+    
+    function calculate() {
+        const t = parseFloat(tuition.value) || 0;
+        const l = parseFloat(living.value) || 0;
+        const s = parseFloat(scholarship.value) || 0;
+        const y = parseFloat(years.value) || 4;
+        const sal = parseFloat(salary.value) || 1;
+        
+        const gross = (t + l) * y;
+        const net = gross - (s * y);
+        const roi = net / sal;
+        
+        resGross.innerText = '$' + gross.toLocaleString('en-US', {maximumFractionDigits:0});
+        resNet.innerText = '$' + net.toLocaleString('en-US', {maximumFractionDigits:0});
+        resRoi.innerText = (roi > 0 ? roi.toFixed(1) : "0.0");
+    }
+    
+    [tuition, living, scholarship, salary, years].forEach(el => el.addEventListener('input', calculate));
+    calculate();
+});
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends 'core/base_public.html' %}
+{% load static %}
+
+{% block title %}Privacy Policy | KNOVA Education Expo{% endblock %}
+
+{% block body_class %}has-dark-hero legal-page{% endblock %}
+
+{% block content %}
+<style>
+  body.legal-page,
+  body.has-dark-hero {
+    padding-top: 0 !important;
+    background-color: #f4f7fb;
+  }
+
+  .legal-hero {
+    padding: 122px 0 28px 0;
+    background: radial-gradient(circle at 85% 15%, rgba(23, 104, 255, 0.28) 0%, transparent 55%),
+                radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.18) 0%, transparent 50%),
+                linear-gradient(135deg, #061022 0%, #0a1c3f 50%, #102e6b 100%);
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .legal-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(6, 16, 34, 0.45) 100%);
+    pointer-events: none;
+  }
+
+  .legal-hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .dash-breadcrumb-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .dash-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(23, 104, 255, 0.22);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    backdrop-filter: blur(8px);
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #7dd3fc;
+  }
+
+  .legal-dash-title {
+    color: #ffffff !important;
+    font-size: clamp(22px, 2.5vw, 28px);
+    font-weight: 800;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+    letter-spacing: -0.6px;
+  }
+
+  .legal-dash-title .gradient-text {
+    background: linear-gradient(135deg, #67e8f9 0%, #ffffff 50%, #93c5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+
+  .legal-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 32px 36px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+    line-height: 1.7;
+    color: #334155;
+    margin: -14px auto 60px auto;
+    max-width: 900px;
+    position: relative;
+    z-index: 20;
+  }
+
+  @media (max-width: 820px) {
+    .legal-hero {
+      padding: 16px 0 22px 0;
+    }
+    .legal-box {
+      padding: 20px;
+      margin-top: 10px;
+      border-radius: 12px;
+    }
+  }
+</style>
+
+{% if site_config.show_privacy_hero %}
+<section class="legal-hero">
+  <div class="container">
+    <div class="legal-hero-inner">
+      <div class="dash-breadcrumb-bar">
+        <span class="dash-badge-pill"><i class="ti ti-shield-lock"></i> COMPLIANCE &amp; LEGAL</span>
+        <span style="color: rgba(255,255,255,0.3); font-size: 11px;">/</span>
+        <span style="font-size: 11.5px; font-weight: 600; color: rgba(241,245,249,0.7);">Privacy Policy</span>
+      </div>
+      <h1 class="legal-dash-title">{{ site_config.privacy_page_title|default:"Privacy Policy &amp; Data Protection"|safe }}</h1>
+      <p style="font-size: 13px; color: rgba(241,245,249,0.8); margin: 0; line-height: 1.4;">
+        How KNOVA GCC collects, uses, encrypts, and safeguards your personal data across expo services.
+      </p>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if site_config.show_privacy_content %}
+<div class="container">
+  <div class="legal-box">
+    {% if site_config.privacy_body_content %}
+    <div class="custom-legal-body">
+      {{ site_config.privacy_body_content|safe }}
+    </div>
+    {% else %}
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 18px; margin-bottom: 24px; font-size: 12.5px; color: #64748b; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+      <div><strong style="color: #0f172a;">Last Updated:</strong> {{ site_config.privacy_last_updated|default:"October 2026" }}</div>
+      <div><strong style="color: #0f172a;">Applies To:</strong> All students, parents, exhibitors, and attendees.</div>
+    </div>
+
+    <h2 style="font-size: 18px; font-weight: 800; color: #0a1936; margin: 20px 0 10px 0;">1. Information We Collect</h2>
+    <p style="font-size: 13.5px;">When you register for the KNOVA Education Expo, download digital passes, or enquire with institutions, we may collect the following personal information:</p>
+    <ul style="padding-left: 20px; margin-bottom: 16px; font-size: 13.5px;">
+      <li>Full name, email address, phone number, and city of residence.</li>
+      <li>Academic preferences, intended study destinations, fields of interest, and budget range.</li>
+      <li>Badge scanning history and interactions with university booths during the expo.</li>
+    </ul>
+
+    <h2 style="font-size: 18px; font-weight: 800; color: #0a1936; margin: 24px 0 10px 0;">2. How We Use Your Information</h2>
+    <p style="font-size: 13.5px;">We use your information exclusively to provide a tailored, world-class education fair experience:</p>
+    <ul style="padding-left: 20px; margin-bottom: 16px; font-size: 13.5px;">
+      <li>To issue your Fast-Track QR Badge and manage event check-ins.</li>
+      <li>To connect you with universities and scholarship programs that match your academic profile.</li>
+      <li>To send essential updates regarding seminars, schedule changes, and venue logistics.</li>
+      <li>To facilitate post-event counseling and direct admissions inquiries upon your consent.</li>
+    </ul>
+
+    <h2 style="font-size: 18px; font-weight: 800; color: #0a1936; margin: 24px 0 10px 0;">3. Data Sharing &amp; Security</h2>
+    <p style="font-size: 13.5px;">We never sell your personal data to third-party brokers. Your contact details are only shared with participating universities whose booths you voluntarily visit and allow your badge to be scanned by.</p>
+    <p style="font-size: 13.5px;">We implement industry-standard encryption, strict database access controls, and secure data handling adhering to GCC and international privacy standards.</p>
+
+    <h2 style="font-size: 18px; font-weight: 800; color: #0a1936; margin: 24px 0 10px 0;">4. Your Rights</h2>
+    <p style="font-size: 13.5px;">You have the right to request access to the data we hold about you, request corrections, or request deletion of your account and badge records at any time by contacting our support team at <a href="mailto:privacy@knova.gcc" style="color: #1768ff; font-weight: 700;">privacy@knova.gcc</a>.</p>
+
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+      <a href="{% url 'terms_conditions' %}" style="color: #1768ff; font-weight: 700; font-size: 13px; text-decoration: none;">View Terms &amp; Conditions &rarr;</a>
+      <a href="{% url 'public_register' %}" style="display: inline-flex; align-items: center; gap: 6px; background: #1768ff; color: #ffffff; padding: 7px 18px; border-radius: 20px; font-weight: 700; font-size: 12px; text-decoration: none; margin-left: auto;">Register for Expo &rarr;</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

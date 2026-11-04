@@ -1,0 +1,732 @@
+{% extends base_template|default:'dashboard/base.html' %}
+{% load static %}
+
+{% block nav_profile %}active{% endblock %}
+{% block page_category %}Student Command Center{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+{% block title %}My Profile | KNOVA{% endblock %}
+
+{% block content %}
+<style>
+  .profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 24px;
+  }
+
+  /* Profile Hero Card */
+  .profile-hero {
+    background: linear-gradient(135deg, #0a1936 0%, #173877 50%, #1768ff 100%);
+    border-radius: 18px;
+    padding: 24px 28px;
+    color: #ffffff;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(10, 25, 54, 0.25);
+  }
+  .profile-hero::before {
+    content: '';
+    position: absolute;
+    right: -40px;
+    top: -40px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(27,216,223,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .profile-hero-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .profile-hero-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .profile-avatar-large {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1bd8df 0%, #1768ff 100%);
+    color: #0a1936;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 900;
+    border: 3px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+  }
+  .profile-hero-name {
+    margin: 0 0 4px 0;
+    font-size: 22px;
+    font-weight: 850;
+    letter-spacing: -0.4px;
+    color: #ffffff;
+  }
+  .profile-hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: #cbd5e1;
+    margin-bottom: 10px;
+  }
+  .profile-hero-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .profile-hero-pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .profile-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .profile-pill-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+  }
+  .profile-pill-verified {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #6ee7b7;
+  }
+  .profile-pill-id {
+    background: rgba(27, 216, 223, 0.2);
+    border: 1px solid rgba(27, 216, 223, 0.4);
+    color: #a5f3fc;
+  }
+  .profile-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn-hero-action {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-hero-edit {
+    background: #ffffff;
+    color: #0a1936;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  .btn-hero-edit:hover {
+    background: #f8fafc;
+    transform: translateY(-1px);
+  }
+  .btn-hero-badge {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+  }
+  .btn-hero-badge:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  /* Two Column Profile Grid */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 2fr 1.25fr;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .profile-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Modern Content Cards */
+  .profile-card {
+    background: #ffffff;
+    border: 1px solid var(--card-border, #e2e8f0);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
+  }
+  .profile-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .profile-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 750;
+    color: #0f172a;
+    margin: 0;
+  }
+  .profile-icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .profile-icon-box.blue { background: #eff6ff; color: #1768ff; }
+  .profile-icon-box.purple { background: #f5f3ff; color: #7c3aed; }
+  .profile-icon-box.green { background: #ecfdf5; color: #10b981; }
+  .profile-icon-box.amber { background: #fffbeb; color: #d97706; }
+  .profile-icon-box.indigo { background: #eef2ff; color: #4f46e5; }
+
+  /* Info Fields Grid */
+  .info-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 600px) {
+    .info-fields-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .info-field-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .info-field-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .info-field-value {
+    font-size: 13.5px;
+    font-weight: 650;
+    color: #0f172a;
+    word-break: break-word;
+  }
+  .info-field-value.muted {
+    color: #94a3b8;
+    font-weight: 500;
+    font-style: italic;
+  }
+
+  /* Form Styling */
+  .form-section-title {
+    font-size: 14px;
+    font-weight: 750;
+    color: #0f172a;
+    margin: 0 0 14px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .edit-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  @media (max-width: 600px) {
+    .edit-form-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-group label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    color: #0f172a;
+    background: #ffffff;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #1768ff;
+    box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.12);
+  }
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+  }
+  .btn-save-profile {
+    background: #1768ff;
+    color: #ffffff;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 3px 10px rgba(23, 104, 255, 0.25);
+  }
+  .btn-cancel-edit {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+  }
+</style>
+
+<div class="profile-container">
+
+  <!-- ========================================== -->
+  <!-- 1. TOP PROFILE HERO BANNER -->
+  <!-- ========================================== -->
+  <div class="profile-hero">
+    <div class="profile-hero-inner">
+      <div class="profile-hero-left">
+        <div class="profile-avatar-large">
+          {{ profile.user.first_name|default:profile.user.username|make_list|first|upper }}
+        </div>
+        <div>
+          <h2 class="profile-hero-name">{{ profile.user.get_full_name|default:profile.user.username }}</h2>
+          <div class="profile-hero-meta">
+            <span><i data-feather="mail" style="width: 14px; height: 14px;"></i> {{ profile.user.email }}</span>
+            {% if profile.mobile %}
+              <span><i data-feather="phone" style="width: 14px; height: 14px;"></i> {{ profile.mobile }}</span>
+            {% endif %}
+            {% if profile.city or profile.country_of_residence %}
+              <span><i data-feather="map-pin" style="width: 14px; height: 14px;"></i> {{ profile.city|default:"" }}{% if profile.city and profile.country_of_residence %}, {% endif %}{{ profile.country_of_residence|default:"" }}</span>
+            {% endif %}
+          </div>
+          <div class="profile-hero-pills">
+            <span class="profile-pill profile-pill-badge"><i data-feather="user-check" style="width: 12px; height: 12px;"></i> Attendee</span>
+            <span class="profile-pill profile-pill-verified"><i data-feather="check-circle" style="width: 12px; height: 12px;"></i> Verified Student</span>
+            <span class="profile-pill profile-pill-id"><i data-feather="tag" style="width: 12px; height: 12px;"></i> Pass: KNOVA-STU-{{ profile.user.id|stringformat:"03d" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-hero-actions">
+        <button type="button" class="btn-hero-action btn-hero-edit" id="btnToggleEdit" onclick="toggleEditMode()">
+          <i data-feather="edit-2" style="width: 14px; height: 14px;"></i> <span id="btnEditText">{% if edit_mode %}View Profile{% else %}Edit Profile{% endif %}</span>
+        </button>
+
+        <a href="{% url 'dashboard_index' %}" class="btn-hero-action btn-hero-badge">
+          <i data-feather="compass" style="width: 14px; height: 14px;"></i> My Expo Hub
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages Feedback -->
+  {% if messages %}
+    <div style="margin-bottom: 16px;">
+      {% for msg in messages %}
+        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+          <i data-feather="check-circle" style="width: 16px; height: 16px; color: #10b981;"></i> {{ msg }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- ========================================== -->
+  <!-- 2. PROFILE VIEW MODE (DEFAULT CLEAN DISPLAY) -->
+  <!-- ========================================== -->
+  <div id="profileViewSection" {% if edit_mode %}style="display: none;"{% endif %}>
+    <div class="profile-grid">
+      
+      <!-- LEFT MAIN COLUMN -->
+      <div>
+        
+        <!-- Personal & Contact Information -->
+        <div class="profile-card">
+          <div class="profile-card-header">
+            <h3 class="profile-card-title">
+              <span class="profile-icon-box blue"><i data-feather="user" style="width: 16px; height: 16px;"></i></span>
+              Personal &amp; Contact Details
+            </h3>
+            <button type="button" onclick="toggleEditMode()" style="background:none; border:none; color:#1768ff; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;">
+              <i data-feather="edit" style="width:12px; height:12px;"></i> Edit
+            </button>
+          </div>
+
+          <div class="info-fields-grid">
+            <div class="info-field-item">
+              <span class="info-field-label">Full Name</span>
+              <span class="info-field-value">{{ profile.user.get_full_name|default:profile.user.username }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Email Address</span>
+              <span class="info-field-value">{{ profile.user.email }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Mobile / WhatsApp</span>
+              <span class="info-field-value">{{ profile.mobile|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Gender</span>
+              <span class="info-field-value">{{ profile.gender|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Country of Residence</span>
+              <span class="info-field-value">{{ profile.country_of_residence|title|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">City</span>
+              <span class="info-field-value">{{ profile.city|title|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item" style="grid-column: span 2;">
+              <span class="info-field-label">Address</span>
+              <span class="info-field-value">{{ profile.address|default:"Not specified" }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic & Education Details -->
+        <div class="profile-card">
+          <div class="profile-card-header">
+            <h3 class="profile-card-title">
+              <span class="profile-icon-box purple"><i data-feather="book-open" style="width: 16px; height: 16px;"></i></span>
+              Education &amp; Academic Background
+            </h3>
+            <button type="button" onclick="toggleEditMode()" style="background:none; border:none; color:#1768ff; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;">
+              <i data-feather="edit" style="width:12px; height:12px;"></i> Edit
+            </button>
+          </div>
+
+          <div class="info-fields-grid">
+            <div class="info-field-item">
+              <span class="info-field-label">Current / Last Institution</span>
+              <span class="info-field-value">{{ profile.school_college|title|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Current Education Level</span>
+              <span class="info-field-value">{{ profile.current_education|title|default:"Undergraduate" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Graduation Year / Class</span>
+              <span class="info-field-value">{{ profile.class_year|default:"2027" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Academic Grades / GPA</span>
+              <span class="info-field-value">{{ profile.grades|default:"3.8 GPA" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">English Proficiency Test</span>
+              <span class="info-field-value">{{ profile.english_proficiency|default:"IELTS" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Target Degree Program</span>
+              <span class="info-field-value">{{ profile.preferred_degree|default:"Undergraduate (UG)" }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Work Experience & Projects -->
+        <div class="profile-card">
+          <div class="profile-card-header">
+            <h3 class="profile-card-title">
+              <span class="profile-icon-box amber"><i data-feather="briefcase" style="width: 16px; height: 16px;"></i></span>
+              Work Experience &amp; Academic Projects
+            </h3>
+          </div>
+          <div>
+            {% if profile.work_experience %}
+              <p style="margin:0; font-size:13px; color:#334155; line-height:1.5;">{{ profile.work_experience }}</p>
+            {% else %}
+              <p style="margin:0; font-size:13px; color:#94a3b8; font-style:italic;">No work experience or internships added yet. Click Edit Profile to add project details.</p>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDEBAR COLUMN -->
+      <div>
+
+        <!-- Connected Parent / Guardian -->
+        <div class="profile-card" style="border-left: 4px solid #10b981;">
+          <div class="profile-card-header">
+            <h3 class="profile-card-title">
+              <span class="profile-icon-box green"><i data-feather="users" style="width: 16px; height: 16px;"></i></span>
+              Parent &amp; Guardian Connection
+            </h3>
+          </div>
+          <div>
+            {% if profile.parents.exists %}
+              {% for parent in profile.parents.all %}
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; margin-bottom:8px; display:flex; align-items:center; gap:12px;">
+                  <div style="width:38px; height:38px; border-radius:50%; background:#ecfdf5; color:#10b981; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px; flex-shrink:0;">
+                    {{ parent.user.first_name|default:"P"|make_list|first|upper }}
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:13px; font-weight:700; color:#0f172a;">{{ parent.user.get_full_name|default:"Connected Parent" }}</div>
+                    <div style="font-size:11.5px; color:#64748b;">{{ parent.user.email }}</div>
+                  </div>
+                  <span style="background:#ecfdf5; color:#059669; font-size:10px; font-weight:700; padding:2px 7px; border-radius:6px;">Linked</span>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div style="text-align:center; padding:16px 12px; background:#f8fafc; border-radius:10px;">
+                <i data-feather="user-plus" style="width:24px; height:24px; color:#94a3b8; margin-bottom:6px;"></i>
+                <div style="font-size:13px; font-weight:600; color:#475569;">No Guardian Connected Yet</div>
+                <div style="font-size:11.5px; color:#94a3b8; margin-top:2px;">Parents can link via guardian invite to synchronize itinerary.</div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Expo & Study Preferences -->
+        <div class="profile-card" style="border-left: 4px solid #1768ff;">
+          <div class="profile-card-header">
+            <h3 class="profile-card-title">
+              <span class="profile-icon-box blue"><i data-feather="target" style="width: 16px; height: 16px;"></i></span>
+              Study Abroad Preferences
+            </h3>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:12px; color:#64748b; font-weight:600;">Preferred Countries</span>
+              <span style="font-size:12.5px; font-weight:700; color:#0f172a;">{{ profile.preferred_country|default:"USA, UK" }}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:12px; color:#64748b; font-weight:600;">Preferred Program</span>
+              <span style="font-size:12.5px; font-weight:700; color:#0f172a;">{{ profile.preferred_program|default:"Computer Science" }}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:12px; color:#64748b; font-weight:600;">Target Degree</span>
+              <span style="font-size:12.5px; font-weight:700; color:#0f172a;">{{ profile.preferred_degree|default:"Undergraduate" }}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:12px; color:#64748b; font-weight:600;">Annual Budget Range</span>
+              <span style="font-size:12.5px; font-weight:700; color:#0f172a;">{{ profile.budget_range|default:"Medium ($10k-$30k)" }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Platform Shortcuts -->
+        <div class="profile-card">
+          <div class="profile-card-header">
+            <h3 class="profile-card-title">
+              <span class="profile-icon-box indigo"><i data-feather="grid" style="width: 16px; height: 16px;"></i></span>
+              Quick Shortcuts
+            </h3>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <a href="{% url 'dashboard_matches' %}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:8px; background:#f8fafc; color:#0f172a; text-decoration:none; font-size:12.5px; font-weight:650; transition:background 0.15s;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='#f8fafc'">
+              <span style="display:flex; align-items:center; gap:8px;"><i data-feather="zap" style="width:14px; height:14px; color:#1768ff;"></i> AI University Matches</span>
+              <i data-feather="chevron-right" style="width:14px; height:14px; color:#94a3b8;"></i>
+            </a>
+            <a href="{% url 'dashboard_scholarships' %}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:8px; background:#f8fafc; color:#0f172a; text-decoration:none; font-size:12.5px; font-weight:650; transition:background 0.15s;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='#f8fafc'">
+              <span style="display:flex; align-items:center; gap:8px;"><i data-feather="award" style="width:14px; height:14px; color:#10b981;"></i> Scholarships Hub</span>
+              <i data-feather="chevron-right" style="width:14px; height:14px; color:#94a3b8;"></i>
+            </a>
+            <a href="{% url 'knova_challenge' %}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:8px; background:#f8fafc; color:#0f172a; text-decoration:none; font-size:12.5px; font-weight:650; transition:background 0.15s;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='#f8fafc'">
+              <span style="display:flex; align-items:center; gap:8px;"><i data-feather="target" style="width:14px; height:14px; color:#f59e0b;"></i> KNOVA Challenge</span>
+              <i data-feather="chevron-right" style="width:14px; height:14px; color:#94a3b8;"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 3. PROFILE EDIT MODE (EXPANDED EDIT FORM) -->
+  <!-- ========================================== -->
+  <div id="profileEditSection" {% if not edit_mode %}style="display: none;"{% endif %}>
+    <div class="profile-card" style="padding: 24px 28px;">
+      <div class="profile-card-header">
+        <h3 class="profile-card-title">
+          <span class="profile-icon-box blue"><i data-feather="edit-3" style="width: 16px; height: 16px;"></i></span>
+          Edit Student Profile &amp; Preferences
+        </h3>
+        <button type="button" onclick="toggleEditMode()" class="btn-cancel-edit" style="padding: 6px 12px; font-size: 12px;">
+          <i data-feather="x" style="width: 12px; height: 12px;"></i> Close
+        </button>
+      </div>
+
+      <form method="POST" action="{% url 'dashboard_student_profile' %}">
+        {% csrf_token %}
+
+        <!-- Contact Section -->
+        <div class="form-section-title"><i data-feather="user" style="width:14px; height:14px; color:#1768ff;"></i> Personal &amp; Contact Details</div>
+        <div class="edit-form-grid">
+          <div class="form-group">
+            <label>Mobile / WhatsApp Number *</label>
+            <input type="text" name="mobile" value="{{ profile.mobile|default:'' }}" required placeholder="e.g. +971 50 123 4567">
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select name="gender">
+              <option value="">Select Gender</option>
+              <option value="Male" {% if profile.gender == 'Male' %}selected{% endif %}>Male</option>
+              <option value="Female" {% if profile.gender == 'Female' %}selected{% endif %}>Female</option>
+              <option value="Other" {% if profile.gender == 'Other' %}selected{% endif %}>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" name="city" value="{{ profile.city|default:'' }}" placeholder="e.g. Dubai, London, Kozhikode">
+          </div>
+          <div class="form-group">
+            <label>Country of Residence</label>
+            <input type="text" name="country_of_residence" value="{{ profile.country_of_residence|default:'' }}" placeholder="e.g. UAE, India, UK">
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label>Residential Address</label>
+            <input type="text" name="address" value="{{ profile.address|default:'' }}" placeholder="Street address or community">
+          </div>
+        </div>
+
+        <!-- Academic Section -->
+        <div class="form-section-title" style="margin-top: 24px;"><i data-feather="book-open" style="width:14px; height:14px; color:#7c3aed;"></i> Academic Background</div>
+        <div class="edit-form-grid">
+          <div class="form-group">
+            <label>Current / Last School or University</label>
+            <input type="text" name="school_college" value="{{ profile.school_college|default:'' }}" placeholder="Institution name">
+          </div>
+          <div class="form-group">
+            <label>Current Education Level</label>
+            <input type="text" name="current_education" value="{{ profile.current_education|default:'' }}" placeholder="e.g. High School, Undergraduate">
+          </div>
+          <div class="form-group">
+            <label>Expected Graduation Year / Class</label>
+            <input type="text" name="class_year" value="{{ profile.class_year|default:'' }}" placeholder="e.g. 2027">
+          </div>
+          <div class="form-group">
+            <label>Grades / GPA</label>
+            <input type="text" name="grades" value="{{ profile.grades|default:'' }}" placeholder="e.g. 3.8 GPA, 90%">
+          </div>
+          <div class="form-group">
+            <label>English Proficiency</label>
+            <select name="english_proficiency">
+              <option value="">Select Test Status</option>
+              <option value="IELTS" {% if profile.english_proficiency == 'IELTS' %}selected{% endif %}>IELTS</option>
+              <option value="TOEFL" {% if profile.english_proficiency == 'TOEFL' %}selected{% endif %}>TOEFL</option>
+              <option value="Duolingo" {% if profile.english_proficiency == 'Duolingo' %}selected{% endif %}>Duolingo</option>
+              <option value="None" {% if profile.english_proficiency == 'None' %}selected{% endif %}>Not taken yet</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Target Degree Program</label>
+            <select name="preferred_degree">
+              <option value="">Select Target Degree</option>
+              <option value="UG" {% if profile.preferred_degree == 'UG' %}selected{% endif %}>Undergraduate (Bachelor)</option>
+              <option value="PG" {% if profile.preferred_degree == 'PG' %}selected{% endif %}>Postgraduate (Master)</option>
+              <option value="PHD" {% if profile.preferred_degree == 'PHD' %}selected{% endif %}>PhD / Doctorate</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label>Work Experience &amp; Projects</label>
+            <textarea name="work_experience" rows="3" placeholder="Briefly describe internships, projects, or achievements...">{{ profile.work_experience|default:'' }}</textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel-edit" onclick="toggleEditMode()">Cancel</button>
+          <button type="submit" class="btn-save-profile">
+            <i data-feather="check" style="width: 14px; height: 14px;"></i> Save Profile Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleEditMode() {
+  const viewSection = document.getElementById('profileViewSection');
+  const editSection = document.getElementById('profileEditSection');
+  const btnText = document.getElementById('btnEditText');
+
+  if (viewSection.style.display === 'none') {
+    viewSection.style.display = 'block';
+    editSection.style.display = 'none';
+    if (btnText) btnText.innerText = 'Edit Profile';
+  } else {
+    viewSection.style.display = 'none';
+    editSection.style.display = 'block';
+    if (btnText) btnText.innerText = 'View Profile';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('edit') === '1') {
+    toggleEditMode();
+  }
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
+});
+</script>
+{% endblock %}

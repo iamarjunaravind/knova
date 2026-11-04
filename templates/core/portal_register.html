@@ -1,0 +1,550 @@
+{% extends 'core/base_public.html' %}
+{% load static %}
+
+{% block body_class %}portal-page{% endblock %}
+
+{% block content %}
+<style>
+  footer#contact {
+    display: none !important;
+  }
+  body.portal-page {
+    background: #ffffff !important;
+  }
+  .portal-reg-wrap {
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px 20px 24px;
+    box-sizing: border-box;
+    background: #ffffff;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Decorative Background Vector Elements */
+  .bg-deco-airplane {
+    position: absolute;
+    top: clamp(80px, 11vh, 120px);
+    right: clamp(10px, 3vw, 60px);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.85;
+  }
+  .bg-deco-cap {
+    position: absolute;
+    bottom: clamp(20px, 5vh, 60px);
+    right: clamp(20px, 4vw, 80px);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.45;
+  }
+
+  .portal-reg-container {
+    max-width: 918px;
+    width: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 432px;
+    gap: 0;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Left Showcase Column */
+  .reg-showcase-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    padding-right: 28px;
+    box-sizing: border-box;
+  }
+  .reg-showcase-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .reg-showcase-kicker .kicker-line {
+    width: 38px;
+    height: 2px;
+    background: #e2e8f0;
+    border-radius: 2px;
+  }
+  .reg-showcase-title {
+    font-size: clamp(28px, 3.2vw, 40px);
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.16;
+    letter-spacing: -0.8px;
+    margin: 0 0 10px 0;
+  }
+  .reg-showcase-title .reg-highlight {
+    color: #0f172a;
+    background: linear-gradient(180deg, transparent 65%, #e2e8f0 65%);
+  }
+  .reg-showcase-sub {
+    font-size: clamp(12.5px, 1.4vh, 13.5px);
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0 0 20px 0;
+    max-width: 432px;
+  }
+
+  /* Feature Value Rows */
+  .reg-feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .reg-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .feature-icon-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: transform 0.25s;
+    background: #f1f5f9;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+  }
+  .feature-icon-circle.green {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+  }
+  .feature-icon-circle.purple {
+    background: #f5f3ff;
+    color: #7c3aed;
+    border: 1px solid #ddd6fe;
+  }
+  .reg-feature-item:hover .feature-icon-circle {
+    transform: scale(1.08);
+  }
+  .feature-text h4 {
+    margin: 0 0 2px 0;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.25;
+  }
+  .feature-text p {
+    margin: 0;
+    font-size: 11.5px;
+    color: #64748b;
+    line-height: 1.35;
+  }
+
+  /* Cityscape Graphic at Bottom */
+  .reg-cityscape-banner {
+    width: 100%;
+    max-width: 460px;
+    height: 110px;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    border: 1px solid #e2e8f0;
+  }
+  .reg-cityscape-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 36%;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .reg-cityscape-banner:hover img {
+    transform: scale(1.03);
+  }
+
+  /* Right Card - Crisp White Theme */
+  .portal-reg-card {
+    background: #ffffff;
+    padding: clamp(20px, 2.6vh, 28px) clamp(20px, 2.6vw, 32px);
+    border-radius: 24px;
+    box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
+    border: 1px solid #e2e8f0;
+    width: 100%;
+    max-width: 480px;
+    margin: 0;
+    box-sizing: border-box;
+    position: relative;
+  }
+  .portal-reg-card h2 {
+    text-align: center;
+    margin: 0 0 4px 0;
+    color: #0f172a;
+    font-weight: 850;
+    font-size: clamp(20px, 2.4vh, 23px);
+    letter-spacing: -0.4px;
+  }
+  .portal-reg-card p.subhead {
+    text-align: center;
+    margin: 0 0 16px 0;
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.4;
+  }
+  .role-pill-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .role-pill-label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 6px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    background: #f8fafc;
+    color: #334155;
+    cursor: pointer;
+    font-size: 11.5px;
+    font-weight: 700;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    margin: 0;
+    user-select: none;
+  }
+  .role-pill-label i {
+    font-size: 16px;
+    color: #64748b;
+    transition: color 0.2s ease;
+  }
+  .role-pill-label input[type="radio"] {
+    display: none;
+  }
+  .role-pill-label.active {
+    background: #0f172a;
+    border-color: #0f172a;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+  }
+  .role-pill-label.active i {
+    color: #ffffff;
+  }
+  .reg-input-group {
+    margin-bottom: 11px;
+  }
+  .reg-input-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: #1e293b;
+  }
+  .input-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .input-icon-wrap .input-icon {
+    position: absolute;
+    left: 12px;
+    color: #64748b;
+    font-size: 16px;
+    pointer-events: none;
+    transition: color 0.2s;
+  }
+  .input-icon-wrap input, .input-icon-wrap select {
+    width: 100%;
+    padding: 9.5px 12px 9.5px 38px;
+    border: 1.2px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 13px;
+    box-sizing: border-box;
+    background: #ffffff;
+    transition: all 0.2s;
+    color: #0f172a;
+    font-family: inherit;
+  }
+  .input-icon-wrap input:focus, .input-icon-wrap select:focus {
+    outline: none;
+    border-color: #0f172a;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+  }
+  .input-icon-wrap:focus-within .input-icon {
+    color: #0f172a;
+  }
+  .toggle-pwd-btn {
+    position: absolute;
+    right: 12px;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s;
+  }
+  .toggle-pwd-btn:hover {
+    color: #0f172a;
+  }
+  .btn-submit-reg {
+    width: 100%;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 750;
+    font-size: 13.5px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+    transition: all 0.2s;
+    margin-top: 5px;
+  }
+  .btn-submit-reg:hover {
+    background: #000000;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+  }
+
+  @media (max-width: 991px) {
+    .portal-reg-wrap {
+      min-height: calc(100vh - 65px);
+      padding: 16px 16px 30px 16px;
+      align-items: center;
+    }
+    .portal-reg-container {
+      grid-template-columns: 1fr;
+      gap: 0;
+      max-width: 440px;
+    }
+    .reg-showcase-col {
+      display: none !important;
+    }
+    .bg-deco-airplane,
+    .bg-deco-cap {
+      display: none !important;
+    }
+    .portal-reg-card {
+      margin: 0 auto;
+      padding: 24px 18px;
+      border-radius: 20px;
+      max-width: 100%;
+    }
+    .reg-cityscape-banner {
+      display: none;
+    }
+  }
+</style>
+
+<div class="portal-reg-wrap">
+    <!-- Decorative Airplane Flight Arc SVG -->
+    <svg class="bg-deco-airplane" width="230" height="130" viewBox="0 0 230 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 10 115 C 65 125, 135 65, 205 22" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="6 6" fill="none"/>
+      <g transform="translate(202, 10) rotate(-35)">
+        <path d="M12 2L2 22l10-3 10 3L12 2z" fill="#0f172a"/>
+      </g>
+    </svg>
+
+    <!-- Faint Decorative Graduation Cap SVG -->
+    <svg class="bg-deco-cap" width="160" height="120" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M60 15L15 35L60 55L105 35L60 15Z" stroke="#cbd5e1" stroke-width="1.8" fill="rgba(241, 245, 249, 0.4)"/>
+      <path d="M35 44V65C35 72 46 78 60 78C74 78 85 72 85 65V44" stroke="#cbd5e1" stroke-width="1.8"/>
+      <path d="M105 35V65" stroke="#cbd5e1" stroke-width="1.8"/>
+      <circle cx="105" cy="67" r="3" fill="#cbd5e1"/>
+    </svg>
+
+    <div class="portal-reg-container">
+        <!-- Left Showcase Column -->
+        <div class="reg-showcase-col">
+            <div class="reg-showcase-kicker">
+                <span>KNOVA EDUCATION EXPO 2027</span>
+                <span class="kicker-line"></span>
+            </div>
+            <h1 class="reg-showcase-title">
+                A brighter future<br>
+                <span class="reg-highlight">starts here</span>
+            </h1>
+            <p class="reg-showcase-sub">
+                Explore top universities, discover scholarship opportunities, and plan your global education journey — all in one place.
+            </p>
+
+            <div class="reg-feature-list">
+                <div class="reg-feature-item">
+                    <div class="feature-icon-circle">
+                        <i class="ti ti-school"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Discover Top Universities</h4>
+                        <p>Meet leading global universities across multiple destinations.</p>
+                    </div>
+                </div>
+
+                <div class="reg-feature-item">
+                    <div class="feature-icon-circle green">
+                        <i class="ti ti-gift"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Get Scholarship Updates</h4>
+                        <p>Find exclusive scholarship options and financial guidance.</p>
+                    </div>
+                </div>
+
+                <div class="reg-feature-item">
+                    <div class="feature-icon-circle purple">
+                        <i class="ti ti-chart-arrows"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Plan Your Future</h4>
+                        <p>Compare programs, connect with experts, and make informed decisions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reg-cityscape-banner">
+                <img src="{% static 'assets/reg_hero_cityscape.jpg' %}" loading="lazy" decoding="async" alt="Student overlooking global education destination">
+            </div>
+        </div>
+
+        <!-- Right Registration Card -->
+        <div class="portal-reg-card">
+            <h2>Create an Account</h2>
+            <p class="subhead">Join KNOVA to explore universities, scholarships &amp; connect</p>
+            
+            {% if error %}
+                <div style="background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; padding: 9px 12px; border-radius: 8px; margin-bottom: 13px; text-align: center; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="ti ti-alert-circle"></i> {{ error }}
+                </div>
+            {% endif %}
+            
+            <form method="POST">
+                {% csrf_token %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+                
+                <div style="margin-bottom: 12px;">
+                    <label style="display: block; font-weight: 700; margin-bottom: 5px; font-size: 12px; color: #1e293b;">I am registering as *</label>
+                    <div class="role-pill-group">
+                        <label class="role-pill-label {% if request.GET.role == 'student' or not request.GET.role %}active{% endif %}" id="pillStudent">
+                            <input type="radio" name="role" value="student" required {% if request.GET.role == 'student' or not request.GET.role %}checked{% endif %} onchange="selectPortalRole('student')">
+                            <i class="ti ti-school"></i>
+                            <span>Student</span>
+                        </label>
+                        <label class="role-pill-label {% if request.GET.role == 'parent' %}active{% endif %}" id="pillParent">
+                            <input type="radio" name="role" value="parent" required {% if request.GET.role == 'parent' %}checked{% endif %} onchange="selectPortalRole('parent')">
+                            <i class="ti ti-users"></i>
+                            <span>Parent</span>
+                        </label>
+                        <label class="role-pill-label {% if request.GET.role == 'exhibitor' %}active{% endif %}" id="pillExhibitor">
+                            <input type="radio" name="role" value="exhibitor" required {% if request.GET.role == 'exhibitor' %}checked{% endif %} onchange="selectPortalRole('exhibitor')">
+                            <i class="ti ti-building"></i>
+                            <span>Exhibitor</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="companyFieldWrap" class="reg-input-group" style="display: {% if request.GET.role == 'exhibitor' %}block{% else %}none{% endif %};">
+                    <label>Institution / Company Name *</label>
+                    <div class="input-icon-wrap">
+                        <i class="ti ti-building input-icon"></i>
+                        <input type="text" name="company_name" id="portalCompanyName" placeholder="e.g. University / Company Name">
+                    </div>
+                </div>
+
+                <div class="reg-input-group">
+                    <label>Username or Email *</label>
+                    <div class="input-icon-wrap">
+                        <i class="ti ti-user input-icon"></i>
+                        <input type="text" name="username" required autocomplete="username" placeholder="Choose a username or email">
+                    </div>
+                </div>
+
+                <div class="reg-input-group" style="margin-bottom: 14px;">
+                    <label>Password (Min 8 Characters) *</label>
+                    <div class="input-icon-wrap">
+                        <i class="ti ti-lock input-icon"></i>
+                        <input type="password" id="genericPassword" name="password" required minlength="8" autocomplete="new-password" placeholder="Create your secure password">
+                        <i class="ti ti-eye toggle-pwd-btn" id="toggleGenericPwd" onclick="toggleGenericPassword()"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit-reg">
+                    Create Account &rarr;
+                </button>
+            </form>
+
+            <p style="text-align: center; margin-top: 14px; margin-bottom: 0; color: #64748b; font-size: 12px;">
+                Already have an account? <a href="{% url 'portal_login' %}{% if next %}?next={{ next|urlencode }}{% endif %}" style="color: #0f172a; font-weight: 800; text-decoration: underline;">Login here</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+  function selectPortalRole(role) {
+    document.querySelectorAll('.role-pill-label').forEach(el => el.classList.remove('active'));
+    const companyWrap = document.getElementById('companyFieldWrap');
+    const companyInput = document.getElementById('portalCompanyName');
+
+    if (role === 'student') {
+      document.getElementById('pillStudent').classList.add('active');
+      companyWrap.style.display = 'none';
+      if (companyInput) companyInput.required = false;
+    } else if (role === 'parent') {
+      document.getElementById('pillParent').classList.add('active');
+      companyWrap.style.display = 'none';
+      if (companyInput) companyInput.required = false;
+    } else if (role === 'exhibitor') {
+      document.getElementById('pillExhibitor').classList.add('active');
+      companyWrap.style.display = 'block';
+      if (companyInput) companyInput.required = true;
+    }
+  }
+
+  function toggleGenericPassword() {
+    const pwd = document.getElementById('genericPassword');
+    const icon = document.getElementById('toggleGenericPwd');
+    if (pwd.type === 'password') {
+      pwd.type = 'text';
+      icon.classList.remove('ti-eye');
+      icon.classList.add('ti-eye-off');
+    } else {
+      pwd.type = 'password';
+      icon.classList.remove('ti-eye-off');
+      icon.classList.add('ti-eye');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.body.classList.remove('theme-dark', 'dark-mode');
+    try {
+      localStorage.removeItem('portal_theme');
+      localStorage.removeItem('register_theme');
+      localStorage.removeItem('theme');
+    } catch (e) {}
+
+    const params = new URLSearchParams(window.location.search);
+    const roleParam = (params.get('role') || '').toLowerCase();
+    if (roleParam) {
+      selectPortalRole(roleParam);
+      const radio = document.querySelector('input[name="role"][value="' + roleParam + '"]');
+      if (radio) radio.checked = true;
+    }
+
+    if (typeof updateNavbarMask === 'function') {
+      updateNavbarMask();
+    }
+  });
+</script>
+{% endblock %}

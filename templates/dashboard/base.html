@@ -1,0 +1,2168 @@
+{% load static rbac_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Dashboard{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+<script src="https://unpkg.com/feather-icons"></script>
+<script>
+  // Bulletproof Feather Icons Initializer
+  function runFeather() {
+    if (typeof feather !== 'undefined') {
+      feather.replace();
+    }
+  }
+  document.addEventListener('DOMContentLoaded', runFeather);
+  window.addEventListener('load', runFeather);
+</script>
+
+<style>
+  /* Universal Modern Ultra-Clean Scrollbar System */
+  *, *::before, *::after {
+    scrollbar-width: thin !important;
+    scrollbar-color: #cbd5e1 transparent !important;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #cbd5e1 !important;
+    border-radius: 9999px !important;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8 !important;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent !important;
+  }
+
+  :root {
+    --bg-light: #f6f8fb;
+    --primary: #1768ff;
+    --primary-hover: #0d54d9;
+    --primary-light: #eff6ff;
+    --accent: #6366f1;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --card-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 8px 24px -4px rgba(15, 23, 42, 0.04);
+    --sidebar-bg: #ffffff;
+    --sidebar-hover: #f1f5f9;
+    --sidebar-text: #475569;
+    --sidebar-text-hover: #0f172a;
+    --sidebar-text-active: #ffffff;
+    --sidebar-border: #e2e8f0;
+  }
+
+  *, *::before, *::after {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+  }
+
+  input, textarea, select, [contenteditable="true"], [contenteditable="true"] * {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+  }
+
+  html {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  /* =========================================================
+     DESKTOP SOFTWARE UI (Single-Screen, No Window Scrolling)
+     Applies to ALL user dashboards on desktop screens (>= 1025px)
+     ========================================================= */
+  @media (min-width: 1025px) {
+    html, body {
+      height: 100vh !important;
+      max-height: 100vh !important;
+      overflow: hidden !important;
+    }
+
+    .sidebar {
+      height: 100vh !important;
+      max-height: 100vh !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      position: relative !important;
+      top: 0 !important;
+      flex-shrink: 0 !important;
+      padding: 14px 12px !important;
+    }
+
+    .sidebar-logo {
+      margin-bottom: 12px !important;
+      padding: 4px 8px !important;
+    }
+
+    .nav-item {
+      padding: 7px 11px !important;
+      font-size: 13px !important;
+      border-radius: 8px !important;
+      gap: 9px !important;
+    }
+
+    .logout-btn {
+      margin-top: 10px !important;
+      padding: 7px 11px !important;
+      font-size: 12.5px !important;
+      border-radius: 8px !important;
+    }
+
+    .main-wrapper {
+      height: 100vh !important;
+      max-height: 100vh !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      flex: 1 !important;
+      min-width: 0 !important;
+    }
+
+    .topbar {
+      height: 50px !important;
+      min-height: 50px !important;
+      max-height: 50px !important;
+      padding: 0 22px !important;
+      position: relative !important;
+      flex-shrink: 0 !important;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+    }
+
+    .page-title {
+      font-size: 15px !important;
+    }
+
+    .page-crumb-parent {
+      font-size: 13px !important;
+      gap: 6px !important;
+    }
+
+    .topbar-search {
+      padding: 4px 12px !important;
+      max-width: 380px !important;
+    }
+
+    .topbar-search input {
+      font-size: 12.5px !important;
+    }
+
+    .main-content {
+      flex: 1 !important;
+      height: calc(100vh - 50px) !important;
+      max-height: calc(100vh - 50px) !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding: 14px 22px 18px 22px !important;
+      box-sizing: border-box !important;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 transparent;
+    }
+
+    .main-content::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .main-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .main-content::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+
+    .main-content::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Compact Software UI Density across ALL Dashboard Pages */
+    .glass-card {
+      padding: 14px 18px !important;
+      border-radius: 12px !important;
+      margin-bottom: 12px !important;
+    }
+
+    .stats-grid {
+      gap: 10px !important;
+      margin-bottom: 12px !important;
+    }
+
+    .stat-card {
+      padding: 10px 14px !important;
+      border-radius: 10px !important;
+    }
+
+    .stat-card div[style*="font-size:28px"],
+    .stat-card div[style*="font-size: 28px"],
+    .stat-card div[style*="font-size:26px"],
+    .stat-card div[style*="font-size: 26px"],
+    .stat-card div[style*="font-size:32px"],
+    .stat-card div[style*="font-size: 32px"] {
+      font-size: 20px !important;
+    }
+
+    .stat-card span[style*="font-size:12px"],
+    .stat-card span[style*="font-size: 12px"],
+    .stat-card span[style*="font-size:11.5px"],
+    .stat-card span[style*="font-size: 11.5px"] {
+      font-size: 10.5px !important;
+    }
+
+    .command-banner, .ch-hero, .myexpo-hero {
+      padding: 12px 18px !important;
+      border-radius: 12px !important;
+      margin-bottom: 10px !important;
+    }
+
+    .matches-header {
+      margin-bottom: 14px !important;
+    }
+
+    .matches-header h1 {
+      font-size: 20px !important;
+      margin: 0 0 4px 0 !important;
+    }
+
+    .search-panel {
+      padding: 14px 18px !important;
+      margin-bottom: 14px !important;
+      border-radius: 12px !important;
+    }
+
+    .search-field input, .search-field select {
+      padding: 7px 11px !important;
+      font-size: 13px !important;
+    }
+
+    .search-panel button[type="submit"] {
+      height: 36px !important;
+      padding: 8px 18px !important;
+      font-size: 13px !important;
+    }
+
+    .matches-grid {
+      gap: 14px !important;
+    }
+
+    .match-card {
+      padding: 14px 16px !important;
+      border-radius: 12px !important;
+    }
+
+  }
+
+  /* Sidebar - Modern Light Theme */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 14px;
+    z-index: 30;
+    border-right: 1px solid var(--sidebar-border);
+    box-shadow: 2px 0 16px rgba(15, 23, 42, 0.03);
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #e2e8f0 transparent;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    align-self: flex-start;
+    flex-shrink: 0;
+  }
+
+  .sidebar::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 9999px;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text-main);
+    text-decoration: none;
+    margin-bottom: 22px;
+    padding: 6px 10px;
+    border-radius: 12px;
+    transition: background 0.2s;
+  }
+
+  .sidebar-logo:hover {
+    background: #f8fafc;
+  }
+
+  .sidebar-logo img {
+    height: 30px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  .sidebar-logo span {
+    font-size: 14.5px;
+    font-weight: 850;
+    color: #0f172a;
+    letter-spacing: 0.6px;
+  }
+
+  .nav-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 9.5px 13px;
+    border-radius: 10px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    font-weight: 550;
+    font-size: 13.5px;
+    transition: background 0.15s ease, color 0.15s ease;
+    gap: 11px;
+    position: relative;
+    letter-spacing: -0.15px;
+  }
+
+  .nav-item:hover {
+    background: #f1f5f9;
+    color: var(--sidebar-text-hover);
+    transform: none;
+  }
+
+  .nav-item.active {
+    background: linear-gradient(135deg, #1768ff 0%, #2563eb 100%) !important;
+    color: #ffffff !important;
+    font-weight: 650 !important;
+    box-shadow: 0 4px 14px rgba(23, 104, 255, 0.32);
+  }
+
+  .nav-item.active:hover {
+    background: linear-gradient(135deg, #1768ff 0%, #2563eb 100%) !important;
+    color: #ffffff !important;
+    transform: none;
+  }
+
+  .nav-item svg, .nav-item i {
+    opacity: 0.8;
+    transition: opacity 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .nav-item:hover svg, .nav-item:hover i {
+    opacity: 1;
+  }
+
+  .nav-item.active svg, .nav-item.active i {
+    opacity: 1 !important;
+    color: #ffffff !important;
+  }
+
+  .logout-btn {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    color: #dc2626;
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13.5px;
+    transition: all 0.2s;
+  }
+
+  .logout-btn:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #b91c1c;
+    transform: none;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.15);
+  }
+
+  /* Main Content & Topbar */
+  .main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 100vh;
+    background: var(--bg-light);
+    overflow: visible;
+  }
+
+  .topbar {
+    height: 70px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+  }
+
+  .topbar-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .page-crumb-parent {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-weight: 550;
+    font-size: 14.5px;
+  }
+
+  .page-crumb-category {
+    color: var(--text-muted);
+  }
+
+  .page-title-main {
+    color: var(--text-main);
+    font-weight: 750;
+  }
+
+  .page-title {
+    font-size: 18px;
+    font-weight: 750;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.3px;
+  }
+
+  .page-title span {
+    color: var(--text-muted);
+    font-weight: 550;
+    font-size: 14.5px;
+  }
+
+  .topbar-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .topbar-search {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9999px;
+    padding: 7px 16px;
+    width: 100%;
+    max-width: 440px;
+    color: var(--text-muted);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    z-index: 1001;
+  }
+
+  .topbar-search:focus-within {
+    background: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.14);
+  }
+
+  .topbar-search input {
+    border: none;
+    background: transparent;
+    outline: none;
+    margin-left: 8px;
+    width: 100%;
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--text-main);
+  }
+
+  .topbar-search input::placeholder {
+    color: #94a3b8;
+  }
+
+  .topbar-search-clear {
+    background: transparent;
+    border: none;
+    padding: 2px 4px;
+    cursor: pointer;
+    color: #94a3b8;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .topbar-search-clear:hover {
+    color: #0f172a;
+    background: #e2e8f0;
+  }
+
+  /* Live Suggestions Dropdown */
+  .topbar-search-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16), 0 2px 6px rgba(15, 23, 42, 0.04);
+    z-index: 2100;
+    overflow: hidden;
+    animation: searchDropIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes searchDropIn {
+    from { opacity: 0; transform: translate(-50%, -6px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  .search-dropdown-scroll {
+    max-height: 380px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .search-dropdown-scroll::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .search-dropdown-scroll::-webkit-scrollbar-track {
+    background: #f8fafc;
+  }
+
+  .search-dropdown-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  .search-group-header {
+    padding: 7px 16px 4px 16px;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #64748b;
+    background: #f8fafc;
+    border-top: 1px solid #f1f5f9;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .search-group-header:first-child {
+    border-top: none;
+  }
+
+  .search-suggestion-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 16px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid #f8fafc;
+    transition: background 0.15s ease;
+  }
+
+  .search-suggestion-item:last-child {
+    border-bottom: none;
+  }
+
+  .search-suggestion-item:hover,
+  .search-suggestion-item.active {
+    background: #eff6ff;
+  }
+
+  .search-item-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .search-item-badge {
+    padding: 2.5px 7px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .badge-scholarship { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+  .badge-university { background: #eff6ff; color: #1768ff; border: 1px solid #bfdbfe; }
+  .badge-course { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
+  .badge-exhibitor { background: #fff7ed; color: #ea580c; border: 1px solid #fed7aa; }
+  .badge-event { background: #fdf4ff; color: #a21caf; border: 1px solid #f5d0fe; }
+  .search-item-info {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .search-item-title {
+    font-size: 13px;
+    font-weight: 650;
+    color: #0f172a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .search-item-title mark {
+    background: transparent;
+    color: #1768ff;
+    font-weight: 800;
+    padding: 0;
+  }
+
+  .search-item-sub {
+    font-size: 11px;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+  }
+
+  .search-dropdown-footer {
+    padding: 8px 16px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #64748b;
+  }
+
+  .search-dropdown-footer a {
+    color: #1768ff;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .search-dropdown-footer a:hover {
+    text-decoration: underline;
+  }
+
+  .search-spinner {
+    padding: 24px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 12.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .search-empty {
+    padding: 24px 16px;
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+  }
+
+  .topbar-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+  }
+
+  .notification-bell {
+    position: relative;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .notification-bell:hover {
+    color: var(--text-main);
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+  }
+
+  .notification-dot {
+    position: absolute;
+    top: 7px;
+    right: 8px;
+    width: 7px;
+    height: 7px;
+    background: #ef4444;
+    border-radius: 50%;
+    border: 1.5px solid #ffffff;
+  }
+
+  .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 5px 6px 5px 14px;
+    border-radius: 9999px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s;
+  }
+
+  .user-profile:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.25;
+  }
+
+  .user-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .user-role {
+    font-size: 10.5px;
+    color: var(--primary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1768ff 0%, #6366f1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: 750;
+    font-size: 13px;
+    box-shadow: 0 2px 6px rgba(23, 104, 255, 0.25);
+  }
+
+  .main-content {
+    padding: 32px;
+    box-sizing: border-box;
+  }
+
+  /* Modern Light Theme Utility Classes */
+  .glass-card {
+    background: #ffffff;
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .btn {
+    padding: 9px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #1768ff 0%, #2563eb 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(23, 104, 255, 0.25);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #0d54d9 0%, #1d4ed8 100%);
+    box-shadow: 0 6px 18px rgba(23, 104, 255, 0.35);
+    color: #fff;
+  }
+
+  /* Mobile Responsiveness */
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 12px;
+    color: var(--text-main);
+  }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+  }
+
+  /* Responsive & Device Compatibility Upgrades (All Screen Sizes) */
+  .sidebar-close-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: #64748b;
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .sidebar-close-btn:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+  }
+
+  .topbar-search-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  /* Universal Table Responsive Wrapper */
+  table {
+    max-width: 100%;
+  }
+
+  .table-responsive,
+  div:has(> table) {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    box-sizing: border-box !important;
+  }
+
+  div:has(> table)::-webkit-scrollbar,
+  .table-responsive::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  div:has(> table)::-webkit-scrollbar-thumb,
+  .table-responsive::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  /* =========================================================
+     UNIFIED DASHBOARD DESIGN SYSTEM (Consistent Font & Style)
+     Applies universally across all dashboard views & tables
+     ========================================================= */
+  /* Global typography lock */
+  .main-content,
+  .main-content *,
+  .glass-card,
+  .glass-card * {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  }
+
+  /* Universal Page Titles & Headings */
+  .glass-card h2,
+  .glass-card h3,
+  .main-content h2,
+  .main-content h3 {
+    font-size: 16px !important;
+    font-weight: 750 !important;
+    color: var(--text-main, #0f172a) !important;
+    letter-spacing: -0.3px !important;
+    line-height: 1.3 !important;
+  }
+
+  .glass-card h4,
+  .main-content h4 {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: var(--text-main, #0f172a) !important;
+  }
+
+  .glass-card p,
+  .main-content p {
+    font-size: 12.5px !important;
+    color: #64748b !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Universal Filter & Sort Toolbar */
+  .main-content form[method="GET"] {
+    background: #ffffff !important;
+    border: 1px solid var(--card-border, #e2e8f0) !important;
+    border-radius: 10px !important;
+    padding: 8px 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03) !important;
+  }
+
+  .main-content form[method="GET"] span {
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    color: #64748b !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  .main-content form[method="GET"] input[type="date"],
+  .main-content form[method="GET"] input[type="text"],
+  .main-content form[method="GET"] select {
+    height: 32px !important;
+    padding: 4px 10px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    background: #ffffff !important;
+    color: #1e293b !important;
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    transition: border-color 0.15s ease !important;
+  }
+
+  .main-content form[method="GET"] input:focus,
+  .main-content form[method="GET"] select:focus {
+    border-color: #1768ff !important;
+    box-shadow: 0 0 0 2px rgba(23, 104, 255, 0.1) !important;
+  }
+
+  .main-content form[method="GET"] button,
+  .main-content form[method="GET"] .btn {
+    height: 32px !important;
+    padding: 0 12px !important;
+    font-size: 12px !important;
+    font-weight: 650 !important;
+    border-radius: 6px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    cursor: pointer !important;
+    border: none !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .main-content form[method="GET"] button[type="submit"]:not([name="format"]) {
+    background: #1768ff !important;
+    color: #ffffff !important;
+  }
+
+  .main-content form[method="GET"] button[name="format"][value="excel"] {
+    background: #10b981 !important;
+    color: #ffffff !important;
+  }
+
+  .main-content form[method="GET"] button[name="format"][value="csv"] {
+    background: #2563eb !important;
+    color: #ffffff !important;
+  }
+
+  /* Universal '+ Add New ...' Action Buttons */
+  .main-content a[href*="_create"],
+  .main-content a.btn-primary:not(form *) {
+    height: 34px !important;
+    padding: 0 14px !important;
+    font-size: 12.5px !important;
+    font-weight: 650 !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    background: #1768ff !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    box-shadow: 0 2px 6px rgba(23, 104, 255, 0.25) !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .main-content a[href*="_create"]:hover,
+  .main-content a.btn-primary:not(form *):hover {
+    background: #0d54d9 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(23, 104, 255, 0.35) !important;
+  }
+
+  /* Universal Tables inside .glass-card across all pages */
+  .glass-card table {
+    width: 100% !important;
+    text-align: left !important;
+    border-collapse: collapse !important;
+    font-size: 13px !important;
+  }
+
+  .glass-card table thead tr {
+    background: #f8fafc !important;
+    border-bottom: 1px solid var(--card-border, #e2e8f0) !important;
+  }
+
+  .glass-card table th {
+    padding: 10px 14px !important;
+    color: #64748b !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    line-height: 1.2 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    white-space: nowrap !important;
+  }
+
+  .glass-card table tbody tr {
+    border-bottom: 1px solid #f1f5f9 !important;
+    transition: background 0.12s ease !important;
+  }
+
+  .glass-card table tbody tr:hover {
+    background: #f8fafc !important;
+  }
+
+  .glass-card table td {
+    padding: 11px 14px !important;
+    font-size: 12.5px !important;
+    line-height: 1.4 !important;
+    color: #334155 !important;
+    vertical-align: middle !important;
+  }
+
+  .glass-card table td:first-child,
+  .glass-card table td strong,
+  .glass-card table td .name,
+  .glass-card table td[style*="font-weight:600"],
+  .glass-card table td[style*="font-weight: 600"],
+  .glass-card table td[style*="font-weight:700"] {
+    font-size: 13px !important;
+    font-weight: 650 !important;
+    color: #0f172a !important;
+  }
+
+  .glass-card table td small,
+  .glass-card table td span[style*="font-size:12px"],
+  .glass-card table td span[style*="font-size: 12px"],
+  .glass-card table td span[style*="font-size:11px"],
+  .glass-card table td .text-muted {
+    font-size: 11.5px !important;
+    color: #64748b !important;
+  }
+
+  /* Table Action Buttons & Links (View, Edit, Delete, Revoke, Verify) */
+  .glass-card table td div[style*="display:flex"] a,
+  .glass-card table td div[style*="display:flex"] button,
+  .glass-card table td div[style*="display: flex"] a,
+  .glass-card table td div[style*="display: flex"] button,
+  .glass-card table td a[style*="padding:4px"],
+  .glass-card table td a[style*="padding: 4px"],
+  .glass-card table td a[style*="padding:6px"],
+  .glass-card table td a[style*="padding: 6px"],
+  .glass-card table td button[style*="padding:6px"],
+  .glass-card table td button[style*="padding: 6px"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 4px 10px !important;
+    font-size: 11.5px !important;
+    font-weight: 650 !important;
+    border-radius: 6px !important;
+    text-decoration: none !important;
+    line-height: 1.3 !important;
+    cursor: pointer !important;
+    border: none !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .glass-card table td a:hover,
+  .glass-card table td button:hover {
+    opacity: 0.85 !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* Table Status Badges */
+  .glass-card table td span[style*="border-radius:20px"],
+  .glass-card table td span[style*="border-radius: 20px"],
+  .glass-card table td span[style*="border-radius:6px"],
+  .glass-card table td span[style*="border-radius: 6px"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 3px 9px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    border-radius: 6px !important;
+    letter-spacing: 0.3px !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Tablets & Below (<= 1024px) */
+  @media (max-width: 1024px) {
+    html, body {
+      height: auto !important;
+      min-height: 100vh !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+    }
+
+    .main-wrapper {
+      height: auto !important;
+      min-height: 100vh !important;
+      overflow: visible !important;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: -320px;
+      width: 280px;
+      min-width: 280px;
+      top: 0;
+      bottom: 0;
+      transition: left 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 99999 !important;
+      box-shadow: 6px 0 30px rgba(15, 23, 42, 0.25);
+    }
+
+    .sidebar.open {
+      left: 0 !important;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      z-index: 99998 !important;
+    }
+
+    .sidebar-overlay.open {
+      display: block !important;
+    }
+
+    .sidebar-close-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hamburger {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      min-height: 38px;
+      padding: 0 !important;
+      margin: 0 4px 0 0 !important;
+      border-radius: 8px;
+      background: transparent !important;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      color: #0f172a !important;
+      cursor: pointer;
+      flex-shrink: 0;
+      pointer-events: auto !important;
+      touch-action: manipulation;
+      transition: background 0.15s ease;
+    }
+
+    .hamburger:hover,
+    .hamburger:active {
+      background: rgba(15, 23, 42, 0.06) !important;
+    }
+
+    .hamburger i {
+      font-size: 24px !important;
+      line-height: 1 !important;
+      color: #0f172a !important;
+      display: block !important;
+    }
+
+    .topbar {
+      padding: 0 16px;
+    }
+
+    .main-content {
+      padding: 16px 14px;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+      gap: 12px !important;
+    }
+
+    .stats-grid > div[style*="span 2"],
+    .stats-grid > .stat-card[style*="span 2"] {
+      grid-column: span 1 !important;
+    }
+
+    div[style*="grid-template-columns: 2fr 1fr"],
+    div[style*="grid-template-columns:2fr 1fr"],
+    div[style*="grid-template-columns: 1fr 2fr"],
+    div[style*="grid-template-columns:1fr 2fr"],
+    div[style*="grid-template-columns: 1fr 1fr"],
+    div[style*="grid-template-columns:1fr 1fr"],
+    div[style*="grid-template-columns: repeat(3, 1fr)"],
+    div[style*="grid-template-columns: repeat(4, 1fr)"],
+    div[style*="minmax(360px"] {
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+    }
+
+  }
+
+  /* Mobile Devices (<= 768px) */
+  @media (max-width: 768px) {
+    .topbar {
+      height: 58px;
+      padding: 0 12px;
+    }
+
+    .topbar-center:not(:has(.mobile-active)) {
+      display: none !important;
+      flex: 0 0 0 !important;
+      width: 0 !important;
+    }
+
+    .topbar-left {
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+    .topbar-search-toggle {
+      display: inline-flex;
+    }
+
+    .topbar-search {
+      display: none;
+    }
+
+    .topbar-search.mobile-active {
+      display: flex !important;
+      position: absolute !important;
+      top: 58px !important;
+      left: 10px !important;
+      right: 10px !important;
+      width: calc(100% - 20px) !important;
+      max-width: 100% !important;
+      background: #ffffff !important;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+      z-index: 100000 !important;
+    }
+
+    .user-info {
+      display: none;
+    }
+
+    .user-profile {
+      padding-left: 6px;
+      border-left: none;
+    }
+
+    .page-title {
+      font-size: 15px !important;
+      font-weight: 750 !important;
+      max-width: 100% !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    .page-crumb-parent {
+      display: none !important;
+    }
+
+    .page-title-main {
+      font-size: 15.5px !important;
+      font-weight: 750 !important;
+      color: #0f172a !important;
+      display: inline-block !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+
+    .topbar-right {
+      gap: 6px !important;
+      flex-shrink: 0 !important;
+    }
+
+    .topbar-search-toggle {
+      width: 36px !important;
+      height: 36px !important;
+      min-width: 36px !important;
+      min-height: 36px !important;
+      padding: 0 !important;
+      background: transparent !important;
+      border: none !important;
+      color: #475569 !important;
+      border-radius: 8px !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: background 0.15s ease;
+    }
+
+    .topbar-search-toggle:active {
+      background: rgba(15, 23, 42, 0.06) !important;
+    }
+
+    .notification-bell {
+      width: 36px !important;
+      height: 36px !important;
+      min-width: 36px !important;
+      min-height: 36px !important;
+      padding: 0 !important;
+      background: transparent !important;
+      border: none !important;
+      color: #475569 !important;
+      border-radius: 8px !important;
+      position: relative !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transition: background 0.15s ease;
+    }
+
+    .notification-bell:active {
+      background: rgba(15, 23, 42, 0.06) !important;
+    }
+
+    .notification-dot {
+      top: 6px !important;
+      right: 7px !important;
+    }
+
+    .avatar {
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 13px !important;
+    }
+
+    .main-content {
+      padding: 12px 10px;
+    }
+
+    input, select, textarea {
+      font-size: 16px !important; /* iOS zoom prevention */
+    }
+
+    .glass-card {
+      padding: 14px 12px !important;
+      border-radius: 14px !important;
+      margin-bottom: 14px !important;
+    }
+
+    /* Toolbar wrap for mobile */
+    .glass-card > div.toolbar-actions,
+    .command-banner div[style*="display:flex"][style*="justify-content:space-between"],
+    .glass-card > div[style*="display:flex"][style*="justify-content:space-between"]:has(h1, h2, h3):has(a.btn, button.btn) {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 10px !important;
+    }
+
+    /* Universal Mobile Grid & Column Normalizer for All Dashboard Pages */
+    .flow-stages-grid-3col,
+    .flow-stage-pair,
+    .matches-grid,
+    .details-grid,
+    .form-row,
+    div[style*="grid-template-columns: 1.55fr 1fr"],
+    div[style*="grid-template-columns:1.55fr 1fr"],
+    div[style*="grid-template-columns: 2fr 1fr"],
+    div[style*="grid-template-columns:2fr 1fr"],
+    div[style*="grid-template-columns: 1fr 2fr"],
+    div[style*="grid-template-columns:1fr 2fr"],
+    div[style*="grid-template-columns: 1fr 1fr"],
+    div[style*="grid-template-columns:1fr 1fr"],
+    div[style*="grid-template-columns: repeat(3,"],
+    div[style*="grid-template-columns:repeat(3,"],
+    div[style*="grid-template-columns: repeat(4,"],
+    div[style*="grid-template-columns:repeat(4,"],
+    div[style*="grid-template-columns: repeat(5,"],
+    div[style*="grid-template-columns:repeat(5,"],
+    div[style*="grid-template-columns: repeat(3, 1fr)"],
+    div[style*="grid-template-columns: repeat(4, 1fr)"],
+    div[style*="repeat(auto-fill, minmax(3"],
+    div[style*="repeat(auto-fit, minmax(2"],
+    div[style*="repeat(auto-fit, minmax(3"] {
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+
+  }
+
+  /* Compact Mobile / iPhone SE (<= 480px) */
+  @media (max-width: 480px) {
+    .topbar {
+      height: 54px;
+      padding: 0 8px;
+    }
+
+    .topbar-left {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .page-title {
+      font-size: 14px;
+      font-weight: 750;
+      max-width: 100% !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Breadcrumbs hidden via .page-crumb-parent */
+    .topbar-right {
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .main-content {
+      padding: 10px 8px;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 6px !important;
+    }
+
+    .stat-card {
+      padding: 10px 10px !important;
+    }
+
+    .stat-card div[style*="font-size:28px"],
+    .stat-card div[style*="font-size:32px"] {
+      font-size: 20px !important;
+    }
+
+    /* Only standard full-size action buttons get min-height 40px, never small inline action buttons */
+    .btn:not(.btn-sm):not([style*="padding:4px"]):not([style*="padding: 4px"]):not([style*="padding:5px"]):not([style*="padding: 5px"]),
+    button:not(.btn-sm):not([style*="padding:4px"]):not([style*="padding: 4px"]):not(.sidebar-close-btn):not(.hamburger):not(.topbar-search-toggle) {
+      min-height: 38px;
+    }
+
+  }
+
+  /* Extra Small Devices (<= 360px) */
+  @media (max-width: 360px) {
+    .stats-grid {
+      grid-template-columns: 1fr !important;
+    }
+
+    .page-title {
+      max-width: none;
+    }
+
+  }
+
+  /* Print & Full Page Capture Optimization */
+  @media print {
+    html, body {
+      height: auto !important;
+      min-height: 0 !important;
+      overflow: visible !important;
+      background: #ffffff !important;
+    }
+
+    .sidebar, .sidebar-overlay, .topbar, .hamburger, #sidebar, #sidebarOverlay, #hamburgerBtn {
+      display: none !important;
+    }
+
+    .main-wrapper {
+      overflow: visible !important;
+      height: auto !important;
+      min-height: 0 !important;
+      display: block !important;
+      width: 100% !important;
+      background: transparent !important;
+    }
+
+    .main-content {
+      padding: 0 !important;
+      margin: 0 !important;
+      overflow: visible !important;
+      height: auto !important;
+    }
+
+    .glass-card, .mission-card, .quest-flow-card, .ch-hero, .stat-card {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+
+  }
+
+</style>
+
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 18px;">
+    <a href="{% url 'dashboard_index' %}" class="sidebar-logo" style="margin-bottom:0;">
+      <img src="{% static 'assets/logo.webp' %}" alt="KNOVA">
+      <span>DASHBOARD</span>
+    </a>
+    <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
+      <i data-feather="x" style="width:18px; height:18px;"></i>
+    </button>
+  </div>
+  <ul class="nav-menu">
+    {% if not request.user|has_role:'university' and not request.user|has_role:'exhibitor' and not request.user|has_role:'parent' and not request.user|has_role:'seminar' and not request.user|has_role:'education_expert' %}
+    <li><a href="{% url 'dashboard_index' %}" class="nav-item {% block nav_overview %}{% endblock %}"><i data-feather="{% if request.user|has_role:'student' %}compass{% else %}grid{% endif %}" style="width:18px; height:18px; {% if request.user|has_role:'student' %}color:#1768ff;{% endif %}"></i> {% if request.user|has_role:'student' %}My Expo Hub{% else %}Overview{% endif %}</a></li>
+    {% endif %}
+    {% if request.user|has_role:'admin' %}
+
+    <!-- Admin Full Management & CRUD Operations -->
+    <li><a href="{% url 'dashboard_events' %}" class="nav-item {% block nav_events %}{% endblock %}"><i data-feather="map-pin" style="width:18px; height:18px; color:#1768ff;"></i> Expos & Seminars</a></li>
+    <li><a href="{% url 'dashboard_exhibitors' %}" class="nav-item {% block nav_exhibitors %}{% endblock %}"><i data-feather="briefcase" style="width:18px; height:18px; color:#8b5cf6;"></i> Exhibitors & Booths</a></li>
+    <li><a href="{% url 'dashboard_universities' %}" class="nav-item {% block nav_universities %}{% endblock %}"><i data-feather="book-open" style="width:18px; height:18px; color:#0284c7;"></i> University Cards &amp; Hero</a></li>
+    <li><a href="{% url 'dashboard_registrations' %}" class="nav-item {% block nav_registrations %}{% endblock %}"><i data-feather="users" style="width:18px; height:18px; color:#10b981;"></i> Registrations & Attendees</a></li>
+    <li><a href="{% url 'dashboard_speakers' %}" class="nav-item {% block nav_speakers %}{% endblock %}"><i data-feather="mic" style="width:18px; height:18px; color:#ec4899;"></i> Speakers &amp; Experts</a></li>
+    <li><a href="{% url 'dashboard_sponsors' %}" class="nav-item {% block nav_sponsors %}{% endblock %}"><i data-feather="star" style="width:18px; height:18px; color:#eab308;"></i> Sponsors</a></li>
+    <li><a href="{% url 'dashboard_exhibitor_exams' %}" class="nav-item {% block nav_exh_exams %}{% endblock %}"><i data-feather="check-square" style="width:18px; height:18px; color:#14b8a6;"></i> Common Exam Portal</a></li>
+    <li><a href="{% url 'dashboard_messages' %}" class="nav-item {% block nav_messages %}{% endblock %}"><i data-feather="message-circle" style="width:18px; height:18px; color:#6366f1;"></i> Direct Messages</a></li>
+    <li><a href="{% url 'dashboard_cms' %}" class="nav-item {% block nav_cms %}{% endblock %}"><i data-feather="layout" style="width:18px; height:18px; color:#f59e0b;"></i> Page Content &amp; Sections</a></li>
+    <li><a href="{% url 'dashboard_seo' %}" class="nav-item {% block nav_seo %}{% endblock %}"><i data-feather="search" style="width:18px; height:18px; color:#10b981;"></i> SEO &amp; Search Engines</a></li>
+    <li><a href="{% url 'dashboard_settings' %}" class="nav-item {% block nav_settings %}{% endblock %}{% block nav_countries %}{% endblock %}"><i data-feather="settings" style="width:18px; height:18px; color:#6366f1;"></i> Backup, Restore & Settings</a></li>
+    <li><a href="/admin/" target="_blank" class="nav-item" style="border: 1px dashed rgba(23,104,255,0.3); background: rgba(23,104,255,0.03); margin-top: 6px;"><i data-feather="shield" style="width:18px; height:18px; color:#1768ff;"></i> Django Admin Console <i data-feather="external-link" style="width:12px; height:12px; margin-left:auto; opacity:0.6;"></i></a></li>
+    {% else %}
+
+    <!-- Non-Admin Navigation -->
+      {% if request.user|has_role:'student' %}
+      <li><a href="{% url 'knova_challenge' %}" class="nav-item {% block nav_challenge %}{% endblock %}"><i data-feather="target" style="width:18px; height:18px; color:#10b981;"></i> KNOVA Challenge</a></li>
+      <li><a href="{% url 'dashboard_matches' %}" class="nav-item {% block nav_matches %}{% endblock %}"><i data-feather="zap" style="width:18px; height:18px;"></i> AI Matches</a></li>
+      <li><a href="{% url 'dashboard_scholarships' %}" class="nav-item {% block nav_scholarships %}{% endblock %}"><i data-feather="award" style="width:18px; height:18px;"></i> Scholarships</a></li>
+      <li><a href="{% url 'dashboard_messages' %}" class="nav-item {% block nav_student_messages %}{% endblock %}"><i data-feather="message-circle" style="width:18px; height:18px;"></i> Messages</a></li>
+      <li><a href="{% url 'dashboard_student_profile' %}" class="nav-item {% block nav_profile %}{% endblock %}"><i data-feather="user" style="width:18px; height:18px;"></i> My Profile</a></li>
+      {% elif request.user|has_role:'parent' %}
+
+      <!-- 4. Parent Navigation -->
+      <li><a href="{% url 'dashboard_index' %}" class="nav-item {% block nav_parent_overview %}{% endblock %}"><i data-feather="grid" style="width:18px; height:18px;"></i> Parent Dashboard</a></li>
+      <li><a href="{% url 'dashboard_student_profile' %}" class="nav-item {% block nav_parent_profile %}{% endblock %}"><i data-feather="user" style="width:18px; height:18px;"></i> My Profile</a></li>
+      <li><a href="{% url 'dashboard_parent_messages' %}" class="nav-item {% block nav_parent_messages %}{% endblock %}"><i data-feather="message-circle" style="width:18px; height:18px;"></i> Messages</a></li>
+      <li><a href="{% url 'my_expo' %}" class="nav-item {% block nav_parent_my_expo %}{% endblock %}"><i data-feather="compass" style="width:18px; height:18px; color:#1768ff;"></i> Student Expo Hub</a></li>
+      {% elif not request.user.is_authenticated %}
+      <li><a href="{% url 'knova_challenge' %}" class="nav-item {% block nav_anon_challenge %}{% endblock %}"><i data-feather="target" style="width:18px; height:18px; color:#10b981;"></i> KNOVA Challenge</a></li>
+      <li><a href="{% url 'my_expo' %}" class="nav-item {% block nav_anon_my_expo %}{% endblock %}"><i data-feather="compass" style="width:18px; height:18px; color:#1768ff;"></i> My Expo Hub</a></li>
+      {% endif %}
+
+      <!-- 2. University / Exhibitors (Both are identical) -->
+      {% if request.user|has_role:'university' or request.user|has_role:'exhibitor' %}
+      <li><a href="{% url 'dashboard_index' %}" class="nav-item {% block nav_uni_exh_dashboard %}{% endblock %}"><i data-feather="home" style="width:18px; height:18px;"></i> Exhibitor Hub</a></li>
+      <li><a href="{% url 'dashboard_exhibitor_scanner' %}" class="nav-item {% block nav_scanner %}{% endblock %}"><i data-feather="camera" style="width:18px; height:18px; color:#1768ff;"></i> Booth Punch Scanner</a></li>
+      <li><a href="{% url 'dashboard_exhibitor_leads' %}" class="nav-item {% block nav_leads %}{% endblock %}"><i data-feather="user-check" style="width:18px; height:18px; color:#10b981;"></i> Attended Students & Leads</a></li>
+      <li><a href="{% url 'dashboard_exhibitor_exams' %}" class="nav-item {% block nav_exh_exams_sub %}{% endblock %}"><i data-feather="award" style="width:18px; height:18px; color:#14b8a6;"></i> Student Exam Results</a></li>
+      <li><a href="{% url 'dashboard_index' %}#coursesSection" class="nav-item {% block nav_uni_courses %}{% endblock %}" id="navUniCourses"><i data-feather="book-open" style="width:18px; height:18px; color:#8b5cf6;"></i> Courses & Degrees</a></li>
+      <li><a href="{% url 'dashboard_index' %}#scholarshipsSection" class="nav-item {% block nav_uni_scholarships %}{% endblock %}"><i data-feather="award" style="width:18px; height:18px; color:#f59e0b;"></i> Scholarships</a></li>
+      <li><a href="{% url 'university_staff_edit' %}" class="nav-item {% block nav_uni_content %}{% endblock %}"><i data-feather="edit-3" style="width:18px; height:18px; color:#f59e0b;"></i> Edit University Page</a></li>
+      <li><a href="{% url 'dashboard_messages' %}" class="nav-item {% block nav_exh_messages %}{% endblock %}"><i data-feather="message-circle" style="width:18px; height:18px;"></i> Student Messages</a></li>
+      {% if user_university and user_university.slug %}
+      <li><a href="{% url 'university_detail' user_university.slug %}" target="_blank" class="nav-item" style="color:#1768ff;"><i data-feather="external-link" style="width:18px; height:18px;"></i> View Public Page &rarr;</a></li>
+      {% endif %}
+      {% endif %}
+
+      <!-- 5. Sponsor -->
+      {% if request.user|has_role:'sponsor' %}
+      <li><a href="{% url 'dashboard_sponsors' %}" class="nav-item {% block nav_sp_sponsors %}{% endblock %}"><i data-feather="star" style="width:18px; height:18px;"></i> Sponsors</a></li>
+      {% endif %}
+
+      <!-- 6. Seminar Coordinator -->
+      {% if request.user|has_role:'seminar' %}
+      <li><a href="{% url 'dashboard_index' %}" class="nav-item {% block nav_seminar_dashboard %}{% endblock %}"><i data-feather="home" style="width:18px; height:18px;"></i> Seminar Dashboard</a></li>
+      <li><a href="{% url 'seminar_attendance_scanner' %}" class="nav-item {% block nav_seminar_scanner %}{% endblock %}"><i data-feather="camera" style="width:18px; height:18px; color:#1768ff;"></i> Hall Punch Scanner</a></li>
+      <li><a href="{% url 'seminar_attendance_roster' %}" class="nav-item {% block nav_seminar_roster %}{% endblock %}"><i data-feather="check-square" style="width:18px; height:18px; color:#10b981;"></i> Session Attendees</a></li>
+      <li><a href="{% url 'dashboard_programme' %}" class="nav-item {% block nav_seminar_programme %}{% endblock %}"><i data-feather="calendar" style="width:18px; height:18px;"></i> Programme Schedule</a></li>
+      {% endif %}
+
+      <!-- 7. Education Expert / Academic Counsellor -->
+      {% if request.user|has_role:'education_expert' %}
+      <li><a href="{% url 'dashboard_index' %}" class="nav-item {% block nav_expert_dashboard %}{% endblock %}"><i data-feather="home" style="width:18px; height:18px;"></i> Counselling Hub</a></li>
+      <li><a href="{% url 'expert_attendance_scanner' %}" class="nav-item {% block nav_expert_scanner %}{% endblock %}"><i data-feather="camera" style="width:18px; height:18px; color:#8b5cf6;"></i> QR Punch Scanner</a></li>
+      <li><a href="{% url 'expert_consultation_roster' %}" class="nav-item {% block nav_expert_roster %}{% endblock %}"><i data-feather="users" style="width:18px; height:18px; color:#10b981;"></i> Consulted Students</a></li>
+      {% endif %}
+    {% endif %}
+  </ul>
+  {% if request.user.is_authenticated %}
+  <a href="{% url 'dashboard_logout' %}" class="logout-btn"><i data-feather="log-out" style="width:18px; height:18px;"></i> Sign Out</a>
+  {% else %}
+  <a href="{% url 'portal_login' %}" class="logout-btn" style="color: #1768ff; background: #eff6ff; border: 1px solid #bfdbfe;"><i data-feather="log-in" style="width:18px; height:18px;"></i> Sign In</a>
+  {% endif %}
+</aside>
+
+<div class="main-wrapper">
+  <header class="topbar">
+    <div class="topbar-left">
+            <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Menu" title="Toggle Navigation Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="page-title">
+        <span class="page-crumb-parent">
+          <span class="page-crumb-category">{% block page_category %}{{ role|default:"Dashboard"|title }}{% endblock %}</span>
+          <i data-feather="chevron-right" style="width:14px; height:14px; color:#94a3b8;"></i>
+        </span>
+        <span class="page-title-main">{% block page_title %}Overview{% endblock %}</span>
+      </div>
+    </div>
+    <div class="topbar-center">
+      <form class="topbar-search" id="topbarSearchForm" action="{% url 'dashboard_search' %}" method="GET" autocomplete="off">
+        <i data-feather="search" style="width:16px; height:16px; flex-shrink: 0;"></i>
+        <input type="text" id="topbarSearchInput" name="q" placeholder="Search scholarships, exhibitors, courses..." value="{{ query|default:'' }}" autocomplete="off">
+        <button type="button" class="topbar-search-clear" id="topbarSearchClear" title="Clear search">
+          <i data-feather="x" style="width:14px; height:14px;"></i>
+        </button>
+      </form>
+      <div id="topbarSuggestions" class="topbar-search-dropdown" style="display: none;"></div>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-search-toggle" id="mobileSearchToggle" aria-label="Search" title="Search">
+        <i data-feather="search" style="width:18px; height:18px;"></i>
+      </button>
+      {% include "dashboard/includes/notification_dropdown.html" %}
+      <div class="user-profile">
+        <div class="user-info">
+          <span class="user-name">{% if request.user.is_authenticated %}{{ request.user.get_full_name|default:request.user.username }}{% else %}Guest Attendee{% endif %}</span>
+          <span class="user-role">{{ request.user|user_display_role }}</span>
+        </div>
+        <div class="avatar">{% if request.user.is_authenticated %}{{ request.user.get_full_name|default:request.user.username|make_list|first|upper }}{% else %}G{% endif %}</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<script>
+  feather.replace();
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+  const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+  const topbarSearch = document.querySelector('.topbar-search');
+  function openSidebar(e) {
+    if (e) {
+      e.stopPropagation();
+    }
+
+    if (sidebar) sidebar.classList.add('open');
+    if (sidebarOverlay) sidebarOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSidebar(e) {
+    if (e) {
+      e.stopPropagation();
+    }
+
+    if (sidebar) sidebar.classList.remove('open');
+    if (sidebarOverlay) sidebarOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (hamburgerBtn) {
+    hamburgerBtn.addEventListener('click', openSidebar);
+    hamburgerBtn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      openSidebar(e);
+    }, { passive: false });
+  }
+
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', closeSidebar);
+  }
+
+  if (sidebarCloseBtn) {
+    sidebarCloseBtn.addEventListener('click', closeSidebar);
+  }
+
+  // Close sidebar on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSidebar();
+  });
+  // Mobile search toggle
+  if (mobileSearchToggle && topbarSearch) {
+    mobileSearchToggle.addEventListener('click', () => {
+      topbarSearch.classList.toggle('mobile-active');
+      const input = topbarSearch.querySelector('input');
+      if (topbarSearch.classList.contains('mobile-active') && input) {
+        input.focus();
+      }
+
+    });
+  }
+
+  document.addEventListener('selectstart', function(e) {
+    var tag = (e.target && e.target.tagName) ? e.target.tagName.toUpperCase() : '';
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && !e.target.isContentEditable) {
+      e.preventDefault();
+    }
+
+  });
+  document.addEventListener('copy', function(e) {
+    var tag = (e.target && e.target.tagName) ? e.target.tagName.toUpperCase() : '';
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && !e.target.isContentEditable) {
+      e.preventDefault();
+    }
+
+  });
+  // Topbar Search with Live Autocomplete Suggestions Controller
+  (function() {
+    const searchInput = document.getElementById('topbarSearchInput');
+    const searchForm = document.getElementById('topbarSearchForm');
+    const suggestionsBox = document.getElementById('topbarSuggestions');
+    const clearBtn = document.getElementById('topbarSearchClear');
+    if (!searchInput || !suggestionsBox) return;
+    let debounceTimer = null;
+    let activeIndex = -1;
+    let currentResults = [];
+    function getPageScope() {
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes('scholarship')) return 'scholarships';
+      if (path.includes('course')) return 'courses';
+      if (path.includes('exhibitor')) return 'exhibitors';
+      if (path.includes('event')) return 'events';
+      if (path.includes('programme') || path.includes('session')) return 'events';
+      if (path.includes('speaker')) return 'speakers';
+      return '';
+    }
+
+    function highlightMatch(text, query) {
+      if (!text || !query) return text || '';
+      const regex = new RegExp('(' + query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')', 'gi');
+      return text.replace(regex, '<mark>$1</mark>');
+    }
+
+    function fetchSuggestions(query) {
+      if (!query || query.trim().length === 0) {
+        suggestionsBox.style.display = 'none';
+        suggestionsBox.innerHTML = '';
+        return;
+      }
+
+      const scope = getPageScope();
+      suggestionsBox.style.display = 'block';
+      suggestionsBox.innerHTML = '<div class="search-spinner"><i class="ti ti-loader-2 ti-spin"></i> Searching matches...</div>';
+      fetch('/api/search/?q=' + encodeURIComponent(query) + '&source=dashboard' + (scope ? '&scope=' + scope : ''))
+        .then(res => res.json())
+        .then(data => {
+          const results = data.results || [];
+          currentResults = results;
+          activeIndex = -1;
+          renderSuggestions(results, query);
+        })
+        .catch(err => {
+          suggestionsBox.style.display = 'none';
+        });
+    }
+
+    function renderSuggestions(results, query) {
+      if (results.length === 0) {
+        suggestionsBox.innerHTML = `
+          <div class="search-empty">
+            <div style="font-weight: 700; color: #1e293b; margin-bottom: 4px;">No matches found for "${query}"</div>
+            <div style="font-size: 11.5px; color: #94a3b8; margin-bottom: 12px;">Try checking for typos or broader keywords</div>
+            <button type="submit" form="topbarSearchForm" style="background:#1768ff; color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
+              Search Full Database &rarr;
+            </button>
+          </div>
+        `;
+        suggestionsBox.style.display = 'block';
+        return;
+      }
+
+      const groups = {};
+      results.forEach(item => {
+        const type = item.type || 'Other';
+        if (!groups[type]) groups[type] = [];
+        groups[type].push(item);
+      });
+      let html = '<div class="search-dropdown-scroll">';
+      let globalIndex = 0;
+      for (const [type, items] of Object.entries(groups)) {
+        let icon = 'ti-sparkles';
+        let badgeClass = 'badge-scholarship';
+        if (type.toLowerCase() === 'scholarship') { icon = 'ti-award'; badgeClass = 'badge-scholarship'; }
+        else if (type.toLowerCase() === 'university') { icon = 'ti-building-bank'; badgeClass = 'badge-university'; }
+        else if (type.toLowerCase() === 'course') { icon = 'ti-school'; badgeClass = 'badge-course'; }
+        else if (type.toLowerCase() === 'exhibitor') { icon = 'ti-briefcase'; badgeClass = 'badge-exhibitor'; }
+        else if (type.toLowerCase() === 'event' || type.toLowerCase() === 'expo') { icon = 'ti-calendar-event'; badgeClass = 'badge-event'; }
+        else if (type.toLowerCase() === 'seminar' || type.toLowerCase() === 'session' || type.toLowerCase() === 'keynote') { icon = 'ti-presentation'; badgeClass = 'badge-event'; }
+        else if (type.toLowerCase() === 'speaker') { icon = 'ti-user'; badgeClass = 'badge-event'; }
+        html += `<div class="search-group-header"><i class="ti ${icon}"></i> ${type}s (${items.length})</div>`;
+        items.forEach(item => {
+          const targetUrl = item.url || ('/dashboard/search/?q=' + encodeURIComponent(item.query_val || item.title));
+          html += `
+            <a href="${targetUrl}" class="search-suggestion-item" data-index="${globalIndex}">
+              <div class="search-item-left">
+                <span class="search-item-badge ${badgeClass}">${item.type}</span>
+                <div class="search-item-info">
+                  <div class="search-item-title">${highlightMatch(item.title, query)}</div>
+                  <div class="search-item-sub">${item.subtitle || ''}</div>
+                </div>
+              </div>
+              <i class="ti ti-chevron-right" style="color: #cbd5e1; font-size: 14px;"></i>
+            </a>
+          `;
+          globalIndex++;
+        });
+      }
+
+      html += '</div>';
+      const searchAllUrl = '/dashboard/search/?q=' + encodeURIComponent(query);
+      html += `
+        <div class="search-dropdown-footer">
+          <a href="${searchAllUrl}"><i class="ti ti-search"></i> See all results for "<strong>${query}</strong>" &rarr;</a>
+          <span style="font-size: 10px; color: #94a3b8;">↵ Select • ↑↓ Navigate • Esc Close</span>
+        </div>
+      `;
+      suggestionsBox.innerHTML = html;
+      suggestionsBox.style.display = 'block';
+    }
+
+    // Live in-page filter if on scholarships page
+    function liveFilterScholarshipPage(query) {
+      const cards = document.querySelectorAll('.scholarship-match-card');
+      if (!cards || cards.length === 0) return;
+      const q = query.toLowerCase().trim();
+      let visibleCount = 0;
+      cards.forEach(card => {
+        const searchText = (card.getAttribute('data-search-text') || card.textContent).toLowerCase();
+        if (!q || searchText.includes(q)) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+
+      });
+      let noResultsEl = document.getElementById('scholarshipLiveNoResults');
+      if (visibleCount === 0 && q) {
+        if (!noResultsEl) {
+          noResultsEl = document.createElement('div');
+          noResultsEl.id = 'scholarshipLiveNoResults';
+          noResultsEl.className = 'glass-card';
+          noResultsEl.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 36px 20px;';
+          cards[0].parentElement.appendChild(noResultsEl);
+        }
+
+        noResultsEl.innerHTML = `
+          <i class="ti ti-search-off" style="font-size: 36px; color: #94a3b8; display: block; margin-bottom: 8px;"></i>
+          <h4 style="margin: 0 0 6px 0; color: var(--text-main);">No scholarships match "${query}"</h4>
+          <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Try a different term or clear the search to view all personalized matches.</p>
+        `;
+        noResultsEl.style.display = 'block';
+      } else if (noResultsEl) {
+        noResultsEl.style.display = 'none';
+      }
+
+    }
+
+    if (searchInput.value.trim().length > 0) {
+      if (clearBtn) clearBtn.style.display = 'inline-flex';
+    }
+
+    searchInput.addEventListener('input', function() {
+      const val = this.value;
+      if (clearBtn) clearBtn.style.display = val ? 'inline-flex' : 'none';
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        fetchSuggestions(val);
+        liveFilterScholarshipPage(val);
+      }, 180);
+    });
+    searchInput.addEventListener('focus', function() {
+      if (this.value.trim().length > 0) {
+        fetchSuggestions(this.value);
+      }
+
+    });
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        this.style.display = 'none';
+        suggestionsBox.style.display = 'none';
+        liveFilterScholarshipPage('');
+        searchInput.focus();
+      });
+    }
+
+    searchInput.addEventListener('keydown', function(e) {
+      const items = suggestionsBox.querySelectorAll('.search-suggestion-item');
+      if (suggestionsBox.style.display === 'block' && items.length > 0) {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          activeIndex = (activeIndex + 1) % items.length;
+          updateActiveItem(items);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          activeIndex = (activeIndex - 1 + items.length) % items.length;
+          updateActiveItem(items);
+        } else if (e.key === 'Enter') {
+          if (activeIndex >= 0 && activeIndex < items.length) {
+            e.preventDefault();
+            items[activeIndex].click();
+          }
+
+        } else if (e.key === 'Escape') {
+          suggestionsBox.style.display = 'none';
+        }
+
+      }
+
+    });
+    function updateActiveItem(items) {
+      items.forEach((item, idx) => {
+        if (idx === activeIndex) {
+          item.classList.add('active');
+          item.scrollIntoView({ block: 'nearest' });
+        } else {
+          item.classList.remove('active');
+        }
+
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!searchForm.contains(e.target) && !suggestionsBox.contains(e.target)) {
+        suggestionsBox.style.display = 'none';
+      }
+
+    });
+  })();
+  // Handle sidebar hash navigation and enforce top section visibility on load
+  (function() {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    function updateSidebarHashActive() {
+      const hash = window.location.hash;
+      const crumbMain = document.querySelector('.page-title-main');
+      const coursesSec = document.getElementById('coursesSection');
+      const schSec = document.getElementById('scholarshipsSection');
+      if (hash === '#coursesSection') {
+        if (coursesSec) coursesSec.style.display = 'block';
+        if (schSec) schSec.style.display = 'none';
+        const coursesLink = document.querySelector('a.nav-item[href*="#coursesSection"]');
+        if (coursesLink) {
+          document.querySelectorAll('.nav-menu .nav-item').forEach(function(el) { el.classList.remove('active'); });
+          coursesLink.classList.add('active');
+        }
+
+        if (crumbMain && window.location.pathname.startsWith('/dashboard/')) {
+          crumbMain.textContent = 'Courses & Degrees';
+        }
+
+      } else if (hash === '#scholarshipsSection') {
+        if (schSec) schSec.style.display = 'block';
+        if (coursesSec) coursesSec.style.display = 'none';
+        const schLink = document.querySelector('a.nav-item[href*="#scholarshipsSection"]');
+        if (schLink) {
+          document.querySelectorAll('.nav-menu .nav-item').forEach(function(el) { el.classList.remove('active'); });
+          schLink.classList.add('active');
+        }
+
+        if (crumbMain && window.location.pathname.startsWith('/dashboard/')) {
+          crumbMain.textContent = 'Scholarships';
+        }
+
+      } else if (window.location.pathname === '/dashboard/' && (!hash || hash === '#' || hash === '#!')) {
+        if (coursesSec) coursesSec.style.display = 'block';
+        if (schSec) schSec.style.display = 'block';
+        const exhHub = document.querySelector('a.nav-item[href="/dashboard/"]');
+        if (exhHub) {
+          document.querySelectorAll('.nav-menu .nav-item').forEach(function(el) { el.classList.remove('active'); });
+          exhHub.classList.add('active');
+        }
+
+        if (crumbMain) {
+          crumbMain.textContent = 'Exhibitor Hub';
+        }
+
+      }
+
+    }
+
+    // Always enforce top of viewport so top header / KPI banner is 100% visible
+    window.scrollTo(0, 0);
+
+    function syncActiveSidebarCard() {
+      var currentPath = window.location.pathname;
+      var currentSearch = window.location.search;
+      var currentHash = window.location.hash;
+      if (currentHash === '#coursesSection' || currentHash === '#scholarshipsSection') return;
+
+      var navItems = document.querySelectorAll('.nav-menu .nav-item');
+      var matchedItem = null;
+
+      // 1. Check for exact path + search match (e.g. /dashboard/cms/?tab=seo)
+      navItems.forEach(function(item) {
+        var href = item.getAttribute('href');
+        if (!href) return;
+        if (href === currentPath + currentSearch) {
+          matchedItem = item;
+        }
+      });
+
+      // 2. Check for exact path match without search
+      if (!matchedItem) {
+        navItems.forEach(function(item) {
+          var href = item.getAttribute('href');
+          if (!href) return;
+          var baseHref = href.split('?')[0].split('#')[0];
+          if (baseHref === currentPath) {
+            matchedItem = item;
+          }
+        });
+      }
+
+      if (matchedItem) {
+        navItems.forEach(function(el) { el.classList.remove('active'); });
+        matchedItem.classList.add('active');
+      }
+    }
+    syncActiveSidebarCard();
+
+    updateSidebarHashActive();
+    window.addEventListener('hashchange', updateSidebarHashActive);
+    // Guarantee that on initial page load / refresh the top section is never scrolled off-screen
+    window.addEventListener('DOMContentLoaded', function() {
+      window.scrollTo(0, 0);
+    });
+    window.addEventListener('load', function() {
+      window.scrollTo(0, 0);
+      setTimeout(function() {
+        window.scrollTo(0, 0);
+      }, 50);
+    });
+  })();
+</script>
+
+</body>
+</html>

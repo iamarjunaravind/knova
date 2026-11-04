@@ -1,0 +1,467 @@
+{% extends base_template|default:'dashboard/base.html' %}
+{% block nav_badge %}active{% endblock %}
+{% block page_category %}Attendee Pass{% endblock %}
+{% block page_title %}Digital Expo Badge{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --badge-primary: #1768ff;
+    --badge-primary-dark: #0055ff;
+  }
+
+  .badge-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px 50px 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Main ID Card Container matching reference style */
+  .id-card-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 330px;
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 14px 40px -8px rgba(23, 104, 255, 0.16), 0 4px 16px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .id-card-wrapper:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 48px -8px rgba(23, 104, 255, 0.22), 0 6px 20px rgba(15, 23, 42, 0.10);
+  }
+
+  /* Physical Lanyard Punch Slot */
+  .id-card-lanyard-slot {
+    width: 100%;
+    background: #f8fafc;
+    border-bottom: 1px dashed #cbd5e1;
+    padding: 8px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .lanyard-hole {
+    width: 50px;
+    height: 9px;
+    background: #e2e8f0;
+    border: 1px solid #94a3b8;
+    border-radius: 9999px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.18);
+  }
+
+  /* Top Banner Strip */
+  .id-card-top-bar {
+    background: #1768ff;
+    color: #ffffff;
+    text-align: center;
+    padding: 11px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-weight: 850;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+  }
+
+  /* Main ID Card Content Body */
+  .id-card-body {
+    padding: 26px 24px 10px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: #ffffff;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Expo Branding: Knova / 2027 */
+  .id-card-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.05;
+    margin-bottom: 22px;
+  }
+  .id-card-brand .brand-knova {
+    font-size: 36px;
+    font-weight: 750;
+    color: #4b5563;
+    letter-spacing: -0.5px;
+    line-height: 1.05;
+  }
+  .id-card-brand .brand-year {
+    font-size: 36px;
+    font-weight: 850;
+    color: #1768ff;
+    letter-spacing: -0.5px;
+    line-height: 1.05;
+  }
+
+  /* Attendee Full Name */
+  .id-card-name {
+    font-size: 22px;
+    font-weight: 850;
+    color: #0f172a;
+    margin: 0 0 6px 0;
+    letter-spacing: 0.2px;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+
+  /* Organization / School Subtitle */
+  .id-card-subtitle {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #334155;
+    margin: 0 0 20px 0;
+    line-height: 1.4;
+    max-width: 270px;
+    word-break: break-word;
+  }
+
+  /* Centered Clean QR Code */
+  .id-card-qr-box {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 16px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+  }
+  .id-card-qr-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  /* Role Badge Title: VISITOR / STUDENT */
+  .id-card-role {
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #0f172a;
+    margin: 0 0 6px 0;
+    line-height: 1;
+  }
+
+  /* Student ID Pill Tag */
+  .id-card-student-id {
+    font-family: 'SF Mono', 'Roboto Mono', 'Inter', monospace;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #475569;
+    margin: 0 0 16px 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    padding: 4px 12px;
+    border-radius: 12px;
+    line-height: 1.3;
+  }
+  .id-card-student-id .id-label {
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+  }
+  .id-card-student-id .id-val {
+    color: #0f172a;
+    font-weight: 850;
+    letter-spacing: 1px;
+  }
+
+  /* Bottom Wavy Graphic Shape matching reference style */
+  .id-card-bottom-waves {
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    background: #ffffff;
+    margin-top: -4px;
+    position: relative;
+    z-index: 1;
+  }
+  .id-card-bottom-waves svg {
+    display: block;
+    width: 100%;
+    height: 64px;
+  }
+
+  /* Dashboard Action Toolbar */
+  .id-badge-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    max-width: 330px;
+    width: 100%;
+  }
+  .btn-badge-print {
+    background: linear-gradient(135deg, #1768ff 0%, #0055ff 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 22px;
+    font-size: 13.5px;
+    font-weight: 750;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(23, 104, 255, 0.28);
+    transition: all 0.2s ease;
+    text-decoration: none;
+    flex: 1;
+    justify-content: center;
+  }
+  .btn-badge-print:hover {
+    background: linear-gradient(135deg, #0d54d9 0%, #0044cc 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(23, 104, 255, 0.38);
+    color: #ffffff;
+  }
+  .btn-badge-subtle {
+    background: #ffffff;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .btn-badge-subtle:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: #0f172a;
+  }
+
+/* Mobile Responsive: Compact ID Card to fit viewport */
+  @media (max-width: 640px) {
+    .badge-page-wrapper {
+      padding: 10px 12px 20px 12px !important;
+    }
+    .id-card-wrapper {
+      max-width: 250px !important;
+      border-radius: 12px !important;
+      box-shadow: 0 8px 24px -4px rgba(23, 104, 255, 0.14), 0 2px 10px rgba(15, 23, 42, 0.06) !important;
+    }
+    .id-card-lanyard-slot {
+      padding: 5px 0 !important;
+    }
+    .lanyard-hole {
+      width: 34px !important;
+      height: 6px !important;
+    }
+    .id-card-top-bar {
+      padding: 6px 10px !important;
+      font-size: 11px !important;
+      letter-spacing: 1.5px !important;
+    }
+    .id-card-body {
+      padding: 10px 12px 4px 12px !important;
+    }
+    .id-card-brand {
+      margin-bottom: 6px !important;
+    }
+    .id-card-brand .brand-knova,
+    .id-card-brand .brand-year {
+      font-size: 21px !important;
+    }
+    .id-card-name {
+      font-size: 15px !important;
+      margin: 0 0 2px 0 !important;
+    }
+    .id-card-subtitle {
+      font-size: 11px !important;
+      margin: 0 0 8px 0 !important;
+      max-width: 210px !important;
+    }
+    .id-card-qr-box {
+      width: 115px !important;
+      height: 115px !important;
+      margin: 0 auto 8px auto !important;
+    }
+    .id-card-role {
+      font-size: 13px !important;
+      letter-spacing: 1.5px !important;
+      margin: 0 0 4px 0 !important;
+    }
+    .id-card-student-id {
+      font-size: 9.5px !important;
+      padding: 2px 8px !important;
+      margin: 0 0 5px 0 !important;
+      border-radius: 8px !important;
+    }
+    .id-card-student-id .id-label {
+      font-size: 8.5px !important;
+    }
+    .fast-track-pill {
+      font-size: 9.5px !important;
+      padding: 2px 7px !important;
+      margin-bottom: 4px !important;
+    }
+    .fast-track-pill svg,
+    .fast-track-pill i {
+      width: 11px !important;
+      height: 11px !important;
+    }
+    .id-card-bottom-waves svg {
+      height: 32px !important;
+    }
+    .id-badge-actions {
+      max-width: 250px !important;
+      margin-top: 10px !important;
+      gap: 6px !important;
+    }
+    .btn-badge-print {
+      padding: 7px 12px !important;
+      font-size: 11.5px !important;
+      border-radius: 8px !important;
+    }
+    .btn-badge-subtle {
+      padding: 6px 10px !important;
+      font-size: 11px !important;
+      border-radius: 8px !important;
+    }
+    .badge-footer-note {
+      font-size: 10.5px !important;
+      margin-top: 8px !important;
+    }
+  }
+
+  /* Print Stylesheet: Isolates badge on physical print or PDF save */
+  @media print {
+    body {
+      background: #ffffff !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    .sidebar, .topbar, .id-badge-actions, .badge-footer-note {
+      display: none !important;
+    }
+    .main-wrapper, .main-content {
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+    }
+    .badge-page-wrapper {
+      padding: 0 !important;
+      margin: 20px auto !important;
+    }
+    .id-card-wrapper {
+      box-shadow: none !important;
+      border: 1px solid #cbd5e1 !important;
+      page-break-inside: avoid;
+    }
+  }
+</style>
+
+<div class="badge-page-wrapper">
+  
+  <!-- Digital ID Badge Card (Matching Reference in KNOVA Theme Color) -->
+  <div class="id-card-wrapper" id="idBadgeCard">
+    <!-- Physical Lanyard Punch Slot -->
+    <div class="id-card-lanyard-slot" aria-hidden="true">
+      <div class="lanyard-hole"></div>
+    </div>
+
+    <!-- Top Strip Banner -->
+    <div class="id-card-top-bar">
+      DIGITAL BADGE
+    </div>
+
+    <!-- Card Content -->
+    <div class="id-card-body">
+      <!-- Expo Branding: Knova / 2027 -->
+      <div class="id-card-brand">
+        <span class="brand-knova">Knova</span>
+        <span class="brand-year">2027</span>
+      </div>
+
+      <!-- Attendee Name -->
+      <h2 class="id-card-name">
+        {{ full_name|default:request.user.get_full_name|default:request.user.username|title }}
+      </h2>
+
+      <!-- Organization / School / Subtitle -->
+      <p class="id-card-subtitle">
+        {% if school_or_org %}{{ school_or_org }}{% elif profile and profile.school_college %}{{ profile.school_college }}{% elif profile and profile.current_education %}{{ profile.current_education }}{% elif request.user.email %}{{ request.user.email }}{% else %}Registered Attendee{% endif %}
+      </p>
+
+      <!-- Center Clean QR Code -->
+      <div class="id-card-qr-box">
+        {% if qr_code_b64 %}
+          <img src="data:image/png;base64,{{ qr_code_b64 }}" alt="Attendee QR Badge" class="id-card-qr-img">
+        {% else %}
+          <img src="{{ qr_url }}" alt="Attendee QR Badge" class="id-card-qr-img">
+        {% endif %}
+      </div>
+
+      <!-- Role Label -->
+      <div class="id-card-role">
+        {{ role|default:"STUDENT"|upper }}
+      </div>
+
+      <!-- Student / Attendee ID -->
+      <div class="id-card-student-id">
+        <span class="id-label">{% if role == 'STUDENT' %}STUDENT ID:{% else %}ATTENDEE ID:{% endif %}</span>
+        <strong class="id-val">{{ student_id|default:badge_id|default:request.user.username|upper }}</strong>
+      </div>
+
+      <!-- Fast Track Pill -->
+      <div class="fast-track-pill" style="display: inline-flex; align-items: center; gap: 5px; background: #ecfdf5; color: #059669; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;">
+        <i data-feather="check-circle" style="width: 13px; height: 13px;"></i> Fast-Track Entry Verified
+      </div>
+    </div>
+
+    <!-- Bottom Wavy Curve in KNOVA Theme Color -->
+    <div class="id-card-bottom-waves" aria-hidden="true">
+      <svg viewBox="0 0 350 75" preserveAspectRatio="none">
+        <!-- Left wave hill -->
+        <path d="M 0,42 C 20,32 50,34 82,52 C 102,63 118,72 126,75 L 0,75 Z" fill="#1768ff"></path>
+        <!-- Right wave hill -->
+        <path d="M 142,75 C 175,72 215,58 255,50 C 295,42 328,30 350,24 L 350,75 Z" fill="#1768ff"></path>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Action Controls -->
+  <div class="id-badge-actions">
+    <button onclick="window.print()" class="btn-badge-print" title="Print or Save Badge as PDF">
+      <i data-feather="printer" style="width:16px; height:16px;"></i> Print / Save ID Card
+    </button>
+    <a href="{% url 'my_expo' %}" class="btn-badge-subtle">
+      <i data-feather="compass" style="width:15px; height:15px; color:#1768ff;"></i> My Expo Hub
+    </a>
+  </div>
+
+  <div class="badge-footer-note" style="margin-top: 14px; font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 5px;">
+    <i data-feather="shield" style="width: 14px; height: 14px; color: #10b981;"></i> Official Fast-Track Expo Pass &bull; Secured by KNOVA
+  </div>
+
+</div>
+{% endblock %}

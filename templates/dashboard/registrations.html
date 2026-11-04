@@ -1,0 +1,311 @@
+{% extends base_template|default:'dashboard/base.html' %}
+
+{% block title %}Registrations | KNOVA{% endblock %}
+{% block nav_registrations %}active{% endblock %}
+{% block page_title %}Registrations &amp; Attendees{% endblock %}
+
+{% block content %}
+<!-- KPI METRIC CARDS -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px;">
+  <!-- Metric 1: Total Registrations -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Total Registrations</div>
+      <div style="font-size: 26px; font-weight: 850; color: #0f172a;">{{ total_registrations_count|default:registrations.count|default:0 }}</div>
+      <div style="font-size: 11.5px; color: #10b981; font-weight: 600; margin-top: 2px;">Registered Students &amp; Visitors</div>
+    </div>
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; color: #1768ff; display: flex; align-items: center; justify-content: center; border: 1px solid #bfdbfe;">
+      <i data-feather="users" style="width: 20px; height: 20px;"></i>
+    </div>
+  </div>
+
+  <!-- Metric 2: Confirmed Status -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Confirmed Attendees</div>
+      <div style="font-size: 26px; font-weight: 850; color: #059669;">{{ confirmed_registrations_count|default:0 }}</div>
+      <div style="font-size: 11.5px; color: #059669; font-weight: 600; margin-top: 2px;">Active Entry Passes Issued</div>
+    </div>
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #ecfdf5; color: #059669; display: flex; align-items: center; justify-content: center; border: 1px solid #a7f3d0;">
+      <i data-feather="check-circle" style="width: 20px; height: 20px;"></i>
+    </div>
+  </div>
+
+  <!-- Metric 3: Showing in View -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Showing in View</div>
+      <div style="font-size: 26px; font-weight: 850; color: #4f46e5;">{{ registrations|length }}</div>
+      <div style="font-size: 11.5px; color: #64748b; font-weight: 600; margin-top: 2px;">Filtered Attendee Records</div>
+    </div>
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #f5f3ff; color: #7c3aed; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd6fe;">
+      <i data-feather="filter" style="width: 20px; height: 20px;"></i>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER & ACTION TOOLBAR (SINGLE LINE) -->
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+  
+  <form method="GET" action="{% url 'dashboard_registrations' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap;">
+    <!-- Date Range -->
+    <input type="date" name="start_date" value="{{ start_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; width: 125px;" title="Start Date">
+    <span style="color: #94a3b8; font-size: 11px; font-weight: 600;">to</span>
+    <input type="date" name="end_date" value="{{ end_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; width: 125px;" title="End Date">
+
+    <!-- Role Dropdown -->
+    <select name="role" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; max-width: 140px;">
+      <option value="">All Roles</option>
+      <option value="Student" {% if role == 'Student' %}selected{% endif %}>Student</option>
+      <option value="Parent" {% if role == 'Parent' %}selected{% endif %}>Parent</option>
+      <option value="Exhibitor" {% if role == 'Exhibitor' %}selected{% endif %}>Exhibitor</option>
+      <option value="Visitor" {% if role == 'Visitor' %}selected{% endif %}>Visitor</option>
+    </select>
+
+    <!-- Sort By -->
+    <select name="sort_by" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; max-width: 130px;">
+      <option value="-registered_at" {% if sort_by == '-registered_at' %}selected{% endif %}>Newest First</option>
+      <option value="registered_at" {% if sort_by == 'registered_at' %}selected{% endif %}>Oldest First</option>
+      <option value="full_name" {% if sort_by == 'full_name' %}selected{% endif %}>Name (A-Z)</option>
+      <option value="-full_name" {% if sort_by == '-full_name' %}selected{% endif %}>Name (Z-A)</option>
+    </select>
+
+    <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(23,104,255,0.25); white-space: nowrap;">
+      <i data-feather="search" style="width: 13px; height: 13px;"></i> Apply Filter
+    </button>
+
+    {% if role or start_date or end_date or sort_by != '-registered_at' %}
+    <a href="{% url 'dashboard_registrations' %}" style="font-size: 11.5px; color: #64748b; text-decoration: none; font-weight: 600; padding: 4px 6px; white-space: nowrap;">
+      Reset
+    </a>
+    {% endif %}
+
+    <!-- Export Separator -->
+    <div style="width: 1px; height: 18px; background: #e2e8f0; margin: 0 2px;"></div>
+
+    <!-- Export Buttons -->
+    <button type="submit" name="format" value="excel" formaction="{% url 'dashboard_export_registrations' %}" style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
+      <i data-feather="file" style="width: 13px; height: 13px;"></i> Excel
+    </button>
+    <button type="submit" name="format" value="csv" formaction="{% url 'dashboard_export_registrations' %}" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
+      <i data-feather="file-text" style="width: 13px; height: 13px;"></i> CSV
+    </button>
+  </form>
+
+  <!-- Add New Registration Button (Pinned to Right) -->
+  <a href="{% url 'registration_create' %}" style="background: linear-gradient(135deg, #1768ff 0%, #0d54d9 100%); color: #ffffff; text-decoration: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 750; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(23,104,255,0.25); white-space: nowrap; flex-shrink: 0;">
+    <i data-feather="plus" style="width: 14px; height: 14px;"></i> Add New Registration
+  </a>
+</div>
+
+{% if matches %}
+<!-- AI TOP MATCHES WIDGET -->
+<div style="background: #ffffff; border: 1.5px solid #c7d2fe; border-radius: 16px; box-shadow: 0 4px 16px rgba(79, 70, 229, 0.06); overflow: hidden; margin-bottom: 24px;">
+  <div style="padding: 16px 20px; background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-bottom: 1px solid #e0e7ff; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <div>
+      <h3 style="margin: 0; font-size: 15px; font-weight: 850; color: #4338ca; display: flex; align-items: center; gap: 8px;">
+        <i data-feather="zap" style="width: 17px; height: 17px; color: #6366f1;"></i> AI Recommended Attendee Matches
+      </h3>
+      <p style="margin: 3px 0 0; font-size: 12px; color: #6366f1;">High-potential candidates matching institution focus areas</p>
+    </div>
+    <span style="background: #4f46e5; color: #ffffff; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 750; letter-spacing: 0.5px;">SMART MATCH</span>
+  </div>
+  <div style="overflow-x: auto; width: 100%;">
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; min-width: 700px;">
+      <thead>
+        <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+          <th style="padding: 12px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase;">Candidate</th>
+          <th style="padding: 12px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase;">Program Interest</th>
+          <th style="padding: 12px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase;">Match Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for match_student, score in matches %}
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 12px 18px; font-weight: 750; color: #0f172a;">
+            <div>{{ match_student.full_name }}</div>
+            <div style="font-size: 11.5px; color: #64748b; font-weight: 500;">{{ match_student.email }}</div>
+          </td>
+          <td style="padding: 12px 16px; color: #334155; font-size: 12.5px; font-weight: 600;">
+            {{ match_student.preferred_program|default:"Global Academic Degree" }}
+          </td>
+          <td style="padding: 12px 16px;">
+            <span style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 4px 10px; border-radius: 12px; font-weight: 800; font-size: 12px;">
+              {{ score }}% Match
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<!-- STRUCTURED DATA TABLE CARD -->
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); overflow: hidden;">
+  
+  <!-- Table Header Bar -->
+  <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: #ffffff;">
+    <div>
+      <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+        <i data-feather="user-check" style="width: 18px; height: 18px; color: #1768ff;"></i> Attendee Registrations &amp; Passes
+      </h3>
+      <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">Live expo registrations, verified badge passes, and attendance status</p>
+    </div>
+    <div style="display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 750; color: #475569;">
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981;"></span>
+      {{ registrations|length }} Registered Attendee{{ registrations|length|pluralize }}
+    </div>
+  </div>
+
+  <!-- Table Responsive Container -->
+  <div style="overflow-x: auto; width: 100%;">
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; min-width: 900px;">
+      <thead>
+        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+          <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 32%;">
+            Attendee Name &amp; Contact
+          </th>
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 16%;">
+            Role
+          </th>
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 20%;">
+            Event Location
+          </th>
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 16%;">
+            Status
+          </th>
+          <th style="padding: 13px 20px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; text-align: right; width: 16%;">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for reg in registrations %}
+        <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc';" onmouseout="this.style.background='transparent';">
+          
+          <!-- Column 1: Attendee Name & Contact -->
+          <td style="padding: 14px 18px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 850; font-size: 14px; flex-shrink: 0; box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2);">
+                {{ reg.full_name|slice:":1"|upper }}
+              </div>
+              <div>
+                <div style="font-weight: 800; color: #0f172a; font-size: 13.5px; line-height: 1.3;">{{ reg.full_name }}</div>
+                <div style="font-size: 11.5px; color: #64748b; margin-top: 2px;">{{ reg.email }}</div>
+              </div>
+            </div>
+          </td>
+
+          <!-- Column 2: Role Badge -->
+          <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+            {% if reg.role == 'Student' %}
+              <span style="display: inline-flex; align-items: center; gap: 4px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 3px 9px; border-radius: 8px; font-size: 11.5px; font-weight: 750;">
+                <i data-feather="book-open" style="width: 11px; height: 11px;"></i> Student
+              </span>
+            {% elif reg.role == 'Parent' %}
+              <span style="display: inline-flex; align-items: center; gap: 4px; background: #fdf2f8; color: #be185d; border: 1px solid #fbcfe8; padding: 3px 9px; border-radius: 8px; font-size: 11.5px; font-weight: 750;">
+                <i data-feather="heart" style="width: 11px; height: 11px;"></i> Parent
+              </span>
+            {% elif reg.role == 'Exhibitor' %}
+              <span style="display: inline-flex; align-items: center; gap: 4px; background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe; padding: 3px 9px; border-radius: 8px; font-size: 11.5px; font-weight: 750;">
+                <i data-feather="briefcase" style="width: 11px; height: 11px;"></i> Exhibitor
+              </span>
+            {% else %}
+              <span style="display: inline-flex; align-items: center; gap: 4px; background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; padding: 3px 9px; border-radius: 8px; font-size: 11.5px; font-weight: 750;">
+                <i data-feather="user" style="width: 11px; height: 11px;"></i> {{ reg.role|default:"Visitor" }}
+              </span>
+            {% endif %}
+          </td>
+
+          <!-- Column 3: Location -->
+          <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 750; color: #0f172a;">
+              <i data-feather="map-pin" style="width: 13px; height: 13px; color: #ef4444;"></i>
+              {{ reg.event_location.city|default:"Dubai" }}
+            </div>
+            {% if reg.registered_at %}
+            <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
+              {{ reg.registered_at|date:"M d, Y" }}
+            </div>
+            {% endif %}
+          </td>
+
+          <!-- Column 4: Status -->
+          <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+            {% if reg.status == 'Confirmed' %}
+              <span style="display: inline-flex; align-items: center; gap: 5px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800;">
+                <i data-feather="check" style="width: 12px; height: 12px;"></i> Confirmed
+              </span>
+            {% elif reg.status == 'Pending' %}
+              <span style="display: inline-flex; align-items: center; gap: 5px; background: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800;">
+                <i data-feather="clock" style="width: 12px; height: 12px;"></i> Pending
+              </span>
+            {% else %}
+              <span style="display: inline-flex; align-items: center; gap: 5px; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800;">
+                <i data-feather="x" style="width: 12px; height: 12px;"></i> Cancelled
+              </span>
+            {% endif %}
+          </td>
+
+          <!-- Column 5: Action Buttons -->
+          <td style="padding: 14px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; text-align: right;">
+            <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
+              
+              <!-- View Registration -->
+              <a href="{% url 'registration_view' reg.pk %}" title="View Details" style="background: #ffffff; border: 1px solid #a7f3d0; color: #059669; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#ecfdf5';" onmouseout="this.style.background='#ffffff';">
+                <i data-feather="eye" style="width: 12px; height: 12px;"></i> View
+              </a>
+
+              <!-- Edit Registration -->
+              <a href="{% url 'registration_update' reg.pk %}" title="Edit Registration" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#f1f5f9';" onmouseout="this.style.background='#ffffff';">
+                <i data-feather="edit-2" style="width: 12px; height: 12px;"></i> Edit
+              </a>
+
+              <!-- Delete Registration -->
+              <a href="{% url 'registration_delete' reg.pk %}" title="Delete Registration" style="background: #ffffff; border: 1px solid #fed7aa; color: #ea580c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#fff7ed';" onmouseout="this.style.background='#ffffff';">
+                <i data-feather="trash-2" style="width: 12px; height: 12px;"></i> Delete
+              </a>
+
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" style="padding: 48px 20px; text-align: center; background: #ffffff;">
+            <div style="width: 52px; height: 52px; border-radius: 50%; background: #f8fafc; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #94a3b8;">
+              <i data-feather="users" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div style="font-weight: 800; color: #0f172a; font-size: 15px; margin-bottom: 4px;">No Registrations Found</div>
+            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0;">No attendee records match your selected filter criteria.</p>
+            <a href="{% url 'dashboard_registrations' %}" style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; text-decoration: none;">
+              Reset Filters
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Table Footer Summary Strip -->
+  <div style="padding: 12px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #64748b; font-weight: 600;">
+    <div>
+      Showing <strong>{{ registrations|length }}</strong> of <strong>{{ total_registrations_count|default:registrations.count|default:0 }}</strong> total registrations
+    </div>
+    <div style="font-size: 11.5px; color: #94a3b8;">
+      KNOVA Global Higher Education Expo 2027
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
+});
+</script>
+{% endblock %}

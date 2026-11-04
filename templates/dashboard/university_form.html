@@ -1,0 +1,235 @@
+{% extends base_template|default:'dashboard/base.html' %}
+{% load static %}
+{% block title %}{{ action }} University Profile & Content | KNOVA{% endblock %}
+
+{% block nav_uni_content %}active{% endblock %}
+
+{% block nav_universities %}active{% endblock %}
+
+{% block page_title %}{{ action }} University Content{% endblock %}
+
+{% block content %}
+<div style="max-width: 960px; margin: 0 auto; padding-bottom: 40px;">
+
+  <!-- Header Bar -->
+  <div class="glass-card" style="margin-bottom: 24px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+        <span style="background: #eff6ff; color: #1768ff; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; text-transform: uppercase;">Institutional Editor</span>
+        <h2 style="margin: 0; font-size: 22px; font-weight: 800; color: #0a1936;">{{ action }} University Profile & Content</h2>
+      </div>
+      <p style="color: #64748b; font-size: 13.5px; margin: 0;">Update institutional identity, public page descriptions, admission criteria, and branding assets.</p>
+    </div>
+    {% if university and university.slug %}
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <a href="{% url 'university_detail' university.slug %}" target="_blank" class="btn" style="background: #ffffff !important; border: 1.5px solid #cbd5e1 !important; color: #0a1936; font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+        <i data-feather="external-link" style="width: 15px; height: 15px;"></i> View Public Page
+      </a>
+    </div>
+    {% endif %}
+  </div>
+  <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 24px;">
+    {% csrf_token %}
+    {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
+
+    <!-- 1. Institutional Identity -->
+    <div class="glass-card" style="padding: 24px;">
+      <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+        <i data-feather="book-open" style="width: 18px; height: 18px; color: #1768ff;"></i> Institutional Identity & Overview
+      </h3>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">University / Institution Name <span style="color:#ef4444;">*</span></label>
+          {{ form.name }}
+          {% if form.name.errors %}<div style="color: #ef4444; font-size: 12px; margin-top: 3px;">{{ form.name.errors }}</div>{% endif %}
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Official Website URL</label>
+            {{ form.website }}
+            <span style="font-size: 11.5px; color: #64748b;">e.g. https://www.keralauniversity.ac.in</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Established Year</label>
+            {{ form.established_year }}
+            <span style="font-size: 11.5px; color: #64748b;">e.g. 1937</span>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Institution Type</label>
+            {{ form.university_type }}
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Accreditation & Rankings</label>
+            {{ form.accreditation }}
+            <span style="font-size: 11.5px; color: #64748b;">e.g. NAAC A++ Accredited &bull; NIRF Top 25</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Location & Campus -->
+    <div class="glass-card" style="padding: 24px;">
+      <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+        <i data-feather="map-pin" style="width: 18px; height: 18px; color: #10b981;"></i> Campus Location
+      </h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Campus City</label>
+          {{ form.location_city }}
+          <span style="font-size: 11.5px; color: #64748b;">e.g. Thiruvananthapuram</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">State & Country</label>
+          {{ form.location_state_country }}
+          <span style="font-size: 11.5px; color: #64748b;">e.g. Kerala, India</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Media & Branding Assets -->
+    <div class="glass-card" style="padding: 24px;">
+      <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+        <i data-feather="image" style="width: 18px; height: 18px; color: #8b5cf6;"></i> Media & Branding Assets
+      </h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">University Emblem / Logo</label>
+          {% if university and university.profile.logo %}
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+            <img src="{{ university.profile.logo.url }}" alt="Logo" style="width: 48px; height: 48px; object-fit: contain; border-radius: 6px; background: #fff; padding: 3px;">
+            <div style="font-size: 12px; color: #64748b;">Current official emblem active</div>
+          </div>
+          {% endif %}
+          {{ form.logo }}
+          <span style="font-size: 11.5px; color: #64748b;">Square format recommended (PNG/JPG). Displays across listings, booth cards, and header.</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Campus Cover Photo / Hero Banner</label>
+          {% if university and university.profile.cover_image %}
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+            <img src="{{ university.profile.cover_image.url }}" alt="Cover" style="width: 72px; height: 48px; object-fit: cover; border-radius: 6px;">
+            <div style="font-size: 12px; color: #64748b;">Current hero banner image active</div>
+          </div>
+          {% endif %}
+          {{ form.cover_image }}
+          <span style="font-size: 11.5px; color: #64748b;">High-resolution landscape photo for public page header banner.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Public Page Detailed Content -->
+    <div class="glass-card" style="padding: 24px;">
+      <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+        <i data-feather="file-text" style="width: 18px; height: 18px; color: #f59e0b;"></i> Public Page Editorial Content
+      </h3>
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Short Card Summary (Quick Overview)</label>
+          {{ form.short_description }}
+          <span style="font-size: 11.5px; color: #64748b;">Shown on directory cards, search results, and quick preview modals. (1-2 sentences).</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">About the University</label>
+          {{ form.about }}
+          <span style="font-size: 11.5px; color: #64748b;">Comprehensive overview of university history, research pedigree, global partnerships, and academic mission.</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Campus & Facilities</label>
+          {{ form.campus_facilities }}
+          <span style="font-size: 11.5px; color: #64748b;">Describe academic libraries, supercomputing centers, research laboratories, sports arenas, residential halls, and dining.</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Admission Process & Entry Criteria</label>
+          {{ form.admission_process }}
+          <span style="font-size: 11.5px; color: #64748b;">Detail eligibility standards, intake periods, entrance tests required, document verification, and visa support.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Homepage Hero Banner & Visibility (Admin Only) -->
+    {% if is_admin or request.user.is_superuser or request.user.is_staff or role == 'admin' %}
+    <div class="glass-card" style="padding: 24px;">
+      <h3 style="font-size: 15px; font-weight: 800; color: #0a1936; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+        <i data-feather="layout" style="width: 18px; height: 18px; color: #1768ff;"></i> Homepage Hero Card Placement &amp; Visibility
+      </h3>
+      <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; gap: 20px; align-items: start; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0;">
+        <div>
+          <label for="{{ form.hero_priority.id_for_label }}" style="font-size: 13.5px; font-weight: 750; color: #0a1936; display: block; margin-bottom: 6px;">
+            Hero Card Position / Priority
+          </label>
+          {{ form.hero_priority }}
+          {% if form.hero_priority.errors %}<div style="color: #ef4444; font-size: 12px; margin-top: 4px;">{{ form.hero_priority.errors }}</div>{% endif %}
+        </div>
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 14px 18px; font-size: 12.5px; color: #1e40af; line-height: 1.6;">
+          <strong style="color: #1768ff; display: block; margin-bottom: 4px;"><i data-feather="info" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> Homepage Hero Banner Layout Guide:</strong>
+          &bull; <strong>Priority 1 &ndash; 3:</strong> Appears as the <strong>Left Floating Cards</strong> on homepage hero banner (Top, Middle, Bottom)<br>
+          &bull; <strong>Priority 4 &ndash; 6:</strong> Appears as the <strong>Right Floating Cards</strong> on homepage hero banner (Top, Middle, Bottom)<br>
+          &bull; <strong>Priority 7 &ndash; 15:</strong> Appears on the draggable canvas orbit surrounding the hero banner<br>
+          &bull; <strong>Priority 0:</strong> Hidden from homepage hero cards (listed only in standard university directory)
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        {{ form.is_approved }}
+        <div>
+          <label for="{{ form.is_approved.id_for_label }}" style="font-size: 14px; font-weight: 700; color: #0a1936; cursor: pointer; display: block;">
+            Publish University to Public Expo Directory &amp; Hero Cards
+          </label>
+          <span style="font-size: 12px; color: #64748b;">When checked, this university is live for students, attendees, and search crawlers.</span>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Form Actions Bar -->
+    <div class="glass-card" style="padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; position: sticky; bottom: 20px; z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1.5px solid #bfdbfe; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px);">
+      <div>
+        <a href="{% if request.GET.next %}{{ request.GET.next }}{% elif user_university %}{% url 'university_dashboard_view' user_university.pk %}{% elif university %}{% url 'university_dashboard_view' university.pk %}{% else %}{% url 'dashboard_index' %}{% endif %}" style="color: #64748b; text-decoration: none; font-weight: 700; font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px;">
+          &larr; Cancel / Return
+        </a>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <button type="submit" class="btn btn-primary" style="background: #1768ff; color: #0f172a !important; padding: 11px 28px; border-radius: 9px; font-weight: 800; font-size: 14px; border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(23,104,255,0.3); display: inline-flex; align-items: center; gap: 8px;">
+          <i data-feather="check" style="width: 16px; height: 16px;"></i> Save University Profile
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<style>
+  form input[type="text"], form input[type="url"], form select, form textarea, form input[type="file"] {
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    color: #0a1936;
+    padding: 12px 14px;
+    border-radius: 9px;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 13.5px;
+    line-height: 1.5;
+    transition: all 0.2s ease;
+  }
+
+  form input[type="text"]:focus, form input[type="url"]:focus, form select:focus, form textarea:focus {
+    outline: none;
+    border-color: #1768ff;
+    box-shadow: 0 0 0 3px rgba(23,104,255,0.12);
+  }
+
+  form textarea {
+    resize: vertical;
+  }
+
+  form input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #1768ff;
+    cursor: pointer;
+  }
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,421 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Seminar Attendance Punch Scanner | KNOVA{% endblock %}
+{% block nav_seminar_scanner %}active{% endblock %}
+{% block page_title %}Seminar Attendance Punch Scanner{% endblock %}
+
+{% block content %}
+<style>
+.scanner-main-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 24px;
+  align-items: flex-start;
+}
+@media (max-width: 900px) {
+  .scanner-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+</style>
+
+<!-- Top Header Card -->
+<div class="glass-card" style="margin-bottom: 24px; padding: 22px 26px; border-radius: 16px; background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); border: 1.5px solid #a7f3d0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(5,150,105,0.25)); border: 1.5px solid rgba(16,185,129,0.3); display: flex; align-items: center; justify-content: center; color: #10b981;">
+      <i data-feather="check-square" style="width: 26px; height: 26px;"></i>
+    </div>
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <h2 style="margin: 0; font-size: 20px; font-weight: 800; color: #0a1936;">Seminar Hall Attendance Punch Scanner</h2>
+        <span style="background: #eff6ff; color: #1768ff; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; border: 1px solid #bfdbfe;">
+          {{ hall_name }}
+        </span>
+      </div>
+      <p style="margin: 4px 0 0; font-size: 13.5px; color: #64748b;">
+        Scan student visitor badges to verify attendance for keynote presentations & panel workshops. Awards <strong>+25 pts</strong> per session.
+      </p>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <a href="{% url 'seminar_attendance_roster' %}" class="btn" style="background: #f0fdf4; color: #15803d; border: 1.5px solid #bbf7d0; font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+      <i data-feather="users" style="width: 15px; height: 15px;"></i> View Attendance Roster
+    </a>
+    <a href="{% url 'dashboard_index' %}" class="btn" style="background: #fff; border: 1px solid #cbd5e1; color: #475569; font-weight: 600; font-size: 13px; padding: 9px 14px; border-radius: 8px; text-decoration: none;">
+      &larr; Dashboard
+    </a>
+  </div>
+</div>
+
+<!-- Active Session Selector Card -->
+<div class="glass-card" style="margin-bottom: 24px; padding: 18px 24px; border-radius: 14px; border-left: 4px solid #1768ff;">
+  <form method="GET" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div style="flex: 1; min-width: 280px;">
+      <label style="display: block; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 6px;">
+        Active Seminar Session To Check-In:
+      </label>
+      <select name="session_id" onchange="this.form.submit()" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 13.5px; font-weight: 700; color: #0a1936; background: #fff;">
+        {% for s in sessions %}
+        <option value="{{ s.id }}" {% if selected_session and selected_session.id == s.id %}selected{% endif %}>
+          {{ s.title }} &bull; {{ s.hall_name }} ({{ s.start_time|time:"g:i A" }} – {{ s.end_time|time:"g:i A" }})
+        </option>
+        {% empty %}
+        <option value="">No seminar sessions scheduled in {{ hall_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {% if selected_session %}
+    <div style="display: flex; gap: 14px; align-items: center; font-size: 13px; color: #475569; flex-wrap: wrap;">
+      <div><strong>Speaker:</strong> {{ selected_session.speaker.name|default:'Keynote Panelist' }}</div>
+      <div><strong>Date:</strong> {{ selected_session.date|date:"M d, Y" }}</div>
+      <span style="background: #ecfdf5; color: #059669; font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 20px;">
+        {{ total_punched_for_session }} Checked In
+      </span>
+    </div>
+    {% endif %}
+  </form>
+</div>
+
+<!-- Main 2-Column Grid -->
+<div class="scanner-main-grid">
+  
+  <!-- LEFT COLUMN: Camera Scanner & Manual Input -->
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    
+    <!-- Camera Viewport Card -->
+    <div class="glass-card" style="padding: 24px; border-radius: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px;">
+          <i data-feather="video" style="width: 18px; height: 18px; color: #1768ff;"></i> Real-Time Camera Scanner
+        </h3>
+        <button id="btnToggleCamera" onclick="toggleCamera()" class="btn" style="background: #1768ff; color: #fff; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+          <i data-feather="video" style="width: 14px; height: 14px;"></i> <span id="cameraBtnText">Start Camera</span>
+        </button>
+      </div>
+
+      <!-- Viewfinder -->
+      <div id="reader" style="width: 100%; min-height: 280px; border-radius: 12px; overflow: hidden; background: #0f172a; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8;">
+        <div id="cameraPlaceholder" style="text-align: center; padding: 40px 20px;">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+            <i data-feather="camera" style="width: 28px; height: 28px; color: #38bdf8;"></i>
+          </div>
+          <div style="color: #fff; font-weight: 700; font-size: 14.5px;">Seminar Scanner Standby</div>
+          <div style="font-size: 12px; color: #94a3b8; margin-top: 4px; max-width: 280px;">Click "Start Camera" to scan student QR badges entering {{ selected_session.hall_name|default:hall_name }}.</div>
+        </div>
+      </div>
+
+      <div id="scanStatusMsg" style="display: none; margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; text-align: center;"></div>
+    </div>
+
+    <!-- Manual Punch Input Card -->
+    <div class="glass-card" style="padding: 24px; border-radius: 16px;">
+      <h3 style="margin: 0 0 14px 0; font-size: 15.5px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px;">
+        <i data-feather="edit-3" style="width: 17px; height: 17px; color: #1768ff;"></i> Manual Student Punch Input
+      </h3>
+
+      <form id="seminarPunchForm" onsubmit="handleManualPunch(event)" style="display: flex; flex-direction: column; gap: 14px;">
+        {% csrf_token %}
+        <input type="hidden" id="selectedSessionId" name="session_id" value="{{ selected_session.id }}">
+
+        <div>
+          <label style="display: block; font-size: 11.5px; font-weight: 750; color: #475569; text-transform: uppercase; margin-bottom: 6px;">
+            Student Code / Badge ID / Registration ID / Email:
+          </label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="studentCodeInput" name="student_code" placeholder="Scan or enter Badge ID or Student Email..." required autofocus
+              style="flex: 1; padding: 12px 14px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 14px; font-weight: 600; color: #0a1936; outline: none; transition: border 0.2s;"
+              onfocus="this.style.borderColor='#1768ff'" onblur="this.style.borderColor='#cbd5e1'">
+            <button type="submit" id="btnSubmitPunch" class="btn" style="background: #10b981; color: #fff; font-weight: 700; font-size: 13.5px; padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(16,185,129,0.25);">
+              <i data-feather="check-circle" style="width: 16px; height: 16px;"></i> Punch Seminar
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px;">
+            Notes (Optional):
+          </label>
+          <input type="text" id="punchNotesInput" name="notes" placeholder="e.g. Arrived on time, seat assigned" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1.5px solid #e2e8f0; font-size: 12.5px; color: #334155; box-sizing: border-box;">
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN: Real-Time Verified Attendee Card & Feed -->
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    
+    <!-- Verified Attendee Card (Shown on Scan) -->
+    <div id="verifiedAttendeeCard" class="glass-card" style="padding: 24px; border-radius: 16px; border: 1.5px solid #bbf7d0; background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%); display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: #10b981; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px;" id="attAvatar">
+            A
+          </div>
+          <div>
+            <h3 id="attName" style="margin: 0; font-size: 17px; font-weight: 800; color: #0a1936;">Student Name</h3>
+            <span id="attEmail" style="font-size: 11.5px; color: #64748b;">email@example.com</span>
+          </div>
+        </div>
+        <span style="background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px;">
+          ✓ Attendance Verified
+        </span>
+      </div>
+
+      <div style="background: #ffffff; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 14px; font-size: 12.5px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="color: #64748b;">Session:</span>
+          <strong id="attSessionTitle" style="color: #1768ff;">Session Title</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="color: #64748b;">Hall:</span>
+          <strong id="attHall">Hall A</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="color: #64748b;">Education:</span>
+          <span id="attEdu">Undergraduate</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: #64748b;">Passport Points:</span>
+          <strong id="attPoints" style="color: #10b981;">+25 pts credited</strong>
+        </div>
+      </div>
+
+      <div style="text-align: right; font-size: 11px; color: #94a3b8;">
+        Verified at <span id="attTime">Just now</span>
+      </div>
+    </div>
+
+    <!-- Standby Card -->
+    <div id="attendeeStandbyCard" class="glass-card" style="padding: 32px 20px; border-radius: 16px; text-align: center; color: #64748b;">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: #eff6ff; color: #1768ff; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+        <i data-feather="check-circle" style="width: 28px; height: 28px;"></i>
+      </div>
+      <h4 style="margin: 0 0 6px 0; font-size: 16px; font-weight: 800; color: #0a1936;">Awaiting Seminar Check-in</h4>
+      <p style="margin: 0; font-size: 13px; line-height: 1.5; max-width: 320px; margin-left: auto; margin-right: auto;">
+        Scan student visitor badges as they enter the seminar hall to mark attendance and credit their challenge passport.
+      </p>
+    </div>
+
+    <!-- Recent Punches For this Session -->
+    <div class="glass-card" style="padding: 22px; border-radius: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h4 style="margin: 0; font-size: 14.5px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 7px;">
+          <i data-feather="clock" style="width: 16px; height: 16px; color: #10b981;"></i> Session Attendee Stream
+        </h4>
+        <span style="font-size: 11.5px; font-weight: 700; color: #10b981; background: #ecfdf5; padding: 2px 8px; border-radius: 12px;">
+          {{ total_punched_for_session }} Checked-in
+        </span>
+      </div>
+
+      <div id="recentSeminarPunchesList" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">
+        {% for att in recent_attendances %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #fff; border: 1px solid #f1f5f9; border-radius: 8px; font-size: 12.5px;">
+          <div>
+            <strong style="color: #0a1936;">{{ att.student.user.get_full_name|default:att.student.user.username }}</strong>
+            <div style="font-size: 11px; color: #64748b;">{{ att.student.user.email }}</div>
+          </div>
+          <div style="text-align: right;">
+            <span style="background: #eff6ff; color: #1768ff; font-weight: 700; font-size: 10.5px; padding: 2px 6px; border-radius: 4px;">{{ att.punch_method }}</span>
+            <div style="font-size: 10px; color: #94a3b8; margin-top: 2px;">{{ att.attended_at|date:"g:i A" }}</div>
+          </div>
+        </div>
+        {% empty %}
+        <div style="padding: 18px; text-align: center; color: #94a3b8; font-size: 12px;">
+          No attendees scanned for this session yet.
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- HTML5-QRCode Library -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<script>
+let html5QrCode = null;
+let isCameraRunning = false;
+
+function toggleCamera() {
+  if (isCameraRunning) {
+    stopCamera();
+  } else {
+    startCamera();
+  }
+}
+
+function startCamera() {
+  const placeholder = document.getElementById('cameraPlaceholder');
+  if (placeholder) placeholder.style.display = 'none';
+
+  html5QrCode = new Html5Qrcode("reader");
+  const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+  html5QrCode.start(
+    { facingMode: "environment" },
+    config,
+    (decodedText) => {
+      handleScannedCode(decodedText);
+    },
+    () => {}
+  ).then(() => {
+    isCameraRunning = true;
+    document.getElementById('cameraBtnText').textContent = "Stop Camera";
+    document.getElementById('btnToggleCamera').style.background = '#ef4444';
+    showStatus("Seminar camera scanner active. Scan student badges.", "info");
+  }).catch((err) => {
+    isCameraRunning = false;
+    if (placeholder) placeholder.style.display = 'block';
+    showStatus("Could not access camera: " + err, "error");
+  });
+}
+
+function stopCamera() {
+  if (html5QrCode && isCameraRunning) {
+    html5QrCode.stop().then(() => {
+      isCameraRunning = false;
+      document.getElementById('cameraBtnText').textContent = "Start Camera";
+      document.getElementById('btnToggleCamera').style.background = '#1768ff';
+      const placeholder = document.getElementById('cameraPlaceholder');
+      if (placeholder) placeholder.style.display = 'block';
+      showStatus("Camera stopped.", "info");
+    }).catch(console.error);
+  }
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('scanStatusMsg');
+  el.style.display = 'block';
+  el.textContent = msg;
+  if (type === 'success') {
+    el.style.background = '#ecfdf5';
+    el.style.color = '#065f46';
+    el.style.border = '1px solid #a7f3d0';
+  } else if (type === 'error') {
+    el.style.background = '#fef2f2';
+    el.style.color = '#991b1b';
+    el.style.border = '1px solid #fecaca';
+  } else {
+    el.style.background = '#eff6ff';
+    el.style.color = '#1e40af';
+    el.style.border = '1px solid #bfdbfe';
+  }
+}
+
+function playBeepSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(987.77, ctx.currentTime);
+    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.18);
+  } catch(e) {}
+}
+
+let lastScanned = "";
+let lastScanTime = 0;
+
+function handleScannedCode(code) {
+  const now = Date.now();
+  if (code === lastScanned && now - lastScanTime < 3000) return;
+  lastScanned = code;
+  lastScanTime = now;
+
+  document.getElementById('studentCodeInput').value = code;
+  executeSeminarPunch(code, 'QR Scanner');
+}
+
+function handleManualPunch(e) {
+  e.preventDefault();
+  const code = document.getElementById('studentCodeInput').value.trim();
+  const notes = document.getElementById('punchNotesInput').value.trim();
+  if (!code) return;
+  executeSeminarPunch(code, notes);
+}
+
+function executeSeminarPunch(code, notes) {
+  const sessionId = document.getElementById('selectedSessionId').value;
+  if (!sessionId) {
+    showStatus("Please select an active session first.", "error");
+    return;
+  }
+
+  showStatus(`Verifying attendee "${code}"...`, "info");
+  const btn = document.getElementById('btnSubmitPunch');
+  btn.disabled = true;
+
+  fetch("{% url 'seminar_punch_attendance' %}", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+    },
+    body: JSON.stringify({
+      session_id: sessionId,
+      student_code: code,
+      notes: notes || 'QR Scanner Punch'
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    btn.disabled = false;
+    if (data.success) {
+      playBeepSound();
+      showStatus(data.message, "success");
+      renderAttendeeCard(data.student);
+      prependRecentAttendee(data.student);
+    } else {
+      showStatus(data.message, "error");
+    }
+  })
+  .catch(err => {
+    btn.disabled = false;
+    showStatus("Error punching seminar attendance: " + err, "error");
+  });
+}
+
+function renderAttendeeCard(s) {
+  document.getElementById('attendeeStandbyCard').style.display = 'none';
+  const card = document.getElementById('verifiedAttendeeCard');
+  card.style.display = 'block';
+
+  document.getElementById('attName').textContent = s.name;
+  document.getElementById('attAvatar').textContent = s.name.charAt(0).toUpperCase();
+  document.getElementById('attEmail').textContent = s.email;
+  document.getElementById('attSessionTitle').textContent = s.session_title;
+  document.getElementById('attHall').textContent = s.hall_name;
+  document.getElementById('attEdu').textContent = `${s.education} (${s.school_college || 'Student'})`;
+  document.getElementById('attPoints').textContent = `${s.points} pts (+25 pts credited)`;
+  document.getElementById('attTime').textContent = s.attended_at;
+}
+
+function prependRecentAttendee(s) {
+  const list = document.getElementById('recentSeminarPunchesList');
+  const div = document.createElement('div');
+  div.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #ecfdf5; border: 1.5px solid #a7f3d0; border-radius: 8px; font-size: 12.5px; animation: fadeIn 0.3s ease;";
+  div.innerHTML = `
+    <div>
+      <strong style="color: #0a1936;">${s.name}</strong>
+      <div style="font-size: 11px; color: #059669;">${s.email}</div>
+    </div>
+    <div style="text-align: right;">
+      <span style="background: #10b981; color: #fff; font-weight: 700; font-size: 10.5px; padding: 2px 6px; border-radius: 4px;">Verified</span>
+      <div style="font-size: 10px; color: #059669; margin-top: 2px;">Just now</div>
+    </div>
+  `;
+  list.insertBefore(div, list.firstChild);
+}
+</script>
+{% endblock %}

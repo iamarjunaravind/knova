@@ -1,0 +1,79 @@
+{% extends base_template|default:'dashboard/base.html' %}
+
+{% block title %}{{ action }} Seminar | KNOVA{% endblock %}
+{% block nav_events %}active{% endblock %}
+{% block page_title %}{{ action }} Seminar{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+  <form method="POST" style="display:flex; flex-direction:column; gap:20px;">
+    {% csrf_token %}
+    
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <label style="font-size:13px; font-weight:600; color:#475569;">Session Title</label>
+      {{ form.title }}
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:20px;">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <label style="font-size:13px; font-weight:600; color:#475569;">Event Location</label>
+        {{ form.event_location }}
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <label style="font-size:13px; font-weight:600; color:#475569;">Speaker (Optional)</label>
+        {{ form.speaker }}
+      </div>
+    </div>
+    
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:20px;">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <label style="font-size:13px; font-weight:600; color:#475569;">Date</label>
+        {{ form.date }}
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <label style="font-size:13px; font-weight:600; color:#475569;">Start Time</label>
+        {{ form.start_time }}
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <label style="font-size:13px; font-weight:600; color:#475569;">End Time</label>
+        {{ form.end_time }}
+      </div>
+    </div>
+    
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <label style="font-size:13px; font-weight:600; color:#475569;">Hall/Room Name</label>
+      {{ form.hall_name }}
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <label style="font-size:13px; font-weight:600; color:#475569;">Session Description</label>
+      {{ form.description }}
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:16px; margin-top:20px; border-top:1px solid var(--card-border); padding-top:20px;">
+      <a href="{% url 'dashboard_events' %}?type=seminar" style="color:#475569; text-decoration:none; padding:10px 20px;">Cancel</a>
+      <button type="submit" class="btn btn-primary">Save Session</button>
+    </div>
+  </form>
+</div>
+
+<style>
+  form input[type="text"], form input[type="date"], form input[type="time"], form select, form textarea {
+    background: #ffffff !important; border: 1.5px solid #cbd5e1 !important;
+    border: 1px solid var(--card-border);
+    color: #0f172a !important;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  form input[type="text"]:focus, form input[type="date"]:focus, form input[type="time"]:focus, form select:focus, form textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(23,104,255,0.2);
+  }
+  form select option { background: #fff; }
+  form textarea { height: 100px; resize: vertical; }
+</style>
+{% endblock %}

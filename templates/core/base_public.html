@@ -1,0 +1,3230 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{% block page_title %}{% if request.path == '/about/' and site_config.seo_about_title %}{{ site_config.seo_about_title }}{% elif request.path == '/courses/' and site_config.seo_courses_title %}{{ site_config.seo_courses_title }}{% elif request.path == '/exhibitors/' and site_config.seo_exhibitors_title %}{{ site_config.seo_exhibitors_title }}{% elif request.path == '/events/' and site_config.seo_events_title %}{{ site_config.seo_events_title }}{% elif request.path == '/scholarships/' and site_config.seo_scholarships_title %}{{ site_config.seo_scholarships_title }}{% elif request.path == '/speakers/' and site_config.seo_speakers_title %}{{ site_config.seo_speakers_title }}{% elif request.path == '/map/' and site_config.seo_map_title %}{{ site_config.seo_map_title }}{% elif request.path == '/sponsors/' and site_config.seo_sponsors_title %}{{ site_config.seo_sponsors_title }}{% else %}{{ site_config.meta_title|default:"KNOVA - Future Begins Here" }}{% endif %}{% endblock %}</title>
+
+<meta name="description" content="{% block meta_description %}{% if request.path == '/about/' and site_config.seo_about_desc %}{{ site_config.seo_about_desc }}{% elif request.path == '/courses/' and site_config.seo_courses_desc %}{{ site_config.seo_courses_desc }}{% elif request.path == '/exhibitors/' and site_config.seo_exhibitors_desc %}{{ site_config.seo_exhibitors_desc }}{% elif request.path == '/events/' and site_config.seo_events_desc %}{{ site_config.seo_events_desc }}{% elif request.path == '/scholarships/' and site_config.seo_scholarships_desc %}{{ site_config.seo_scholarships_desc }}{% elif request.path == '/speakers/' and site_config.seo_speakers_desc %}{{ site_config.seo_speakers_desc }}{% elif request.path == '/map/' and site_config.seo_map_desc %}{{ site_config.seo_map_desc }}{% elif request.path == '/sponsors/' and site_config.seo_sponsors_desc %}{{ site_config.seo_sponsors_desc }}{% else %}{{ site_config.meta_description|default:'Meet world-class universities, discover global study opportunities and connect with education experts at KNOVA GCC.' }}{% endif %}{% endblock %}">
+
+{% if site_config.meta_keywords %}
+<meta name="keywords" content="{{ site_config.meta_keywords }}">
+{% endif %}
+
+<meta name="robots" content="{{ site_config.robots_meta|default:'index, follow' }}">
+
+{% if site_config.canonical_base_url %}
+<link rel="canonical" href="{{ site_config.canonical_base_url }}{{ request.path }}">
+{% endif %}
+
+{% if site_config.google_site_verification %}
+<meta name="google-site-verification" content="{{ site_config.google_site_verification }}">
+{% endif %}
+
+{% if site_config.bing_site_verification %}
+<meta name="msvalidate.01" content="{{ site_config.bing_site_verification }}">
+{% endif %}
+
+<!-- Open Graph / Social Media Meta Tags -->
+<meta property="og:site_name" content="{{ site_config.og_site_name|default:'KNOVA 2027' }}">
+<meta property="og:type" content="{{ site_config.og_type|default:'website' }}">
+<meta property="og:title" content="{% block og_title %}{{ site_config.og_title|default:site_config.meta_title|default:'KNOVA - Future Begins Here' }}{% endblock %}">
+<meta property="og:description" content="{% block og_description %}{{ site_config.og_description|default:site_config.meta_description|default:'Meet world-class universities, discover global study opportunities and connect with education experts at KNOVA GCC.' }}{% endblock %}">
+{% if site_config.og_image %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_config.og_image.url }}">
+{% endif %}
+{% if site_config.canonical_base_url %}
+<meta property="og:url" content="{{ site_config.canonical_base_url }}{{ request.path }}">
+{% else %}
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% endif %}
+
+<!-- Twitter / X Card Meta Tags -->
+<meta name="twitter:card" content="{{ site_config.twitter_card_type|default:'summary_large_image' }}">
+{% if site_config.twitter_handle %}
+<meta name="twitter:site" content="{{ site_config.twitter_handle }}">
+{% endif %}
+{% if site_config.twitter_creator %}
+<meta name="twitter:creator" content="{{ site_config.twitter_creator }}">
+{% endif %}
+<meta name="twitter:title" content="{% block twitter_title %}{{ site_config.og_title|default:site_config.meta_title|default:'KNOVA - Future Begins Here' }}{% endblock %}">
+<meta name="twitter:description" content="{% block twitter_description %}{{ site_config.og_description|default:site_config.meta_description|default:'Meet world-class universities, discover global study opportunities and connect with education experts at KNOVA GCC.' }}{% endblock %}">
+{% if site_config.og_image %}
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site_config.og_image.url }}">
+{% endif %}
+
+{% if site_config.google_tag_manager_id %}
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','{{ site_config.google_tag_manager_id }}');</script>
+<!-- End Google Tag Manager -->
+{% endif %}
+
+{% if site_config.google_analytics_id %}
+<!-- Google Analytics 4 (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ site_config.google_analytics_id }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{ site_config.google_analytics_id }}');
+</script>
+<!-- End Google Analytics 4 -->
+{% endif %}
+
+{% if site_config.enable_schema_org %}
+<!-- Schema.org JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "{{ site_config.canonical_base_url|default:request.build_absolute_uri }}#organization",
+      "name": "{{ site_config.schema_org_name|default:'KNOVA Global Higher Education Expo'|escapejs }}",
+      "url": "{{ site_config.canonical_base_url|default:request.build_absolute_uri }}",
+      "description": "{{ site_config.meta_description|default:'Meet world-class universities, discover global study opportunities and connect with education experts at KNOVA GCC.'|escapejs }}"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "{{ site_config.canonical_base_url|default:request.build_absolute_uri }}#website",
+      "url": "{{ site_config.canonical_base_url|default:request.build_absolute_uri }}",
+      "name": "{{ site_config.schema_org_name|default:'KNOVA Global Higher Education Expo'|escapejs }}",
+      "publisher": {
+        "@id": "{{ site_config.canonical_base_url|default:request.build_absolute_uri }}#organization"
+      }
+    },
+    {
+      "@type": "EducationEvent",
+      "name": "{{ site_config.schema_org_name|default:'KNOVA Global Higher Education Expo'|escapejs }}",
+      "description": "{{ site_config.meta_description|default:'Meet world-class universities and connect with education experts'|escapejs }}",
+      "eventStatus": "https://schema.org/EventScheduled",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "location": {
+        "@type": "Place",
+        "name": "{{ site_config.footer_address|default:'Middle East & GCC'|escapejs }}",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Dubai / Riyadh",
+          "addressCountry": "UAE / KSA"
+        }
+      },
+      "organizer": {
+        "@id": "{{ site_config.canonical_base_url|default:request.build_absolute_uri }}#organization"
+      }
+    }
+  ]
+}
+</script>
+{% endif %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+<link rel="preload" as="image" href="{% static 'assets/logo.webp' %}" fetchpriority="high" type="image/webp">
+
+<link rel="preload" as="image" href="{% static 'assets/hero_frames/frame_000.webp' %}?v=5" fetchpriority="high" type="image/webp">
+
+{% if request.path == '/' or request.path == '' %}
+
+<link rel="preload" as="video" href="{% static 'assets/hero_bg.mp4' %}?v=5" type="video/mp4">
+
+{% endif %}
+
+<link rel="preload" as="font" type="font/woff2" href="https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko20yw.woff2" crossorigin>
+
+<link rel="preload" as="style" href="{% static 'css/style.css' %}?v=4.2">
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}?v=4.2">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" media="print" onload="this.media='all'">
+
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"></noscript>
+
+<style>
+
+:root {
+  --eventor-font: 'Poppins', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --eventor-heading-font: 'Poppins', 'Plus Jakarta Sans', sans-serif;
+  --eventor-primary: #0055ff;
+  --eventor-primary-dark: #0040cc;
+  --eventor-gradient: linear-gradient(135deg, #0055ff 0%, #0099ff 100%);
+  --eventor-ease: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --eventor-ease-smooth: cubic-bezier(0.25, 0.8, 0.25, 1);
+  --eventor-shadow: 0 16px 36px -8px rgba(10, 25, 54, 0.10), 0 4px 12px rgba(0, 85, 255, 0.06);
+  --eventor-shadow-hover: 0 20px 42px -6px rgba(0, 85, 255, 0.20), 0 8px 18px rgba(10, 25, 54, 0.08);
+  --eventor-section-py: 85px;
+  --eventor-section-py-mobile: 48px;
+  --eventor-container-max: 1240px;
+  --eventor-card-pad: 26px;
+  --eventor-card-gap: 20px;
+  /* Normalized System Tokens - Sharpened Contrast */
+
+  --knova-section-py-lg: clamp(75px, 8.5vw, 100px);
+  --knova-section-py-md: clamp(60px, 7vw, 80px);
+  --knova-section-py-sm: clamp(38px, 4.5vw, 52px);
+  --knova-radius-sm: 10px;
+  --knova-radius-md: 16px;
+  --knova-radius-lg: 20px;
+  --knova-radius-xl: 28px;
+  --knova-radius-pill: 9999px;
+  --knova-shadow-subtle: 0 2px 8px rgba(10, 25, 54, 0.06), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --knova-shadow-card: 0 8px 24px -4px rgba(10, 25, 54, 0.08), 0 2px 6px -1px rgba(10, 25, 54, 0.03);
+  --knova-shadow-card-hover: 0 18px 38px -4px rgba(10, 25, 54, 0.12), 0 6px 14px -2px rgba(0, 85, 255, 0.10);
+  --knova-blue: #0055ff;
+  --knova-blue-bg: #eff6ff;
+  --knova-blue-border: #93c5fd;
+  --knova-violet: #7c3aed;
+  --knova-violet-bg: #f5f3ff;
+  --knova-violet-border: #c4b5fd;
+  --knova-amber: #d97706;
+  --knova-amber-bg: #fffbeb;
+  --knova-amber-border: #fcd34d;
+  --knova-emerald: #059669;
+  --knova-emerald-bg: #ecfdf5;
+  --knova-emerald-border: #6ee7b7;
+  --knova-cyan: #0284c7;
+  --knova-cyan-bg: #f0f9ff;
+  --knova-cyan-border: #7dd3fc;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko20yw.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'tabler-icons';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/fonts/tabler-icons.woff2") format("woff2");
+}
+
+body, button, input, select, textarea {
+  font-family: var(--eventor-font);
+}
+
+h1, h2, h3, h4, h5, h6, .btn, .navlinks a {
+  font-family: var(--eventor-heading-font);
+}
+
+  /* Universal Responsive & Device Compatibility Upgrades */
+
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  img, video, iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .table-responsive,
+  div:has(> table) {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  @media (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important; /* Prevent iOS Safari auto-zoom on input focus */
+
+    }
+
+  }
+
+  @media (max-width: 480px) {
+    .btn, button.btn-primary-gradient, button.btn-secondary {
+      min-height: 44px; /* Touch-friendly tap targets */
+
+    }
+
+  }
+
+</style>
+
+{% if site_config.custom_head_code %}
+{{ site_config.custom_head_code|safe }}
+{% endif %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+{% if site_config.google_tag_manager_id %}
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ site_config.google_tag_manager_id }}"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+{% endif %}
+
+
+<style>
+
+  /* Disable text selection and copying across the website */
+
+  *, *::before, *::after {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+  }
+
+  input, textarea, select, [contenteditable="true"], [contenteditable="true"] * {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+  }
+
+  /* Borderless Card System with Soft Light Background */
+
+  .exhibitor-brand-card,
+  .eventor-prog-card,
+  .fund-card,
+  .sponsor-elite-card,
+  .city-location-card,
+  .how-to-participate-card,
+  .sch-card,
+  .ex-card,
+  .speaker-card,
+  .tour-card,
+  .timeline-session-card,
+  .course-card-modern,
+  .sp-card,
+  .ov-feat-card,
+  .pillar-row-card {
+    border: none !important;
+    background-color: #f4f6fb !important;
+  }
+
+  .exhibitor-brand-card:hover,
+  .eventor-prog-card:hover,
+  .fund-card:hover,
+  .sponsor-elite-card:hover,
+  .city-location-card:hover,
+  .sch-card:hover,
+  .ex-card:hover,
+  .speaker-card:hover,
+  .tour-card:hover,
+  .timeline-session-card:hover,
+  .course-card-modern:hover,
+  .sp-card:hover,
+  .ov-feat-card:hover,
+  .pillar-row-card:hover {
+    border: none !important;
+    background-color: #eaf0f9 !important;
+  }
+
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    color: #1e293b;
+  }
+
+  /* Modern Navbar with Hero Background */
+
+  .header {
+    background: linear-gradient(135deg, rgba(6, 16, 34, 0.95) 0%, rgba(10, 25, 54, 0.95) 100%) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: none !important;
+    border-bottom: none !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+    width: 100%;
+  }
+
+  body.homepage-view,
+  body.has-dark-hero,
+  body.courses-page,
+  body.register-page {
+    padding-top: 0 !important;
+  }
+
+  body.homepage-view {
+    background: #ffffff !important;
+  }
+
+  body.homepage-view main,
+  main {
+    background: #ffffff !important;
+    position: relative;
+    z-index: 1;
+  }
+
+  body.homepage-view .header,
+  body.has-dark-hero .header,
+  body.courses-page .header {
+    background: transparent !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+  }
+
+  .header .container.nav {
+    width: 80% !important;
+    max-width: 80% !important;
+    height: 70px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin: 0 auto !important;
+    position: relative !important;
+    border: none !important;
+    outline: none !important;
+  }
+
+  .nav .logo {
+    display: inline-flex !important;
+    align-items: center !important;
+    text-decoration: none !important;
+    flex-shrink: 0 !important;
+  }
+
+  .nav .logo img {
+    height: 40px !important;
+    width: auto !important;
+    max-width: 155px !important;
+    object-fit: contain !important;
+    display: block !important;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5)) !important;
+  }
+
+  /* Desktop View (>= 821px): Floating Capsule Glassy Navbar - Fixed & Consistent at all scroll positions */
+
+  @media (min-width: 821px) {
+    .header,
+    .header.floating-nav-scrolled {
+      background: transparent !important;
+      border-bottom: none !important;
+      box-shadow: none !important;
+      position: fixed !important;
+      top: 14px !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 1050 !important;
+      width: 100% !important;
+      padding: 0 16px !important;
+      box-sizing: border-box !important;
+      pointer-events: none !important;
+      transition: none !important;
+    }
+
+    .header .container.nav,
+    .header.floating-nav-scrolled .container.nav {
+      width: 80% !important;
+      min-width: 80% !important;
+      max-width: 80% !important;
+      height: 58px !important;
+      backdrop-filter: blur(28px) saturate(210%) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(210%) !important;
+      border-radius: 9999px !important;
+      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      margin: 0 auto !important;
+      padding: 6px 20px !important;
+      position: relative !important;
+      pointer-events: auto !important;
+      box-sizing: border-box !important;
+      flex-wrap: nowrap !important;
+      transition: background 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s ease, box-shadow 0.35s ease !important;
+    }
+
+    /* 1. HERO GLASS MASKING: For Dark Hero Backgrounds (Hero Video / Dark Navy Atmosphere) */
+
+    .header .container.nav,
+    .header .container.nav.nav-mask-light,
+    body.homepage-view .header:not(.scrolled-into-light) .container.nav,
+    body.has-dark-hero .header:not(.scrolled-into-light) .container.nav,
+    body.courses-page .header:not(.scrolled-into-light) .container.nav {
+      background: linear-gradient(135deg, rgba(8, 20, 44, 0.78) 0%, rgba(13, 30, 66, 0.70) 100%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      box-shadow: 0 16px 38px -6px rgba(0, 0, 0, 0.48), 0 4px 12px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+    }
+
+    /* 2. HERO SOLID MASKING: When Scrolled or on Inner Pages */
+
+    .header .container.nav.nav-mask-dark,
+    .header.scrolled-into-light .container.nav,
+    body:not(.homepage-view):not(.has-dark-hero):not(.courses-page) .header .container.nav {
+      background: linear-gradient(135deg, rgba(7, 18, 40, 0.94) 0%, rgba(10, 26, 56, 0.96) 100%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
+      box-shadow: 0 18px 44px -6px rgba(0, 0, 0, 0.58), 0 4px 14px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+    }
+
+    /* 3. Dark Theme Mode Support */
+
+    body.dark-mode .header .container.nav {
+      background: linear-gradient(135deg, rgba(7, 18, 40, 0.92) 0%, rgba(11, 28, 60, 0.88) 100%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+    }
+
+    .header .logo {
+      display: inline-flex !important;
+      align-items: center !important;
+      margin-right: 14px !important;
+      margin-left: 2px !important;
+      flex-shrink: 0 !important;
+      text-decoration: none !important;
+    }
+
+    .header .logo img {
+      height: 38px !important;
+      width: auto !important;
+      transform: none !important;
+      object-fit: contain !important;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5)) !important;
+      transition: transform 0.25s ease !important;
+    }
+
+    .header .logo img:hover {
+      transform: scale(1.03) !important;
+    }
+
+    .navlinks {
+      display: flex !important;
+      align-items: center !important;
+      gap: 3px !important;
+      margin: 0 !important;
+      flex-shrink: 0 !important;
+    }
+
+    .navlinks > a {
+      padding: 6px 11px !important;
+      font-size: 13px !important;
+      font-weight: 500 !important;
+      color: rgba(241, 245, 249, 0.88) !important;
+      text-decoration: none !important;
+      border-radius: 9999px !important;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      white-space: nowrap !important;
+      letter-spacing: -0.01em !important;
+      text-shadow: none !important;
+      border: 1px solid transparent !important;
+    }
+
+    .navlinks > a:hover {
+      color: #ffffff !important;
+      background: rgba(255, 255, 255, 0.12) !important;
+      border-color: rgba(255, 255, 255, 0.10) !important;
+    }
+
+    .navlinks > a.active,
+    .navlinks > a[data-active="true"] {
+      background: linear-gradient(135deg, #1d6cf5 0%, #0d58e8 100%) !important;
+      color: #ffffff !important;
+      font-weight: 600 !important;
+      border: 1px solid rgba(255, 255, 255, 0.26) !important;
+      box-shadow: 0 4px 14px rgba(23, 104, 255, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+      text-shadow: none !important;
+    }
+
+    .navlinks > a[href*="logout"] {
+      color: #fca5a5 !important;
+      font-weight: 600 !important;
+    }
+
+    .navlinks > a[href*="logout"]:hover {
+      color: #ffffff !important;
+      background: rgba(239, 68, 68, 0.25) !important;
+      border-color: rgba(239, 68, 68, 0.4) !important;
+    }
+
+    .actions {
+      display: flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      flex-shrink: 0 !important;
+    }
+
+    .actions .iconbtn {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background: rgba(255, 255, 255, 0.10) !important;
+      border: 1px solid rgba(255, 255, 255, 0.20) !important;
+      color: #ffffff !important;
+      padding: 4px !important;
+      cursor: pointer !important;
+      border-radius: 50% !important;
+      font-size: 14px !important;
+      transition: all 0.2s ease !important;
+      width: 32px !important;
+      height: 32px !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .actions .iconbtn:hover {
+      background: rgba(255, 255, 255, 0.22) !important;
+      color: #38bdf8 !important;
+      border-color: rgba(56, 189, 248, 0.5) !important;
+      transform: translateY(-1px) !important;
+    }
+
+    .actions .desktop-action-link {
+      color: #ffffff !important;
+      background: rgba(255, 255, 255, 0.10) !important;
+      border: 1px solid rgba(255, 255, 255, 0.22) !important;
+      border-radius: 9999px !important;
+      padding: 5px 12px !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      text-decoration: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+      transition: all 0.2s ease !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18) !important;
+      text-shadow: none !important;
+    }
+
+    .actions .desktop-action-link:hover {
+      background: rgba(255, 255, 255, 0.20) !important;
+      border-color: rgba(255, 255, 255, 0.40) !important;
+      transform: translateY(-1px) !important;
+    }
+
+    .actions .desktop-action-link i.ti-compass {
+      color: #38bdf8 !important;
+      font-size: 14px !important;
+    }
+
+    .actions .desktop-action-link i.ti-target {
+      color: #34d399 !important;
+      font-size: 14px !important;
+    }
+    .actions .nav-logout-btn {
+      color: #fda4af !important;
+      background: rgba(244, 63, 94, 0.14) !important;
+      border: 1px solid rgba(244, 63, 94, 0.38) !important;
+      border-radius: 9999px !important;
+      padding: 5px 13px !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      text-decoration: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18) !important;
+      text-shadow: none !important;
+      white-space: nowrap !important;
+      cursor: pointer !important;
+    }
+
+    .actions .nav-logout-btn:hover {
+      background: linear-gradient(135deg, #e11d48 0%, #be123c 100%) !important;
+      border-color: rgba(255, 255, 255, 0.35) !important;
+      color: #ffffff !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 14px rgba(225, 29, 72, 0.45) !important;
+    }
+
+    .actions .nav-logout-btn i {
+      color: #fb7185 !important;
+      font-size: 14px !important;
+      transition: color 0.2s ease, transform 0.2s ease !important;
+    }
+
+    .actions .nav-logout-btn:hover i {
+      color: #ffffff !important;
+      transform: translateX(1px) !important;
+    }
+
+    .actions .nav-login-link {
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #f1f5f9 !important;
+      text-decoration: none !important;
+      padding: 6px 13px !important;
+      border-radius: 9999px !important;
+      transition: all 0.2s ease !important;
+      white-space: nowrap !important;
+      text-shadow: none !important;
+      border: 1px solid transparent !important;
+    }
+
+    .actions .nav-login-link:hover {
+      color: #ffffff !important;
+      background: rgba(255, 255, 255, 0.12) !important;
+      border-color: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    .actions .register {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 5px !important;
+      background: linear-gradient(135deg, #1d6cf5 0%, #0d58e8 100%) !important;
+      color: #ffffff !important;
+      padding: 7px 18px !important;
+      border-radius: 9999px !important;
+      font-size: 12.5px !important;
+      font-weight: 600 !important;
+      letter-spacing: -0.01em !important;
+      text-decoration: none !important;
+      border: 1px solid rgba(255, 255, 255, 0.32) !important;
+      box-shadow: 0 4px 16px rgba(23, 104, 255, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.32) !important;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      white-space: nowrap !important;
+      text-shadow: none !important;
+    }
+
+    .actions .register:hover {
+      background: linear-gradient(135deg, #2575fc 0%, #1562ef 100%) !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 6px 22px rgba(23, 104, 255, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.42) !important;
+    }
+
+    @media (max-width: 1280px) {
+      .header .container.nav,
+      .header.floating-nav-scrolled .container.nav {
+        padding: 6px 14px !important;
+      }
+
+      .navlinks {
+        gap: 2px !important;
+      }
+
+      .navlinks > a {
+        padding: 5px 8px !important;
+        font-size: 12px !important;
+      }
+
+      .actions .desktop-action-link,
+      .actions .nav-logout-btn {
+        padding: 4px 8px !important;
+        font-size: 11px !important;
+      }
+
+      .actions .register {
+        padding: 6px 14px !important;
+        font-size: 12px !important;
+      }
+
+    }
+
+    @media (max-width: 1140px) {
+      .actions .desktop-action-link {
+        display: none !important;
+      }
+
+      .navlinks > a {
+        padding: 5px 7px !important;
+        font-size: 11.5px !important;
+      }
+
+    }
+
+    .mobile-nav-controls {
+      display: none !important;
+    }
+
+    body:not(.homepage-view):not(.has-dark-hero):not(.courses-page):not(.register-page):not(.challenge-page) {
+      padding-top: 96px !important;
+    }
+
+    body.homepage-view,
+    body.has-dark-hero,
+    body.courses-page,
+    body.register-page,
+    body.challenge-page {
+      padding-top: 0 !important;
+    }
+
+    /* Generous Clearance for All Dark Hero Dashboard Sections */
+
+    body.has-dark-hero .ch-hero,
+    body.has-dark-hero .myexpo-hero,
+    body.has-dark-hero .courses-hero,
+    body.has-dark-hero .sch-hero,
+    body.has-dark-hero .events-hero,
+    body.has-dark-hero .ex-hero,
+    body.has-dark-hero .sp-hero,
+    body.has-dark-hero .about-dash-hero,
+    body.has-dark-hero .spk-hero,
+    body.has-dark-hero .pr-hero,
+    body.has-dark-hero .map-hero,
+    body.has-dark-hero .legal-hero,
+    body.has-dark-hero .booking-hero,
+    body.has-dark-hero .uni-hero,
+    body.courses-page .courses-hero {
+      padding-top: 122px !important;
+    }
+
+    /* Normalized Fluid Containers with Standard Max-Width */
+
+    .container,
+    .about-container,
+    .filter-wrapper,
+    .courses-cards-grid-wrap {
+      width: 100% !important;
+      max-width: 1240px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      padding-left: clamp(20px, 3.5vw, 32px) !important;
+      padding-right: clamp(20px, 3.5vw, 32px) !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Fluid Container Option */
+
+    .container-fluid {
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      padding-left: clamp(16px, 3.5vw, 48px) !important;
+      padding-right: clamp(16px, 3.5vw, 48px) !important;
+      box-sizing: border-box !important;
+    }
+
+  }
+
+  /* ========================================================
+
+     EVENTOR FOOTER DESIGN SYSTEM (COMPACT)
+
+  ======================================================== */
+
+  footer.eventor-footer {
+    background:
+      radial-gradient(circle at 85% 90%, rgba(23, 104, 255, 0.28) 0%, transparent 60%),
+      radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
+      linear-gradient(135deg, #061022 0%, #081d45 50%, #0c2b64 100%) !important;
+    color: #cbd5e1 !important;
+    padding: 42px 0 24px 0 !important;
+    position: relative !important;
+    overflow: hidden !important;
+    border-top: 1px solid rgba(23, 104, 255, 0.2) !important;
+  }
+
+  footer.eventor-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(23, 104, 255, 0.6) 50%, transparent 100%);
+    pointer-events: none;
+  }
+
+  footer.eventor-footer .container,
+  .eventor-footer-container {
+    width: 100% !important;
+    max-width: 1240px !important;
+    margin: 0 auto !important;
+    padding: 0 24px !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    z-index: 2 !important;
+  }
+
+  .eventor-footer-grid {
+    display: grid !important;
+    grid-template-columns: 2fr 1fr 1fr 1fr !important;
+    gap: 36px !important;
+    margin-bottom: 28px !important;
+    align-items: flex-start !important;
+  }
+
+  .eventor-footer-brand-col {
+    max-width: 340px !important;
+  }
+
+  .eventor-footer-logo {
+    display: inline-block !important;
+    text-decoration: none !important;
+    margin-bottom: 12px !important;
+  }
+
+  .eventor-footer-logo-img {
+    height: 30px !important;
+    width: auto !important;
+    aspect-ratio: 80/38 !important;
+    display: block !important;
+    transform: none !important;
+  }
+
+  .eventor-footer-brand-desc {
+    font-size: 12.5px !important;
+    color: #94a3b8 !important;
+    line-height: 1.55 !important;
+    margin: 0 0 16px 0 !important;
+    font-weight: 400 !important;
+    max-width: 320px !important;
+  }
+
+  .eventor-footer-social-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .eventor-footer-social-btn {
+    width: 32px !important;
+    height: 32px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    text-decoration: none !important;
+    transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  .eventor-footer-social-btn:hover {
+    background: #1768ff !important;
+    border-color: #1768ff !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(23, 104, 255, 0.4) !important;
+  }
+
+  .eventor-footer-nav-col {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .eventor-footer-col-title {
+    font-family: 'Poppins', var(--eventor-heading-font), sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    margin: 0 0 14px 0 !important;
+    letter-spacing: -0.2px !important;
+  }
+
+  .eventor-footer-links-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .eventor-footer-link {
+    font-size: 12.5px !important;
+    color: #94a3b8 !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease, transform 0.2s ease !important;
+    display: inline-block !important;
+    font-weight: 400 !important;
+    width: fit-content !important;
+  }
+
+  .eventor-footer-link:hover {
+    color: #38bdf8 !important;
+    transform: translateX(3px) !important;
+  }
+
+  .eventor-footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding-top: 20px !important;
+    text-align: center !important;
+  }
+
+  .eventor-footer-bottom-text {
+    font-size: 12px !important;
+    color: rgba(255, 255, 255, 0.48) !important;
+    margin: 0 !important;
+    line-height: 1.5 !important;
+  }
+
+  @media (max-width: 991px) {
+    .eventor-footer-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 32px !important;
+      margin-bottom: 24px !important;
+    }
+
+    .eventor-footer-brand-col {
+      grid-column: 1 / -1 !important;
+      max-width: 100% !important;
+    }
+
+  }
+
+  @media (max-width: 600px) {
+    footer.eventor-footer {
+      padding: 34px 0 18px 0 !important;
+    }
+
+    .eventor-footer-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 24px 16px !important;
+      margin-bottom: 22px !important;
+    }
+
+    .eventor-footer-brand-desc {
+      font-size: 12px !important;
+      margin-bottom: 14px !important;
+    }
+
+    .eventor-footer-col-title {
+      font-size: 13px !important;
+      margin-bottom: 10px !important;
+    }
+
+    .eventor-footer-links-list {
+      gap: 6px !important;
+    }
+
+    .eventor-footer-link {
+      font-size: 12px !important;
+    }
+
+    .eventor-footer-social-btn {
+      width: 30px !important;
+      height: 30px !important;
+      font-size: 13px !important;
+    }
+
+    .eventor-footer-bottom {
+      padding-top: 16px !important;
+    }
+
+    .eventor-footer-bottom-text {
+      font-size: 11px !important;
+    }
+
+  }
+
+  /* Mobile Responsive View (<= 820px) */
+
+  @media (max-width: 820px) {
+    html, body {
+      overflow-x: hidden !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    input, select, textarea {
+      font-size: 16px !important; /* Prevent iOS automatic zoom */
+
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .container,
+    .about-container,
+    .filter-wrapper,
+    .courses-cards-grid-wrap,
+    .portal-login-container,
+    .portal-reg-container,
+    footer.eventor-footer .container,
+    .eventor-footer-container,
+    .container-fluid {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+      box-sizing: border-box !important;
+    }
+
+    body.homepage-view,
+    body.has-dark-hero,
+    body.courses-page,
+    body.challenge-page {
+      padding-top: 0 !important;
+    }
+
+    body:not(.homepage-view):not(.has-dark-hero):not(.courses-page):not(.challenge-page) {
+      padding-top: 58px !important;
+    }
+
+    body.has-dark-hero .ch-hero,
+    body.has-dark-hero .myexpo-hero,
+    body.has-dark-hero .courses-hero,
+    body.has-dark-hero .sch-hero,
+    body.has-dark-hero .events-hero,
+    body.has-dark-hero .ex-hero,
+    body.has-dark-hero .sp-hero,
+    body.has-dark-hero .about-dash-hero,
+    body.has-dark-hero .spk-hero,
+    body.has-dark-hero .pr-hero,
+    body.has-dark-hero .map-hero,
+    body.has-dark-hero .legal-hero,
+    body.has-dark-hero .booking-hero,
+    body.has-dark-hero .uni-hero,
+    body.courses-page .courses-hero {
+      padding-top: 76px !important;
+    }
+
+    .header {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      z-index: 1050 !important;
+      height: 58px !important;
+      border: none !important;
+      border-bottom: none !important;
+      transition: background 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease !important;
+    }
+
+    /* On Dark Heroes (Homepage, Courses, etc.), Header is 100% Transparent on mobile */
+
+    body.homepage-view .header,
+    body.has-dark-hero .header,
+    body.courses-page .header,
+    body.homepage-view .header:not(.scrolled-into-light),
+    body.has-dark-hero .header:not(.scrolled-into-light),
+    body.courses-page .header:not(.scrolled-into-light),
+    .header:not(.scrolled-into-light) {
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
+
+    /* When scrolled down into light content, activate readable dark blur background */
+
+    body.homepage-view .header.scrolled-into-light,
+    body.has-dark-hero .header.scrolled-into-light,
+    body.courses-page .header.scrolled-into-light,
+    body:not(.homepage-view):not(.has-dark-hero):not(.courses-page) .header {
+      background: rgba(6, 16, 34, 0.95) !important;
+      backdrop-filter: blur(20px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* Mobile Nav Container: 100% transparent on mobile */
+
+    .header .container.nav,
+    .header .container.nav.nav-mask-light,
+    .header .container.nav.nav-mask-dark,
+    .header:not(.scrolled-into-light) .container.nav,
+    body.homepage-view .header .container.nav,
+    body.homepage-view .header:not(.scrolled-into-light) .container.nav,
+    body.homepage-view .header:not(.scrolled-into-light) .container.nav.nav-mask-light,
+    body.homepage-view .header:not(.scrolled-into-light) .container.nav.nav-mask-dark,
+    body.has-dark-hero .header .container.nav,
+    body.has-dark-hero .header:not(.scrolled-into-light) .container.nav,
+    body.courses-page .header .container.nav,
+    body.courses-page .header:not(.scrolled-into-light) .container.nav,
+    body.dark-mode .header .container.nav {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 0 16px !important;
+      height: 58px !important;
+      box-sizing: border-box !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      background-image: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+    }
+
+    .nav {
+      height: 58px !important;
+    }
+
+    .logo,
+    .header .logo {
+      min-width: auto !important;
+      overflow: visible !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      flex-shrink: 0 !important;
+      text-decoration: none !important;
+    }
+
+    .header .logo img {
+      height: 36px !important;
+      max-height: 38px !important;
+      width: auto !important;
+      max-width: 135px !important;
+      transform: none !important;
+      margin: 0 !important;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6)) !important;
+      display: block !important;
+      object-fit: contain !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    .footer-grid .logo img {
+      height: 38px !important;
+      width: auto !important;
+      transform: none !important;
+      margin-left: 0 !important;
+      margin-bottom: 8px !important;
+    }
+
+    .navlinks {
+      display: none !important;
+    }
+
+    .actions {
+      display: none !important;
+    }
+
+    .mobile-nav-controls {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      margin-left: auto !important;
+    }
+
+    .mobile-nav-controls a {
+      color: #38bdf8 !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+      text-decoration: none !important;
+      background: rgba(56, 189, 248, 0.12) !important;
+      border: 1px solid rgba(56, 189, 248, 0.35) !important;
+      padding: 5px 12px !important;
+      border-radius: 20px !important;
+    }
+
+    .mobile-nav-controls a i {
+      color: #38bdf8 !important;
+      font-size: 15px !important;
+    }
+
+    .mobile-nav-controls button.menu {
+      color: #ffffff !important;
+      background: none !important;
+      border: none !important;
+      padding: 4px !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      font-size: 24px !important;
+    }
+
+    .navlinks.show {
+      display: flex !important;
+      flex-direction: column !important;
+      position: fixed !important;
+      top: 58px !important;
+      left: 14px !important;
+      right: 14px !important;
+      width: auto !important;
+      max-width: calc(100vw - 28px) !important;
+      max-height: calc(100vh - 72px) !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      margin: 0 !important;
+      background: rgba(6, 16, 34, 0.98) !important;
+      backdrop-filter: blur(24px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+      padding: 16px !important;
+      border-radius: 20px !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      z-index: 1100 !important;
+      gap: 4px !important;
+      box-sizing: border-box !important;
+    }
+
+    .navlinks.show > a {
+      padding: 12px 16px !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      color: #e2e8f0 !important;
+      border-radius: 12px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      text-decoration: none !important;
+    }
+
+    .navlinks.show > a:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: #38bdf8 !important;
+    }
+
+    .navlinks.show > a.active {
+      background: #1768ff !important;
+      color: #ffffff !important;
+    }
+
+    .navlinks.show .mobile-menu-cta {
+      display: flex !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    }
+
+    .desktop-action-link {
+      display: none !important;
+    }
+
+    #chatWidgetBtn {
+      display: none !important;
+    }
+
+    /* Universal Public Pages Mobile Grid Normalizer */
+
+    .flow-stages-grid-3col,
+    .flow-stage-pair,
+    .grid-3col, .grid-4col, .grid-5col,
+    div[style*="grid-template-columns: 1.55fr 1fr"],
+    div[style*="grid-template-columns: 2fr 1fr"],
+    div[style*="grid-template-columns: 1fr 2fr"],
+    div[style*="grid-template-columns: 1fr 1fr"],
+    div[style*="grid-template-columns: repeat(3,"],
+    div[style*="grid-template-columns: repeat(4,"],
+    div[style*="grid-template-columns: repeat(5,"],
+    div[style*="grid-template-columns: repeat(6,"],
+    div[style*="grid-template-columns:repeat(3,"],
+    div[style*="grid-template-columns:repeat(4,"],
+    div[style*="grid-template-columns:repeat(5,"],
+    div[style*="grid-template-columns:repeat(6,"],
+    div[style*="grid-template-columns: repeat(3, 1fr)"],
+    div[style*="grid-template-columns: repeat(4, 1fr)"],
+    div[style*="repeat(auto-fit, minmax(2"],
+    div[style*="repeat(auto-fit, minmax(3"],
+    div[style*="repeat(auto-fill, minmax(3"] {
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+    }
+
+    img {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+
+  }
+
+  @media (min-width: 821px) {
+    .mobile-only-link {
+      display: none !important;
+    }
+
+  }
+
+</style>
+
+<header class="header" style="border: none !important; border-bottom: none !important;">
+
+  <div class="container nav" style="border: none !important; outline: none !important;">
+
+    <a class="logo" href="{% url 'index' %}" aria-label="KNOVA - Back to homepage">
+
+      <img src="{% static 'assets/logo.webp' %}" alt="KNOVA Logo" width="80" height="38" fetchpriority="high" decoding="async" style="height: 38px; width: auto; aspect-ratio: 80/38; display: block;">
+
+    </a>
+
+    <nav class="navlinks" {% if site_config.disable_navbar %}style="pointer-events: none; opacity: 0.6;" title="Navbar is disabled by administrator"{% endif %}>
+
+      {% if site_config.show_nav_home %}
+        {% if site_config.disable_navbar or site_config.disable_nav_home %}
+          <a href="javascript:void(0)" onclick="return false;" class="nav-disabled-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled">Home</a>
+        {% else %}
+          <a href="{% url 'index' %}" class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}">Home</a>
+        {% endif %}
+      {% endif %}
+
+      {% if site_config.show_nav_about %}
+        {% if site_config.disable_navbar or site_config.disable_nav_about %}
+          <a href="javascript:void(0)" onclick="return false;" class="nav-disabled-link {% if request.resolver_match.url_name == 'public_about' %}active{% endif %}" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled">About</a>
+        {% else %}
+          <a href="{% url 'public_about' %}" class="{% if request.resolver_match.url_name == 'public_about' %}active{% endif %}">About</a>
+        {% endif %}
+      {% endif %}
+
+      {% if site_config.show_nav_programs %}
+        {% if site_config.disable_navbar or site_config.disable_nav_programs %}
+          <a href="javascript:void(0)" onclick="return false;" class="nav-disabled-link {% if request.resolver_match.url_name == 'courses_list' %}active{% endif %}" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled">Programs</a>
+        {% else %}
+          <a href="{% url 'courses_list' %}" class="{% if request.resolver_match.url_name == 'courses_list' %}active{% endif %}">Programs</a>
+        {% endif %}
+      {% endif %}
+
+      {% if site_config.show_nav_events %}
+        {% if site_config.disable_navbar or site_config.disable_nav_events %}
+          <a href="javascript:void(0)" onclick="return false;" class="nav-disabled-link {% if request.resolver_match.url_name == 'public_events' %}active{% endif %}" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled">Events</a>
+        {% else %}
+          <a href="{% url 'public_events' %}" class="{% if request.resolver_match.url_name == 'public_events' %}active{% endif %}">Events</a>
+        {% endif %}
+      {% endif %}
+
+      {% if site_config.show_nav_exhibitors %}
+        {% if site_config.disable_navbar or site_config.disable_nav_exhibitors %}
+          <a href="javascript:void(0)" onclick="return false;" class="nav-disabled-link {% if request.resolver_match.url_name == 'public_exhibitors' %}active{% endif %}" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled">Exhibitors</a>
+        {% else %}
+          <a href="{% url 'public_exhibitors' %}" class="{% if request.resolver_match.url_name == 'public_exhibitors' %}active{% endif %}">Exhibitors</a>
+        {% endif %}
+      {% endif %}
+
+      {% if site_config.show_nav_scholarships %}
+        {% if site_config.disable_navbar or site_config.disable_nav_scholarships %}
+          <a href="javascript:void(0)" onclick="return false;" class="nav-disabled-link {% if request.resolver_match.url_name == 'public_scholarships' %}active{% endif %}" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled">Scholarships</a>
+        {% else %}
+          <a href="{% url 'public_scholarships' %}" class="{% if request.resolver_match.url_name == 'public_scholarships' %}active{% endif %}">Scholarships</a>
+        {% endif %}
+      {% endif %}
+
+      {% if site_config.show_nav_sponsors %}
+        {% if site_config.disable_navbar or site_config.disable_nav_sponsors %}
+          <a href="javascript:void(0)" onclick="return false;" class="nav-disabled-link {% if request.resolver_match.url_name == 'public_sponsors' %}active{% endif %}" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled">Sponsors</a>
+        {% else %}
+          <a href="{% url 'public_sponsors' %}" class="{% if request.resolver_match.url_name == 'public_sponsors' %}active{% endif %}">Sponsors</a>
+        {% endif %}
+      {% endif %}
+
+      {% if request.user.is_authenticated %}
+        {% if request.user.student_profile or request.user.parent_profile %}
+          <a href="{% url 'my_expo' %}" class="mobile-only-link {% if request.resolver_match.url_name == 'my_expo' %}active{% endif %}" style="align-items:center; gap:4px; font-weight:700;"><i class="ti ti-compass" style="font-size:15px; color:#1768ff;"></i> My Expo</a>
+          <a href="{% url 'knova_challenge' %}" class="mobile-only-link {% if request.resolver_match.url_name == 'knova_challenge' %}active{% endif %}" style="align-items:center; gap:4px; color:#059669; font-weight:700;"><i class="ti ti-target" style="font-size:15px; color:#10b981;"></i> Challenge</a>
+        {% else %}
+          <a href="{% url 'dashboard_index' %}" class="mobile-only-link {% if request.resolver_match.url_name == 'dashboard_index' %}active{% endif %}" style="align-items:center; gap:4px; font-weight:700;"><i class="ti ti-layout-dashboard" style="font-size:15px; color:#1768ff;"></i> Dashboard</a>
+        {% endif %}
+        <a href="{% url 'dashboard_logout' %}" class="mobile-only-link" style="color: #ef4444; align-items:center; gap:4px;"><i class="ti ti-logout"></i> Logout</a>
+      {% endif %}
+
+      <div class="mobile-menu-cta mobile-only" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.08); display: none; flex-direction: column; gap: 10px;">
+        {% if request.user.is_authenticated %}
+          {% if request.user.student_profile or request.user.parent_profile %}
+            <a href="{% url 'my_expo' %}" style="text-align: center; justify-content: center; padding: 11px; color: #1768ff !important; font-weight: 700; border: 1.5px solid #1768ff; border-radius: 30px; background: rgba(23,104,255,0.05); text-decoration: none; display:flex; align-items:center; gap:6px;">
+              <i class="ti ti-compass"></i> My Expo Hub
+            </a>
+            <a href="{% url 'knova_challenge' %}" style="text-align: center; justify-content: center; padding: 11px; color: #059669 !important; font-weight: 700; border: 1.5px solid #10b981; border-radius: 30px; background: rgba(16,185,129,0.05); text-decoration: none; display:flex; align-items:center; gap:6px;">
+              <i class="ti ti-target"></i> KNOVA Challenge
+            </a>
+          {% else %}
+            <a class="btn-primary-gradient" href="{% url 'dashboard_index' %}" style="text-align: center; justify-content: center; padding: 12px; color: #fff !important; width: 100% !important; display:flex; align-items:center; justify-content:center; gap:6px;">
+              <i class="ti ti-layout-dashboard"></i> Go to Dashboard
+            </a>
+          {% endif %}
+          <a href="{% url 'dashboard_logout' %}" style="text-align: center; justify-content: center; padding: 10px; color: #ef4444 !important; font-weight: 700; border: 1.5px solid rgba(239,68,68,0.4); border-radius: 30px; background: rgba(239,68,68,0.06); text-decoration: none; display:flex; align-items:center; gap:6px;">
+            <i class="ti ti-logout"></i> Sign Out
+          </a>
+        {% else %}
+          <a class="btn-primary-gradient" href="{% url 'portal_login' %}" style="text-align: center; justify-content: center; padding: 12px; color: #fff !important; width: 100% !important;">Login</a>
+          <a href="{% url 'public_register' %}" style="text-align: center; justify-content: center; padding: 11px; color: #1768ff !important; font-weight: 700; border: 1.5px solid #1768ff; border-radius: 30px; background: rgba(23,104,255,0.05); text-decoration: none;">Register Now</a>
+        {% endif %}
+      </div>
+    </nav>
+
+    <div class="actions">
+      {% if request.user.is_authenticated %}
+        {% if request.user.student_profile or request.user.parent_profile %}
+          {% if site_config.show_nav_my_expo %}
+            {% if site_config.disable_navbar or site_config.disable_nav_my_expo %}
+              <a href="javascript:void(0)" onclick="return false;" class="desktop-action-link" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled"><i class="ti ti-compass"></i> My Expo</a>
+            {% else %}
+              <a href="{% url 'my_expo' %}" class="desktop-action-link"><i class="ti ti-compass"></i> My Expo</a>
+            {% endif %}
+          {% endif %}
+          {% if site_config.show_nav_challenge %}
+            {% if site_config.disable_navbar or site_config.disable_nav_challenge %}
+              <a href="javascript:void(0)" onclick="return false;" class="desktop-action-link" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled"><i class="ti ti-target"></i> Challenge</a>
+            {% else %}
+              <a href="{% url 'knova_challenge' %}" class="desktop-action-link"><i class="ti ti-target"></i> Challenge</a>
+            {% endif %}
+          {% endif %}
+        {% else %}
+          <a class="register btn-dashboard-action" href="{% url 'dashboard_index' %}"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+        {% endif %}
+        <a class="nav-logout-btn" href="{% url 'dashboard_logout' %}" title="Sign Out"><i class="ti ti-logout"></i> Logout</a>
+      {% else %}
+        <a class="nav-login-link" href="{% url 'portal_login' %}">Login</a>
+        <a class="register" href="{% url 'public_register' %}">Register for Expo &rarr;</a>
+      {% endif %}
+    </div>
+
+    <div class="mobile-nav-controls" style="align-items: center; gap: 8px; margin-left: auto;">
+      {% if request.user.is_authenticated %}
+        {% if request.user.student_profile or request.user.parent_profile %}
+        <a href="{% url 'my_expo' %}" style="display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); padding: 5px 12px; border-radius: 20px; text-decoration: none; margin-right: 4px;">
+          <i class="ti ti-compass" style="font-size: 15px; color: #38bdf8;"></i> <span>My Expo</span>
+        </a>
+        {% else %}
+        <a href="{% url 'dashboard_index' %}" style="display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; font-weight: 700; color: #ffffff; background: linear-gradient(135deg, #1d6cf5 0%, #0d58e8 100%); border: 1px solid rgba(255, 255, 255, 0.3); padding: 5px 12px; border-radius: 20px; text-decoration: none; margin-right: 4px;">
+          <i class="ti ti-layout-dashboard" style="font-size: 14px;"></i> <span>Dashboard</span>
+        </a>
+                {% endif %}
+        <a href="{% url 'dashboard_logout' %}" style="display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; color: #fda4af; background: rgba(244, 63, 94, 0.14); border: 1px solid rgba(244, 63, 94, 0.38); text-decoration: none;" title="Logout">
+          <i class="ti ti-logout" style="font-size: 14px; color: #fb7185;"></i>
+        </a>
+      {% endif %}
+      <button class="menu" id="mobileMenuBtn"  onclick="toggleMobileNav()" aria-label="Toggle Menu" style="margin-left: 2px; background: none; border: none; color: #ffffff; cursor: pointer; display: flex; align-items: center;"><i class="ti ti-menu-2" id="mobileMenuIcon" style="font-size: 24px; color: #ffffff;"></i></button>
+
+    </div>
+
+  </div>
+
+</header>
+
+<!-- Sticky Mobile CTA Button -->
+
+{% if not request.user.is_authenticated %}
+
+<div id="mobileStickyCta" style="position: fixed; bottom: 16px; left: 14px; width: 40%; max-width: 200px; z-index: 990; display: none !important;">
+
+  <a href="{% url 'public_register' %}" class="btn-primary-gradient" style="width: 100%; text-align: center; justify-content: center; font-size: 13px; font-weight: 800; padding: 12px 10px; margin: 0; border-radius: 30px; box-sizing: border-box; text-decoration: none; box-shadow: 0 10px 25px rgba(23,104,255,0.4); display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+
+    <i class="ti ti-ticket" style="font-size: 15px; flex-shrink: 0;"></i> <span>Register Now</span>
+
+  </a>
+
+</div>
+
+{% endif %}
+
+<script>
+
+  function toggleMobileNav() {
+    var nav = document.querySelector('.navlinks');
+    var icon = document.getElementById('mobileMenuIcon');
+    if (nav) {
+      nav.classList.toggle('show');
+      if (icon) {
+        icon.className = nav.classList.contains('show') ? 'ti ti-x' : 'ti ti-menu-2';
+      }
+
+    }
+
+  }
+
+  // Close nav on click outside
+
+  document.addEventListener('click', function(e) {
+    var nav = document.querySelector('.navlinks');
+    var btn = document.getElementById('mobileMenuBtn');
+    var icon = document.getElementById('mobileMenuIcon');
+    if (nav && nav.classList.contains('show')) {
+      if (!nav.contains(e.target) && !btn.contains(e.target)) {
+        nav.classList.remove('show');
+        if (icon) icon.className = 'ti ti-menu-2';
+      }
+
+    }
+
+  });
+  // Dynamic Navbar Masking: Dark Mask on White/Light Backgrounds, Light Mask on Dark Backgrounds
+
+  function updateNavbarMask() {
+    var header = document.querySelector('.header');
+    var navContainer = document.querySelector('.header .container.nav');
+    if (!navContainer) return;
+    // In dark-mode, the entire page background is dark
+
+    if (document.body.classList.contains('dark-mode')) {
+      navContainer.classList.add('nav-mask-light');
+      navContainer.classList.remove('nav-mask-dark');
+      if (header) header.classList.remove('scrolled-into-light');
+      return;
+    }
+
+    // List of known dark container elements across the site
+
+    var darkElements = document.querySelectorAll(
+
+      '.hero-wrapper, .hero-bg-video, .courses-hero, .dark-hero, .hero-dark, .page-hero-dark, .bg-dark, .section-dark'
+
+    );
+    // The floating navbar capsule sits at vertical coordinate ~42px
+
+    var probeY = 42;
+    var isOverDark = false;
+    for (var i = 0; i < darkElements.length; i++) {
+      var rect = darkElements[i].getBoundingClientRect();
+      if (rect.top <= probeY && rect.bottom >= probeY) {
+        isOverDark = true;
+        break;
+      }
+
+    }
+
+    // Intelligent fallback: Sample element underneath probe point
+
+    if (!isOverDark && document.elementsFromPoint) {
+      try {
+        var stack = document.elementsFromPoint(window.innerWidth / 2, probeY);
+        for (var j = 0; j < stack.length; j++) {
+          var el = stack[j];
+          if (!el || (el.closest && el.closest('.header'))) continue;
+          var bg = window.getComputedStyle(el).backgroundColor;
+          if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') {
+            var rgb = bg.match(/\d+/g);
+            if (rgb && rgb.length >= 3) {
+              var r = parseInt(rgb[0], 10);
+              var g = parseInt(rgb[1], 10);
+              var b = parseInt(rgb[2], 10);
+              var brightness = (r * 0.299 + g * 0.587 + b * 0.114);
+              if (brightness < 128) {
+                isOverDark = true;
+              }
+
+            }
+
+            break;
+          }
+
+        }
+
+      } catch (err) {
+        // Safe fallback
+
+      }
+
+    }
+
+    if (isOverDark) {
+      navContainer.classList.add('nav-mask-light');
+      navContainer.classList.remove('nav-mask-dark');
+      if (header) header.classList.remove('scrolled-into-light');
+    } else {
+      navContainer.classList.add('nav-mask-dark');
+      navContainer.classList.remove('nav-mask-light');
+      if (header) header.classList.add('scrolled-into-light');
+    }
+
+  }
+
+  var navTicking = false;
+  window.addEventListener('scroll', function() {
+    var cta = document.getElementById('mobileStickyCta');
+    var chat = document.getElementById('chatWidgetBtn');
+    if (window.innerWidth <= 820) {
+      if (cta) cta.style.display = 'none';
+      if (chat) chat.style.setProperty('bottom', '16px', 'important');
+    } else {
+      if (cta) cta.style.display = 'none';
+      if (chat) chat.style.removeProperty('bottom');
+    }
+
+    if (!navTicking) {
+      window.requestAnimationFrame(function() {
+        updateNavbarMask();
+        navTicking = false;
+      });
+      navTicking = true;
+    }
+
+  }, { passive: true });
+  window.addEventListener('resize', updateNavbarMask);
+  document.addEventListener('DOMContentLoaded', updateNavbarMask);
+  updateNavbarMask();
+  setTimeout(updateNavbarMask, 100);
+  setTimeout(updateNavbarMask, 400);
+</script>
+
+<main>
+
+  {% block content %}
+
+  {% endblock %}
+
+</main>
+
+<!-- ========================================================
+
+     EVENTOR FOOTER (MATCHING USER SCREENSHOT)
+
+======================================================== -->
+
+<footer id="contact" class="eventor-footer">
+
+  <div class="container eventor-footer-container">
+
+    <div class="eventor-footer-grid">
+
+      <!-- Column 1: Brand Info & Socials -->
+
+      <div class="eventor-footer-brand-col">
+
+        <a class="eventor-footer-logo" href="{% url 'index' %}" aria-label="KNOVA Homepage">
+
+          <img src="{% static 'assets/logo.webp' %}" alt="KNOVA Logo" width="88" height="42" loading="lazy" decoding="async" class="eventor-footer-logo-img">
+
+        </a>
+
+        <p class="eventor-footer-brand-desc">
+          {{ site_config.footer_tagline|default:"Join 10,000+ students and global academic leaders for the GCC's premier higher education expo series with 3+ fully immersive events covering top universities, scholarships, and career pathways." }}
+        </p>
+
+        <div class="eventor-footer-social-row">
+          {% if site_config.social_facebook_url %}<a href="{{ site_config.social_facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook" class="eventor-footer-social-btn"><i class="ti ti-brand-facebook"></i></a>{% endif %}
+          {% if site_config.social_linkedin_url %}<a href="{{ site_config.social_linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn" class="eventor-footer-social-btn"><i class="ti ti-brand-linkedin"></i></a>{% endif %}
+          {% if site_config.social_twitter_url %}<a href="{{ site_config.social_twitter_url }}" target="_blank" rel="noopener" aria-label="Twitter / X" class="eventor-footer-social-btn"><i class="ti ti-brand-x"></i></a>{% endif %}
+          {% if site_config.social_instagram_url %}<a href="{{ site_config.social_instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram" class="eventor-footer-social-btn"><i class="ti ti-brand-instagram"></i></a>{% endif %}
+          {% if site_config.social_youtube_url %}<a href="{{ site_config.social_youtube_url }}" target="_blank" rel="noopener" aria-label="YouTube" class="eventor-footer-social-btn"><i class="ti ti-brand-youtube"></i></a>{% endif %}
+        </div>
+
+      </div>
+
+      <!-- Column 2: About -->
+
+      <div class="eventor-footer-nav-col">
+
+        <h4 class="eventor-footer-col-title">About</h4>
+
+        <div class="eventor-footer-links-list">
+
+          <a href="{% url 'public_about' %}" class="eventor-footer-link">Conference</a>
+
+          <a href="{% url 'index' %}#programme" class="eventor-footer-link">Schedule</a>
+
+          <a href="{% url 'public_register' %}" class="eventor-footer-link">Buy Tickets</a>
+
+          <a href="{% url 'public_sponsors' %}" class="eventor-footer-link">Sponsoring</a>
+
+          <a href="{% url 'portal_login' %}" class="eventor-footer-link">Volunteer</a>
+
+        </div>
+
+      </div>
+
+      <!-- Column 3: Enterprise -->
+
+      <div class="eventor-footer-nav-col">
+
+        <h4 class="eventor-footer-col-title">Enterprise</h4>
+
+        <div class="eventor-footer-links-list">
+
+          <a href="{% url 'public_about' %}" class="eventor-footer-link">Committees</a>
+
+          <a href="{% url 'public_speakers' %}" class="eventor-footer-link">Advisory Boards</a>
+
+          <a href="{% url 'public_exhibitors' %}" class="eventor-footer-link">Apply to Speak</a>
+
+          <a href="{% url 'public_register' %}" class="eventor-footer-link">Register</a>
+
+        </div>
+
+      </div>
+
+      <!-- Column 4: Contact -->
+
+      <div class="eventor-footer-nav-col">
+
+        <h4 class="eventor-footer-col-title">Contact</h4>
+
+        <div class="eventor-footer-links-list">
+
+          <a href="{% url 'index' %}#faq" class="eventor-footer-link">Help Desk</a>
+
+          <a href="{% url 'index' %}#contact" class="eventor-footer-link">Contact Us</a>
+
+          <a href="{% url 'courses_list' %}" class="eventor-footer-link">Documentation</a>
+
+          <a href="javascript:void(0)" onclick="openEventorNewsletterModal()" class="eventor-footer-link">Newsletter</a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Centered Copyright -->
+
+    <div class="eventor-footer-bottom">
+
+      <p class="eventor-footer-bottom-text">
+        {{ site_config.footer_copyright|safe|default:"&copy; 2027 KNOVA. All rights reserved. Theme made with passion for global education." }}
+      </p>
+
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Eventor Newsletter Modal -->
+
+<div id="eventorNewsletterModal" style="display: none; position: fixed; inset: 0; background: rgba(3, 10, 26, 0.82); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 99999; align-items: center; justify-content: center; padding: 20px;">
+
+  <div style="background: radial-gradient(circle at 80% 90%, #071f4a 0%, #0a1936 60%, #061022 100%); border: 1.5px solid rgba(23, 104, 255, 0.35); border-radius: 24px; padding: 36px 32px; max-width: 440px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.6); position: relative; color: #ffffff;">
+
+    <button onclick="closeEventorNewsletterModal()" aria-label="Close modal" style="position: absolute; top: 16px; right: 18px; background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+
+    <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(23,104,255,0.18); border: 1px solid rgba(23,104,255,0.35); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #38bdf8; margin-bottom: 18px;">
+
+      <i class="ti ti-mail"></i>
+
+    </div>
+
+    <h3 style="font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.5px;">Subscribe to Newsletter</h3>
+
+    <p style="font-size: 13.5px; color: #94a3b8; line-height: 1.6; margin: 0 0 22px 0;">Get early access to speaker announcements, ticket drops, and international scholarship alerts.</p>
+
+    <form onsubmit="handleEventorNewsletterSubmit(event)" style="display: flex; flex-direction: column; gap: 12px;">
+
+      <input type="email" id="eventorNewsletterEmail" required placeholder="Enter your email address" style="width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 13px 16px; color: #ffffff; font-size: 14px; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#1768ff'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+
+      <button type="submit" style="width: 100%; background: linear-gradient(135deg, #1768ff 0%, #0284c7 100%); color: #ffffff; border: none; border-radius: 12px; padding: 13px 20px; font-size: 14px; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 8px 24px rgba(23,104,255,0.35);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">Subscribe Now &rarr;</button>
+
+    </form>
+
+    <p id="eventorNewsletterMsg" style="display: none; font-size: 13px; color: #34d399; margin: 14px 0 0 0; text-align: center; font-weight: 600;"></p>
+
+  </div>
+
+</div>
+
+<script>
+
+function openEventorNewsletterModal() {
+  const modal = document.getElementById('eventorNewsletterModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    const input = document.getElementById('eventorNewsletterEmail');
+    if (input) setTimeout(() => input.focus(), 100);
+  }
+
+}
+
+function closeEventorNewsletterModal() {
+  const modal = document.getElementById('eventorNewsletterModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function handleEventorNewsletterSubmit(e) {
+  e.preventDefault();
+  const msg = document.getElementById('eventorNewsletterMsg');
+  if (msg) {
+    msg.style.display = 'block';
+    msg.textContent = '🎉 Thank you for subscribing to KNOVA updates!';
+    setTimeout(() => {
+      closeEventorNewsletterModal();
+      msg.style.display = 'none';
+    }, 2000);
+  }
+
+}
+
+</script>
+
+<!-- Registration Modal -->
+
+<div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+
+  <div style="background:#fff; padding:30px; border-radius:15px; width:100%; max-width:400px; position:relative;">
+
+    <button onclick="closeRegister()" aria-label="Close registration modal" style="position:absolute; top:15px; right:15px; border:none; background:none; font-size:20px; font-weight:bold; cursor:pointer;">&times;</button>
+
+    <div class="modal-title" role="heading" aria-level="2" style="margin-top:0; color:#0b2d58; font-size: 20px; font-weight: 800; margin-bottom: 12px;">Register for KNOVA 2026</div>
+
+    <form id="regForm">
+
+      <div style="margin-bottom:15px;">
+
+        <label style="display:block; margin-bottom:5px; font-size:14px; font-weight:bold;">Full Name</label>
+
+        <input type="text" name="name" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+
+      </div>
+
+      <div style="margin-bottom:15px;">
+
+        <label style="display:block; margin-bottom:5px; font-size:14px; font-weight:bold;">Email Address</label>
+
+        <input type="email" name="email" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+
+      </div>
+
+      <div style="margin-bottom:20px;">
+
+        <label style="display:block; margin-bottom:5px; font-size:14px; font-weight:bold;">I am a...</label>
+
+        <select name="role" required style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+
+          <option value="Student">Student</option>
+
+          <option value="Exhibitor">Exhibitor</option>
+
+        </select>
+
+      </div>
+
+      <button type="submit" style="width:100%; padding:12px; background:#e63946; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Complete Registration</button>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- Floating Chat Widget: Mr. K - Your eBuddy (Enhanced Premium Edition) -->
+<div id="chatWindow" class="mrk-chat-window" style="display:none;">
+
+  <!-- Chat Header -->
+  <div class="mrk-chat-header">
+    <div class="mrk-header-profile">
+      <div class="mrk-avatar-wrap">
+        <img src="{% static 'assets/chat-avatar.webp' %}" alt="{{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}" width="38" height="38" loading="lazy" decoding="async">
+        <span class="mrk-online-dot"></span>
+      </div>
+      <div>
+        <div class="mrk-name-row">
+          <span class="mrk-bot-name">{{ site_config.chatbot_name|default:"Mr. K - Your eBuddy" }}</span>
+          <span class="mrk-verified-badge" title="Verified KNOVA AI">✓</span>
+        </div>
+        <div class="mrk-status-text">
+          <span class="mrk-pulse-ring"></span>
+          <span>Online • KNOVA 2027 AI Advisor</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mrk-header-actions">
+      <!-- Direct WhatsApp Action Pill inside Chat Header -->
+      <a href="javascript:void(0)" onclick="openWhatsAppChat('Hi Mr.K Support Team, I would like to speak directly with an admissions advisor.')" title="Chat on WhatsApp" class="mrk-header-wa-btn">
+        <i class="ti ti-brand-whatsapp"></i> <span>WhatsApp</span>
+      </a>
+      <button type="button" onclick="restartMrkChat()" aria-label="Restart chat" title="Clear &amp; Restart Chat" class="mrk-header-icon-btn">
+        <i class="ti ti-refresh"></i>
+      </button>
+      <button type="button" onclick="toggleChat()" aria-label="Close chat window" title="Close" class="mrk-header-icon-btn mrk-close-btn">
+        <i class="ti ti-x"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Chat Lead Form (Before Chatting) -->
+  <div id="chatLeadForm" class="mrk-lead-form">
+    <div class="mrk-lead-welcome">
+      <div class="mrk-lead-emoji">👋</div>
+      <div>
+        <h3 class="mrk-lead-title">Welcome to KNOVA 2027!</h3>
+        <p class="mrk-lead-desc">I'm <strong>{{ site_config.chatbot_name|default:"Mr. K - Your eBuddy" }}</strong>. Enter your name and email to start chatting with me.</p>
+      </div>
+    </div>
+    <div class="mrk-input-group">
+      <i class="ti ti-user mrk-input-icon"></i>
+      <input type="text" id="chatName" placeholder="Your Full Name" required class="mrk-input-field">
+    </div>
+    <div class="mrk-input-group">
+      <i class="ti ti-mail mrk-input-icon"></i>
+      <input type="email" id="chatEmail" placeholder="Your Email Address" required class="mrk-input-field">
+    </div>
+    <button type="button" onclick="submitChatLead()" class="mrk-submit-lead-btn">
+      <span>Start Chatting with Mr. K</span>
+      <i class="ti ti-arrow-right"></i>
+    </button>
+    
+    <!-- Option on Lead Form to switch to WhatsApp directly -->
+    <div class="mrk-lead-wa-divider">
+      <span>Or speak with a human advisor directly</span>
+      <button type="button" onclick="openWhatsAppChat('Hi Mr.K Admissions Team, I would like to speak directly with an advisor.')" class="mrk-lead-wa-btn">
+        <i class="ti ti-brand-whatsapp"></i> Chat directly on WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- Chat Interface (Active Chat Screen) -->
+  <div id="chatInterface" class="mrk-interface" style="display:none;">
+    
+    <!-- Chat Messages Stream -->
+    <div id="chatHistory" class="mrk-history-stream">
+      <!-- Default Welcome Message -->
+      <div class="mrk-msg-row mrk-msg-assistant">
+        <div class="mrk-msg-avatar">
+          <img src="{% static 'assets/chat-avatar.webp' %}" alt="Mr.K" width="28" height="28">
+        </div>
+        <div class="mrk-msg-bubble">
+          <div class="mrk-bubble-sender">
+            <strong>{{ site_config.chatbot_name|default:"Mr. K - Your eBuddy" }}</strong>
+            <span class="mrk-pill-tag">AI Advisor</span>
+          </div>
+          <p class="mrk-bubble-text">
+            Hi there! 👋 I'm <strong>{{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}</strong> for KNOVA 2027.
+          </p>
+          <p class="mrk-bubble-text">
+            Ask me anything about <strong>free entry tickets, participating universities, $5M+ scholarships, or booth booking</strong>. If I can't answer, you can instantly continue on WhatsApp with our human advisors!
+          </p>
+          <div class="mrk-msg-timestamp" id="mrkInitTime">Just now</div>
+        </div>
+      </div>
+
+      <!-- Typing Indicator -->
+      <div id="mrkTypingIndicator" class="mrk-msg-row mrk-msg-assistant mrk-typing-row" style="display:none;">
+        <div class="mrk-msg-avatar">
+          <img src="{% static 'assets/chat-avatar.webp' %}" alt="Mr.K" width="28" height="28">
+        </div>
+        <div class="mrk-typing-bubble">
+          <span class="mrk-dot"></span>
+          <span class="mrk-dot"></span>
+          <span class="mrk-dot"></span>
+          <span class="mrk-typing-label">Mr. K is thinking...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Suggestion Topic Chips (Horizontal Scrollable Carousel) -->
+    <div class="mrk-chips-wrapper">
+      <div class="mrk-chips-scroll">
+        <button type="button" class="mrk-chip" onclick="handleMrkChip('🎟️ How do I get a free ticket?')">
+          🎟️ Free Pass
+        </button>
+        <button type="button" class="mrk-chip" onclick="handleMrkChip('📍 When and where is the event?')">
+          📍 Dates &amp; Venues
+        </button>
+        <button type="button" class="mrk-chip" onclick="handleMrkChip('🎓 Which universities are participating?')">
+          🎓 Universities
+        </button>
+        <button type="button" class="mrk-chip" onclick="handleMrkChip('💰 How do I apply for scholarships?')">
+          💰 Scholarships
+        </button>
+        <button type="button" class="mrk-chip" onclick="handleMrkChip('🏛️ How can universities exhibit?')">
+          🏛️ For Exhibitors
+        </button>
+        <button type="button" class="mrk-chip" onclick="handleMrkChip('📄 What documents should I bring?')">
+          📄 Documents to Bring
+        </button>
+        <button type="button" class="mrk-chip" onclick="handleMrkChip('🎮 How does the KNOVA Challenge work?')">
+          🎮 Challenge Rewards
+        </button>
+        <!-- WhatsApp Option Inside Chat Suggestions -->
+        <button type="button" class="mrk-chip mrk-chip-wa" onclick="openWhatsAppChat('Hi Mr.K Support Team, I would like to speak directly with an admissions advisor.')">
+          <i class="ti ti-brand-whatsapp"></i> 💬 WhatsApp Advisor
+        </button>
+      </div>
+    </div>
+
+    <!-- User Input Bar -->
+    <div class="mrk-input-bar">
+      <div class="mrk-input-container">
+        <input type="text" id="chatUserInput" placeholder="Ask Mr. K anything (e.g. scholarships, tickets)..." autocomplete="off" onkeydown="if(event.key==='Enter') sendUserCustomMsg()">
+        <button type="button" onclick="sendUserCustomMsg()" aria-label="Send message" title="Send question" class="mrk-send-btn">
+          <i class="ti ti-send"></i>
+        </button>
+      </div>
+      <!-- Direct WhatsApp Button Inside Chat Bar -->
+      <button type="button" onclick="openWhatsAppChat()" aria-label="WhatsApp" title="Chat on WhatsApp" class="mrk-bar-wa-btn">
+        <i class="ti ti-brand-whatsapp"></i>
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Enhanced Chat Widget Styling -->
+<style>
+  /* Chat Window Container */
+  .mrk-chat-window {
+    position: fixed;
+    bottom: 92px;
+    right: 28px;
+    width: 380px;
+    max-width: calc(100vw - 32px);
+    height: 520px;
+    max-height: calc(100vh - 120px);
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 16px 50px rgba(10, 25, 54, 0.22), 0 0 0 1px rgba(226, 232, 240, 0.8);
+    z-index: 9998;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Poppins', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    animation: mrkFadeUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes mrkFadeUp {
+    from { opacity: 0; transform: translateY(18px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Header */
+  .mrk-chat-header {
+    background: linear-gradient(135deg, #0d52e8 0%, #1768ff 50%, #4338ca 100%);
+    color: #ffffff;
+    padding: 13px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 14px rgba(23, 104, 255, 0.2);
+  }
+
+  .mrk-header-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mrk-avatar-wrap {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+  }
+
+  .mrk-avatar-wrap img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  }
+
+  .mrk-online-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background: #10b981;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+  }
+
+  .mrk-name-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .mrk-bot-name {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.2;
+    letter-spacing: -0.2px;
+    color: #ffffff;
+  }
+
+  .mrk-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  .mrk-status-text {
+    font-size: 11px;
+    opacity: 0.92;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 2px;
+    color: #e0e7ff;
+  }
+
+  .mrk-pulse-ring {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: mrkPulseAnim 1.8s infinite;
+  }
+
+  @keyframes mrkPulseAnim {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8); }
+    70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+
+  .mrk-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .mrk-header-wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #25D366;
+    color: #ffffff !important;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    transition: transform 0.15s ease, background 0.15s;
+  }
+
+  .mrk-header-wa-btn:hover {
+    background: #20bd5a;
+    transform: translateY(-1px);
+  }
+
+  .mrk-header-icon-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #ffffff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.15s ease;
+  }
+
+  .mrk-header-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+  }
+
+  /* Lead Form */
+  .mrk-lead-form {
+    padding: 22px 20px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .mrk-lead-welcome {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .mrk-lead-emoji {
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  .mrk-lead-title {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 3px 0;
+  }
+
+  .mrk-lead-desc {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .mrk-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .mrk-input-icon {
+    position: absolute;
+    left: 12px;
+    color: #94a3b8;
+    font-size: 15px;
+    pointer-events: none;
+  }
+
+  .mrk-input-field {
+    width: 100%;
+    padding: 10px 12px 10px 34px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #0f172a;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+  }
+
+  .mrk-input-field:focus {
+    border-color: #1768ff;
+    box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.1);
+  }
+
+  .mrk-submit-lead-btn {
+    padding: 11px 16px;
+    background: linear-gradient(135deg, #1768ff 0%, #0d52e8 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13.5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(23, 104, 255, 0.28);
+    transition: all 0.2s ease;
+  }
+
+  .mrk-submit-lead-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(23, 104, 255, 0.35);
+  }
+
+  .mrk-lead-wa-divider {
+    text-align: center;
+    padding-top: 10px;
+    border-top: 1px dashed #e2e8f0;
+    margin-top: 2px;
+  }
+
+  .mrk-lead-wa-divider span {
+    font-size: 11.5px;
+    color: #64748b;
+    display: block;
+    margin-bottom: 7px;
+  }
+
+  .mrk-lead-wa-btn {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #86efac;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    transition: all 0.2s ease;
+  }
+
+  .mrk-lead-wa-btn:hover {
+    background: #dcfce7;
+    border-color: #4ade80;
+  }
+
+  /* Chat Interface */
+  .mrk-interface {
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .mrk-history-stream {
+    padding: 14px 16px;
+    flex: 1;
+    overflow-y: auto;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+  }
+
+  /* Custom Scrollbar */
+  .mrk-history-stream::-webkit-scrollbar,
+  .mrk-chips-scroll::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .mrk-history-stream::-webkit-scrollbar-thumb,
+  .mrk-chips-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  /* Message Rows */
+  .mrk-msg-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    animation: mrkMsgIn 0.22s ease-out;
+  }
+
+  @keyframes mrkMsgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .mrk-msg-assistant {
+    align-self: flex-start;
+    max-width: 88%;
+  }
+
+  .mrk-msg-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1.5px solid #cbd5e1;
+  }
+
+  .mrk-msg-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .mrk-msg-bubble {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px 14px 14px 2px;
+    padding: 11px 14px;
+    box-shadow: 0 2px 8px rgba(10, 25, 54, 0.04);
+    font-size: 13px;
+    line-height: 1.48;
+    color: #1e293b;
+    word-break: break-word;
+  }
+
+  .mrk-bubble-sender {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 5px;
+    font-size: 11.5px;
+  }
+
+  .mrk-pill-tag {
+    background: #eff6ff;
+    color: #1768ff;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .mrk-bubble-text {
+    margin: 0 0 6px 0;
+  }
+
+  .mrk-bubble-text:last-child {
+    margin-bottom: 0;
+  }
+
+  .mrk-msg-timestamp {
+    font-size: 10px;
+    color: #94a3b8;
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  /* User Message */
+  .mrk-msg-user {
+    align-self: flex-end;
+    max-width: 82%;
+  }
+
+  .mrk-msg-user .mrk-msg-bubble {
+    background: linear-gradient(135deg, #1768ff 0%, #0d52e8 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 14px 14px 2px 14px;
+    box-shadow: 0 3px 10px rgba(23, 104, 255, 0.25);
+  }
+
+  .mrk-msg-user .mrk-msg-timestamp {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  /* Action Buttons inside Bubble */
+  .mrk-action-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #eff6ff;
+    color: #1768ff !important;
+    border: 1px solid #bfdbfe;
+    padding: 5px 11px;
+    border-radius: 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-decoration: none;
+    margin-top: 7px;
+    margin-right: 5px;
+    transition: all 0.15s ease;
+  }
+
+  .mrk-action-link:hover {
+    background: #dbeafe;
+    transform: translateY(-1px);
+  }
+
+  .mrk-wa-action-card {
+    background: #f0fdf4;
+    border: 1.5px solid #86efac;
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-top: 8px;
+  }
+
+  .mrk-wa-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background: #25D366;
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 12.5px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-top: 6px;
+    box-shadow: 0 3px 10px rgba(37,211,102,0.3);
+    transition: all 0.2s ease;
+  }
+
+  .mrk-wa-action-btn:hover {
+    background: #20bd5a;
+    transform: translateY(-1px);
+  }
+
+  /* Typing Indicator */
+  .mrk-typing-bubble {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+
+  .mrk-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #94a3b8;
+    display: inline-block;
+    animation: mrkBounce 1.4s infinite ease-in-out;
+  }
+
+  .mrk-dot:nth-child(1) { animation-delay: 0s; }
+  .mrk-dot:nth-child(2) { animation-delay: 0.2s; }
+  .mrk-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes mrkBounce {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+    40% { transform: scale(1.1); opacity: 1; background: #1768ff; }
+  }
+
+  /* Chips Carousel */
+  .mrk-chips-wrapper {
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+    padding: 8px 12px;
+  }
+
+  .mrk-chips-scroll {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    white-space: nowrap;
+  }
+
+  .mrk-chip {
+    background: #eff6ff;
+    color: #1768ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 16px;
+    padding: 5px 11px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+
+  .mrk-chip:hover {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    transform: translateY(-1px);
+  }
+
+  .mrk-chip-wa {
+    background: #f0fdf4 !important;
+    color: #15803d !important;
+    border-color: #86efac !important;
+    font-weight: 700 !important;
+  }
+
+  .mrk-chip-wa:hover {
+    background: #dcfce7 !important;
+  }
+
+  /* Input Bar */
+  .mrk-input-bar {
+    padding: 10px 14px;
+    border-top: 1px solid #e2e8f0;
+    background: #ffffff;
+    display: flex;
+    gap: 7px;
+    align-items: center;
+  }
+
+  .mrk-input-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .mrk-input-container input {
+    width: 100%;
+    padding: 9px 38px 9px 13px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 20px;
+    font-size: 12.5px;
+    color: #0f172a;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+  }
+
+  .mrk-input-container input:focus {
+    border-color: #1768ff;
+    box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.1);
+  }
+
+  .mrk-send-btn {
+    position: absolute;
+    right: 4px;
+    background: linear-gradient(135deg, #1768ff, #0d52e8);
+    color: #ffffff;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    box-shadow: 0 2px 6px rgba(23, 104, 255, 0.3);
+    transition: transform 0.15s;
+  }
+
+  .mrk-send-btn:hover {
+    transform: scale(1.08);
+  }
+
+  .mrk-bar-wa-btn {
+    background: #25D366;
+    color: #ffffff;
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 17px;
+    box-shadow: 0 3px 8px rgba(37,211,102,0.35);
+    transition: transform 0.15s;
+  }
+
+  .mrk-bar-wa-btn:hover {
+    transform: scale(1.08);
+  }
+</style>
+
+<!-- Floating Launcher Button -->
+<button type="button" class="chat-widget" id="chatWidgetBtn" aria-label="Open {{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}" onclick="toggleChat(event)" style="background:none; border:none; padding:0; cursor:pointer;">
+  <div class="chat-tooltip">Chat with {{ site_config.chatbot_name|default:"Mr. K - Your eBuddy" }}!</div>
+  <div class="chat-avatar">
+    <img src="{% static 'assets/chat-avatar.webp' %}" alt="{{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}" width="48" height="48" loading="lazy" decoding="async">
+    <span class="chat-badge" id="chatBadge">1</span>
+  </div>
+</button>
+
+<script>
+// Mr. K - Your eBuddy Engine 2.0 (Intelligent NLP & WhatsApp Bridge)
+(function() {
+  const rawPhone = "{{ site_config.whatsapp_number|default:'+971 50 123 4567'|escapejs }}";
+  window.MRK_WA_PHONE = rawPhone.replace(/[^0-9]/g, '') || '971501234567';
+
+  // Format current time
+  function getFormattedTime() {
+    const d = new Date();
+    let h = d.getHours();
+    const m = String(d.getMinutes()).padStart(2, '0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return `${h}:${m} ${ampm}`;
+  }
+
+  // Set initial time
+  const initEl = document.getElementById("mrkInitTime");
+  if (initEl) initEl.textContent = getFormattedTime();
+
+  // Audio chime feedback using Web Audio API
+  function playChime(type) {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      const now = ctx.currentTime;
+      if (type === 'send') {
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(1100, now + 0.08);
+        gain.gain.setValueAtTime(0.06, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      } else {
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(780, now + 0.12);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+        osc.start(now);
+        osc.stop(now + 0.18);
+      }
+    } catch(e) {}
+  }
+
+  window.getMrKWhatsAppUrl = function(msg) {
+    const defaultText = "Hi Mr.K Support Team, I have an inquiry regarding KNOVA 2027.";
+    const text = msg ? encodeURIComponent(msg) : encodeURIComponent(defaultText);
+    return `https://wa.me/${window.MRK_WA_PHONE}?text=${text}`;
+  };
+
+  window.openWhatsAppChat = function(customMsg) {
+    const url = window.getMrKWhatsAppUrl(customMsg);
+    window.open(url, '_blank');
+  };
+
+  // Toggle chat window open / close
+  window.toggleChat = function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const chatWindow = document.getElementById("chatWindow");
+    const chatBadge = document.getElementById("chatBadge");
+    if (!chatWindow) return;
+    
+    const isHidden = chatWindow.style.display === "none" || chatWindow.style.display === "";
+    if (isHidden) {
+      chatWindow.style.display = "flex";
+      if (chatBadge) chatBadge.style.display = "none";
+      
+      // Auto-bypass lead form if user already registered or saved in localStorage
+      if (localStorage.getItem('mrk_lead_name')) {
+        const leadForm = document.getElementById('chatLeadForm');
+        const chatInterface = document.getElementById('chatInterface');
+        if (leadForm) leadForm.style.display = 'none';
+        if (chatInterface) chatInterface.style.display = 'flex';
+      }
+      setTimeout(() => {
+        const inp = document.getElementById("chatUserInput");
+        if (inp && inp.offsetParent !== null) inp.focus();
+      }, 150);
+    } else {
+      chatWindow.style.display = "none";
+    }
+  };
+
+  // Submit Lead Form
+  window.submitChatLead = function() {
+    const nameInput = document.getElementById('chatName');
+    const emailInput = document.getElementById('chatEmail');
+    const name = nameInput ? nameInput.value.trim() : '';
+    const email = emailInput ? emailInput.value.trim() : '';
+    
+    if (!name || !email) {
+      alert("Please enter both your Name and Email to start chatting.");
+      return;
+    }
+    
+    // Save locally
+    localStorage.setItem('mrk_lead_name', name);
+    localStorage.setItem('mrk_lead_email', email);
+    
+    fetch('/chat/lead/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email })
+    }).catch(() => {});
+    
+    document.getElementById('chatLeadForm').style.display = 'none';
+    document.getElementById('chatInterface').style.display = 'flex';
+    
+    // Welcome message with visitor's name
+    setTimeout(() => {
+      appendMrkBotMessage(`Great to meet you, <strong>${name}</strong>! How can I assist you with your KNOVA 2027 journey today? Feel free to ask any question or tap a suggestion chip below.`);
+    }, 300);
+  };
+
+  // Restart / Reset Chat
+  window.restartMrkChat = function() {
+    const history = document.getElementById("chatHistory");
+    if (!history) return;
+    const typingIndicator = document.getElementById("mrkTypingIndicator");
+    history.innerHTML = `
+      <div class="mrk-msg-row mrk-msg-assistant">
+        <div class="mrk-msg-avatar">
+          <img src="{% static 'assets/chat-avatar.webp' %}" alt="Mr.K" width="28" height="28">
+        </div>
+        <div class="mrk-msg-bubble">
+          <div class="mrk-bubble-sender">
+            <strong>{{ site_config.chatbot_name|default:"Mr. K - Your eBuddy" }}</strong>
+            <span class="mrk-pill-tag">AI Advisor</span>
+          </div>
+          <p class="mrk-bubble-text">Conversation reset! 👋 What can I help you explore today for KNOVA 2027?</p>
+          <div class="mrk-msg-timestamp">${getFormattedTime()}</div>
+        </div>
+      </div>
+    `;
+    if (typingIndicator) history.appendChild(typingIndicator);
+  };
+
+  // Append User message to stream
+  function appendMrkUserMessage(text) {
+    const history = document.getElementById("chatHistory");
+    if (!history) return;
+    const typingIndicator = document.getElementById("mrkTypingIndicator");
+    
+    const row = document.createElement("div");
+    row.className = "mrk-msg-row mrk-msg-user";
+    row.innerHTML = `
+      <div class="mrk-msg-bubble">
+        <div class="mrk-bubble-text">${escapeHtml(text)}</div>
+        <div class="mrk-msg-timestamp">${getFormattedTime()}</div>
+      </div>
+    `;
+    if (typingIndicator) {
+      history.insertBefore(row, typingIndicator);
+    } else {
+      history.appendChild(row);
+    }
+    history.scrollTop = history.scrollHeight;
+    playChime('send');
+  }
+
+  // Append Bot message to stream
+  function appendMrkBotMessage(htmlContent) {
+    const history = document.getElementById("chatHistory");
+    if (!history) return;
+    const typingIndicator = document.getElementById("mrkTypingIndicator");
+    
+    const row = document.createElement("div");
+    row.className = "mrk-msg-row mrk-msg-assistant";
+    row.innerHTML = `
+      <div class="mrk-msg-avatar">
+        <img src="{% static 'assets/chat-avatar.webp' %}" alt="Mr.K" width="28" height="28">
+      </div>
+      <div class="mrk-msg-bubble">
+        <div class="mrk-bubble-sender">
+          <strong>{{ site_config.chatbot_name|default:"Mr. K - Your eBuddy" }}</strong>
+          <span class="mrk-pill-tag">AI Advisor</span>
+        </div>
+        <div>${htmlContent}</div>
+        <div class="mrk-msg-timestamp">${getFormattedTime()}</div>
+      </div>
+    `;
+    if (typingIndicator) {
+      history.insertBefore(row, typingIndicator);
+    } else {
+      history.appendChild(row);
+    }
+    history.scrollTop = history.scrollHeight;
+    playChime('receive');
+  }
+
+  function escapeHtml(str) {
+    const p = document.createElement('p');
+    p.textContent = str;
+    return p.innerHTML;
+  }
+
+  // Handle click on quick chips
+  window.handleMrkChip = function(query) {
+    sendMrkQuery(query);
+  };
+
+  // Handle standard send button / enter key
+  window.sendUserCustomMsg = function() {
+    const input = document.getElementById("chatUserInput");
+    if (!input) return;
+    const query = input.value.trim();
+    if (!query) return;
+    input.value = "";
+    sendMrkQuery(query);
+  };
+
+  // Legacy sendMsg bridge for backwards compatibility
+  window.sendMsg = function(question, answer) {
+    appendMrkUserMessage(question);
+    const typing = document.getElementById("mrkTypingIndicator");
+    if (typing) typing.style.display = "flex";
+    const history = document.getElementById("chatHistory");
+    if (history) history.scrollTop = history.scrollHeight;
+
+    setTimeout(() => {
+      if (typing) typing.style.display = "none";
+      appendMrkBotMessage(answer);
+    }, 600);
+  };
+
+  // Central intelligent query processor
+  function sendMrkQuery(query) {
+    appendMrkUserMessage(query);
+
+    const typing = document.getElementById("mrkTypingIndicator");
+    if (typing) typing.style.display = "flex";
+    const history = document.getElementById("chatHistory");
+    if (history) history.scrollTop = history.scrollHeight;
+
+    setTimeout(() => {
+      if (typing) typing.style.display = "none";
+      const qLower = query.toLowerCase();
+      let answerHtml = "";
+
+      // 1. Tickets & Free Entry
+      if (qLower.includes("ticket") || qLower.includes("entry") || qLower.includes("free") || qLower.includes("pass") || qLower.includes("price") || qLower.includes("cost") || qLower.includes("fee")) {
+        answerHtml = `
+          <p class="mrk-bubble-text"><strong>Admission to KNOVA 2027 is 100% free</strong> for students, parents, and educators!</p>
+          <p class="mrk-bubble-text">Register online to instantly receive your smart QR digital pass with fast-track entry to all exhibition halls, auditoriums, and counseling booths.</p>
+          <a href="/register/" class="mrk-action-link"><i class="ti ti-ticket"></i> Get Free Pass Now →</a>
+        `;
+      }
+      // 2. Dates, Cities, Venues & Timings
+      else if (qLower.includes("when") || qLower.includes("where") || qLower.includes("date") || qLower.includes("location") || qLower.includes("venue") || qLower.includes("city") || qLower.includes("time") || qLower.includes("hour") || qLower.includes("riyadh") || qLower.includes("dubai") || qLower.includes("doha")) {
+        answerHtml = `
+          <p class="mrk-bubble-text">KNOVA 2027 is hosted across premier GCC exhibition centers from <strong>10:00 AM to 7:00 PM daily</strong>:</p>
+          <p class="mrk-bubble-text">
+            📍 <strong>Dubai:</strong> Dubai World Trade Centre (DWTC), Sheikh Zayed Road<br>
+            📍 <strong>Riyadh:</strong> Riyadh International Convention &amp; Exhibition Center
+          </p>
+          <a href="/events/" class="mrk-action-link"><i class="ti ti-calendar"></i> View Full Timetable &amp; Venues →</a>
+        `;
+      }
+      // 3. Universities & Spot Admissions
+      else if (qLower.includes("universit") || qLower.includes("college") || qLower.includes("institution") || qLower.includes("spot") || qLower.includes("admiss") || qLower.includes("study abroad") || qLower.includes("uk") || qLower.includes("usa") || qLower.includes("canada") || qLower.includes("australia") || qLower.includes("course") || qLower.includes("major")) {
+        answerHtml = `
+          <p class="mrk-bubble-text">Over <strong>60+ top world-ranked universities</strong> from the UK, USA, Canada, Australia, Europe, and the Middle East are participating.</p>
+          <p class="mrk-bubble-text">Bring your academic transcripts to receive direct on-spot profile assessments, conditional acceptance letters, and exclusive application fee waivers!</p>
+          <a href="/universities/" class="mrk-action-link"><i class="ti ti-building-bank"></i> Browse Universities Catalog →</a>
+        `;
+      }
+      // 4. Scholarships, Grants & Exam
+      else if (qLower.includes("scholarship") || qLower.includes("grant") || qLower.includes("financial") || qLower.includes("fund") || qLower.includes("exam") || qLower.includes("cbt") || qLower.includes("waiver")) {
+        answerHtml = `
+          <p class="mrk-bubble-text">Over <strong>$5,000,000+ in merit scholarships &amp; tuition grants</strong> are awarded at KNOVA 2027!</p>
+          <p class="mrk-bubble-text">You can also sit for the online scholarship aptitude exam directly on our CBT Exam Portal to earn awards from 15% up to 100% full-ride funding.</p>
+          <a href="/scholarships/" class="mrk-action-link"><i class="ti ti-award"></i> View Scholarships →</a>
+          <a href="/exam/portal/" class="mrk-action-link"><i class="ti ti-device-laptop"></i> Online CBT Exam Portal →</a>
+        `;
+      }
+      // 5. Exhibitors & Booth Booking
+      else if (qLower.includes("exhibit") || qLower.includes("booth") || qLower.includes("sponsor") || qLower.includes("partner") || qLower.includes("stall")) {
+        answerHtml = `
+          <p class="mrk-bubble-text">Higher education institutions and corporate sponsors can exhibit at KNOVA 2027 to meet <strong>25,000+ targeted students and families</strong>.</p>
+          <p class="mrk-bubble-text">Packages include branded shell schemes, custom fascia, high-speed Wi-Fi, keynote auditorium sessions, and our smart QR digital lead scanner app.</p>
+          <a href="/#faq" class="mrk-action-link"><i class="ti ti-building-store"></i> Exhibitor FAQs &amp; ROI →</a>
+          <a href="mailto:exhibitors@knovaexpo.com" class="mrk-action-link"><i class="ti ti-mail"></i> Contact Partnerships Desk →</a>
+        `;
+      }
+      // 6. Documents to bring
+      else if (qLower.includes("document") || qLower.includes("bring") || qLower.includes("transcript") || qLower.includes("ielts") || qLower.includes("toefl") || qLower.includes("cv") || qLower.includes("resume") || qLower.includes("grade")) {
+        answerHtml = `
+          <p class="mrk-bubble-text">To maximize your on-spot evaluation opportunities, please bring:</p>
+          <p class="mrk-bubble-text">
+            ✔️ Academic transcripts or predicted grades (physical or digital copy)<br>
+            ✔️ Valid Passport or National ID<br>
+            ✔️ CV / Resume and portfolio (for postgraduate / creative arts)<br>
+            ✔️ IELTS / TOEFL / SAT scores (if available, not mandatory)
+          </p>
+        `;
+      }
+      // 7. KNOVA Challenge Gamification
+      else if (qLower.includes("challenge") || qLower.includes("passport") || qLower.includes("game") || qLower.includes("point") || qLower.includes("reward") || qLower.includes("prize") || qLower.includes("xp")) {
+        answerHtml = `
+          <p class="mrk-bubble-text">The <strong>KNOVA Challenge</strong> is an interactive digital attendee passport!</p>
+          <p class="mrk-bubble-text">Scan QR codes at university booths, participate in workshops, and complete fun challenges to earn XP points redeemable for official KNOVA swag, tech prizes, and voucher tiers.</p>
+          <a href="/dashboard/challenge/" class="mrk-action-link"><i class="ti ti-gift"></i> Open Challenge Passport →</a>
+        `;
+      }
+      // 8. Parents & Family Attendance
+      else if (qLower.includes("parent") || qLower.includes("family") || qLower.includes("accompany") || qLower.includes("father") || qLower.includes("mother") || qLower.includes("guardian")) {
+        answerHtml = `
+          <p class="mrk-bubble-text"><strong>Parents are warmly welcomed and encouraged to attend!</strong></p>
+          <p class="mrk-bubble-text">Dedicated Family Lounges, financial planning clinics, visa guidance sessions, and 1-on-1 counselor meetings are available throughout the convention halls.</p>
+        `;
+      }
+      // 9. WhatsApp / Human Advisor request
+      else if (qLower.includes("whatsapp") || qLower.includes("human") || qLower.includes("advisor") || qLower.includes("person") || qLower.includes("agent") || qLower.includes("call") || qLower.includes("phone") || qLower.includes("contact") || qLower.includes("help") || qLower.includes("support")) {
+        const waUrl = window.getMrKWhatsAppUrl("Hi Mr.K Admissions Team, I would like to speak directly with a human advisor regarding KNOVA 2027.");
+        answerHtml = `
+          <div class="mrk-wa-action-card">
+            <div style="font-weight:700; color:#15803d; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+              <i class="ti ti-brand-whatsapp" style="font-size:16px;"></i> Live Admissions Advisor Online
+            </div>
+            <p style="margin:0 0 8px 0; font-size:12.5px; color:#334155;">
+              Our human counselors and admissions desk are available right now on WhatsApp to assist you personally!
+            </p>
+            <a href="${waUrl}" target="_blank" rel="noopener" class="mrk-wa-action-btn">
+              <i class="ti ti-brand-whatsapp"></i> Chat on WhatsApp with Advisor
+            </a>
+          </div>
+        `;
+      }
+      // 10. Fallback: Chatbot doesn't have the answer -> WhatsApp Bridge!
+      else {
+        const waUrl = window.getMrKWhatsAppUrl(`Hi Mr.K Support Team, I asked: "${query}". Could you please help me with this?`);
+        answerHtml = `
+          <div style="margin-bottom:6px; color:#b45309; font-weight:700; display:flex; align-items:center; gap:5px;">
+            <i class="ti ti-help-circle" style="font-size:16px;"></i> I don't have the exact answer to that yet!
+          </div>
+          <p class="mrk-bubble-text">
+            I'm continuously learning, but our <strong>live admissions counselors and event desk</strong> are active on WhatsApp and can answer your question immediately!
+          </p>
+          <div class="mrk-wa-action-card">
+            <div style="font-size:11.5px; color:#15803d; font-weight:700; margin-bottom:3px;">
+              ⚡ Direct 1-on-1 WhatsApp Support:
+            </div>
+            <a href="${waUrl}" target="_blank" rel="noopener" class="mrk-wa-action-btn">
+              <i class="ti ti-brand-whatsapp"></i> Continue on WhatsApp with Advisor
+            </a>
+          </div>
+        `;
+      }
+
+      appendMrkBotMessage(answerHtml);
+    }, 550);
+  }
+})();
+</script>
+
+
+<!-- AI Search Overlay -->
+
+<div id="aiSearchOverlay" style="display:none; position:fixed; inset:0; background:rgba(6,21,50,0.8); backdrop-filter:blur(10px); z-index:100000; align-items:flex-start; justify-content:center; padding-top:10vh;">
+
+  <div style="background:#fff; width:90%; max-width:650px; border-radius:24px; box-shadow:0 20px 50px rgba(0,0,0,0.2); overflow:hidden; display:flex; flex-direction:column; position:relative;">
+
+    <div style="padding:20px 24px; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; gap:16px;">
+
+      <span style="font-size:22px; color:#1768ff; display:flex; align-items:center;"><i class="ti ti-sparkles"></i></span>
+
+      <input type="text" id="aiSearchInput" placeholder="Ask AI: 'Find me engineering courses'..." style="flex:1; border:none; outline:none; font-size:18px; font-weight:500; color:#112d61;" autocomplete="off">
+
+      <button onclick="closeAiSearch()" aria-label="Close search overlay" style="background:none; border:none; font-size:24px; color:#64748b; cursor:pointer;">&times;</button>
+
+    </div>
+
+    <div id="aiSearchResults" style="padding:16px; max-height:60vh; overflow-y:auto; background:#f8fafc; display:flex; flex-direction:column; gap:12px;">
+
+      <div style="text-align:center; color:#94a3b8; padding:30px 0; font-size:14px;">Try searching for universities, courses, categories, or exhibitors.</div>
+
+    </div>
+
+    <div style="padding:12px 24px; background:#f1f5f9; border-top:1px solid #e2e8f0; font-size:12px; color:#64748b; text-align:right; font-weight:600;">
+
+      Powered by KNOVA AI
+
+    </div>
+
+  </div>
+
+</div>
+
+<style>
+
+.search-result-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.search-result-item:hover {
+  border-color: #e63946;
+  box-shadow: 0 4px 12px rgba(230,57,70,0.1);
+  transform: translateY(-2px);
+}
+
+.search-result-type {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #eff6ff;
+  color: #e63946;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+</style>
+
+<script>
+
+function openAiSearch() {
+  document.getElementById('aiSearchOverlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('aiSearchInput').focus(), 100);
+}
+
+function closeAiSearch() {
+  document.getElementById('aiSearchOverlay').style.display = 'none';
+}
+
+document.getElementById('aiSearchInput')?.addEventListener('input', function(e) {
+  const query = e.target.value.trim();
+  const resultsDiv = document.getElementById('aiSearchResults');
+  if (query.length < 2) {
+    resultsDiv.innerHTML = '<div style="text-align:center; color:#94a3b8; padding:30px 0; font-size:14px;">Try searching for universities, courses, categories, or exhibitors.</div>';
+    return;
+  }
+
+  fetch(`/api/search/?q=${encodeURIComponent(query)}`)
+
+    .then(r => r.json())
+
+    .then(data => {
+      if (data.results && data.results.length > 0) {
+        resultsDiv.innerHTML = data.results.map(item => `
+
+          <a href="${item.url}" class="search-result-item">
+
+            <div>
+
+              <div style="color:#112d61; font-weight:800; font-size:15px; margin-bottom:4px;">${item.title}</div>
+
+              <div style="color:#64748b; font-size:13px; font-weight:500;">${item.subtitle}</div>
+
+            </div>
+
+            <div class="search-result-type">${item.type}</div>
+
+          </a>
+
+        `).join('');
+      } else {
+        resultsDiv.innerHTML = '<div style="text-align:center; color:#94a3b8; padding:30px 0; font-size:14px;">No matching data found. Try another query.</div>';
+      }
+
+    });
+});
+// Close on escape key
+
+document.addEventListener('keydown', function(event) {
+  if (event.key === "Escape") {
+    closeAiSearch();
+  }
+
+});
+</script>
+
+<script src="{% static 'js/main.js' %}" defer></script>
+
+<script>
+
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.className = isDark ? 'ti ti-sun' : 'ti ti-moon';
+}
+
+if (localStorage.getItem('theme') === 'dark') {
+  document.body.classList.add('dark-mode');
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.className = 'ti ti-sun';
+}
+
+</script>
+
+<script>
+
+// Prevent copy and text selection on non-editable elements
+
+document.addEventListener('selectstart', function(e) {
+  var tag = (e.target && e.target.tagName) ? e.target.tagName.toUpperCase() : '';
+  if (tag !== 'INPUT' && tag !== 'TEXTAREA' && !e.target.isContentEditable) {
+    e.preventDefault();
+  }
+
+});
+document.addEventListener('copy', function(e) {
+  var tag = (e.target && e.target.tagName) ? e.target.tagName.toUpperCase() : '';
+  if (tag !== 'INPUT' && tag !== 'TEXTAREA' && !e.target.isContentEditable) {
+    e.preventDefault();
+  }
+
+});
+</script>
+
+{% if site_config.custom_body_code %}
+{{ site_config.custom_body_code|safe }}
+{% endif %}
+</body>
+
+</html>

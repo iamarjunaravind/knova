@@ -1,0 +1,77 @@
+{% extends 'dashboard/base.html' %}
+{% block nav_scholarships %}active{% endblock %}
+{% block page_title %}Exam Registration{% endblock %}
+{% block title %}Register | KNOVA{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="max-width:700px; margin:0 auto; padding:30px;">
+    <h2 style="margin-top:0; color:var(--text-main);">{{ exam.title }}</h2>
+    <p style="color:var(--text-muted); margin-bottom:24px;">Select an available time slot to take your scholarship examination. Each slot has a strict capacity of 100 students.</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="padding:15px; margin-bottom:20px; border-radius:8px; 
+                {% if message.tags == 'error' %}background:#fee2e2; color:#b91c1c; border:1px solid #fecaca;
+                {% else %}background:#dcfce7; color:#15803d; border:1px solid #bbf7d0;{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:16px; margin-bottom:30px;">
+            {% for slot in slots %}
+            <label class="slot-card {% if slot.is_full_flag %}full{% endif %}" style="display:block; padding:16px; border:2px solid {% if slot.is_full_flag %}#e2e8f0{% else %}var(--card-border){% endif %}; border-radius:12px; cursor:{% if slot.is_full_flag %}not-allowed{% else %}pointer{% endif %}; position:relative; transition:all 0.2s; background:{% if slot.is_full_flag %}#f8fafc{% else %}white{% endif %};">
+                
+                <input type="radio" name="slot_id" value="{{ slot.id }}" {% if slot.is_full_flag %}disabled{% endif %} style="position:absolute; opacity:0;">
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <div style="font-weight:600; color:{% if slot.is_full_flag %}#94a3b8{% else %}var(--text-main){% endif %};">{{ slot.date|date:"l, M j" }}</div>
+                    {% if slot.is_full_flag %}
+                        <span style="font-size:11px; font-weight:700; color:#ef4444; background:#fee2e2; padding:2px 8px; border-radius:12px;">FULL</span>
+                    {% else %}
+                        <span style="font-size:11px; font-weight:700; color:#10b981; background:#dcfce7; padding:2px 8px; border-radius:12px;">AVAILABLE</span>
+                    {% endif %}
+                </div>
+                
+                <div style="font-size:20px; font-weight:700; color:{% if slot.is_full_flag %}#cbd5e1{% else %}var(--primary){% endif %}; margin-bottom:12px;">
+                    {{ slot.start_time|time:"g:i A" }} - {{ slot.end_time|time:"g:i A" }}
+                </div>
+                
+                <div style="font-size:12px; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+                    <i data-feather="users" style="width:14px; height:14px;"></i>
+                    {{ slot.registrations.count }} / {{ slot.capacity }} registered
+                </div>
+                
+                <div class="slot-selected-indicator" style="display:none; position:absolute; top:-2px; left:-2px; right:-2px; bottom:-2px; border:2px solid var(--primary); border-radius:12px; pointer-events:none;"></div>
+            </label>
+            {% endfor %}
+        </div>
+        
+        <div style="display:flex; gap:16px;">
+            <a href="{% url 'dashboard_scholarships' %}" class="btn" style="padding:12px 24px;">Cancel</a>
+            <button type="submit" class="btn btn-primary" style="padding:12px 24px;" id="submitBtn" disabled>Confirm Registration</button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const radios = document.querySelectorAll('input[name="slot_id"]');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    radios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            // Hide all indicators
+            document.querySelectorAll('.slot-selected-indicator').forEach(ind => ind.style.display = 'none');
+            // Show indicator for selected
+            if (e.target.checked) {
+                e.target.parentElement.querySelector('.slot-selected-indicator').style.display = 'block';
+                submitBtn.disabled = false;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

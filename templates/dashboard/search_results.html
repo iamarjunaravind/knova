@@ -1,0 +1,207 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Search Results | KNOVA{% endblock %}
+{% block page_title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;">
+    <div>
+        <h2 style="margin: 0 0 6px 0; color: var(--text-main);">Search Results for "{{ query }}"</h2>
+        <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Matches found across scholarships, institutions, courses, exhibitors, and events.</p>
+    </div>
+    <a href="javascript:history.back()" class="btn btn-secondary" style="padding: 6px 14px; font-size: 13px;">&larr; Go Back</a>
+</div>
+
+{% if not query %}
+<div class="glass-card">
+    <p style="color: var(--text-muted);">Please enter a search term.</p>
+</div>
+{% else %}
+
+    <!-- Scholarships Section -->
+    {% if results.scholarships %}
+    <div class="glass-card" style="margin-bottom: 24px;">
+        <h3 style="margin-top: 0; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+            <i class="ti ti-award" style="color: #10b981;"></i> Scholarships ({{ results.scholarships|length }})
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 14px;">
+            {% for s in results.scholarships %}
+            <div style="background: #f8fafc; border: 1px solid var(--card-border); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <h4 style="margin: 0 0 4px 0; font-size: 14.5px; color: var(--text-main);">{{ s.name }}</h4>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">{{ s.university.name|default:"Global Partner" }}</div>
+                    <div style="font-size: 16px; font-weight: 800; color: #10b981; margin-bottom: 10px;">{{ s.amount|default:s.coverage_type }}</div>
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <a href="{% url 'dashboard_scholarships' %}?q={{ s.name|urlencode }}" class="btn btn-primary" style="padding: 4px 10px; font-size: 11.5px; text-decoration: none; border-radius: 6px;">
+                        View Match &rarr;
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Universities Section -->
+    {% if results.universities %}
+    <div class="glass-card" style="margin-bottom: 24px;">
+        <h3 style="margin-top: 0; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+            <i class="ti ti-building-bank" style="color: #1768ff;"></i> Universities & Institutions ({{ results.universities|length }})
+        </h3>
+        <table style="width:100%; text-align:left; border-collapse:collapse; margin-top: 12px;">
+            {% for uni in results.universities %}
+            <tr style="border-bottom: 1px solid var(--card-border);">
+                <td style="padding:12px; font-weight: 600;">{{ uni.name }}</td>
+                <td style="padding:12px; color: var(--text-muted); font-size: 13px;">
+                    {{ uni.profile.location_city|default:"" }}{% if uni.profile.location_city and uni.profile.location_state_country %}, {% endif %}{{ uni.profile.location_state_country|default:"Global" }}
+                </td>
+                <td style="padding:12px; text-align:right;">
+                    {% if uni.slug %}
+                    <a href="{% url 'university_detail' uni.slug %}" class="btn btn-primary" style="padding:4px 10px; font-size:12px; text-decoration:none;">View Profile</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Courses Section -->
+    {% if results.courses %}
+    <div class="glass-card" style="margin-bottom: 24px;">
+        <h3 style="margin-top: 0; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+            <i class="ti ti-school" style="color: #7c3aed;"></i> Courses & Degrees ({{ results.courses|length }})
+        </h3>
+        <table style="width:100%; text-align:left; border-collapse:collapse; margin-top: 12px;">
+            {% for course in results.courses %}
+            <tr style="border-bottom: 1px solid var(--card-border);">
+                <td style="padding:12px; font-weight: 600;">{{ course.name }}</td>
+                <td style="padding:12px; color: var(--text-muted); font-size: 13px;">{{ course.university.name }}</td>
+                <td style="padding:12px; color: var(--text-muted); font-size: 12px;">{{ course.degree_type }} &bull; {{ course.duration }}</td>
+                <td style="padding:12px; text-align:right;">
+                    <a href="{% url 'courses_list' %}?q={{ course.name|urlencode }}" class="btn btn-secondary" style="padding:4px 10px; font-size:12px; text-decoration:none;">Explore</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Events Section -->
+    {% if results.events %}
+    <div class="glass-card" style="margin-bottom: 24px;">
+        <h3 style="margin-top: 0;">Events (Expos)</h3>
+        <table style="width:100%; text-align:left; border-collapse:collapse;">
+            {% for event in results.events %}
+            <tr style="border-bottom: 1px solid var(--card-border);">
+                <td style="padding:12px;">{{ event.name }}</td>
+                <td style="padding:12px;">{{ event.city }}</td>
+                <td style="padding:12px; text-align:right;">
+                    <a href="{% url 'event_update' event.pk %}" class="btn btn-primary" style="padding:4px 8px; font-size:12px;">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Exhibitors Section -->
+    {% if results.exhibitors %}
+    <div class="glass-card" style="margin-bottom: 24px;">
+        <h3 style="margin-top: 0;">Exhibitors</h3>
+        <table style="width:100%; text-align:left; border-collapse:collapse;">
+            {% for exh in results.exhibitors %}
+            <tr style="border-bottom: 1px solid var(--card-border);">
+                <td style="padding:12px;">{{ exh.company_name }}</td>
+                <td style="padding:12px;">{{ exh.country }}</td>
+                <td style="padding:12px; text-align:right;">
+                    <a href="{% url 'exhibitor_update' exh.pk %}" class="btn btn-primary" style="padding:4px 8px; font-size:12px;">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Keynote & Seminar Sessions Section -->
+    {% if results.sessions %}
+    <div class="glass-card" style="margin-bottom: 24px;">
+        <h3 style="margin-top: 0; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+            <i class="ti ti-presentation" style="color: #7c3aed;"></i> Keynote Seminars &amp; Sessions ({{ results.sessions|length }})
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 14px;">
+            {% for s in results.sessions %}
+            <div style="background: #f8fafc; border: 1px solid var(--card-border); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #7c3aed; background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 6px; padding: 2px 8px; margin-bottom: 6px;">{{ s.hall_name|default:"Main Auditorium" }}</span>
+                    <h4 style="margin: 0 0 6px 0; font-size: 14.5px; color: var(--text-main); font-weight: 750;">{{ s.title }}</h4>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
+                        {% if s.speaker %}<span>&bull; Speaker: {{ s.speaker.name }}</span>{% endif %}
+                    </div>
+                    <div style="font-size: 12px; color: #64748b;">
+                        {% if s.event_location %}<span>&bull; {{ s.event_location.city }}</span>{% endif %}
+                        {% if s.date %}<span>&bull; {{ s.date|date:"M d, Y" }}</span>{% endif %}
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                    <a href="{% url 'dashboard_events' %}?q={{ s.title|urlencode }}" class="btn btn-primary" style="padding: 5px 12px; font-size: 12px; text-decoration: none; border-radius: 6px; background: #7c3aed; color: #ffffff;">
+                        View in Expos &amp; Seminars &rarr;
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Speakers Section -->
+    {% if results.speakers %}
+    <div class="glass-card" style="margin-bottom: 24px;">
+        <h3 style="margin-top: 0; color: var(--text-main); display: flex; align-items: center; gap: 8px;">
+            <i class="ti ti-user" style="color: #ea580c;"></i> Keynote Speakers ({{ results.speakers|length }})
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 14px;">
+            {% for sp in results.speakers %}
+            <div style="background: #f8fafc; border: 1px solid var(--card-border); border-radius: 10px; padding: 14px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <h4 style="margin: 0 0 4px 0; font-size: 14px; color: var(--text-main); font-weight: 750;">{{ sp.name }}</h4>
+                    <div style="font-size: 12px; color: var(--text-muted);">{{ sp.title|default:"Keynote Speaker" }}</div>
+                    {% if sp.organization %}<div style="font-size: 11.5px; color: #64748b;">{{ sp.organization }}</div>{% endif %}
+                </div>
+                <a href="{% url 'speaker_update' sp.pk %}" class="btn btn-primary" style="padding: 4px 10px; font-size: 12px; text-decoration: none; border-radius: 6px;">Edit</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Registrations Section -->
+    {% if results.registrations %}
+    <div class="glass-card" style="margin-bottom: 24px;">
+        <h3 style="margin-top: 0;">Registrations</h3>
+        <table style="width:100%; text-align:left; border-collapse:collapse;">
+            {% for reg in results.registrations %}
+            <tr style="border-bottom: 1px solid var(--card-border);">
+                <td style="padding:12px;">{{ reg.full_name }}</td>
+                <td style="padding:12px;">{{ reg.email }}</td>
+                <td style="padding:12px;">{{ reg.role }}</td>
+                <td style="padding:12px; text-align:right;">
+                    <a href="{% url 'registration_view' reg.pk %}" class="btn btn-primary" style="padding:4px 8px; font-size:12px;">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+    
+    {% if not results.scholarships and not results.universities and not results.courses and not results.events and not results.exhibitors and not results.registrations and not results.speakers and not results.sessions %}
+    <div class="glass-card" style="text-align: center; padding: 40px 20px;">
+        <i class="ti ti-search-off" style="font-size: 40px; color: #94a3b8; display: block; margin-bottom: 12px;"></i>
+        <h3 style="margin: 0 0 8px 0; color: var(--text-main);">No results found for "{{ query }}"</h3>
+        <p style="color: var(--text-muted); margin: 0;">Please check your spelling or search with broader keywords.</p>
+    </div>
+    {% endif %}
+
+{% endif %}
+{% endblock %}

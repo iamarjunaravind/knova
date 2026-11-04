@@ -1,0 +1,264 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% load rbac_tags %}
+
+{% block title %}Student QR Punch Scanner — Education Expert — KNOVA{% endblock %}
+{% block nav_expert_scanner %}active{% endblock %}
+
+{% block content %}
+<div class="dashboard-content" style="padding: 24px 28px;">
+  <!-- Header Breadcrumb -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+    <div>
+      <div style="font-size:12px; font-weight:700; color:#8b5cf6; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">
+        <i data-feather="camera" style="width:13px; height:13px;"></i> Academic Counselling Hub
+      </div>
+      <h2 style="margin:0; font-size:24px; font-weight:800; color:#0a1936;">Student QR Code Punch Scanner</h2>
+      <p style="margin:3px 0 0 0; font-size:13.5px; color:#64748b;">
+        Scan student Challenge Passport badges or enter their badge ID to punch consultation attendance (+40 XP).
+      </p>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <a href="{% url 'dashboard_index' %}" class="btn" style="background:#fff; border:1px solid #cbd5e1; color:#334155; font-weight:700; padding:10px 18px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+        <i data-feather="arrow-left" style="width:15px; height:15px;"></i> Back to Station
+      </a>
+      <a href="{% url 'expert_consultation_roster' %}" class="btn" style="background:#8b5cf6; color:#fff; font-weight:700; padding:10px 18px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(139,92,246,0.25);">
+        <i data-feather="users" style="width:15px; height:15px;"></i> Consulted Roster
+      </a>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; align-items:start;">
+    <!-- Live Camera Scanner Box -->
+    <div class="glass-card" style="background:#fff; border-radius:16px; border:1px solid #e2e8f0; padding:24px; box-shadow:0 4px 20px rgba(0,0,0,0.04);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h4 style="margin:0; font-size:16px; font-weight:800; color:#0a1936; display:flex; align-items:center; gap:8px;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#10b981; display:inline-block; animation:pulse 2s infinite;"></span>
+          Camera QR Scanner
+        </h4>
+        <span style="font-size:11.5px; background:#f5f3ff; color:#7c3aed; font-weight:700; padding:3px 10px; border-radius:12px; border:1px solid #ddd6fe;">
+          Active Auto-Punch
+        </span>
+      </div>
+
+      <div id="expertCameraReader" style="width:100%; min-height:280px; border-radius:12px; overflow:hidden; background:#0f172a; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:13px; position:relative;">
+        <div style="text-align:center; padding:30px;">
+          <i data-feather="camera" style="width:40px; height:40px; color:#8b5cf6; margin-bottom:12px;"></i>
+          <div>Initializing camera for student badge scanning...</div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div style="margin-top:14px; display:flex; gap:10px; justify-content:center;">
+        <button id="btnStartCam" onclick="startExpertScanner()" class="btn" style="background:#8b5cf6; color:#fff; font-weight:700; font-size:12.5px; padding:8px 16px; border-radius:8px; border:none; cursor:pointer;">
+          <i data-feather="video" style="width:14px; height:14px; vertical-align:-2px;"></i> Start Camera
+        </button>
+        <button id="btnStopCam" onclick="stopExpertScanner()" class="btn" style="background:#f1f5f9; color:#64748b; font-weight:700; font-size:12.5px; padding:8px 16px; border-radius:8px; border:none; cursor:pointer;">
+          <i data-feather="video-off" style="width:14px; height:14px; vertical-align:-2px;"></i> Stop Camera
+        </button>
+      </div>
+    </div>
+
+    <!-- Manual Code Punch & Live Feedback -->
+    <div>
+      <div class="glass-card" style="background:#fff; border-radius:16px; border:1px solid #e2e8f0; padding:24px; box-shadow:0 4px 20px rgba(0,0,0,0.04); margin-bottom:20px;">
+        <h4 style="margin:0 0 6px 0; font-size:16px; font-weight:800; color:#0a1936; display:flex; align-items:center; gap:8px;">
+          <i data-feather="edit-3" style="width:16px; height:16px; color:#8b5cf6;"></i> Manual Student Badge Code Punch
+        </h4>
+        <p style="margin:0 0 16px 0; font-size:13px; color:#64748b;">
+          Enter the student's Passport Badge ID (e.g. <code>KNOVA-0005</code>) or student email:
+        </p>
+
+        <form id="expertManualPunchForm" onsubmit="handleExpertManualPunch(event)" style="display:flex; gap:10px;">
+          <input type="text" id="manualBadgeCode" placeholder="Enter Badge ID (e.g. KNOVA-0005) or email" required
+                 style="flex:1; padding:12px 16px; border:1.5px solid #cbd5e1; border-radius:10px; font-size:14px; outline:none; transition:border 0.2s;"
+                 onfocus="this.style.borderColor='#8b5cf6'" onblur="this.style.borderColor='#cbd5e1'">
+          <button type="submit" id="btnManualPunch" class="btn" style="background:#8b5cf6; color:#fff; font-weight:700; font-size:13.5px; padding:12px 22px; border-radius:10px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; box-shadow:0 4px 12px rgba(139,92,246,0.25);">
+            <i data-feather="check-circle" style="width:16px; height:16px;"></i> Punch (+40 XP)
+          </button>
+        </form>
+
+        <div id="punchAlertBox" style="display:none; margin-top:14px; padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600;"></div>
+      </div>
+
+      <!-- Station Profile Card -->
+      <div class="glass-card" style="background:linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border-radius:16px; border:1px solid #ddd6fe; padding:20px 24px;">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div style="width:50px; height:50px; border-radius:12px; background:#8b5cf6; color:#fff; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; flex-shrink:0;">
+            <i data-feather="award" style="width:26px; height:26px;"></i>
+          </div>
+          <div>
+            <div style="font-size:11px; font-weight:800; color:#7c3aed; text-transform:uppercase; letter-spacing:0.5px;">Counsellor Desk Station</div>
+            <div style="font-size:17px; font-weight:800; color:#0a1936;">{{ expert_profile.name|default:"Dr. Sarah Jenkins" }}</div>
+            <div style="font-size:12.5px; color:#5b21b6; margin-top:2px;">{{ expert_profile.desk_name|default:"Academic Counselling Hub — Desk 1" }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HTML5-QRCode Scanner Library -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<script>
+let expertQrScanner = null;
+let isPunching = false;
+
+function startExpertScanner() {
+  const readerEl = document.getElementById('expertCameraReader');
+  if (expertQrScanner) {
+    try { expertQrScanner.stop(); } catch(e) {}
+  }
+
+  expertQrScanner = new Html5Qrcode("expertCameraReader");
+  const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+  expertQrScanner.start(
+    { facingMode: "environment" },
+    config,
+    (decodedText) => {
+      if (!isPunching) {
+        onBadgeScanned(decodedText);
+      }
+    },
+    (errorMessage) => {
+      // quiet scan errors
+    }
+  ).catch(err => {
+    readerEl.innerHTML = `
+      <div style="text-align:center; padding:30px; color:#f87171;">
+        <i data-feather="alert-triangle" style="width:36px; height:36px; margin-bottom:10px;"></i>
+        <div>Camera access error: ${err}. Please allow camera permissions or use manual badge code punch.</div>
+      </div>`;
+    if (typeof feather !== 'undefined') feather.replace();
+  });
+}
+
+function stopExpertScanner() {
+  if (expertQrScanner) {
+    expertQrScanner.stop().then(() => {
+      document.getElementById('expertCameraReader').innerHTML = '<div style="text-align:center; padding:30px; color:#94a3b8;">Scanner paused. Click "Start Camera" to resume.</div>';
+    }).catch(err => console.error(err));
+  }
+}
+
+async function onBadgeScanned(code) {
+  isPunching = true;
+  showPunchAlert('Scanning badge ' + code + '...', 'info');
+
+  try {
+    const res = await fetch("{% url 'dashboard_expert_punch_attendance' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}"
+      },
+      body: JSON.stringify({ badge_id: code, punch_method: "QR Scanner" })
+    });
+    const data = await res.json();
+    if (data.success) {
+      if (data.already_attended || data.already_punched) {
+        showPunchAlert('&#9888; ' + data.message, 'warning');
+      } else {
+        showPunchAlert('&#10004; ' + data.message, 'success');
+      }
+      playPunchSuccessAudio();
+    } else {
+      showPunchAlert('&#9888; ' + (data.error || 'Punch failed.'), 'error');
+    }
+  } catch (err) {
+    showPunchAlert('Network error punching attendance.', 'error');
+  }
+
+  // Cooldown before scanning next badge
+  setTimeout(() => { isPunching = false; }, 2500);
+}
+
+async function handleExpertManualPunch(e) {
+  e.preventDefault();
+  const input = document.getElementById('manualBadgeCode');
+  const code = input.value.trim();
+  if (!code) return;
+
+  const btn = document.getElementById('btnManualPunch');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Punching...';
+
+  try {
+    const res = await fetch("{% url 'dashboard_expert_punch_attendance' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}"
+      },
+      body: JSON.stringify({ badge_id: code, punch_method: "Manual Code" })
+    });
+    const data = await res.json();
+    if (data.success) {
+      if (data.already_attended || data.already_punched) {
+        showPunchAlert('&#9888; ' + data.message, 'warning');
+      } else {
+        showPunchAlert('&#10004; ' + data.message, 'success');
+      }
+      input.value = '';
+      playPunchSuccessAudio();
+    } else {
+      showPunchAlert('&#9888; ' + (data.error || 'Punch failed.'), 'error');
+    }
+  } catch (err) {
+    showPunchAlert('Network error punching attendance.', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i data-feather="check-circle" style="width:16px; height:16px;"></i> Punch (+40 XP)';
+    if (typeof feather !== 'undefined') feather.replace();
+  }
+}
+
+function showPunchAlert(msg, type) {
+  const box = document.getElementById('punchAlertBox');
+  box.style.display = 'block';
+  if (type === 'success') {
+    box.style.background = '#ecfdf5';
+    box.style.color = '#065f46';
+    box.style.border = '1.5px solid #a7f3d0';
+  } else if (type === 'warning') {
+    box.style.background = '#fffbeb';
+    box.style.color = '#92400e';
+    box.style.border = '1.5px solid #fde68a';
+    box.style.fontWeight = '750';
+  } else if (type === 'error') {
+    box.style.background = '#fef2f2';
+    box.style.color = '#991b1b';
+    box.style.border = '1px solid #fecaca';
+  } else {
+    box.style.background = '#eff6ff';
+    box.style.color = '#1e40af';
+    box.style.border = '1px solid #bfdbfe';
+  }
+  box.innerHTML = msg;
+}
+
+function playPunchSuccessAudio() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+    osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.35);
+  } catch(e) {}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof feather !== 'undefined') feather.replace();
+  startExpertScanner();
+});
+</script>
+{% endblock %}
+

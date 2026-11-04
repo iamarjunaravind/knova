@@ -1,0 +1,153 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Seminar Attendees Roster | KNOVA{% endblock %}
+{% block nav_seminar_roster %}active{% endblock %}
+{% block page_title %}Seminar Attendees Roster{% endblock %}
+
+{% block content %}
+<!-- Top Header Card -->
+<div class="glass-card" style="margin-bottom: 24px; padding: 22px 26px; border-radius: 16px; background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%); border: 1.5px solid #bfdbfe; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, rgba(23,104,255,0.15), rgba(37,99,235,0.25)); border: 1.5px solid rgba(23,104,255,0.3); display: flex; align-items: center; justify-content: center; color: #1768ff;">
+      <i data-feather="check-square" style="width: 26px; height: 26px;"></i>
+    </div>
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <h2 style="margin: 0; font-size: 20px; font-weight: 800; color: #0a1936;">Seminar Session Attendees Roster</h2>
+        <span style="background: #eff6ff; color: #1768ff; font-size: 11px; font-weight: 750; padding: 3px 9px; border-radius: 20px; border: 1px solid #bfdbfe;">
+          {{ total_attendances }} Verified Punches
+        </span>
+      </div>
+      <p style="margin: 4px 0 0; font-size: 13.5px; color: #64748b;">
+        Comprehensive log of student visitor attendance across keynote presentations, masterclasses, and panels.
+      </p>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <a href="{% url 'seminar_attendance_scanner' %}" class="btn btn-primary" style="background: #1768ff; color: #fff; font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(23,104,255,0.25);">
+      <i data-feather="camera" style="width: 15px; height: 15px;"></i> Launch Hall Scanner
+    </a>
+    <a href="{% url 'dashboard_index' %}" class="btn" style="background: #fff; border: 1px solid #cbd5e1; color: #475569; font-weight: 600; font-size: 13px; padding: 9px 14px; border-radius: 8px; text-decoration: none;">
+      &larr; Dashboard
+    </a>
+  </div>
+</div>
+
+<!-- Filters Bar -->
+<div class="glass-card" style="margin-bottom: 24px; padding: 18px 22px; border-radius: 14px;">
+  <form method="GET" style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 240px; position: relative;">
+      <i data-feather="search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #94a3b8;"></i>
+      <input type="text" name="q" value="{{ search_q }}" placeholder="Search attendee name, email, or session..."
+        style="width: 100%; padding: 10px 12px 10px 36px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 13px; outline: none; box-sizing: border-box;"
+        onfocus="this.style.borderColor='#1768ff'" onblur="this.style.borderColor='#cbd5e1'">
+    </div>
+
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <select name="session_id" style="padding: 10px 14px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 600; color: #334155; max-width: 260px;">
+        <option value="">All Seminar Sessions</option>
+        {% for s in sessions %}
+        <option value="{{ s.id }}" {% if selected_session_id == s.id %}selected{% endif %}>
+          {{ s.title|truncatechars:35 }} ({{ s.hall_name }})
+        </option>
+        {% endfor %}
+      </select>
+
+      <select name="method" style="padding: 10px 14px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 600; color: #334155;">
+        <option value="">All Punch Methods</option>
+        <option value="QR Scanner" {% if selected_method == 'QR Scanner' %}selected{% endif %}>QR Scanner</option>
+        <option value="Self Punch" {% if selected_method == 'Self Punch' %}selected{% endif %}>Student Self Punch</option>
+        <option value="Staff Punch" {% if selected_method == 'Staff Punch' %}selected{% endif %}>Staff Manual Punch</option>
+      </select>
+
+      <button type="submit" class="btn" style="background: #1768ff; color: #fff; font-weight: 700; font-size: 13px; padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+        <i data-feather="filter" style="width: 14px; height: 14px;"></i> Filter
+      </button>
+
+      {% if search_q or selected_session_id or selected_method %}
+      <a href="{% url 'seminar_attendance_roster' %}" class="btn" style="background: #f1f5f9; color: #64748b; font-weight: 600; font-size: 13px; padding: 10px 14px; border-radius: 8px; text-decoration: none;">
+        Reset
+      </a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<!-- Attendees Table -->
+<div class="glass-card" style="padding: 24px; border-radius: 16px;">
+  <div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; text-align: left; min-width: 850px;">
+      <thead>
+        <tr style="border-bottom: 2px solid #e2e8f0; background: #f8fafc;">
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase;">Attendee Name</th>
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase;">Contact & Education</th>
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase;">Seminar Session</th>
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase;">Hall / Venue</th>
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase;">Punch Method</th>
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase; text-align: right;">Punched Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for att in attendances %}
+        <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='none'">
+          
+          <td style="padding: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #10b981; color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">
+                {{ att.student.user.first_name|default:att.student.user.username|slice:":1"|upper }}
+              </div>
+              <div>
+                <div style="font-weight: 800; color: #0a1936; font-size: 14px;">{{ att.student.user.get_full_name|default:att.student.user.username }}</div>
+                <div style="font-size: 11px; color: #64748b;">{{ att.student.user.email }}</div>
+              </div>
+            </div>
+          </td>
+
+          <td style="padding: 14px; font-size: 12.5px; color: #334155;">
+            <div>{{ att.student.current_education|default:'Student' }}</div>
+            <div style="font-size: 11px; color: #64748b;">{{ att.student.school_college|default:'N/A' }}</div>
+          </td>
+
+          <td style="padding: 14px; font-size: 13px;">
+            <div style="font-weight: 700; color: #1768ff;">{{ att.session.title }}</div>
+            {% if att.session.speaker %}
+            <div style="font-size: 11.5px; color: #64748b;">Speaker: {{ att.session.speaker.name }}</div>
+            {% endif %}
+          </td>
+
+          <td style="padding: 14px; font-size: 12.5px; color: #334155;">
+            <div style="font-weight: 600;">{{ att.session.hall_name }}</div>
+            <div style="font-size: 11px; color: #64748b;">{{ att.session.start_time|time:"g:i A" }} – {{ att.session.end_time|time:"g:i A" }}</div>
+          </td>
+
+          <td style="padding: 14px;">
+            <span style="display: inline-block; padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 750;
+              {% if att.punch_method == 'QR Scanner' %}background:#eff6ff; color:#1768ff;
+              {% elif att.punch_method == 'Self Punch' %}background:#ecfdf5; color:#059669;
+              {% else %}background:#fef3c7; color:#d97706;{% endif %}">
+              {{ att.punch_method }}
+            </span>
+          </td>
+
+          <td style="padding: 14px; text-align: right; font-size: 12px; color: #64748b;">
+            <div style="font-weight: 600; color: #0a1936;">{{ att.attended_at|date:"M d, Y" }}</div>
+            <div style="font-size: 11px;">{{ att.attended_at|date:"g:i A" }}</div>
+          </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" style="padding: 36px; text-align: center; color: #64748b;">
+            <div style="font-size: 28px; margin-bottom: 8px;">🎓</div>
+            <div style="font-weight: 800; font-size: 15px; color: #0a1936;">No seminar attendee records found</div>
+            <div style="font-size: 12.5px; margin-top: 4px;">Attendees will appear here as soon as their attendance is scanned or self-punched.</div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,1584 @@
+{% extends 'core/base_public.html' %}
+{% load static %}
+
+{% block title %}Fund Your Education: 290+ Verified Global University Scholarships | KNOVA{% endblock %}
+
+{% block body_class %}has-dark-hero scholarships-page{% endblock %}
+
+{% block content %}
+<style>
+    /* ==========================================================
+       SCHOLARSHIPS PAGE MODERN DASHBOARD DESIGN SYSTEM
+       ========================================================== */
+    :root {
+        --sch-primary: #1768ff;
+        --sch-primary-dark: #0f52cc;
+        --sch-navy: #061022;
+        --sch-navy-card: #0b1c3d;
+        --sch-slate-900: #0f172a;
+        --sch-slate-700: #334155;
+        --sch-slate-600: #475569;
+        --sch-slate-500: #64748b;
+        --sch-slate-100: #f1f5f9;
+        --sch-border: #e2e8f0;
+        --sch-emerald: #10b981;
+        --sch-amber: #f59e0b;
+        --sch-card-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.07);
+        --sch-hover-shadow: 0 20px 40px -10px rgba(23, 104, 255, 0.16);
+    }
+
+    body.scholarships-page,
+    body.has-dark-hero {
+        padding-top: 0 !important;
+        background-color: #f4f7fb;
+    }
+
+    /* Seamless Dark Atmosphere Hero */
+    .sch-hero {
+        padding: 122px 0 26px 0;
+        background: radial-gradient(circle at 85% 15%, rgba(23, 104, 255, 0.28) 0%, transparent 55%),
+                    radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.18) 0%, transparent 50%),
+                    linear-gradient(135deg, #061022 0%, #0a1c3f 50%, #102e6b 100%);
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .sch-hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, transparent 0%, rgba(6, 16, 34, 0.45) 100%);
+        pointer-events: none;
+    }
+
+    .dashboard-header-inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    /* Left: Title & Breadcrumbs */
+    .dash-title-block {
+        flex: 1;
+        min-width: 260px;
+    }
+
+    .dash-breadcrumb-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 4px;
+    }
+
+    .dash-badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(23, 104, 255, 0.22);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 2px 8px;
+        border-radius: 9999px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #7dd3fc;
+    }
+
+    .dash-badge-pill i {
+        font-size: 12px;
+        color: #38bdf8;
+    }
+
+    .dash-crumb-sep {
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 11px;
+    }
+
+    .dash-crumb-text {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: rgba(241, 245, 249, 0.7);
+    }
+
+    .sch-dash-title {
+        color: #ffffff !important;
+        font-size: clamp(19px, 2.2vw, 24px);
+        font-weight: 800;
+        margin: 0 0 3px 0;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .sch-dash-title .gradient-text {
+        background: linear-gradient(135deg, #67e8f9 0%, #ffffff 50%, #93c5fd 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+
+    .dash-live-badge {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 2px 7px;
+        border-radius: 5px;
+        background: rgba(16, 185, 129, 0.18);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        color: #6ee7b7;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .dash-live-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 6px #10b981;
+    }
+
+    .dash-subtitle-text {
+        font-size: 12.5px;
+        color: rgba(241, 245, 249, 0.8);
+        margin: 0;
+        line-height: 1.4;
+        font-weight: 400;
+    }
+
+    /* Right: Compact Dashboard KPI Stat Cards */
+    .dash-kpi-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    cursor: default; transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    transform: none;
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .kpi-icon-wrap {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .dash-kpi-card.kpi-awards .kpi-icon-wrap {
+        background: rgba(23, 104, 255, 0.22);
+        color: #60a5fa;
+        border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
+    .dash-kpi-card.kpi-full .kpi-icon-wrap {
+        background: rgba(16, 185, 129, 0.22);
+        color: #34d399;
+        border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .dash-kpi-card.kpi-unis .kpi-icon-wrap {
+        background: rgba(56, 189, 248, 0.22);
+        color: #38bdf8;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .dash-kpi-card.kpi-pool .kpi-icon-wrap {
+        background: rgba(168, 85, 247, 0.22);
+        color: #c084fc;
+        border: 1px solid rgba(192, 132, 252, 0.3);
+    }
+
+    .kpi-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kpi-stat-number {
+        font-size: 15px;
+        font-weight: 800;
+        color: #ffffff;
+        line-height: 1.1;
+        letter-spacing: -0.3px;
+    }
+
+    .kpi-stat-number span {
+        color: #38bdf8;
+        font-size: 13px;
+    }
+
+    .kpi-stat-title {
+        font-size: 9.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba(241, 245, 249, 0.72);
+        font-weight: 600;
+        margin-top: 1px;
+    }
+
+    /* Overlapping Filter Panel Hub */
+    .filter-wrapper {
+        position: relative;
+        z-index: 20;
+        margin-top: -14px;
+        margin-bottom: 18px;
+    }
+
+    .filter-hub-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 14px 18px;
+        box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.9);
+        border: 1px solid #e2e8f0;
+    }
+
+    .filter-search-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 11px;
+        align-items: center;
+    }
+
+    .search-input-box {
+        position: relative;
+        flex: 1;
+    }
+
+    .search-input-box i.search-icon {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .search-input-box input {
+        width: 100%;
+        height: 40px;
+        padding: 0 34px 0 38px;
+        border-radius: 10px;
+        border: 1.5px solid #cbd5e1;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #0f172a;
+        background: #f8fafc;
+        outline: none;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .search-input-box input:focus {
+        background: #ffffff;
+        border-color: #1768ff;
+        box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.12);
+    }
+
+    .search-input-box .clear-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #e2e8f0;
+        border: none;
+        color: #64748b;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .search-input-box .clear-btn:hover {
+        background: #cbd5e1;
+        color: #0f172a;
+    }
+
+    /* Suggestions Dropdown */
+    .search-suggestions-dropdown {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(23, 104, 255, 0.08);
+        z-index: 1050;
+        overflow: hidden;
+        animation: fadeInDown 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-6px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .suggestions-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 14px;
+        background: #f8fafc;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+    }
+
+    .suggestions-header i {
+        color: #1768ff;
+        margin-right: 4px;
+    }
+
+    .suggestions-header .esc-hint {
+        font-size: 10px;
+        font-weight: 600;
+        color: #94a3b8;
+        background: #e2e8f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .suggestions-list {
+        max-height: 320px;
+        overflow-y: auto;
+        padding: 6px 0;
+    }
+
+    .suggestion-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: background 0.15s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .suggestion-item:hover,
+    .suggestion-item.active {
+        background: #f1f5f9;
+    }
+
+    .suggestion-item.active {
+        background: #eff6ff;
+        border-left: 3px solid #1768ff;
+        padding-left: 11px;
+    }
+
+    .suggestion-icon-wrap {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .suggestion-icon-wrap.type-scholarship {
+        background: rgba(23, 104, 255, 0.1);
+        color: #1768ff;
+    }
+
+    .suggestion-icon-wrap.type-university {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+    }
+
+    .suggestion-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .suggestion-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+    }
+
+    .suggestion-title mark {
+        background: transparent;
+        color: #1768ff;
+        font-weight: 800;
+        padding: 0;
+    }
+
+    .suggestion-subtitle {
+        font-size: 11.5px;
+        color: #64748b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 1px;
+        display: block;
+    }
+
+    .suggestion-badge {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: #f1f5f9;
+        color: #475569;
+        flex-shrink: 0;
+    }
+
+    .suggestion-empty {
+        padding: 24px 16px;
+        text-align: center;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .suggestion-empty i {
+        font-size: 24px;
+        color: #94a3b8;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .btn-apply-filters {
+        height: 40px;
+        padding: 0 18px;
+        background: #1768ff;
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(23, 104, 255, 0.25);
+    }
+
+    .btn-apply-filters:hover {
+        background: #0f52cc;
+        box-shadow: 0 6px 16px rgba(23, 104, 255, 0.35);
+    }
+
+    .filter-dropdowns-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .dropdown-group {
+        position: relative;
+    }
+
+    .dropdown-group label {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        margin-bottom: 3px;
+    }
+
+    .dropdown-group label i {
+        color: #1768ff;
+        font-size: 11px;
+    }
+
+    .dropdown-wrap {
+        position: relative;
+    }
+
+    .dropdown-wrap select {
+        width: 100%;
+        height: 34px;
+        padding: 0 24px 0 10px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #1e293b;
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        box-sizing: border-box;
+    }
+
+    .dropdown-wrap select:focus {
+        border-color: #1768ff;
+        box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.1);
+    }
+
+    .dropdown-wrap i.arrow {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 12px;
+        pointer-events: none;
+    }
+
+    /* Popular Stream Chips & Quick Toggles */
+    .filter-popular-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding-top: 8px;
+        border-top: 1px solid #f1f5f9;
+        flex-wrap: wrap;
+    }
+
+    .popular-chips-list {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+    .popular-label {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        margin-right: 3px;
+    }
+
+    .popular-chip {
+        padding: 3px 10px;
+        border-radius: 20px;
+        background: #f1f5f9;
+        color: #475569;
+        font-size: 11.5px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid transparent;
+        transition: all 0.18s ease;
+        white-space: nowrap;
+    }
+
+    .popular-chip:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+    .popular-chip.active {
+        background: #1768ff;
+        color: #ffffff;
+        font-weight: 700;
+        border-color: #1768ff;
+        box-shadow: 0 2px 8px rgba(23, 104, 255, 0.3);
+    }
+
+    .filter-actions-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .reset-filters-link {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #64748b;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        transition: all 0.18s;
+    }
+
+    .reset-filters-link:hover {
+        color: #ef4444;
+        background: #fee2e2;
+    }
+
+    /* Results Header Bar */
+    .results-count-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 12.5px;
+        color: #64748b;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .results-count-bar strong {
+        color: #0f172a;
+    }
+
+    /* Scholarships Card Grid */
+    .sch-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+
+    .sch-card {
+        background: #f4f6fb;
+        border-radius: 12px;
+        border: none !important;
+        padding: 13px;
+        display: flex;
+        flex-direction: column;
+        transition: background 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+        position: relative;
+    }
+
+    .sch-card:hover {
+        transform: none;
+        background: #eaf0f9 !important;
+        border: none !important;
+        box-shadow: 0 10px 24px -4px rgba(23, 104, 255, 0.12);
+    }
+
+    /* Card Top Row */
+    .card-top-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 8px;
+    }
+
+    .uni-avatar-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 800;
+        color: #ffffff;
+        flex-shrink: 0;
+        text-transform: uppercase;
+        letter-spacing: -0.3px;
+        overflow: hidden;
+    }
+
+    /* 6 dynamic rotating gradient avatars */
+    .sch-card:nth-child(6n+1) .uni-avatar-badge { background: linear-gradient(135deg, #1768ff 0%, #0052cc 100%); }
+    .sch-card:nth-child(6n+2) .uni-avatar-badge { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+    .sch-card:nth-child(6n+3) .uni-avatar-badge { background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); }
+    .sch-card:nth-child(6n+4) .uni-avatar-badge { background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); }
+    .sch-card:nth-child(6n+5) .uni-avatar-badge { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
+    .sch-card:nth-child(6n+6) .uni-avatar-badge { background: linear-gradient(135deg, #db2777 0%, #be185d 100%); }
+
+    .uni-meta {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .uni-name-text {
+        font-size: 12px;
+        font-weight: 800;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        line-height: 1.25;
+    }
+
+    .uni-location-text {
+        font-size: 10.5px;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .uni-location-text i {
+        color: #f43f5e;
+        font-size: 11px;
+    }
+
+    .card-bookmark-btn {
+        background: transparent;
+        border: 1px solid #e2e8f0;
+        color: #94a3b8;
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+
+    .card-bookmark-btn:hover {
+        color: #1768ff;
+        background: #eff6ff;
+        border-color: #bfdbfe;
+    }
+
+    /* Scholarship Title */
+    .sch-title {
+        font-size: 13.5px;
+        font-weight: 800;
+        color: #061226;
+        line-height: 1.35;
+        margin: 0 0 6px 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 38px;
+    }
+
+    /* Tags Row */
+    .sch-tags-row {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+    }
+
+    .category-chip {
+        font-size: 9.5px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        background: #f1f5f9;
+        color: #475569;
+        display: inline-block;
+    }
+
+    .coverage-chip {
+        font-size: 9.5px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .coverage-chip.coverage-full {
+        background: #ecfdf5;
+        color: #059669;
+        border: 1px solid #a7f3d0;
+    }
+
+    .coverage-chip.coverage-partial {
+        background: #eff6ff;
+        color: #1768ff;
+        border: 1px solid #bfdbfe;
+    }
+
+    .coverage-chip.coverage-grant {
+        background: #f5f3ff;
+        color: #7c3aed;
+        border: 1px solid #ddd6fe;
+    }
+
+    /* 2x2 Specs Matrix */
+    .sch-specs-matrix {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 7px 9px;
+        margin-bottom: 8px;
+    }
+
+    .spec-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .spec-lbl {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .spec-lbl i {
+        font-size: 10px;
+        color: #1768ff;
+    }
+
+    .spec-val {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .spec-val.val-award {
+        color: #059669;
+        font-weight: 850;
+    }
+
+    /* Standardized Status Strip */
+    .card-status-strip {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 6px;
+        min-height: 24px;
+        box-sizing: border-box;
+    }
+
+    .card-status-strip.strip-green {
+        background: #ecfdf5;
+        color: #059669;
+        border: 1px solid #a7f3d0;
+    }
+
+    .card-status-strip.strip-blue {
+        background: #eff6ff;
+        color: #1768ff;
+        border: 1px solid #bfdbfe;
+    }
+
+    .card-req-note {
+        font-size: 10px;
+        color: #334155;
+        font-weight: 500;
+        line-height: 1.35;
+        margin: 0 0 10px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-grow: 1;
+    }
+
+    .card-req-note strong {
+        color: #061226;
+    }
+
+    /* Card Actions */
+    .sch-card-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: auto;
+    }
+
+    .btn-sch-primary {
+        flex: 1;
+        height: 31px;
+        background: #1768ff;
+        color: #ffffff;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.18s ease;
+        border: none;
+        box-shadow: 0 2px 6px rgba(23, 104, 255, 0.2);
+    }
+
+    .btn-sch-primary:hover {
+        background: #0f52cc;
+        box-shadow: 0 4px 10px rgba(23, 104, 255, 0.3);
+    }
+
+    .btn-sch-secondary {
+        height: 31px;
+        padding: 0 10px;
+        background: #ffffff;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        transition: all 0.18s ease;
+        white-space: nowrap;
+    }
+
+    .btn-sch-secondary:hover {
+        background: #f8fafc;
+        border-color: #94a3b8;
+        color: #0f172a;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .filter-dropdowns-row {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 820px) {
+        .sch-hero {
+            padding: 16px 0 22px 0;
+        }
+        .dashboard-header-inner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .dash-kpi-row {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+        .filter-dropdowns-row {
+            grid-template-columns: 1fr;
+        }
+        .filter-search-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .btn-apply-filters {
+            width: 100%;
+            justify-content: center;
+        }
+        .filter-popular-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<!-- Modern Compact Dashboard Hero -->
+{% if site_config.show_scholarships_hero %}
+<section class="sch-hero">
+    <div class="container">
+        <div class="dashboard-header-inner">
+            <!-- Left: Breadcrumb & Title -->
+            <div class="dash-title-block">
+                <div class="dash-breadcrumb-bar">
+                    <span class="dash-badge-pill">
+                        <i class="ti ti-award"></i> FINANCIAL AID
+                    </span>
+                    <span class="dash-crumb-sep">/</span>
+                    <span class="dash-crumb-text">Global Scholarships</span>
+                </div>
+                <h1 class="sch-dash-title">
+                    {{ site_config.scholarships_page_title|safe|default:"Global Scholarships <span class='gradient-text'>&amp; Grants</span>" }}
+                    <span class="dash-live-badge">
+                        <span class="dash-live-dot"></span> 2026/27 AWARDS
+                    </span>
+                </h1>
+                <p class="dash-subtitle-text">
+                    {{ site_config.scholarships_page_subtitle|default:"Browse, filter, and compare verified merit awards, full-tuition waivers, and global institutional grants." }}
+                
+                </p>
+            </div>
+
+            <!-- Right: 4 KPI Cards -->
+            <div class="dash-kpi-row">
+                <div class="dash-kpi-card kpi-pool">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-coin"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">{{ site_config.scholarships_kpi1_val|default:hero_stats.funding_pool|default:"$2.5M+" }}</div>
+                        <div class="kpi-stat-title">{{ site_config.scholarships_kpi1_label|default:"Total Aid Pool" }}</div>
+                    </div>
+                </div>
+
+                <div class="dash-kpi-card kpi-awards">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-award"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">{{ site_config.scholarships_kpi2_val|default:hero_stats.total_scholarships|default:0 }}</div>
+                        <div class="kpi-stat-title">{{ site_config.scholarships_kpi2_label|default:"Available Awards" }}</div>
+                    </div>
+                </div>
+
+                <div class="dash-kpi-card kpi-full">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-crown"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">{{ site_config.scholarships_kpi3_val|default:hero_stats.total_full|default:"100%" }}</div>
+                        <div class="kpi-stat-title">{{ site_config.scholarships_kpi3_label|default:"Full Rides" }}</div>
+                    </div>
+                </div>
+
+                <div class="dash-kpi-card kpi-unis">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-building-bank"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">{{ site_config.scholarships_kpi4_val|default:hero_stats.total_unis|default:0 }}</div>
+                        <div class="kpi-stat-title">{{ site_config.scholarships_kpi4_label|default:"Partner Unis" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if site_config.show_scholarships_filters %}
+<!-- Filter Hub & Results -->
+<div class="container">
+    <div class="filter-wrapper">
+        <div class="filter-hub-card">
+            <form method="GET" action="{% url 'public_scholarships' %}" id="scholarshipFilterForm">
+                <!-- Row 1: Search Input & Submit -->
+                <div class="filter-search-row">
+                    <div class="search-input-box" id="schSearchWrapper">
+                        <i class="ti ti-search search-icon"></i>
+                        <input 
+                            type="text" 
+                            name="q" 
+                            id="schSearchInput" 
+                            value="{{ q }}" 
+                            placeholder="Search by scholarship name, field, or university (e.g. Merit, AI, Dean's List)..."
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                        <button type="button" class="clear-btn" id="schClearBtn" onclick="clearSchSearch()" title="Clear search" style="{% if not q %}display:none;{% endif %}">
+                            <i class="ti ti-x"></i>
+                        </button>
+
+                        <!-- Autocomplete Suggestions Dropdown -->
+                        <div class="search-suggestions-dropdown" id="schSuggestionsBox" style="display: none;">
+                            <div class="suggestions-header" id="schSuggestionsHeader">
+                                <span><i class="ti ti-sparkles"></i> Popular Suggestions</span>
+                                <span class="esc-hint">ESC</span>
+                            </div>
+                            <div class="suggestions-list" id="schSuggestionsList"></div>
+                        </div>
+{% endif %}
+                    </div>
+                    <button type="submit" class="btn-apply-filters" id="schSubmitBtn">
+                        <i class="ti ti-search"></i> Search
+                    </button>
+                </div>
+
+                <!-- Row 2: Five Curated Dropdowns -->
+                <div class="filter-dropdowns-row">
+                    <!-- 1. Country -->
+                    <div class="dropdown-group">
+                        <label><i class="ti ti-map-pin"></i> Country</label>
+                        <div class="dropdown-wrap">
+                            <select name="country" onchange="this.form.submit()">
+                                <option value="">All Countries</option>
+                                {% for c in all_countries %}
+                                    <option value="{{ c }}" {% if selected_country == c %}selected{% endif %}>{{ c }}</option>
+                                {% endfor %}
+                            </select>
+                            <i class="ti ti-chevron-down arrow"></i>
+                        </div>
+                    </div>
+
+                    <!-- 2. Study Level -->
+                    <div class="dropdown-group">
+                        <label><i class="ti ti-school"></i> Study Level</label>
+                        <div class="dropdown-wrap">
+                            <select name="level" onchange="this.form.submit()">
+                                <option value="">All Levels</option>
+                                {% for lvl_val, lvl_lbl in all_levels %}
+                                    <option value="{{ lvl_val }}" {% if selected_level == lvl_val %}selected{% endif %}>{{ lvl_lbl }}</option>
+                                {% endfor %}
+                            </select>
+                            <i class="ti ti-chevron-down arrow"></i>
+                        </div>
+                    </div>
+
+                    <!-- 3. Field of Study -->
+                    <div class="dropdown-group">
+                        <label><i class="ti ti-atom-2"></i> Field</label>
+                        <div class="dropdown-wrap">
+                            <select name="field" onchange="this.form.submit()">
+                                <option value="">All Fields</option>
+                                {% for f in all_fields %}
+                                    <option value="{{ f }}" {% if selected_field == f %}selected{% endif %}>{{ f }}</option>
+                                {% endfor %}
+                            </select>
+                            <i class="ti ti-chevron-down arrow"></i>
+                        </div>
+                    </div>
+
+                    <!-- 4. Coverage -->
+                    <div class="dropdown-group">
+                        <label><i class="ti ti-percentage"></i> Coverage</label>
+                        <div class="dropdown-wrap">
+                            <select name="coverage" onchange="this.form.submit()">
+                                <option value="">All Coverage</option>
+                                {% for cov_val, cov_lbl in all_coverages %}
+                                    <option value="{{ cov_val }}" {% if selected_coverage == cov_val %}selected{% endif %}>{{ cov_lbl }}</option>
+                                {% endfor %}
+                            </select>
+                            <i class="ti ti-chevron-down arrow"></i>
+                        </div>
+                    </div>
+
+                    <!-- 5. Sort By -->
+                    <div class="dropdown-group">
+                        <label><i class="ti ti-arrows-sort"></i> Sort By</label>
+                        <div class="dropdown-wrap">
+                            <select name="sort_by" onchange="this.form.submit()">
+                                <option value="amount_desc" {% if selected_sort == 'amount_desc' or not selected_sort %}selected{% endif %}>Highest Award ($$$)</option>
+                                <option value="amount_asc" {% if selected_sort == 'amount_asc' %}selected{% endif %}>Lowest Award ($)</option>
+                                <option value="deadline_asc" {% if selected_sort == 'deadline_asc' %}selected{% endif %}>Nearest Deadline</option>
+                                <option value="name_asc" {% if selected_sort == 'name_asc' %}selected{% endif %}>Award Name (A-Z)</option>
+                                <option value="university_asc" {% if selected_sort == 'university_asc' %}selected{% endif %}>University (A-Z)</option>
+                            </select>
+                            <i class="ti ti-chevron-down arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Popular Quick Chips & Reset -->
+                <div class="filter-popular-row">
+                    <div class="popular-chips-list">
+                        <span class="popular-label"><i class="ti ti-sparkles"></i> Popular:</span>
+                        <a href="{% url 'public_scholarships' %}" class="popular-chip {% if not q and not selected_coverage and not selected_field and not selected_level and not selected_country %}active{% endif %}">
+                            All
+                        </a>
+                        <a href="?coverage=Full" class="popular-chip {% if selected_coverage == 'Full' %}active{% endif %}">
+                            100% Full Rides
+                        </a>
+                        <a href="?field=Computer+Science+%26+AI" class="popular-chip {% if selected_field == 'Computer Science & AI' %}active{% endif %}">
+                            Computer Science &amp; AI
+                        </a>
+                        <a href="?field=Engineering+%26+Technology" class="popular-chip {% if selected_field == 'Engineering & Technology' %}active{% endif %}">
+                            Engineering
+                        </a>
+                        <a href="?field=Business+%26+Finance" class="popular-chip {% if selected_field == 'Business & Finance' %}active{% endif %}">
+                            Business &amp; Finance
+                        </a>
+                        <a href="?level=Undergraduate" class="popular-chip {% if selected_level == 'Undergraduate' %}active{% endif %}">
+                            Undergraduate
+                        </a>
+                        <a href="?level=Postgraduate" class="popular-chip {% if selected_level == 'Postgraduate' %}active{% endif %}">
+                            Postgraduate
+                        </a>
+                    </div>
+
+                    <div class="filter-actions-right">
+                        {% if q or selected_country or selected_university or selected_field or selected_level or selected_coverage or selected_deadline or selected_sort %}
+                        <a href="{% url 'public_scholarships' %}" class="reset-filters-link">
+                            <i class="ti ti-rotate-clockwise"></i> Reset Filters
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'scholarship_exam_booking' %}" class="popular-chip" style="background: rgba(16, 185, 129, 0.12); color: #059669; border: 1px solid rgba(16, 185, 129, 0.3); font-weight: 700;">
+                            <i class="ti ti-calendar-check"></i> Book Exam Slot
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results Count Bar -->
+    <div class="results-count-bar">
+        <div>
+            Showing <strong>1–{{ scholarships|length }}</strong> of <strong>{{ total_results }}</strong> available scholarships
+        </div>
+        <div style="font-size: 11.5px; color: #64748b;">
+            Direct Institutional Partner Awards &bull; GCC Intake 2026/27
+        </div>
+    </div>
+
+    <!-- 4-Column Compact Scholarship Cards Grid -->
+    <div class="sch-grid">
+        {% for scholarship in scholarships %}
+        <div class="sch-card">
+            <!-- Top Row: University Avatar + Name + Country + Bookmark -->
+            <div class="card-top-row">
+                <div class="uni-avatar-badge">
+                    {% if scholarship.university.profile.logo %}
+                    <img src="{{ scholarship.university.profile.logo.url }}" alt="{{ scholarship.university.name }}" style="width: 100%; height: 100%; object-fit: contain; background: #fff;">
+                    {% else %}
+                    {{ scholarship.university.name|slice:":2"|upper }}
+                    {% endif %}
+                </div>
+                <div class="uni-meta">
+                    <a href="{% url 'university_detail' scholarship.university.slug %}" class="uni-name-text" title="{{ scholarship.university.name }}">
+                        {{ scholarship.university.name }}
+                    </a>
+                    <div class="uni-location-text">
+                        <i class="ti ti-map-pin"></i>
+                        <span>{{ scholarship.university.profile.location_state_country|default:"Global Campus" }}</span>
+                    </div>
+                </div>
+                <button class="card-bookmark-btn" onclick="toggleBookmark(this, '{{ scholarship.id }}')" title="Shortlist Scholarship" aria-label="Bookmark">
+                    <i class="ti ti-bookmark"></i>
+                </button>
+            </div>
+
+            <!-- Scholarship Title -->
+            <h3 class="sch-title" title="{{ scholarship.name }}">
+                {{ scholarship.name }}
+            </h3>
+
+            <!-- Tags Row -->
+            <div class="sch-tags-row">
+                <span class="category-chip">
+                    {{ scholarship.field_of_study|default:"General Merit" }}
+                </span>
+                {% if scholarship.coverage_type == 'Full' or '100%' in scholarship.amount %}
+                <span class="coverage-chip coverage-full">100% Full Tuition</span>
+                {% elif scholarship.coverage_type == 'Partial' or 'Waiver' in scholarship.amount %}
+                <span class="coverage-chip coverage-partial">Partial Waiver</span>
+                {% else %}
+                <span class="coverage-chip coverage-grant">Direct Grant</span>
+                {% endif %}
+            </div>
+
+            <!-- 2x2 Specs Matrix -->
+            <div class="sch-specs-matrix">
+                <div class="spec-item">
+                    <span class="spec-lbl"><i class="ti ti-school"></i> Degree Level</span>
+                    <span class="spec-val">{{ scholarship.level|default:"All Levels" }}</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-lbl"><i class="ti ti-calendar-time"></i> Deadline</span>
+                    <span class="spec-val">
+                        {% if scholarship.deadline %}
+                            {{ scholarship.deadline|date:"M d, Y" }}
+                        {% else %}
+                            Rolling
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-lbl"><i class="ti ti-percentage"></i> Coverage</span>
+                    <span class="spec-val">{{ scholarship.coverage_type|default:"Merit" }}</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-lbl"><i class="ti ti-cash"></i> Award Value</span>
+                    <span class="spec-val val-award">{{ scholarship.amount|default:"Merit Aid" }}</span>
+                </div>
+            </div>
+
+            <!-- Standardized Status Strip -->
+            {% if scholarship.coverage_type == 'Full' or '100%' in scholarship.amount %}
+            <div class="card-status-strip strip-green">
+                <i class="ti ti-sparkles"></i> 100% Ride &bull; Direct Dean Interview
+            </div>
+            {% else %}
+            <div class="card-status-strip strip-blue">
+                <i class="ti ti-shield-check"></i> Verified Partner Award &bull; Fast-Track
+            </div>
+            {% endif %}
+
+            <!-- Requirements small note -->
+            <div class="card-req-note" title="{{ scholarship.eligibility }}">
+                <strong>Req:</strong> {{ scholarship.eligibility|default:"High school diploma or university transcript." }}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="sch-card-actions">
+                <a href="{% if request.user.is_authenticated %}{% url 'scholarship_exam_booking' %}?scholarship_id={{ scholarship.id }}{% else %}{% url 'portal_login' %}?next={% url 'scholarship_exam_booking' %}?scholarship_id={{ scholarship.id }}{% endif %}" class="btn-sch-primary">
+                    <i class="ti ti-bolt"></i> Apply &bull; Book
+                </a>
+                <a href="{% url 'university_detail' scholarship.university.slug %}" class="btn-sch-secondary" title="View University Profile">
+                    Uni <i class="ti ti-arrow-up-right"></i>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: #ffffff; border-radius: 14px; border: 1px solid #e2e8f0;">
+            <div style="font-size: 40px; margin-bottom: 12px;">🎓</div>
+            <h3 style="font-size: 19px; color: #0a1936; font-weight: 800; margin: 0 0 8px 0;">No scholarships found</h3>
+            <p style="color: #64748b; font-size: 13.5px; max-width: 480px; margin: 0 auto 18px auto;">No scholarships matched your current filters. Try searching with different keywords or clearing your filters.</p>
+            <a href="{% url 'public_scholarships' %}" class="btn-apply-filters" style="text-decoration: none; display: inline-flex;">
+                <i class="ti ti-rotate-clockwise"></i> Clear All Filters
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if scholarships.has_other_pages %}
+    <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin: 20px 0 50px 0; flex-wrap: wrap;">
+        {% if scholarships.has_previous %}
+            <a href="?page={{ scholarships.previous_page_number }}{% if q %}&q={{ q }}{% endif %}{% if selected_country %}&country={{ selected_country }}{% endif %}{% if selected_university %}&university={{ selected_university }}{% endif %}{% if selected_field %}&field={{ selected_field }}{% endif %}{% if selected_level %}&level={{ selected_level }}{% endif %}{% if selected_coverage %}&coverage={{ selected_coverage }}{% endif %}{% if selected_sort %}&sort_by={{ selected_sort }}{% endif %}" style="padding: 7px 14px; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; color: #0a1936; font-weight: 700; font-size: 12px; text-decoration: none;">&laquo; Previous</a>
+        {% endif %}
+
+        <span style="padding: 7px 14px; background: #1768ff; color: #fff; border-radius: 8px; font-weight: 800; font-size: 12px;">
+            Page {{ scholarships.number }} of {{ scholarships.paginator.num_pages }}
+        </span>
+
+        {% if scholarships.has_next %}
+            <a href="?page={{ scholarships.next_page_number }}{% if q %}&q={{ q }}{% endif %}{% if selected_country %}&country={{ selected_country }}{% endif %}{% if selected_university %}&university={{ selected_university }}{% endif %}{% if selected_field %}&field={{ selected_field }}{% endif %}{% if selected_level %}&level={{ selected_level }}{% endif %}{% if selected_coverage %}&coverage={{ selected_coverage }}{% endif %}{% if selected_sort %}&sort_by={{ selected_sort }}{% endif %}" style="padding: 7px 14px; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; color: #0a1936; font-weight: 700; font-size: 12px; text-decoration: none;">Next &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function clearSchSearch() {
+        var input = document.getElementById('schSearchInput');
+        var clearBtn = document.getElementById('schClearBtn');
+        var box = document.getElementById('schSuggestionsBox');
+        if (input) {
+            input.value = '';
+            if (clearBtn) clearBtn.style.display = 'none';
+            if (box) box.style.display = 'none';
+            document.getElementById('scholarshipFilterForm').submit();
+        }
+    }
+
+    // Auto-suggestions & Keyboard Navigation for Scholarships
+    (function initScholarshipSuggestions() {
+        var input = document.getElementById('schSearchInput');
+        var wrapper = document.getElementById('schSearchWrapper');
+        var box = document.getElementById('schSuggestionsBox');
+        var list = document.getElementById('schSuggestionsList');
+        var header = document.getElementById('schSuggestionsHeader');
+        var clearBtn = document.getElementById('schClearBtn');
+        var debounceTimer = null;
+        var activeIndex = -1;
+        var currentItems = [];
+
+        if (!input || !box || !list) return;
+
+        function updateClearBtn() {
+            if (clearBtn) {
+                clearBtn.style.display = input.value.trim().length > 0 ? 'flex' : 'none';
+            }
+        }
+
+        function highlightMatch(text, query) {
+            if (!query) return escapeHtml(text);
+            var safeText = escapeHtml(text);
+            var qWords = query.trim().split(/\s+/).filter(Boolean);
+            if (!qWords.length) return safeText;
+            var pattern = '(' + qWords.map(escapeRegExp).join('|') + ')';
+            return safeText.replace(new RegExp(pattern, 'gi'), '<mark>$1</mark>');
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function escapeHtml(string) {
+            var div = document.createElement('div');
+            div.textContent = string;
+            return div.innerHTML;
+        }
+
+        function renderSuggestions(results, query) {
+            currentItems = results || [];
+            activeIndex = -1;
+
+            if (!currentItems.length) {
+                if (query) {
+                    if (header) {
+                        header.innerHTML = '<span><i class="ti ti-info-circle"></i> No exact suggestions</span><span class="esc-hint">ESC</span>';
+                    }
+                    list.innerHTML = '<div class="suggestion-empty"><i class="ti ti-mood-empty"></i>Press Search to search for "' + escapeHtml(query) + '"</div>';
+                    box.style.display = 'block';
+                } else {
+                    box.style.display = 'none';
+                }
+                return;
+            }
+
+            if (header) {
+                header.innerHTML = query 
+                    ? '<span><i class="ti ti-sparkles"></i> Top Matching Scholarships</span><span class="esc-hint">ESC</span>' 
+                    : '<span><i class="ti ti-flame"></i> Popular Scholarship Searches</span><span class="esc-hint">ESC</span>';
+            }
+
+            var html = '';
+            currentItems.forEach(function(item, idx) {
+                var typeClass = 'type-' + (item.type || 'scholarship').toLowerCase();
+                var iconClass = item.icon || 'ti ti-award';
+                var highlightedTitle = highlightMatch(item.title, query);
+                html += '<div class="suggestion-item" data-index="' + idx + '" onclick="selectSchSuggestion(' + idx + ')">';
+                html += '  <div class="suggestion-icon-wrap ' + typeClass + '"><i class="' + iconClass + '"></i></div>';
+                html += '  <div class="suggestion-content">';
+                html += '    <span class="suggestion-title">' + highlightedTitle + '</span>';
+                html += '    <span class="suggestion-subtitle">' + escapeHtml(item.subtitle || '') + '</span>';
+                html += '  </div>';
+                html += '  <span class="suggestion-badge">' + escapeHtml(item.type || 'Scholarship') + '</span>';
+                html += '</div>';
+            });
+
+            list.innerHTML = html;
+            box.style.display = 'block';
+        }
+
+        window.selectSchSuggestion = function(index) {
+            var item = currentItems[index];
+            if (!item) return;
+
+            box.style.display = 'none';
+            input.value = item.query_val || item.title;
+            updateClearBtn();
+            var form = document.getElementById('scholarshipFilterForm');
+            if (form) form.submit();
+        };
+
+        function fetchSuggestions(query) {
+            var url = '/api/search/?scope=scholarships&q=' + encodeURIComponent(query);
+            fetch(url)
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    renderSuggestions(data.results || [], query);
+                })
+                .catch(function(err) {
+                    console.error('Error fetching suggestions:', err);
+                });
+        }
+
+        input.addEventListener('input', function() {
+            var val = input.value.trim();
+            updateClearBtn();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function() {
+                fetchSuggestions(val);
+            }, 180);
+        });
+
+        input.addEventListener('focus', function() {
+            var val = input.value.trim();
+            updateClearBtn();
+            fetchSuggestions(val);
+        });
+
+        input.addEventListener('keydown', function(e) {
+            if (box.style.display === 'none' || !currentItems.length) {
+                if (e.key === 'Escape') box.style.display = 'none';
+                return;
+            }
+
+            var items = list.querySelectorAll('.suggestion-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = (activeIndex + 1) >= items.length ? 0 : activeIndex + 1;
+                highlightActive(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = (activeIndex - 1) < 0 ? items.length - 1 : activeIndex - 1;
+                highlightActive(items);
+            } else if (e.key === 'Enter') {
+                if (activeIndex >= 0 && activeIndex < currentItems.length) {
+                    e.preventDefault();
+                    selectSchSuggestion(activeIndex);
+                }
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                box.style.display = 'none';
+            }
+        });
+
+        function highlightActive(items) {
+            items.forEach(function(el, i) {
+                if (i === activeIndex) {
+                    el.classList.add('active');
+                    el.scrollIntoView({ block: 'nearest' });
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (wrapper && !wrapper.contains(e.target)) {
+                box.style.display = 'none';
+            }
+        });
+
+        updateClearBtn();
+    })();
+
+    function toggleBookmark(btn, schId) {
+        var icon = btn.querySelector('i');
+        if (icon) {
+            if (icon.classList.contains('ti-bookmark')) {
+                icon.className = 'ti ti-bookmark-filled';
+                btn.style.color = '#1768ff';
+                btn.style.background = '#eff6ff';
+                btn.style.borderColor = '#93c5fd';
+            } else {
+                icon.className = 'ti ti-bookmark';
+                btn.style.color = '#94a3b8';
+                btn.style.background = 'transparent';
+                btn.style.borderColor = '#e2e8f0';
+            }
+        }
+    }
+</script>
+{% endblock %}

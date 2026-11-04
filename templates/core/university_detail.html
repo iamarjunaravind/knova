@@ -1,0 +1,3263 @@
+{% extends 'core/base_public.html' %}
+
+{% load static %}
+
+{% block title %}{{ university.name }} — Degree Programs, Admissions & Scholarships | KNOVA{% endblock %}
+
+{% block body_class %}has-dark-hero uni-detail-page{% endblock %}
+
+{% block content %}
+
+<style>
+
+    /* ==========================================================
+
+       UNIVERSITY DETAIL PAGE — MODERN OPTIMIZED DESIGN SYSTEM
+
+       ========================================================== */
+
+    :root {
+        --uni-primary: #1768ff;
+        --uni-primary-dark: #0f52cc;
+        --uni-primary-light: #eff6ff;
+        --uni-navy: #061022;
+        --uni-navy-card: #0b1c3d;
+        --uni-slate-900: #0f172a;
+        --uni-slate-800: #1e293b;
+        --uni-slate-700: #334155;
+        --uni-slate-600: #475569;
+        --uni-slate-500: #64748b;
+        --uni-slate-100: #f1f5f9;
+        --uni-border: #e2e8f0;
+        --uni-emerald: #10b981;
+        --uni-emerald-light: #ecfdf5;
+        --uni-amber: #f59e0b;
+        --uni-purple: #8b5cf6;
+        --uni-card-shadow: 0 4px 16px -4px rgba(15, 23, 42, 0.06);
+        --uni-hover-shadow: 0 16px 32px -8px rgba(23, 104, 255, 0.14);
+    }
+
+    body.uni-detail-page {
+        background-color: #f4f7fb;
+    }
+
+    /* ==========================================================
+
+       HERO & INSTITUTION IDENTITY BANNER (SEAMLESS NAVBAR)
+
+       ========================================================== */
+
+    .uni-hero {
+        padding: 122px 0 28px 0;
+        background: radial-gradient(circle at 85% 15%, rgba(23, 104, 255, 0.32) 0%, transparent 55%),
+                    radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.20) 0%, transparent 50%),
+                    linear-gradient(135deg, #061022 0%, #0a1936 50%, #102e6b 100%);
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .uni-hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, transparent 0%, rgba(6, 16, 34, 0.4) 100%);
+        pointer-events: none;
+    }
+
+    .uni-hero-inner {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Breadcrumbs */
+
+    .uni-breadcrumb-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 14px;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: rgba(241, 245, 249, 0.7);
+        flex-wrap: wrap;
+    }
+
+    .uni-breadcrumb-bar a {
+        color: rgba(241, 245, 249, 0.75);
+        text-decoration: none;
+        transition: color 0.15s;
+    }
+
+    .uni-breadcrumb-bar a:hover {
+        color: #ffffff;
+    }
+
+    .uni-crumb-sep {
+        color: rgba(241, 245, 249, 0.4);
+    }
+
+    .uni-partner-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 2px 8px;
+        border-radius: 20px;
+        background: rgba(16, 185, 129, 0.18);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        color: #6ee7b7;
+        margin-left: 6px;
+    }
+
+    .uni-partner-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 6px #10b981;
+    }
+
+    /* Compact University Identity Card */
+
+    .uni-identity-card {
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 20px 24px;
+        box-shadow: 0 12px 35px -8px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        color: #0f172a;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+    }
+
+    .uni-identity-left {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .uni-logo-frame {
+        width: 76px;
+        height: 76px;
+        min-width: 76px;
+        border-radius: 14px;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .uni-logo-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .uni-title-meta {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .uni-name-heading {
+        font-size: clamp(20px, 2.2vw, 26px);
+        font-weight: 850;
+        color: #0a1936;
+        margin: 0 0 4px 0;
+        line-height: 1.2;
+        letter-spacing: -0.4px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+
+    .verified-icon {
+        color: #1768ff;
+        font-size: 20px;
+    }
+
+    .uni-meta-chips {
+        display: flex;
+        align-items: center;
+        gap: 8px 12px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+        font-size: 12.5px;
+        color: #475569;
+        font-weight: 500;
+    }
+
+    .uni-meta-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .uni-meta-chip i {
+        color: #1768ff;
+        font-size: 14px;
+    }
+
+    .uni-meta-chip.chip-badge {
+        background: #eff6ff;
+        color: #1768ff;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 11.5px;
+        border: 1px solid #bfdbfe;
+    }
+
+    .uni-website-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        color: #1768ff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 12px;
+        transition: color 0.15s;
+    }
+
+    .uni-website-link:hover {
+        text-decoration: underline;
+        color: #0f52cc;
+    }
+
+    .uni-short-desc {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0;
+        line-height: 1.45;
+        max-width: 680px;
+    }
+
+    /* Identity Card Right Action Buttons */
+
+    .uni-identity-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-shortlist {
+        background: #f1f5f9;
+        color: #334155;
+        border: 1.5px solid #cbd5e1;
+        padding: 9px 16px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 12.5px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-shortlist:hover {
+        background: #e2e8f0;
+        border-color: #94a3b8;
+        color: #0f172a;
+    }
+
+    .btn-shortlist.saved {
+        background: #eff6ff;
+        color: #1768ff;
+        border-color: #93c5fd;
+    }
+
+    .btn-shortlist.saved i {
+        color: #1768ff;
+    }
+
+    .btn-counseling-cta {
+        background: linear-gradient(135deg, #1768ff 0%, #0052cc 100%);
+        color: #ffffff !important;
+        border: none;
+        padding: 9px 18px;
+        border-radius: 10px;
+        font-weight: 750;
+        font-size: 12.5px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 14px rgba(23, 104, 255, 0.35);
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-counseling-cta:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(23, 104, 255, 0.45);
+    }
+
+    .btn-share-icon {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 15px;
+        transition: all 0.2s;
+    }
+
+    .btn-share-icon:hover {
+        background: #eff6ff;
+        color: #1768ff;
+        border-color: #bfdbfe;
+    }
+
+    /* Dashboard KPI Metrics Strip */
+
+    .uni-kpi-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    .uni-kpi-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: default;
+        transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .uni-kpi-card:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: none;
+    }
+
+    .uni-kpi-icon {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+    }
+
+    .kpi-courses .uni-kpi-icon { background: rgba(23, 104, 255, 0.25); color: #60a5fa; }
+
+    .kpi-scholarships .uni-kpi-icon { background: rgba(16, 185, 129, 0.25); color: #34d399; }
+
+    .kpi-levels .uni-kpi-icon { background: rgba(139, 92, 246, 0.25); color: #c084fc; }
+
+    .kpi-status .uni-kpi-icon { background: rgba(245, 158, 11, 0.25); color: #fbbf24; }
+
+    .uni-kpi-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+    }
+
+    .uni-kpi-val {
+        font-size: 14.5px;
+        font-weight: 850;
+        color: #ffffff;
+    }
+
+    .uni-kpi-label {
+        font-size: 10.5px;
+        color: rgba(241, 245, 249, 0.7);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    /* ==========================================================
+
+       STICKY NAVIGATION TAB BAR
+
+       ========================================================== */
+
+    .uni-nav-sticky-wrap {
+        position: sticky;
+        top: 72px;
+        z-index: 100;
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+        margin-bottom: 24px;
+    }
+
+    .uni-nav-tabs {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 8px 0;
+        scrollbar-width: none;
+    }
+
+    .uni-nav-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .uni-tab-link {
+        padding: 7px 14px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #64748b;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.15s ease;
+    }
+
+    .uni-tab-link:hover {
+        color: #0f172a;
+        background: #f1f5f9;
+    }
+
+    .uni-tab-link.active {
+        color: #1768ff;
+        background: #eff6ff;
+    }
+
+    .uni-tab-count {
+        background: #e2e8f0;
+        color: #475569;
+        font-size: 10.5px;
+        font-weight: 800;
+        padding: 1px 6px;
+        border-radius: 10px;
+    }
+
+    .uni-tab-link.active .uni-tab-count {
+        background: #1768ff;
+        color: #ffffff;
+    }
+
+    /* ==========================================================
+
+       MAIN CONTENT 2-COLUMN LAYOUT
+
+       ========================================================== */
+
+    .uni-main-grid {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 24px;
+        align-items: start;
+        padding-bottom: 60px;
+    }
+
+    /* Sections */
+
+    .uni-content-section {
+        margin-bottom: 28px;
+        scroll-margin-top: 130px;
+    }
+
+    .uni-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .uni-section-title {
+        font-size: 18px;
+        font-weight: 850;
+        color: #0a1936;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        letter-spacing: -0.3px;
+    }
+
+    .uni-section-title i {
+        color: #1768ff;
+        font-size: 20px;
+    }
+
+    /* Overview Content Card */
+
+    .uni-overview-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 20px 22px;
+        border: 1px solid #e2e8f0;
+        box-shadow: var(--uni-card-shadow);
+        color: #334155;
+        font-size: 13.5px;
+        line-height: 1.65;
+        margin-bottom: 20px;
+    }
+
+    .uni-overview-card p {
+        margin: 0 0 12px 0;
+    }
+
+    .uni-overview-card p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Highlights 4-Box Grid */
+
+    .uni-highlights-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 16px;
+    }
+
+    .highlight-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .highlight-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        background: #eff6ff;
+        color: #1768ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+
+    .highlight-title {
+        font-size: 12px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .highlight-sub {
+        font-size: 11px;
+        color: #64748b;
+        line-height: 1.3;
+    }
+
+    /* ==========================================================
+
+       COURSE CARDS (OPTIMIZED & COMPACT)
+
+       ========================================================== */
+
+    .course-filter-bar {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 8px 12px;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .course-search-field {
+        position: relative;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .course-search-field i {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 14px;
+    }
+
+    .course-search-field input {
+        width: 100%;
+        height: 34px;
+        padding: 0 10px 0 32px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 500;
+        outline: none;
+        box-sizing: border-box;
+    }
+
+    .course-search-field input:focus {
+        border-color: #1768ff;
+        box-shadow: 0 0 0 2px rgba(23, 104, 255, 0.12);
+    }
+
+    .course-degree-filters {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .course-filter-chip {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 11.5px;
+        font-weight: 700;
+        background: #f1f5f9;
+        color: #475569;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all 0.15s;
+    }
+
+    .course-filter-chip:hover {
+        background: #e2e8f0;
+    }
+
+    .course-filter-chip.active {
+        background: #1768ff;
+        color: #ffffff;
+    }
+
+    .compact-courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        gap: 14px;
+    }
+
+    .course-card-compact {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1.5px solid #b6c5d6;
+        box-shadow: var(--uni-card-shadow);
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        position: relative;
+    }
+
+    .course-card-compact:hover {
+        transform: none;
+        box-shadow: 0 8px 20px rgba(23, 104, 255, 0.08);
+        border-color: #93c5fd;
+    }
+
+    .course-card-top-badges {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+    }
+
+    .badge-deg {
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 6px;
+        border-radius: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .badge-deg.ug { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+
+    .badge-deg.pg { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+
+    .badge-deg.phd { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+
+    .badge-stream {
+        font-size: 10px;
+        font-weight: 700;
+        color: #475569;
+        background: #f1f5f9;
+        padding: 2px 6px;
+        border-radius: 5px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .badge-mode {
+        font-size: 10px;
+        font-weight: 600;
+        color: #64748b;
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .course-card-title {
+        font-size: 14.5px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0 0 10px 0;
+        line-height: 1.3;
+    }
+
+    /* 2x2 Specs Matrix */
+
+    .course-specs-matrix {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+
+    .course-spec-item {
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+        border-radius: 6px;
+        padding: 5px 8px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .course-spec-lbl {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .course-spec-val {
+        font-size: 11.5px;
+        font-weight: 750;
+        color: #1e293b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .course-spec-item.tuition-item {
+        background: #f0fdf4;
+        border-color: #dcfce7;
+    }
+
+    .course-spec-item.tuition-item .course-spec-lbl { color: #16a34a; }
+
+    .course-spec-item.tuition-item .course-spec-val { color: #15803d; font-weight: 850; }
+
+    /* Scholarship Available Flag */
+
+    .course-scholarship-tag {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: #065f46;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        border-radius: 5px;
+        padding: 3px 7px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 8px;
+    }
+
+    .course-scholarship-tag i {
+        color: #10b981;
+        font-size: 12px;
+    }
+
+    /* Eligibility Note */
+
+    .course-elig-note {
+        font-size: 10.5px;
+        color: #64748b;
+        line-height: 1.35;
+        background: #fafafa;
+        border-left: 2px solid #cbd5e1;
+        padding: 4px 7px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        margin-top: auto;
+    }
+
+    .course-card-btn {
+        background: #eff6ff;
+        color: #1768ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 7px 10px;
+        font-size: 12px;
+        font-weight: 750;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.2s;
+        text-decoration: none;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .course-card-btn:hover {
+        background: #1768ff;
+        color: #ffffff;
+        border-color: #1768ff;
+    }
+
+    /* ==========================================================
+
+       SCHOLARSHIPS SECTION
+
+       ========================================================== */
+
+    .scholarship-card-modern {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: var(--uni-card-shadow);
+        padding: 16px 18px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        transition: all 0.2s;
+    }
+
+    .scholarship-card-modern:hover {
+        border-color: #a7f3d0;
+        box-shadow: 0 10px 24px -6px rgba(16, 185, 129, 0.14);
+    }
+
+    .sch-info-col {
+        flex: 1;
+        min-width: 250px;
+    }
+
+    .sch-top-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+        flex-wrap: wrap;
+    }
+
+    .sch-title {
+        font-size: 15px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .sch-coverage-badge {
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 7px;
+        border-radius: 5px;
+        text-transform: uppercase;
+        background: #ecfdf5;
+        color: #059669;
+        border: 1px solid #a7f3d0;
+    }
+
+    .sch-desc {
+        font-size: 12.5px;
+        color: #64748b;
+        margin: 0 0 8px 0;
+        line-height: 1.4;
+    }
+
+    .sch-meta-pills {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11.5px;
+        color: #475569;
+        font-weight: 600;
+        flex-wrap: wrap;
+    }
+
+    .sch-meta-pills span {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .sch-amount-box {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .sch-amount-val {
+        font-size: 18px;
+        font-weight: 850;
+        color: #10b981;
+    }
+
+    .sch-amount-sub {
+        font-size: 10.5px;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    /* ==========================================================
+
+       CAMPUS FACILITIES & ADMISSION PROCESS CARDS
+
+       ========================================================== */
+
+    .facilities-grid-showcase {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .facility-showcase-box {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .facility-showcase-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        border-radius: 10px;
+        background: #eff6ff;
+        color: #1768ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .facility-showcase-info h4 {
+        margin: 0 0 3px 0;
+        font-size: 13.5px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .facility-showcase-info p {
+        margin: 0;
+        font-size: 12px;
+        color: #64748b;
+        line-height: 1.4;
+    }
+
+    .admission-steps-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    .admission-step-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px 14px;
+        position: relative;
+    }
+
+    .step-number-circle {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #1768ff;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+    }
+
+    .admission-step-card h4 {
+        margin: 0 0 4px 0;
+        font-size: 13px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .admission-step-card p {
+        margin: 0;
+        font-size: 11.5px;
+        color: #64748b;
+        line-height: 1.4;
+    }
+
+    /* ==========================================================
+
+       RIGHT SIDEBAR (STICKY & HIGH CONVERSION)
+
+       ========================================================== */
+
+    .uni-sidebar-sticky {
+        position: sticky;
+        top: 120px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    /* Premium Counseling Box */
+
+    .counseling-sidebar-card {
+        background: linear-gradient(145deg, #061022 0%, #0a1c3f 50%, #102e6b 100%);
+        border-radius: 16px;
+        padding: 20px 18px;
+        color: #ffffff;
+        box-shadow: 0 12px 30px -5px rgba(6, 16, 34, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .counseling-sidebar-card::after {
+        content: '';
+        position: absolute;
+        top: -30px;
+        right: -30px;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: rgba(23, 104, 255, 0.35);
+        filter: blur(25px);
+        pointer-events: none;
+    }
+
+    .counseling-card-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .counseling-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: #38bdf8;
+    }
+
+    .counseling-card-title {
+        font-size: 15px;
+        font-weight: 850;
+        color: #ffffff;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .counseling-card-sub {
+        font-size: 11px;
+        color: #93c5fd;
+        font-weight: 600;
+    }
+
+    .counseling-benefits {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 16px 0;
+        font-size: 12px;
+        color: #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .counseling-benefits li {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .counseling-benefits li i {
+        color: #34d399;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .btn-book-session {
+        background: #ffffff;
+        color: #061022 !important;
+        border: none;
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        font-weight: 800;
+        font-size: 13px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: all 0.2s;
+        text-decoration: none;
+        box-sizing: border-box;
+    }
+
+    .btn-book-session:hover {
+        background: #f1f5f9;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Quick Facts Sidebar Card */
+
+    .facts-sidebar-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 18px;
+        border: 1px solid #e2e8f0;
+        box-shadow: var(--uni-card-shadow);
+    }
+
+    .facts-card-header {
+        font-size: 13.5px;
+        font-weight: 800;
+        color: #0a1936;
+        margin: 0 0 12px 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .facts-card-header i {
+        color: #1768ff;
+    }
+
+    .facts-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .fact-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .fact-item:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .fact-lbl {
+        color: #64748b;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .fact-val {
+        color: #0f172a;
+        font-weight: 750;
+        text-align: right;
+    }
+
+    /* Helpdesk Mini Card */
+
+    .helpdesk-sidebar-card {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .helpdesk-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: #1768ff;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .helpdesk-text h5 {
+        margin: 0 0 2px 0;
+        font-size: 12.5px;
+        font-weight: 800;
+        color: #1e3a8a;
+    }
+
+    .helpdesk-text p {
+        margin: 0;
+        font-size: 11px;
+        color: #3b82f6;
+        line-height: 1.3;
+    }
+
+    /* ==========================================================
+
+       COUNSELING MODAL & TOAST
+
+       ========================================================== */
+
+    .counsel-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(6, 16, 34, 0.65);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+    }
+
+    .counsel-modal-box {
+        background: #ffffff;
+        border-radius: 18px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlideUp {
+        from { transform: translateY(20px); opacity: 0; }
+
+        to { transform: translateY(0); opacity: 1; }
+
+    }
+
+    .modal-hdr {
+        background: linear-gradient(135deg, #061022 0%, #0a1936 100%);
+        color: #ffffff;
+        padding: 18px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .modal-hdr h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 850;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .modal-close-btn {
+        background: rgba(255, 255, 255, 0.12);
+        border: none;
+        color: #ffffff;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.15s;
+    }
+
+    .modal-close-btn:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    .modal-body {
+        padding: 20px 22px;
+    }
+
+    .modal-form-group {
+        margin-bottom: 12px;
+    }
+
+    .modal-form-group label {
+        display: block;
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #334155;
+        margin-bottom: 4px;
+    }
+
+    .modal-form-group input,
+    .modal-form-group textarea,
+    .modal-form-group select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: #0f172a;
+        box-sizing: border-box;
+        outline: none;
+        font-family: inherit;
+    }
+
+    .modal-form-group input:focus,
+    .modal-form-group textarea:focus,
+    .modal-form-group select:focus {
+        border-color: #1768ff;
+        box-shadow: 0 0 0 2.5px rgba(23, 104, 255, 0.12);
+    }
+
+    .modal-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .btn-submit-booking {
+        background: linear-gradient(135deg, #1768ff 0%, #0052cc 100%);
+        color: #ffffff;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 800;
+        font-size: 13px;
+        width: 100%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        box-shadow: 0 4px 14px rgba(23, 104, 255, 0.3);
+        margin-top: 6px;
+    }
+
+    .btn-submit-booking:hover {
+        filter: brightness(1.05);
+    }
+
+    /* Floating Toast */
+
+    .uni-toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: #0f172a;
+        color: #ffffff;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-size: 12.5px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        z-index: 3000;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.25s ease;
+        pointer-events: none;
+    }
+
+    .uni-toast.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .uni-toast i {
+        color: #10b981;
+        font-size: 16px;
+    }
+
+    /* ==========================================================
+
+       RESPONSIVE DESIGN (TABLET & MOBILE)
+
+       ========================================================== */
+
+    @media (max-width: 991px) {
+        .uni-main-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .uni-sidebar-sticky {
+            position: static;
+        }
+
+        .uni-kpi-row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .uni-highlights-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .admission-steps-row {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+    @media (max-width: 820px) {
+        body.uni-detail-page,
+        body.has-dark-hero {
+            padding-top: 58px !important;
+        }
+
+        .uni-hero {
+            padding: 18px 0 24px 0;
+        }
+
+        .uni-nav-sticky-wrap {
+            top: 58px;
+        }
+
+    }
+
+    @media (max-width: 640px) {
+        .uni-identity-card {
+            padding: 16px;
+            gap: 16px;
+        }
+
+        .uni-identity-left {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .uni-logo-frame {
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
+        }
+
+        .uni-identity-actions {
+            width: 100%;
+        }
+
+        .btn-shortlist,
+        .btn-counseling-cta {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .compact-courses-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .facilities-grid-showcase {
+            grid-template-columns: 1fr;
+        }
+
+        .uni-kpi-row {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+    /* Course Details Quick View Modal */
+
+    .course-details-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(6, 16, 34, 0.72);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 2100;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+    }
+
+    .course-details-modal-backdrop.open {
+        display: flex;
+    }
+
+    .course-details-modal-box {
+        background: #ffffff;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 530px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+        position: relative;
+        padding: 24px;
+        animation: courseModalScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid #e2e8f0;
+    }
+
+    @keyframes courseModalScaleIn {
+        from { opacity: 0; transform: scale(0.95); }
+
+        to { opacity: 1; transform: scale(1); }
+
+    }
+
+    .course-card-compact {
+        cursor: pointer;
+    }
+
+    .course-card-compact:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(23, 104, 255, 0.12);
+        border-color: #1768ff;
+    }
+
+    .course-card-btn.is-booked {
+        background: #10b981 !important;
+        border-color: #10b981 !important;
+        color: #ffffff !important;
+        cursor: default;
+    }
+
+</style>
+
+<!-- ==========================================================
+
+     HERO & UNIVERSITY IDENTITY HUB (DASHBOARD STYLE)
+
+     ========================================================== -->
+
+<section class="uni-hero">
+
+    <div class="container uni-hero-inner">
+
+        <!-- Top Context / Breadcrumb -->
+
+        <div class="uni-breadcrumb-bar">
+
+            <a href="{% url 'index' %}">Home</a>
+
+            <span class="uni-crumb-sep">/</span>
+
+            <a href="{% url 'courses_list' %}">Programs & Universities</a>
+
+            <span class="uni-crumb-sep">/</span>
+
+            <span>{{ university.name }}</span>
+
+            <span class="uni-partner-pill"><span class="uni-partner-dot"></span> Verified Partner</span>
+
+        </div>
+
+        <!-- Optimized University Identity Glass Card -->
+
+        <div class="uni-identity-card">
+
+            <div class="uni-identity-left">
+
+                <div class="uni-logo-frame">
+
+                    {% if university.profile.logo %}
+
+                        <img src="{{ university.profile.logo.url }}" alt="{{ university.name }} Logo" loading="eager">
+
+                    {% else %}
+
+                        <img src="{% static 'assets/dubai.webp' %}" alt="{{ university.name }} Logo" loading="eager">
+
+                    {% endif %}
+
+                </div>
+
+                <div class="uni-title-meta">
+
+                    <h1 class="uni-name-heading">
+
+                        {{ university.name }}
+
+                        <i class="ti ti-circle-check-filled verified-icon" title="Verified Educational Partner"></i>
+
+                    </h1>
+
+                    <div class="uni-meta-chips">
+
+                        <!-- Location (Clean & Deduplicated) -->
+
+                        <span class="uni-meta-chip">
+
+                            <i class="ti ti-map-pin"></i>
+
+                            {% if university.profile.location_city and university.profile.location_state_country and university.profile.location_city != university.profile.location_state_country %}
+
+                                {{ university.profile.location_city }}, {{ university.profile.location_state_country }}
+
+                            {% elif university.profile.location_city %}
+
+                                {{ university.profile.location_city }}
+
+                            {% else %}
+
+                                {{ university.profile.location_state_country|default:"Global Campus" }}
+
+                            {% endif %}
+
+                        </span>
+
+                        <!-- Institution Type -->
+
+                        <span class="uni-meta-chip chip-badge">
+
+                            {{ university.profile.university_type|default:"Public University" }}
+
+                        </span>
+
+                        <!-- Founded Year -->
+
+                        {% if university.profile.established_year %}
+
+                        <span class="uni-meta-chip">
+
+                            <i class="ti ti-calendar"></i> Est. {{ university.profile.established_year }}
+
+                        </span>
+
+                        {% endif %}
+
+                        <!-- Accreditation -->
+
+                        {% if university.profile.accreditation %}
+
+                        <span class="uni-meta-chip">
+
+                            <i class="ti ti-certificate"></i> {{ university.profile.accreditation }}
+
+                        </span>
+
+                        {% endif %}
+
+                        <!-- Official Website -->
+
+                        {% if university.profile.website %}
+
+                        <a href="{{ university.profile.website }}" target="_blank" rel="noopener noreferrer" class="uni-website-link">
+
+                            <i class="ti ti-world"></i> Official Website &nearr;
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                    <p class="uni-short-desc">
+
+                        {{ university.profile.short_description|default:"A globally distinguished university offering premier degree programs, research innovation, and recognized career pathways." }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+
+            <div class="uni-identity-actions">
+
+                <button type="button" id="btnShortlist" onclick="toggleShortlist({{ university.pk }})" class="btn-shortlist {% if is_saved %}saved{% endif %}" title="Add to my shortlist">
+
+                    <i class="{% if is_saved %}ti ti-bookmark-filled{% else %}ti ti-bookmark{% endif %}" id="shortlistIcon"></i>
+
+                    <span id="shortlistText">{% if is_saved %}Saved in Shortlist{% else %}Save to Shortlist{% endif %}</span>
+
+                </button>
+
+                <button type="button" class="btn-counseling-cta" onclick="openCounselingModal('{{ university.name|escapejs }}', '')">
+
+                    <i class="ti ti-phone-call"></i> Enquire & Call Back
+
+                </button>
+
+                <button type="button" class="btn-share-icon" onclick="shareUniversity()" title="Share profile link">
+
+                    <i class="ti ti-share"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- KPI Metrics Strip -->
+
+        <div class="uni-kpi-row">
+
+            <div class="uni-kpi-card kpi-courses">
+
+                <div class="uni-kpi-icon"><i class="ti ti-school"></i></div>
+
+                <div class="uni-kpi-text">
+
+                    <span class="uni-kpi-val">{{ courses.count|default:"12" }} Available</span>
+
+                    <span class="uni-kpi-label">Degree Programs</span>
+
+                </div>
+
+            </div>
+
+            <div class="uni-kpi-card kpi-scholarships">
+
+                <div class="uni-kpi-icon"><i class="ti ti-award"></i></div>
+
+                <div class="uni-kpi-text">
+
+                    <span class="uni-kpi-val">{{ scholarships.count|default:"2" }} Active</span>
+
+                    <span class="uni-kpi-label">Scholarships & Aid</span>
+
+                </div>
+
+            </div>
+
+            <div class="uni-kpi-card kpi-levels">
+
+                <div class="uni-kpi-icon"><i class="ti ti-certificate"></i></div>
+
+                <div class="uni-kpi-text">
+
+                    <span class="uni-kpi-val">UG &bull; PG &bull; PhD</span>
+
+                    <span class="uni-kpi-label">Study Levels</span>
+
+                </div>
+
+            </div>
+
+            <div class="uni-kpi-card kpi-status">
+
+                <div class="uni-kpi-icon"><i class="ti ti-sparkles"></i></div>
+
+                <div class="uni-kpi-text">
+
+                    <span class="uni-kpi-val">Open for 2026/27</span>
+
+                    <span class="uni-kpi-label">Intake Status</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================================
+
+     STICKY NAVIGATION TABS
+
+     ========================================================== -->
+
+<div class="uni-nav-sticky-wrap">
+
+    <div class="container">
+
+        <nav class="uni-nav-tabs">
+
+            <a href="#overview" class="uni-tab-link active" onclick="setActiveTab(this)"><i class="ti ti-info-circle"></i> Overview</a>
+
+            <a href="#courses" class="uni-tab-link" onclick="setActiveTab(this)"><i class="ti ti-book-2"></i> Programs <span class="uni-tab-count">{{ courses.count }}</span></a>
+
+            <a href="#scholarships" class="uni-tab-link" onclick="setActiveTab(this)"><i class="ti ti-medal"></i> Scholarships <span class="uni-tab-count">{{ scholarships.count }}</span></a>
+
+            <a href="#facilities" class="uni-tab-link" onclick="setActiveTab(this)"><i class="ti ti-building"></i> Campus & Facilities</a>
+
+            <a href="#admissions" class="uni-tab-link" onclick="setActiveTab(this)"><i class="ti ti-checklist"></i> Admissions Guide</a>
+
+        </nav>
+
+    </div>
+
+</div>
+
+<!-- ==========================================================
+
+     MAIN 2-COLUMN DASHBOARD GRID
+
+     ========================================================== -->
+
+<div class="container">
+
+    <div class="uni-main-grid">
+
+        <!-- Left Column: Core Sections -->
+
+        <div class="uni-content-col">
+
+            <!-- 1. Overview & Institutional Profile -->
+
+            <section id="overview" class="uni-content-section">
+
+                <div class="uni-section-header">
+
+                    <h2 class="uni-section-title"><i class="ti ti-info-circle"></i> Institutional Overview</h2>
+
+                </div>
+
+                <div class="uni-overview-card">
+
+                    <p>{{ university.profile.about|default:"A globally renowned institution dedicated to academic excellence, state-of-the-art research, and empowering students with industry-aligned qualifications and world-class experiential learning."|linebreaksbr }}</p>
+
+                    <!-- Highlights Strip -->
+
+                    <div class="uni-highlights-grid">
+
+                        <div class="highlight-box">
+
+                            <div class="highlight-icon"><i class="ti ti-world"></i></div>
+
+                            <span class="highlight-title">Global Standing</span>
+
+                            <span class="highlight-sub">Internationally accredited degree credentials</span>
+
+                        </div>
+
+                        <div class="highlight-box">
+
+                            <div class="highlight-icon"><i class="ti ti-users"></i></div>
+
+                            <span class="highlight-title">Expert Faculty</span>
+
+                            <span class="highlight-sub">Learn directly from leading scholars & researchers</span>
+
+                        </div>
+
+                        <div class="highlight-box">
+
+                            <div class="highlight-icon"><i class="ti ti-briefcase"></i></div>
+
+                            <span class="highlight-title">Career Placement</span>
+
+                            <span class="highlight-sub">Dedicated global internship & employment network</span>
+
+                        </div>
+
+                        <div class="highlight-box">
+
+                            <div class="highlight-icon"><i class="ti ti-shield-check"></i></div>
+
+                            <span class="highlight-title">Student Support</span>
+
+                            <span class="highlight-sub">Comprehensive visa, housing & academic advisory</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- 2. Academic Programs & Courses -->
+
+            <section id="courses" class="uni-content-section">
+
+                <div class="uni-section-header">
+
+                    <h2 class="uni-section-title">
+
+                        <i class="ti ti-school"></i> Available Programs & Degrees
+
+                        <span style="font-size: 13px; font-weight: 600; color: #64748b; margin-left: 4px;">({{ courses.count }})</span>
+
+                    </h2>
+
+                </div>
+
+                <!-- Instant Filter & Search Bar -->
+
+                <div class="course-filter-bar">
+
+                    <div class="course-search-field">
+
+                        <i class="ti ti-search"></i>
+
+                        <input type="text" id="courseFilterInput" onkeyup="filterCoursesList()" placeholder="Filter programs by name, subject, or stream...">
+
+                    </div>
+
+                    <div class="course-degree-filters">
+
+                        <button type="button" class="course-filter-chip active" onclick="setDegreeFilter('ALL', this)">All</button>
+
+                        <button type="button" class="course-filter-chip" onclick="setDegreeFilter('UG', this)">UG</button>
+
+                        <button type="button" class="course-filter-chip" onclick="setDegreeFilter('PG', this)">PG</button>
+
+                        <button type="button" class="course-filter-chip" onclick="setDegreeFilter('PHD', this)">PhD</button>
+
+                    </div>
+
+                </div>
+
+                <!-- Compact Courses Grid -->
+
+                {% if courses %}
+
+                    <div class="compact-courses-grid" id="coursesGridContainer">
+
+                        {% for course in courses %}
+
+                        <div class="course-card-compact"
+
+                             data-course-name="{{ course.name|lower }}"
+
+                             data-degree="{{ course.degree_type|upper }}"
+
+                             data-stream="{{ course.stream|lower }}"
+
+                             onclick="openCourseDetailsModal(
+
+                                 '{{ course.name|escapejs }}',
+                                 '{{ university.name|escapejs }}',
+                                 '{{ university.profile.location_city|default:university.profile.location_state_country|escapejs }}',
+                                 '{{ course.degree_type|escapejs }}',
+                                 '{{ course.duration|default:"Flexible"|escapejs }}',
+                                 '{{ course.mode|default:"Full Time"|escapejs }}',
+                                 '{{ course.fees|default:"Inquire"|escapejs }}',
+                                 '{{ course.stream|default:"General Studies"|escapejs }}',
+                                 '{{ course.eligibility|default:"High school diploma or equivalent qualification required."|escapejs }}',
+                                 '{{ course.scholarship_available|yesno:"yes,no" }}',
+                                 {{ university.pk }}
+
+                             )"
+
+                             title="Click to view course details">
+
+                            <!-- Badges -->
+
+                            <div class="course-card-top-badges">
+
+                                <span class="badge-deg {% if 'PG' in course.degree_type %}pg{% elif 'PHD' in course.degree_type %}phd{% else %}ug{% endif %}">
+
+                                    {{ course.degree_type }}
+
+                                </span>
+
+                                {% if course.stream %}
+
+                                <span class="badge-stream">{{ course.stream }}</span>
+
+                                {% endif %}
+
+                                <span class="badge-mode">
+
+                                    <i class="ti ti-device-laptop"></i> {{ course.mode }}
+
+                                </span>
+
+                                <span style="margin-left:auto; font-size:11px; font-weight:700; color:#1768ff; display:inline-flex; align-items:center; gap:3px;">
+
+                                    <i class="ti ti-info-circle"></i> View Details
+
+                                </span>
+
+                            </div>
+
+                            <!-- Course Title -->
+
+                            <h3 class="course-card-title">{{ course.name }}</h3>
+
+                            <!-- Spec Matrix (2x2) -->
+
+                            <div class="course-specs-matrix">
+
+                                <div class="course-spec-item">
+
+                                    <span class="course-spec-lbl"><i class="ti ti-clock"></i> Duration</span>
+
+                                    <span class="course-spec-val">{{ course.duration|default:"Flexible" }}</span>
+
+                                </div>
+
+                                <div class="course-spec-item tuition-item">
+
+                                    <span class="course-spec-lbl"><i class="ti ti-cash"></i> Tuition</span>
+
+                                    <span class="course-spec-val">{{ course.fees|default:"Inquire" }}</span>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Scholarship Available Indicator -->
+
+                            {% if course.scholarship_available %}
+
+                              {% if has_scholarship_exam %}
+
+                              <div class="course-scholarship-tag" style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; padding: 7px 10px; border-radius: 8px;">
+
+                                  <span style="font-weight: 700; font-size: 11.5px; display: inline-flex; align-items: center; gap: 5px;">
+
+                                      <i class="ti ti-sparkles" style="color: #059669;"></i> Scholarship Eligible
+
+                                  </span>
+
+                                  <span style="font-size: 10.5px; font-weight: 750; color: #047857; background: #d1fae5; padding: 2px 8px; border-radius: 10px;">
+
+                                      ✓ Exam on File (Auto-Considered)
+
+                                  </span>
+
+                              </div>
+
+                              {% else %}
+
+                              <div class="course-scholarship-tag" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; display: flex; flex-direction: column; gap: 5px; padding: 8px 10px; border-radius: 8px;">
+
+                                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+
+                                      <span style="font-weight: 700; font-size: 11.5px; display: inline-flex; align-items: center; gap: 5px;">
+
+                                          <i class="ti ti-sparkles" style="color: #2563eb;"></i> Scholarship Eligible &bull; Aid Available
+
+                                      </span>
+
+                                  </div>
+
+                                  <div style="font-size: 11.5px; color: #1d4ed8; background: #dbeafe; padding: 5px 8px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+
+                                      <span>Take Common Scholarship Exam to qualify</span>
+
+                                      {% if request.user.is_authenticated and request.user.parent_profile %}
+
+                                      <button type="button" disabled style="color: #64748b; background: #cbd5e1; font-weight: 750; font-size: 11px; padding: 4px 9px; border-radius: 5px; border: none; cursor: not-allowed; opacity: 0.85; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;" title="Examinations must be taken by the student. Parents have view-only access.">
+
+                                          <i class="ti ti-lock" style="font-size: 11px;"></i> Take Exam &rarr;
+                                      </button>
+
+                                      {% else %}
+
+                                      <a href="{% url 'dashboard_scholarship_exam_booking' %}" onclick="event.stopPropagation();" style="color: #ffffff; background: #1d4ed8; font-weight: 750; font-size: 11px; padding: 3px 8px; border-radius: 5px; text-decoration: none; white-space: nowrap;">
+
+                                          Take Exam &rarr;
+                                      </a>
+
+                                      {% endif %}
+
+                                  </div>
+
+                              </div>
+
+                              {% endif %}
+
+                            {% endif %}
+
+                            <!-- Eligibility Brief -->
+
+                            {% if course.eligibility %}
+
+                            <div class="course-elig-note">
+
+                                <strong>Req:</strong> {{ course.eligibility|truncatechars:75 }}
+
+                            </div>
+
+                            {% endif %}
+
+                            <!-- CTA Button -->
+
+                            <button type="button" class="course-card-btn" onclick="bookCourse(event, {{ university.pk }}, '{{ course.name|escapejs }}', this)">
+
+                                <i class="ti ti-calendar-event"></i> Book Now &rarr;
+                            </button>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div id="noCoursesFound" style="display: none; text-align: center; padding: 35px 20px; background: #ffffff; border-radius: 12px; border: 1px dashed #cbd5e1; margin-top: 10px;">
+
+                        <i class="ti ti-search-off" style="font-size: 28px; color: #94a3b8; display: block; margin-bottom: 6px;"></i>
+
+                        <span style="font-size: 13.5px; font-weight: 700; color: #475569;">No courses match your filter.</span>
+
+                    </div>
+
+                {% else %}
+
+                    <div style="text-align: center; padding: 40px; background: white; border-radius: 14px; border: 1px dashed #cbd5e1;">
+
+                        <i class="ti ti-school-off" style="font-size: 32px; color: #94a3b8; margin-bottom: 8px; display: block;"></i>
+
+                        <p style="color: #64748b; font-size: 13.5px; margin: 0;">No active courses listed for this institution yet.</p>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+            <!-- 3. Scholarships Section -->
+
+            <section id="scholarships" class="uni-content-section">
+
+                <div class="uni-section-header">
+
+                    <h2 class="uni-section-title">
+
+                        <i class="ti ti-medal"></i> Scholarships & Financial Grants
+
+                        <span style="font-size: 13px; font-weight: 600; color: #64748b; margin-left: 4px;">({{ scholarships.count }})</span>
+
+                    </h2>
+
+                </div>
+
+                {% if scholarships %}
+
+                    {% for sc in scholarships %}
+
+                    <div class="scholarship-card-modern">
+
+                        <div class="sch-info-col">
+
+                            <div class="sch-top-row">
+
+                                <h3 class="sch-title">{{ sc.name }}</h3>
+
+                                <span class="sch-coverage-badge">{{ sc.coverage_type|default:"Grant" }} Waiver</span>
+
+                            </div>
+
+                            <p class="sch-desc">{{ sc.description|default:"Merit-based financial aid awarded to eligible applicants." }}</p>
+
+                            <div class="sch-meta-pills">
+
+                                <span><i class="ti ti-certificate" style="color: #1768ff;"></i> Level: {{ sc.level|default:"All Levels" }}</span>
+
+                                <span><i class="ti ti-book" style="color: #8b5cf6;"></i> Field: {{ sc.field_of_study|default:"All Fields" }}</span>
+
+                                {% if sc.deadline %}
+
+                                <span><i class="ti ti-calendar" style="color: #ef4444;"></i> Deadline: {{ sc.deadline|date:"M d, Y" }}</span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                        <div class="sch-amount-box">
+
+                            <span class="sch-amount-val">{{ sc.amount|default:"Partial Aid" }}</span>
+
+                            <span class="sch-amount-sub">Grant / Scholarship</span>
+
+                            <button type="button" class="btn-shortlist" style="margin-top: 8px; font-size: 11px; padding: 5px 10px;" onclick="openCounselingModal('{{ university.name|escapejs }}', 'Scholarship: {{ sc.name|escapejs }}')">
+
+                                Apply for Aid
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div style="text-align: center; padding: 32px; background: white; border-radius: 12px; border: 1px dashed #cbd5e1;">
+
+                        <i class="ti ti-award-off" style="font-size: 28px; color: #94a3b8; margin-bottom: 6px; display: block;"></i>
+
+                        <p style="color: #64748b; font-size: 13px; margin: 0;">Scholarship grants are currently under annual review for this institution.</p>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+            <!-- 4. Campus & Facilities -->
+
+            <section id="facilities" class="uni-content-section">
+
+                <div class="uni-section-header">
+
+                    <h2 class="uni-section-title"><i class="ti ti-building"></i> Campus Infrastructure & Student Life</h2>
+
+                </div>
+
+                <div class="uni-overview-card" style="margin-bottom: 12px;">
+
+                    <p>{{ university.profile.campus_facilities|default:"Modern, student-centric campus featuring digital smart libraries, cutting-edge research labs, athletics complexes, on-campus student housing, and vibrant collaborative workspaces."|linebreaksbr }}</p>
+
+                </div>
+
+                <div class="facilities-grid-showcase">
+
+                    <div class="facility-showcase-box">
+
+                        <div class="facility-showcase-icon"><i class="ti ti-books"></i></div>
+
+                        <div class="facility-showcase-info">
+
+                            <h4>Smart Libraries & Archives</h4>
+
+                            <p>24/7 digital resource access, private study pods, and collaborative innovation zones.</p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="facility-showcase-box">
+
+                        <div class="facility-showcase-icon"><i class="ti ti-flask"></i></div>
+
+                        <div class="facility-showcase-info">
+
+                            <h4>Advanced Research Labs</h4>
+
+                            <p>Industry-standard technology suites, computing clusters, and specialized workshops.</p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="facility-showcase-box">
+
+                        <div class="facility-showcase-icon"><i class="ti ti-home"></i></div>
+
+                        <div class="facility-showcase-info">
+
+                            <h4>Student Housing & Halls</h4>
+
+                            <p>Safe, comfortable residences with dining options, high-speed WiFi, and 24/7 security.</p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="facility-showcase-box">
+
+                        <div class="facility-showcase-icon"><i class="ti ti-activity"></i></div>
+
+                        <div class="facility-showcase-info">
+
+                            <h4>Athletics & Recreation</h4>
+
+                            <p>Multi-sport complexes, fitness gyms, swimming facilities, and dynamic cultural clubs.</p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- 5. Admissions Guide -->
+
+            <section id="admissions" class="uni-content-section">
+
+                <div class="uni-section-header">
+
+                    <h2 class="uni-section-title"><i class="ti ti-checklist"></i> Admissions & Application Guide</h2>
+
+                </div>
+
+                <div class="uni-overview-card" style="margin-bottom: 12px;">
+
+                    <p>{{ university.profile.admission_process|default:"Admissions at KNOVA partner universities follow a clear, streamlined evaluation process. Our academic counseling team assists you at every step—from program selection to document submission and visa issuance."|linebreaksbr }}</p>
+
+                </div>
+
+                <div class="admission-steps-row">
+
+                    <div class="admission-step-card">
+
+                        <div class="step-number-circle">1</div>
+
+                        <h4>Choose & Inquire</h4>
+
+                        <p>Select your desired degree program and review specific academic prerequisites.</p>
+
+                    </div>
+
+                    <div class="admission-step-card">
+
+                        <div class="step-number-circle">2</div>
+
+                        <h4>Counseling & Review</h4>
+
+                        <p>Meet 1-on-1 with an authorized advisor to evaluate transcripts and scholarship chances.</p>
+
+                    </div>
+
+                    <div class="admission-step-card">
+
+                        <div class="step-number-circle">3</div>
+
+                        <h4>Direct Submission</h4>
+
+                        <p>Receive fast-track offer letters, accommodation booking, and visa assistance.</p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <!-- Right Column: Sticky Conversion Sidebar -->
+
+        <aside class="uni-sidebar-col">
+
+            <div class="uni-sidebar-sticky">
+
+                <!-- 1. Featured Enquire & Call Back Card -->
+
+                <div class="counseling-sidebar-card">
+
+                    <div class="counseling-card-top">
+
+                        <div class="counseling-avatar"><i class="ti ti-phone-call"></i></div>
+
+                        <div>
+
+                            <h3 class="counseling-card-title">Enquire & Get Call Back</h3>
+
+                            <span class="counseling-card-sub">&bull; Direct Admissions Callback</span>
+
+                        </div>
+
+                    </div>
+
+                    <p style="font-size: 12px; color: #bfdbfe; margin: 0 0 12px 0; line-height: 1.45;">
+
+                        Have questions about admissions, fees, or courses? Request a fast call back from our advisory team representing {{ university.name }}.
+
+                    </p>
+
+                    <ul class="counseling-benefits">
+
+                        <li><i class="ti ti-check"></i> Direct call back from authorized advisors</li>
+
+                        <li><i class="ti ti-check"></i> Instant fee structure & scholarship guidance</li>
+
+                        <li><i class="ti ti-check"></i> 1-on-1 personalized response</li>
+
+                    </ul>
+
+                    <button type="button" class="btn-book-session" onclick="openCounselingModal('{{ university.name|escapejs }}', '')">
+
+                        <i class="ti ti-phone-outgoing" style="color: #1768ff;"></i> Request Call Back
+
+                    </button>
+
+                </div>
+
+                <!-- 2. Fast Institutional Facts -->
+
+                <div class="facts-sidebar-card">
+
+                    <h4 class="facts-card-header"><i class="ti ti-file-certificate"></i> Key Institutional Facts</h4>
+
+                    <div class="facts-list">
+
+                        <div class="fact-item">
+
+                            <span class="fact-lbl"><i class="ti ti-building-bank"></i> Institution Type</span>
+
+                            <span class="fact-val">{{ university.profile.university_type|default:"Public University" }}</span>
+
+                        </div>
+
+                        {% if university.profile.established_year %}
+
+                        <div class="fact-item">
+
+                            <span class="fact-lbl"><i class="ti ti-calendar"></i> Founded</span>
+
+                            <span class="fact-val">{{ university.profile.established_year }}</span>
+
+                        </div>
+
+                        {% endif %}
+
+                        <div class="fact-item">
+
+                            <span class="fact-lbl"><i class="ti ti-map-pin"></i> Location</span>
+
+                            <span class="fact-val">
+
+                                {% if university.profile.location_city and university.profile.location_state_country and university.profile.location_city != university.profile.location_state_country %}
+
+                                    {{ university.profile.location_city }}, {{ university.profile.location_state_country }}
+
+                                {% elif university.profile.location_city %}
+
+                                    {{ university.profile.location_city }}
+
+                                {% else %}
+
+                                    {{ university.profile.location_state_country|default:"Global" }}
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+                        <div class="fact-item">
+
+                            <span class="fact-lbl"><i class="ti ti-language"></i> Instruction</span>
+
+                            <span class="fact-val">English</span>
+
+                        </div>
+
+                        <div class="fact-item">
+
+                            <span class="fact-lbl"><i class="ti ti-award"></i> Verification</span>
+
+                            <span class="fact-val" style="color: #059669;"><i class="ti ti-shield-check"></i> Verified Partner</span>
+
+                        </div>
+
+                        {% if university.profile.website %}
+
+                        <div class="fact-item">
+
+                            <span class="fact-lbl"><i class="ti ti-world"></i> Website</span>
+
+                            <span class="fact-val">
+
+                                <a href="{{ university.profile.website }}" target="_blank" rel="noopener noreferrer" style="color: #1768ff; text-decoration: none;">Visit Portal &nearr;</a>
+
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                <!-- 3. Student Advisory Helpdesk -->
+
+                <div class="helpdesk-sidebar-card">
+
+                    <div class="helpdesk-icon"><i class="ti ti-phone-call"></i></div>
+
+                    <div class="helpdesk-text">
+
+                        <h5>Need Immediate Guidance?</h5>
+
+                        <p>Speak to our GCC educational team for comprehensive support.</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+<!-- ==========================================================
+
+     ENQUIRE & GET CALL BACK MODAL
+
+     ========================================================== -->
+
+<div id="counselingModal" class="counsel-modal-backdrop">
+
+    <div class="counsel-modal-box">
+
+        <div class="modal-hdr">
+
+            <h3><i class="ti ti-phone-call"></i> Enquire & Get Call Back</h3>
+
+            <button type="button" class="modal-close-btn" onclick="closeCounselingModal()"><i class="ti ti-x"></i></button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 14px 0; line-height: 1.4;">
+
+                Have questions regarding <strong id="modalUniName" style="color: #1768ff;"></strong>? Leave your contact details below and our authorized advisor will call you back.
+
+            </p>
+
+            <form id="counselingForm" onsubmit="submitCounselingBooking(event)">
+
+                <div class="modal-form-group">
+
+                    <label>Full Name *</label>
+
+                    <input type="text" id="modalStudentName" required placeholder="Enter your full name" value="{% if request.user.is_authenticated %}{{ request.user.get_full_name|default:request.user.username }}{% endif %}">
+
+                </div>
+
+                <div class="modal-grid-2">
+
+                    <div class="modal-form-group">
+
+                        <label>Phone / WhatsApp Number *</label>
+
+                        <input type="tel" id="modalPhone" required placeholder="+971 50 123 4567 or mobile" value="{% if request.user.is_authenticated and request.user.student_profile %}{{ request.user.student_profile.mobile }}{% endif %}">
+
+                    </div>
+
+                    <div class="modal-form-group">
+
+                        <label>Email Address</label>
+
+                        <input type="email" id="modalEmail" placeholder="your.email@example.com" value="{% if request.user.is_authenticated %}{{ request.user.email }}{% endif %}">
+
+                    </div>
+
+                </div>
+
+                <div class="modal-form-group">
+
+                    <label>Selected Program / Topic of Interest</label>
+
+                    <input type="text" id="modalCourseInterest" placeholder="E.g. Computer Science, MBA, or General Admissions">
+
+                </div>
+
+                <div class="modal-form-group">
+
+                    <label>Questions / Notes for Advisory Team</label>
+
+                    <textarea id="modalNotes" rows="2" placeholder="Mention your queries regarding tuition fees, scholarships, entry criteria, or intake..."></textarea>
+
+                </div>
+
+                <button type="submit" class="btn-submit-booking" id="btnSubmitEnquiry">
+
+                    <i class="ti ti-phone-outgoing"></i> Request Call Back &rarr;
+                </button>
+
+                <p style="font-size: 11px; color: #94a3b8; text-align: center; margin: 8px 0 0 0;">
+
+                    <i class="ti ti-shield-check" style="color: #059669;"></i> 100% Free Advisory &bull; Fast Callback from Verified Team
+
+                </p>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================================================
+
+     QUICK COURSE DETAILS MODAL
+
+     ========================================================== -->
+
+<div id="courseDetailsModal" class="course-details-modal-backdrop" onclick="closeCourseDetailsModal(event)">
+
+    <div class="course-details-modal-box" onclick="event.stopPropagation()">
+
+        <button type="button" class="modal-close-btn" onclick="closeCourseDetailsModalDirect()" aria-label="Close modal"><i class="ti ti-x"></i></button>
+
+        <div style="margin-bottom: 18px;">
+
+            <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:wrap;">
+
+                <span id="modalCourseDegreeBadge" class="badge-deg ug" style="font-size:11px; padding:3px 8px; border-radius:4px;">Undergraduate</span>
+
+                <span id="modalCourseStreamBadge" class="badge-stream" style="font-size:11px; padding:3px 8px; border-radius:4px;">General</span>
+
+            </div>
+
+            <h2 id="modalCourseTitle" style="font-size: 22px; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; line-height: 1.25;">Course Name</h2>
+
+            <div style="font-size: 13.5px; color: #1768ff; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+
+                <i class="ti ti-building"></i> <span id="modalCourseUniName">{{ university.name }}</span>
+
+                {% if university.profile.location_city or university.profile.location_state_country %}
+
+                <span style="color:#64748b; font-weight:500;">&bull; {{ university.profile.location_city|default:university.profile.location_state_country }}</span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+
+            <div class="course-spec-item" style="padding:10px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+
+                <span class="course-spec-lbl"><i class="ti ti-clock"></i> Duration</span>
+
+                <span id="modalCourseDuration" class="course-spec-val" style="font-size:13px;">Flexible</span>
+
+            </div>
+
+            <div class="course-spec-item" style="padding:10px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+
+                <span class="course-spec-lbl"><i class="ti ti-device-laptop"></i> Study Mode</span>
+
+                <span id="modalCourseMode" class="course-spec-val" style="font-size:13px;">Full Time</span>
+
+            </div>
+
+            <div class="course-spec-item tuition-item" style="padding:10px 12px; background:#f0fdf4; border:1px solid #dcfce7; border-radius:8px;">
+
+                <span class="course-spec-lbl"><i class="ti ti-cash"></i> Tuition Fees</span>
+
+                <span id="modalCourseFees" class="course-spec-val" style="font-size:13px;">Inquire</span>
+
+            </div>
+
+            <div class="course-spec-item" style="padding:10px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+
+                <span class="course-spec-lbl"><i class="ti ti-category"></i> Academic Stream</span>
+
+                <span id="modalCourseStream" class="course-spec-val" style="font-size:13px;">General</span>
+
+            </div>
+
+        </div>
+
+        <div id="modalCourseScholarshipBadge" class="course-scholarship-tag" style="display: none; margin-bottom: 16px; padding: 12px 14px; font-size: 12.5px; border-radius: 10px;">
+
+            {% if has_scholarship_exam %}
+
+            <div style="display: flex; align-items: center; gap: 8px; color: #065f46; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 10px 12px; border-radius: 8px; width: 100%;">
+
+                <i class="ti ti-circle-check" style="font-size: 18px; color: #10b981; flex-shrink: 0;"></i>
+
+                <div>
+
+                    <strong>Scholarship Eligible:</strong> Common Scholarship Examination is already on file for your account. No further examination required &mdash; your scores will automatically qualify you for this scholarship!
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px 12px; border-radius: 8px;">
+
+                <div style="display: flex; align-items: center; gap: 6px;">
+
+                    <i class="ti ti-sparkles" style="font-size: 16px; color: #2563eb;"></i>
+
+                    <strong>Scholarship Opportunity Available:</strong> This course is eligible for institutional tuition waivers and grants.
+
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #dbeafe; padding: 6px 10px; border-radius: 6px; font-size: 12px;">
+
+                    <span>Please complete the Common Scholarship Examination to qualify:</span>
+
+                    {% if request.user.is_authenticated and request.user.parent_profile %}
+
+                    <button type="button" disabled style="background: #94a3b8; color: #ffffff; padding: 5px 12px; border-radius: 6px; border: none; font-weight: 700; white-space: nowrap; cursor: not-allowed; opacity: 0.85; display: inline-flex; align-items: center; gap: 4px;" title="Examinations must be taken by the student. Parents have view-only access.">
+
+                        <i class="ti ti-lock" style="font-size: 12px;"></i> Take Exam &rarr;
+                    </button>
+
+                    {% else %}
+
+                    <a href="{% url 'dashboard_scholarship_exam_booking' %}" target="_blank" style="background: #1d4ed8; color: #ffffff; padding: 5px 12px; border-radius: 6px; text-decoration: none; font-weight: 700; white-space: nowrap;">
+
+                        Take Exam &rarr;
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; margin-bottom: 20px;">
+
+            <h4 style="font-size: 12px; font-weight: 800; color: #334155; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px 0; display: flex; align-items: center; gap: 6px;">
+
+                <i class="ti ti-file-certificate" style="color: #1768ff;"></i> Admission & Eligibility
+
+            </h4>
+
+            <p id="modalCourseEligibility" style="font-size: 13.5px; color: #475569; line-height: 1.5; margin: 0;">-</p>
+
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+
+            <button type="button" class="btn" onclick="closeCourseDetailsModalDirect()" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; font-weight: 600; font-size: 13px; cursor: pointer;">
+
+                Close
+
+            </button>
+
+            <button type="button" id="modalBtnBookNow" class="btn btn-primary" onclick="bookCourseFromModal(this)" style="padding: 10px 22px; border-radius: 8px; background: #1768ff; color: #ffffff; font-weight: 750; font-size: 13px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+
+                <i class="ti ti-calendar-event"></i> Book Now &rarr;
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Floating Notification Toast -->
+
+<div id="uniToast" class="uni-toast">
+
+    <i class="ti ti-circle-check-filled"></i>
+
+    <span id="uniToastMsg">Saved to Shortlist!</span>
+
+</div>
+
+<!-- ==========================================================
+
+     INTERACTION LOGIC & SCRIPTS
+
+     ========================================================== -->
+
+<script>
+
+    // Tab switching highlighting
+
+    function setActiveTab(el) {
+        document.querySelectorAll('.uni-tab-link').forEach(function(item) {
+            item.classList.remove('active');
+        });
+        el.classList.add('active');
+    }
+
+    // Client-side instant Course Filter
+
+    var currentDegreeFilter = 'ALL';
+    function setDegreeFilter(deg, btn) {
+        currentDegreeFilter = deg;
+        document.querySelectorAll('.course-filter-chip').forEach(function(chip) {
+            chip.classList.remove('active');
+        });
+        btn.classList.add('active');
+        filterCoursesList();
+    }
+
+    function filterCoursesList() {
+        var query = (document.getElementById('courseFilterInput').value || '').toLowerCase().trim();
+        var cards = document.querySelectorAll('.course-card-compact');
+        var matched = 0;
+        cards.forEach(function(card) {
+            var name = card.getAttribute('data-course-name') || '';
+            var deg = card.getAttribute('data-degree') || '';
+            var stream = card.getAttribute('data-stream') || '';
+            var matchSearch = !query || name.indexOf(query) !== -1 || stream.indexOf(query) !== -1;
+            var matchDegree = (currentDegreeFilter === 'ALL') || (deg.indexOf(currentDegreeFilter) !== -1);
+            if (matchSearch && matchDegree) {
+                card.style.display = 'flex';
+                matched++;
+            } else {
+                card.style.display = 'none';
+            }
+
+        });
+        var noFound = document.getElementById('noCoursesFound');
+        if (noFound) {
+            noFound.style.display = (matched === 0) ? 'block' : 'none';
+        }
+
+    }
+
+    // Counseling Modal
+
+    function openCounselingModal(uniName, courseName) {
+        document.getElementById('modalUniName').textContent = uniName || 'University';
+        var courseInput = document.getElementById('modalCourseInterest');
+        if (courseInput) {
+            courseInput.value = courseName || '';
+        }
+
+        var modal = document.getElementById('counselingModal');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+
+    }
+
+    function closeCounselingModal() {
+        var modal = document.getElementById('counselingModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    // Close on click outside
+
+    window.addEventListener('click', function(e) {
+        var modal = document.getElementById('counselingModal');
+        if (e.target === modal) {
+            closeCounselingModal();
+        }
+
+    });
+    function submitCounselingBooking(e) {
+        e.preventDefault();
+        var submitBtn = document.getElementById('btnSubmitEnquiry');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Submitting...';
+        }
+
+        var formData = new FormData();
+        var fullName = document.getElementById('modalStudentName') ? document.getElementById('modalStudentName').value : '';
+        var phone = document.getElementById('modalPhone') ? document.getElementById('modalPhone').value : '';
+        var email = document.getElementById('modalEmail') ? document.getElementById('modalEmail').value : '';
+        var courseInterest = document.getElementById('modalCourseInterest') ? document.getElementById('modalCourseInterest').value : '';
+        var notes = document.getElementById('modalNotes') ? document.getElementById('modalNotes').value : '';
+        formData.append('full_name', fullName);
+        formData.append('phone', phone);
+        formData.append('email', email);
+        formData.append('course_interest', courseInterest);
+        formData.append('notes', notes);
+        fetch('/university/enquire/{{ university.pk }}/', {
+            method: 'POST',
+            body: formData
+
+        }).then(function(resp) {
+            return resp.json();
+        }).then(function(data) {
+            closeCounselingModal();
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="ti ti-phone-outgoing"></i> Request Call Back &rarr;';
+            }
+
+            showToast(data.message || 'Enquiry received! An admissions advisor will call you back shortly.');
+        }).catch(function(err) {
+            closeCounselingModal();
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="ti ti-phone-outgoing"></i> Request Call Back &rarr;';
+            }
+
+            showToast('Enquiry received! An admissions advisor will call you back shortly.');
+        });
+    }
+
+    // Toast utility
+
+    function showToast(msg) {
+        var toast = document.getElementById('uniToast');
+        var text = document.getElementById('uniToastMsg');
+        if (toast && text) {
+            text.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(function() {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+    }
+
+    // Share link
+
+    function shareUniversity() {
+        if (navigator.share) {
+            navigator.share({
+                title: '{{ university.name|escapejs }} on KNOVA',
+                url: window.location.href
+
+            }).catch(function() {});
+        } else {
+            navigator.clipboard.writeText(window.location.href).then(function() {
+                showToast('University profile link copied to clipboard!');
+            }).catch(function() {
+                showToast('URL copied to clipboard.');
+            });
+        }
+
+    }
+
+    // Dynamic AJAX Shortlist toggle
+
+    function toggleShortlist(uniId) {
+        var btn = document.getElementById('btnShortlist');
+        var icon = document.getElementById('shortlistIcon');
+        var text = document.getElementById('shortlistText');
+        // CSRF helper
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+
+                }
+
+            }
+
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+        fetch('/save-university/' + uniId + '/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+
+            }
+
+        })
+
+        .then(function(res) {
+            if (res.status === 403 || res.redirected) {
+                window.location.href = "{% url 'portal_login' %}?next=" + encodeURIComponent(window.location.pathname);
+                return;
+            }
+
+            return res.json();
+        })
+
+        .then(function(data) {
+            if (!data) return;
+            if (data.status === 'success') {
+                if (data.message && data.message.indexOf('Added') !== -1) {
+                    btn.classList.add('saved');
+                    icon.className = 'ti ti-bookmark-filled';
+                    text.textContent = 'Saved in Shortlist';
+                    showToast('University saved to your shortlist!');
+                } else {
+                    btn.classList.remove('saved');
+                    icon.className = 'ti ti-bookmark';
+                    text.textContent = 'Save to Shortlist';
+                    showToast('Removed from your shortlist.');
+                }
+
+            } else {
+                showToast(data.message || 'Please log in to save universities.');
+            }
+
+        })
+
+        .catch(function(err) {
+            // If unauthorized, redirect to login
+
+            window.location.href = "{% url 'portal_login' %}?next=" + encodeURIComponent(window.location.pathname);
+        });
+    }
+
+    // Course Details Modal and 1-Click Booking
+
+    var activeModalCourseName = '';
+    var activeModalUniId = {{ university.pk }};
+    function openCourseDetailsModal(title, uniName, location, degree, duration, mode, fees, stream, eligibility, hasScholarship, uniId) {
+        activeModalCourseName = title || '';
+        activeModalUniId = uniId || {{ university.pk }};
+        document.getElementById('modalCourseTitle').textContent = title || 'Program Details';
+        document.getElementById('modalCourseDegreeBadge').textContent = degree || 'Degree';
+        document.getElementById('modalCourseStreamBadge').textContent = stream || 'General';
+        document.getElementById('modalCourseDuration').textContent = duration || 'Flexible';
+        document.getElementById('modalCourseMode').textContent = mode || 'Full Time';
+        document.getElementById('modalCourseFees').textContent = fees || 'Inquire';
+        document.getElementById('modalCourseStream').textContent = stream || 'General';
+        document.getElementById('modalCourseEligibility').textContent = eligibility || 'Consult the admissions office for specific prerequisite requirements.';
+        var scholarshipBox = document.getElementById('modalCourseScholarshipBadge');
+        if (hasScholarship === 'yes') {
+            scholarshipBox.style.display = 'flex';
+        } else {
+            scholarshipBox.style.display = 'none';
+        }
+
+        var btn = document.getElementById('modalBtnBookNow');
+        if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('is-booked');
+            btn.style.background = '#1768ff';
+            btn.style.borderColor = '#1768ff';
+            btn.style.color = '#ffffff';
+            btn.innerHTML = '<i class="ti ti-calendar-event"></i> Book Now &rarr;';
+        }
+
+        var modal = document.getElementById('courseDetailsModal');
+        if (modal) {
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+    }
+
+    function closeCourseDetailsModal(e) {
+        if (e.target === document.getElementById('courseDetailsModal')) {
+            closeCourseDetailsModalDirect();
+        }
+
+    }
+
+    function closeCourseDetailsModalDirect() {
+        var modal = document.getElementById('courseDetailsModal');
+        if (modal) {
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+    }
+
+    function bookCourseFromModal(btn) {
+        bookCourse(null, activeModalUniId, activeModalCourseName, btn);
+    }
+
+    // 1-Click Instant Book Now
+
+    function bookCourse(event, uniId, courseName, btn) {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+
+        if (btn && btn.classList.contains('is-booked')) {
+            showToast('You have already booked ' + courseName + '!');
+            return;
+        }
+
+        var originalHtml = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Booking...';
+        }
+
+        var formData = new FormData();
+        formData.append('course_interest', courseName);
+        formData.append('action', 'book_now');
+        fetch('/university/enquire/' + uniId + '/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+
+            }
+
+        }).then(function(resp) {
+            return resp.json();
+        }).then(function(data) {
+            if (data.status === 'login_required') {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+
+                showToast('Please sign in to book your course.');
+                setTimeout(function() {
+                    window.location.href = data.login_url || '/portal/login/';
+                }, 1000);
+                return;
+            }
+
+            if (data.status === 'success') {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.classList.add('is-booked');
+                    btn.style.background = '#10b981';
+                    btn.style.borderColor = '#10b981';
+                    btn.style.color = '#ffffff';
+                    btn.innerHTML = '<i class="ti ti-check"></i> Booked ✓';
+                }
+
+                // Sync any matching card button on the page
+
+                document.querySelectorAll('.course-card-compact').forEach(function(card) {
+                    var cardCourse = card.getAttribute('data-course-name') || '';
+                    if (courseName && cardCourse.toLowerCase() === courseName.toLowerCase()) {
+                        var cardBtn = card.querySelector('.course-card-btn');
+                        if (cardBtn) {
+                            cardBtn.classList.add('is-booked');
+                            cardBtn.style.background = '#10b981';
+                            cardBtn.style.borderColor = '#10b981';
+                            cardBtn.style.color = '#ffffff';
+                            cardBtn.innerHTML = '<i class="ti ti-check"></i> Booked ✓';
+                        }
+
+                    }
+
+                });
+                if (data.exam_status === 'ask_exam') {
+                    openScholarshipPromptModal(courseName, data.exam_msg, data.exam_url);
+                } else if (data.exam_status === 'already_done') {
+                    showToast('Booked! ' + data.exam_msg);
+                } else {
+                    showToast(data.message || 'Booked successfully!');
+                }
+
+            } else {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHtml;
+                }
+
+                showToast(data.message || 'Error completing booking.');
+            }
+
+        }).catch(function(err) {
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
+
+            showToast('Unable to complete booking. Please try again.');
+        });
+    }
+
+</script>
+
+<!-- SCHOLARSHIP EXAM PROMPT MODAL -->
+
+<div id="scholarshipExamPromptModal" style="display: none; position: fixed; inset: 0; background: rgba(10,25,54,0.7); backdrop-filter: blur(6px); z-index: 10001; align-items: center; justify-content: center; padding: 20px;">
+
+  <div style="background: #ffffff; border-radius: 18px; max-width: 500px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.3); padding: 30px; position: relative; text-align: center;">
+
+    <div style="width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 50%; background: #eff6ff; border: 2px solid #bfdbfe; display: flex; align-items: center; justify-content: center; color: #1d4ed8;">
+
+      <i data-feather="award" style="width: 32px; height: 32px;"></i>
+
+    </div>
+
+    <span style="background: #fef3c7; color: #b45309; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 20px; text-transform: uppercase;">
+
+      Scholarship Opportunity
+
+    </span>
+
+    <h3 style="margin: 10px 0 8px; font-size: 20px; font-weight: 800; color: #0a1936;" id="schPromptCourseTitle">Course Booked Successfully!</h3>
+
+    <p style="font-size: 13.5px; color: #475569; line-height: 1.5; margin: 0 0 20px;" id="schPromptMessage">
+
+      This program is eligible for institutional scholarships and tuition fee waivers! Please take the Common Scholarship Examination to qualify for funding.
+
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+
+      {% if request.user.is_authenticated and request.user.parent_profile %}
+
+      <button type="button" disabled style="background: #94a3b8; color: #ffffff; font-weight: 800; font-size: 14px; padding: 12px 20px; border-radius: 10px; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: not-allowed; opacity: 0.85;" title="Examinations must be taken by students (Parent View-Only)">
+
+        <i data-feather="lock" style="width: 16px; height: 16px;"></i> Student Examination &bull; View Only
+
+      </button>
+
+      {% else %}
+
+      <a href="{% url 'dashboard_scholarship_exam_booking' %}" id="btnTakeSchExam" class="btn btn-primary" style="background: #1768ff; color: #ffffff; font-weight: 800; font-size: 14px; padding: 12px 20px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(23,104,255,0.3);">
+
+        <i data-feather="edit-3" style="width: 16px; height: 16px;"></i> Take Common Scholarship Exam &rarr;
+      </a>
+
+      {% endif %}
+
+      <button type="button" onclick="closeScholarshipPromptModal()" class="btn" style="background: #f8fafc; border: 1px solid #cbd5e1; color: #64748b; font-weight: 700; font-size: 13px; padding: 10px 20px; border-radius: 10px; cursor: pointer;">
+
+        I'll Take the Exam Later &bull; Continue
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+function openScholarshipPromptModal(courseName, msg, url) {
+    var modal = document.getElementById('scholarshipExamPromptModal');
+    var title = document.getElementById('schPromptCourseTitle');
+    var p = document.getElementById('schPromptMessage');
+    var btn = document.getElementById('btnTakeSchExam');
+    if (title && courseName) title.textContent = 'Booked: ' + courseName;
+    if (p && msg) p.textContent = msg;
+    if (btn && url) btn.href = url;
+    if (modal) {
+        modal.style.display = 'flex';
+        if (typeof feather !== 'undefined') feather.replace();
+    }
+
+}
+
+function closeScholarshipPromptModal() {
+    var modal = document.getElementById('scholarshipExamPromptModal');
+    if (modal) modal.style.display = 'none';
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'core/base_public.html' %}
+{% load static %}
+
+{% block content %}
+<section style="height: calc(100vh - 82px); background: #f4f8fc; position: relative; overflow: hidden; display: flex; align-items: center;">
+  <!-- Decorative background elements -->
+  <div style="position: absolute; top: -150px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(23,104,255,0.05) 0%, transparent 60%); border-radius: 50%;"></div>
+  <div style="position: absolute; bottom: -150px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(27,216,223,0.05) 0%, transparent 60%); border-radius: 50%;"></div>
+
+  <div class="container" style="position: relative; z-index: 10;">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <div class="section-kicker" style="color:#1768ff;font-weight:800;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;display:block;">Brain Teaser</div>
+      <h2 style="font-size: clamp(28px, 4vw, 42px); color: #0b2d58; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; line-height: 1.1;">
+        KNOVA <span style="color: transparent; -webkit-text-fill-color: transparent; background: linear-gradient(to right, #1768ff, #1bd8df); -webkit-background-clip: text;">Puzzle Challenge</span>
+      </h2>
+      <p style="color: #475569; font-size: 15px; max-width: 500px; margin: 0 auto; line-height: 1.5;">Test your visual memory. Slide the fragmented pieces back into their correct positions to reveal the original image.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 25px;">
+      
+      <!-- Premium White Container -->
+      <div style="background: #ffffff; padding: 20px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; position: relative;">
+        
+        <div style="position: relative; width: 360px; height: 360px; border-radius: 10px; overflow: hidden; box-shadow: inset 0 5px 20px rgba(0,0,0,0.1);">
+          <img src="{% static 'assets/dubai.webp' %}" alt="Dubai Image" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;">
+          <!-- Puzzle Grid Overlay -->
+          <div style="position: absolute; inset: 0; background-image: linear-gradient(to right, rgba(255,255,255,0.7) 2px, transparent 2px), linear-gradient(to bottom, rgba(255,255,255,0.7) 2px, transparent 2px); background-size: 33.333% 33.333%; z-index: 5; pointer-events: none;"></div>
+          <!-- Right and Bottom borders for the grid -->
+          <div style="position: absolute; inset: 0; border-right: 2px solid rgba(255,255,255,0.7); border-bottom: 2px solid rgba(255,255,255,0.7); z-index: 6; pointer-events: none; opacity: 0;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @media (max-width: 500px) {
+    div[style*="width: 360px"] { width: 320px !important; height: 320px !important; }
+  }
+</style>
+{% endblock %}

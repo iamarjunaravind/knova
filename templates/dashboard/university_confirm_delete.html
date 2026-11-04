@@ -1,0 +1,21 @@
+{% extends base_template|default:'dashboard/base.html' %}
+
+{% block title %}Delete University Card | KNOVA{% endblock %}
+{% block nav_universities %}active{% endblock %}
+{% block page_title %}Delete University{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 550px; margin: 40px auto; text-align:center; padding: 40px; border-radius:16px;">
+  <div style="font-size:44px; margin-bottom:16px;">🗑️</div>
+  <h2 style="margin-top:0; font-size:22px; color:#0a1936; font-weight:800;">Remove University Card?</h2>
+  <p style="color:#64748b; margin-bottom:28px; font-size:14px; line-height:1.6;">
+    Are you sure you want to delete <strong>"{{ university.name }}"</strong>? This will remove its floating card from the hero canvas and its public directory entry.
+  </p>
+  
+  <form method="POST" style="display:flex; justify-content:center; gap:14px;">
+    {% csrf_token %}
+    <a href="{% url 'dashboard_universities' %}" class="btn" style="background:#f1f5f9; color:#475569; padding:10px 20px; border-radius:10px; font-weight:700; text-decoration:none;">Cancel</a>
+    <button type="submit" class="btn" style="background:#ef4444; color:#fff; border:none; padding:10px 24px; border-radius:10px; font-weight:700; cursor:pointer;">Yes, Remove University</button>
+  </form>
+</div>
+{% endblock %}

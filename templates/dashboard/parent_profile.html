@@ -1,0 +1,598 @@
+{% extends base_template|default:'dashboard/base_parent.html' %}
+{% load static %}
+
+{% block nav_parent_profile %}active{% endblock %}
+{% block page_category %}Parent Guardian Portal{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+{% block title %}My Profile | KNOVA{% endblock %}
+
+{% block content %}
+<style>
+  .profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 24px;
+  }
+
+  /* Profile Hero Card */
+  .profile-hero {
+    background: linear-gradient(135deg, #0a1936 0%, #173877 50%, #1768ff 100%);
+    border-radius: 18px;
+    padding: 24px 28px;
+    color: #ffffff;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(10, 25, 54, 0.25);
+  }
+  .profile-hero::before {
+    content: '';
+    position: absolute;
+    right: -40px;
+    top: -40px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(27,216,223,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .profile-hero-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .profile-hero-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .profile-avatar-large {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1bd8df 0%, #1768ff 100%);
+    color: #0a1936;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 900;
+    border: 3px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+  }
+  .profile-hero-name {
+    margin: 0 0 4px 0;
+    font-size: 22px;
+    font-weight: 850;
+    letter-spacing: -0.4px;
+    color: #ffffff;
+  }
+  .profile-hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: #cbd5e1;
+    margin-bottom: 10px;
+  }
+  .profile-hero-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .profile-hero-pills {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .profile-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .profile-pill-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+  }
+  .profile-pill-verified {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #6ee7b7;
+  }
+  .profile-pill-id {
+    background: rgba(27, 216, 223, 0.2);
+    border: 1px solid rgba(27, 216, 223, 0.4);
+    color: #a5f3fc;
+  }
+
+  .profile-hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn-hero-action {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-hero-edit {
+    background: #ffffff;
+    color: #0a1936;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  .btn-hero-edit:hover {
+    background: #f8fafc;
+    transform: translateY(-1px);
+  }
+  .btn-hero-badge {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+  }
+  .btn-hero-badge:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  /* Two Column Profile Grid */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 2fr 1.25fr;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .profile-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Modern Content Cards */
+  .profile-card {
+    background: #ffffff;
+    border: 1px solid var(--card-border, #e2e8f0);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
+  }
+  .profile-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .profile-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 750;
+    color: #0f172a;
+    margin: 0;
+  }
+  .profile-icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .profile-icon-box.blue { background: #eff6ff; color: #1768ff; }
+  .profile-icon-box.purple { background: #f5f3ff; color: #7c3aed; }
+  .profile-icon-box.green { background: #ecfdf5; color: #10b981; }
+  .profile-icon-box.indigo { background: #eef2ff; color: #6366f1; }
+
+  /* Details Key-Value Display */
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 20px;
+  }
+  @media (max-width: 600px) {
+    .details-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .detail-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .detail-value {
+    font-size: 13.5px;
+    font-weight: 650;
+    color: #0f172a;
+  }
+
+  /* Edit Form Styles */
+  .form-section-title {
+    font-size: 14px;
+    font-weight: 750;
+    color: #0f172a;
+    margin: 0 0 14px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .edit-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  @media (max-width: 600px) {
+    .edit-form-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-group label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .form-group input,
+  .form-group select {
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    color: #0f172a;
+    background: #ffffff;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: #1768ff;
+    box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.12);
+  }
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+  }
+  .btn-save-profile {
+    background: #1768ff;
+    color: #ffffff;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 3px 10px rgba(23, 104, 255, 0.25);
+  }
+  .btn-cancel-edit {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 650;
+    cursor: pointer;
+  }
+</style>
+
+<div class="profile-container">
+
+  <!-- ========================================== -->
+  <!-- 1. TOP PROFILE HERO BANNER -->
+  <!-- ========================================== -->
+  <div class="profile-hero">
+    <div class="profile-hero-inner">
+      <div class="profile-hero-left">
+        <div class="profile-avatar-large">
+          {{ request.user.first_name|default:request.user.username|make_list|first|upper }}
+        </div>
+        <div>
+          <h2 class="profile-hero-name">{{ request.user.get_full_name|default:request.user.username }}</h2>
+          <div class="profile-hero-meta">
+            <span><i data-feather="mail" style="width: 14px; height: 14px;"></i> {{ request.user.email }}</span>
+            {% if profile.mobile %}
+              <span><i data-feather="phone" style="width: 14px; height: 14px;"></i> {{ profile.mobile }}</span>
+            {% endif %}
+          </div>
+          <div class="profile-hero-pills">
+            <span class="profile-pill profile-pill-badge"><i data-feather="users" style="width: 12px; height: 12px;"></i> Parent &amp; Guardian</span>
+            <span class="profile-pill profile-pill-verified"><i data-feather="check-circle" style="width: 12px; height: 12px;"></i> Verified Account</span>
+            <span class="profile-pill profile-pill-id"><i data-feather="tag" style="width: 12px; height: 12px;"></i> Pass: KNOVA-PAR-{{ request.user.id|stringformat:"03d" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-hero-actions">
+        <button type="button" class="btn-hero-action btn-hero-edit" id="btnToggleEdit" onclick="toggleEditMode()">
+          <i data-feather="edit-2" style="width: 14px; height: 14px;"></i> <span id="btnEditText">{% if edit_mode %}View Profile{% else %}Edit Profile{% endif %}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages Feedback -->
+  {% if messages %}
+    <div style="margin-bottom: 16px;">
+      {% for msg in messages %}
+        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+          <i data-feather="check-circle" style="width: 16px; height: 16px; color: #10b981;"></i> {{ msg }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- ========================================== -->
+  <!-- 2. PROFILE VIEW MODE (DEFAULT CLEAN DISPLAY) -->
+  <!-- ========================================== -->
+  <div id="profileViewSection" {% if edit_mode %}style="display: none;"{% endif %}>
+    <div class="profile-grid">
+      
+      <!-- LEFT MAIN COLUMN -->
+      <div>
+        
+        <!-- Personal & Contact Details Card -->
+        <div class="profile-card">
+          <div class="profile-card-header">
+            <h3 class="profile-card-title">
+              <span class="profile-icon-box blue"><i data-feather="user" style="width: 16px; height: 16px;"></i></span>
+              Parent Personal &amp; Contact Details
+            </h3>
+            <button type="button" onclick="toggleEditMode()" style="background:none; border:none; color:#1768ff; font-size:12.5px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;">
+              <i data-feather="edit" style="width:13px; height:13px;"></i> Edit
+            </button>
+          </div>
+          <div class="details-grid">
+            <div class="detail-item">
+              <span class="detail-label">Full Name</span>
+              <span class="detail-value">{{ request.user.get_full_name|default:request.user.username }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Email Address</span>
+              <span class="detail-value">{{ request.user.email }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Mobile / WhatsApp</span>
+              <span class="detail-value">{{ profile.mobile|default:"Not specified" }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Account Role</span>
+              <span class="detail-value">Parent / Legal Guardian</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Supervised & Linked Children Card -->
+        <div class="profile-card">
+          <div class="profile-card-header">
+            <h3 class="profile-card-title">
+              <span class="profile-icon-box purple"><i data-feather="users" style="width: 16px; height: 16px;"></i></span>
+              Supervised &amp; Linked Children ({{ linked_students.count }})
+            </h3>
+            <a href="{% url 'dashboard_index' %}" style="color:#7c3aed; font-size:12.5px; font-weight:700; text-decoration:none; display:flex; align-items:center; gap:4px;">
+              <i data-feather="user-plus" style="width:13px; height:13px;"></i> + Connect Student
+            </a>
+          </div>
+
+          {% if linked_students.exists %}
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              {% for st in linked_students %}
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-radius:10px; background:#f8fafc; border:1px solid #e2e8f0;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <div style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg, #1768ff 0%, #0284c7 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px;">
+                    {{ st.user.first_name|default:st.user.username|make_list|first|upper }}
+                  </div>
+                  <div>
+                    <div style="font-size:14px; font-weight:750; color:#0a1936;">{{ st.user.get_full_name|default:st.user.username }}</div>
+                    <div style="font-size:12px; color:#64748b;">{{ st.user.email }} &bull; {{ st.school_college|default:"High School Senior" }}</div>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-size:11px; font-weight:750; color:#059669; background:#ecfdf5; border:1px solid #a7f3d0; padding:2px 8px; border-radius:12px;">Active Supervised</span>
+                  <a href="{% url 'my_expo' %}" style="font-size:12px; font-weight:700; color:#1768ff; text-decoration:none; padding:4px 8px; border-radius:6px; border:1px solid #bfdbfe; background:#eff6ff;">Expo Hub &rarr;</a>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div style="text-align:center; padding:20px; color:#64748b; font-size:13px;">
+              No students connected yet. Connect your child using their KNOVA registration email or username.
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDEBAR COLUMN -->
+      <div>
+        
+        <!-- Parent Access Pass Card -->
+        <div class="profile-card" style="text-align:center;">
+          <div class="profile-card-header" style="justify-content:center;">
+            <h3 class="profile-card-title">
+              <span class="profile-icon-box green"><i data-feather="maximize" style="width: 16px; height: 16px;"></i></span>
+              Parent Expo Access Pass
+            </h3>
+          </div>
+          <div style="margin:10px auto;">
+            {% if qr_code_b64 %}
+              <img src="data:image/png;base64,{{ qr_code_b64 }}" alt="Parent QR Pass" style="width:130px; height:130px; border-radius:12px; border:1px solid #e2e8f0; padding:4px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            {% endif %}
+          </div>
+          <div style="font-size:12px; font-weight:750; color:#0a1936; margin-top:6px;">{{ request.user.get_full_name|default:request.user.username }}</div>
+          <div style="font-size:11px; color:#64748b;">Pass ID: {{ profile.qr_identifier|slice:":12" }}...</div>
+        </div>
+
+        <!-- Quick Platform Shortcuts -->
+        <div class="profile-card">
+          <div class="profile-card-header">
+            <h3 class="profile-card-title">
+              <span class="profile-icon-box indigo"><i data-feather="grid" style="width: 16px; height: 16px;"></i></span>
+              Quick Navigation
+            </h3>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <a href="{% url 'dashboard_index' %}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:8px; background:#f8fafc; color:#0f172a; text-decoration:none; font-size:12.5px; font-weight:650; transition:background 0.15s;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='#f8fafc'">
+              <span style="display:flex; align-items:center; gap:8px;"><i data-feather="grid" style="width:14px; height:14px; color:#1768ff;"></i> Parent Overview</span>
+              <i data-feather="chevron-right" style="width:14px; height:14px; color:#94a3b8;"></i>
+            </a>
+            <a href="{% url 'my_expo' %}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:8px; background:#f8fafc; color:#0f172a; text-decoration:none; font-size:12.5px; font-weight:650; transition:background 0.15s;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='#f8fafc'">
+              <span style="display:flex; align-items:center; gap:8px;"><i data-feather="compass" style="width:14px; height:14px; color:#10b981;"></i> Student Expo Hub</span>
+              <i data-feather="chevron-right" style="width:14px; height:14px; color:#94a3b8;"></i>
+            </a>
+            <a href="{% url 'dashboard_parent_messages' %}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:8px; background:#f8fafc; color:#0f172a; text-decoration:none; font-size:12.5px; font-weight:650; transition:background 0.15s;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background='#f8fafc'">
+              <span style="display:flex; align-items:center; gap:8px;"><i data-feather="message-circle" style="width:14px; height:14px; color:#f59e0b;"></i> Messages with Reps</span>
+              <i data-feather="chevron-right" style="width:14px; height:14px; color:#94a3b8;"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 3. PROFILE EDIT MODE (EXPANDED EDIT FORM) -->
+  <!-- ========================================== -->
+  <div id="profileEditSection" {% if not edit_mode %}style="display: none;"{% endif %}>
+    <div class="profile-card" style="padding: 24px 28px;">
+      <div class="profile-card-header">
+        <h3 class="profile-card-title">
+          <span class="profile-icon-box blue"><i data-feather="edit-3" style="width: 16px; height: 16px;"></i></span>
+          Edit Parent Profile Details
+        </h3>
+        <button type="button" onclick="toggleEditMode()" class="btn-cancel-edit" style="padding: 6px 12px; font-size: 12px;">
+          <i data-feather="x" style="width: 12px; height: 12px;"></i> Close
+        </button>
+      </div>
+
+      <form method="POST" action="{% url 'dashboard_student_profile' %}">
+        {% csrf_token %}
+
+        <div class="form-section-title"><i data-feather="user" style="width:14px; height:14px; color:#1768ff;"></i> Personal &amp; Contact Information</div>
+        <div class="edit-form-grid">
+          <div class="form-group">
+            <label>First Name *</label>
+            <input type="text" name="first_name" value="{{ request.user.first_name|default:'' }}" required placeholder="e.g. Sarah">
+          </div>
+          <div class="form-group">
+            <label>Last Name *</label>
+            <input type="text" name="last_name" value="{{ request.user.last_name|default:'' }}" required placeholder="e.g. Parent">
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input type="email" name="email" value="{{ request.user.email|default:'' }}" required placeholder="e.g. parent@example.com">
+          </div>
+          <div class="form-group">
+            <label>Mobile / WhatsApp Number *</label>
+            <input type="text" name="mobile" value="{{ profile.mobile|default:'' }}" required placeholder="e.g. +971 50 987 6543">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel-edit" onclick="toggleEditMode()">Cancel</button>
+          <button type="submit" class="btn-save-profile">
+            <i data-feather="check" style="width: 14px; height: 14px;"></i> Save Profile Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleEditMode() {
+  const viewSection = document.getElementById('profileViewSection');
+  const editSection = document.getElementById('profileEditSection');
+  const btnText = document.getElementById('btnEditText');
+
+  const isEditing = viewSection.style.display === 'none';
+  if (isEditing) {
+    viewSection.style.display = 'block';
+    editSection.style.display = 'none';
+    if (btnText) btnText.innerText = 'Edit Profile';
+  } else {
+    viewSection.style.display = 'none';
+    editSection.style.display = 'block';
+    if (btnText) btnText.innerText = 'View Profile';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('edit') === '1') {
+    const viewSection = document.getElementById('profileViewSection');
+    const editSection = document.getElementById('profileEditSection');
+    const btnText = document.getElementById('btnEditText');
+    if (viewSection && editSection) {
+      viewSection.style.display = 'none';
+      editSection.style.display = 'block';
+      if (btnText) btnText.innerText = 'View Profile';
+    }
+  }
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
+});
+</script>
+{% endblock %}
+

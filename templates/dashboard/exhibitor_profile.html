@@ -1,0 +1,84 @@
+{% extends 'dashboard/base.html' %}
+{% block nav_exh_profile %}active{% endblock %}
+{% block page_title %}Booth Profile{% endblock %}
+{% block title %}Booth Profile | KNOVA{% endblock %}
+
+{% block content %}
+<div class="glass-card">
+    <h3 style="margin-top:0; color:var(--text-main); font-size:18px; margin-bottom:16px;">Edit Booth Information</h3>
+    <form method="POST">
+        {% csrf_token %}
+        <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:8px;">Company Name</label>
+            <input type="text" name="company_name" class="form-control" value="{{ profile.company_name }}" required>
+        </div>
+        <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:8px;">Profile Description</label>
+            <textarea name="profile_description" class="form-control" rows="4">{{ profile.profile_description }}</textarea>
+        </div>
+        <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:8px;">Country</label>
+            <input type="text" name="country" class="form-control" value="{{ profile.country }}">
+        </div>
+        <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:8px;">Tuition Range</label>
+            <select name="tuition_range" class="form-control">
+                <option value="Low" {% if profile.tuition_range == 'Low' %}selected{% endif %}>Under $10k</option>
+                <option value="Medium" {% if profile.tuition_range == 'Medium' %}selected{% endif %}>$10k-$30k</option>
+                <option value="High" {% if profile.tuition_range == 'High' %}selected{% endif %}>Over $30k</option>
+            </select>
+        </div>
+        <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:8px;">Offered Programs</label>
+            <input type="text" name="offered_programs" class="form-control" value="{{ profile.offered_programs }}" placeholder="e.g. Engineering, Business, Arts">
+        </div>
+        <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:8px;">Website URL</label>
+            <input type="url" name="website" class="form-control" value="{{ profile.website }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+</div>
+
+<div class="glass-card" style="margin-top: 24px;">
+    <h3 style="margin-top:0; color:var(--text-main); font-size:18px; margin-bottom:16px;">Staff Management</h3>
+    <p style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">Invite other team members to scan leads on behalf of your booth.</p>
+    
+    <table style="width:100%; border-collapse:collapse; margin-bottom:24px;">
+        <thead>
+            <tr>
+                <th style="padding:10px; border-bottom:1px solid var(--card-border); text-align:left; font-size:13px; color:var(--text-muted);">Username</th>
+                <th style="padding:10px; border-bottom:1px solid var(--card-border); text-align:left; font-size:13px; color:var(--text-muted);">Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding:10px; border-bottom:1px solid var(--card-border); font-size:14px; font-weight:600;">{{ profile.user.username }} (You)</td>
+                <td style="padding:10px; border-bottom:1px solid var(--card-border); font-size:14px; color:#10b981; font-weight:600;">Admin</td>
+            </tr>
+            {% for staff in staff_members %}
+            <tr>
+                <td style="padding:10px; border-bottom:1px solid var(--card-border); font-size:14px;">{{ staff.user.username }}</td>
+                <td style="padding:10px; border-bottom:1px solid var(--card-border); font-size:14px; color:var(--text-muted);">{{ staff.role }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h4 style="margin-top:0; font-size:15px; margin-bottom:12px;">Add New Staff Member</h4>
+    <form method="POST" style="display:flex; gap:16px; align-items:flex-end;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="add_staff">
+        <div style="flex:1;">
+            <label style="display:block; font-size:12px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">Username</label>
+            <input type="text" name="staff_username" class="form-control" required>
+        </div>
+        <div style="flex:1;">
+            <label style="display:block; font-size:12px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">Password</label>
+            <input type="password" name="staff_password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="padding:10px 16px;">Add Staff</button>
+    </form>
+</div>
+{% endblock %}

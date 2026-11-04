@@ -1,0 +1,149 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% load rbac_tags %}
+
+{% block title %}Consulted Students Roster — Education Expert — KNOVA{% endblock %}
+{% block nav_expert_roster %}active{% endblock %}
+
+{% block content %}
+<div class="dashboard-content" style="padding: 24px 28px;">
+  <!-- Header Breadcrumb -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+    <div>
+      <div style="font-size:12px; font-weight:700; color:#8b5cf6; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">
+        <i data-feather="users" style="width:13px; height:13px;"></i> Academic Counselling Hub
+      </div>
+      <h2 style="margin:0; font-size:24px; font-weight:800; color:#0a1936;">Consulted Students Roster</h2>
+      <p style="margin:3px 0 0 0; font-size:13.5px; color:#64748b;">
+        All students who have completed official 1-on-1 advisory consultations with {{ expert_profile.name }}.
+      </p>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <a href="{% url 'dashboard_index' %}" class="btn" style="background:#fff; border:1px solid #cbd5e1; color:#334155; font-weight:700; padding:10px 18px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+        <i data-feather="arrow-left" style="width:15px; height:15px;"></i> Back to Station
+      </a>
+      <a href="{% url 'expert_attendance_scanner' %}" class="btn" style="background:#8b5cf6; color:#fff; font-weight:700; padding:10px 18px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(139,92,246,0.25);">
+        <i data-feather="camera" style="width:15px; height:15px;"></i> Open Scanner
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Grid -->
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:18px; margin-bottom:24px;">
+    <div class="glass-card stat-card" style="background:#fff; border-radius:14px; border:1px solid #e2e8f0; padding:18px 22px;">
+      <div style="font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Total Consultations</div>
+      <div style="font-size:28px; font-weight:800; color:#0a1936; margin-top:4px;">{{ total_consultations }}</div>
+      <div style="font-size:11.5px; color:#10b981; font-weight:600; margin-top:2px;">&#10004; Verified &amp; Credited</div>
+    </div>
+    <div class="glass-card stat-card" style="background:#fff; border-radius:14px; border:1px solid #e2e8f0; padding:18px 22px;">
+      <div style="font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Points Awarded</div>
+      <div style="font-size:28px; font-weight:800; color:#8b5cf6; margin-top:4px;">{% widthratio total_consultations 1 40 %} XP</div>
+      <div style="font-size:11.5px; color:#7c3aed; font-weight:600; margin-top:2px;">+40 XP per Student Consultation</div>
+    </div>
+    <div class="glass-card stat-card" style="background:#fff; border-radius:14px; border:1px solid #e2e8f0; padding:18px 22px;">
+      <div style="font-size:12px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Counselling Station</div>
+      <div style="font-size:16px; font-weight:800; color:#0a1936; margin-top:8px;">{{ expert_profile.desk_name|default:"Desk 1" }}</div>
+      <div style="font-size:11.5px; color:#64748b; margin-top:2px;">{{ expert_profile.name }}</div>
+    </div>
+  </div>
+
+  <!-- Search Filter -->
+  <div class="glass-card" style="background:#fff; border-radius:16px; border:1px solid #e2e8f0; padding:20px; box-shadow:0 4px 20px rgba(0,0,0,0.04); margin-bottom:24px;">
+    <form method="GET" action="" style="display:flex; gap:12px;">
+      <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search by student name, badge ID (e.g. KNOVA-0005), or email..."
+             style="flex:1; padding:10px 16px; border:1.5px solid #cbd5e1; border-radius:8px; font-size:13.5px; outline:none;"
+             onfocus="this.style.borderColor='#8b5cf6'" onblur="this.style.borderColor='#cbd5e1'">
+      <button type="submit" class="btn" style="background:#8b5cf6; color:#fff; font-weight:700; font-size:13px; padding:10px 20px; border-radius:8px; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+        <i data-feather="search" style="width:14px; height:14px;"></i> Search
+      </button>
+      {% if query %}
+      <a href="{% url 'expert_consultation_roster' %}" class="btn" style="background:#f1f5f9; color:#64748b; font-weight:700; font-size:13px; padding:10px 16px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center;">
+        Reset
+      </a>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Consultations Table -->
+  <div class="glass-card" style="background:#fff; border-radius:16px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.04);">
+    <div style="padding:18px 24px; border-bottom:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="margin:0; font-size:16px; font-weight:800; color:#0a1936;">Consultation Attendees List</h3>
+      <span style="font-size:12px; color:#64748b; font-weight:600;">Showing {{ consultations.count }} records</span>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:13.5px;">
+        <thead>
+          <tr style="background:#f8fafc; border-bottom:1px solid #e2e8f0; color:#64748b; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">
+            <th style="padding:12px 24px; text-align:left;">Student Attendee</th>
+            <th style="padding:12px 16px; text-align:left;">Badge ID</th>
+            <th style="padding:12px 16px; text-align:left;">Punch Method</th>
+            <th style="padding:12px 16px; text-align:left;">Consultation Notes</th>
+            <th style="padding:12px 16px; text-align:left;">Verification Status</th>
+            <th style="padding:12px 24px; text-align:right;">Date &amp; Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in consultations %}
+          <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s ease;" onmouseover="this.style.background='#faf5ff'" onmouseout="this.style.background='transparent'">
+            <td style="padding:14px 24px;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0;">
+                  {{ c.student_name|first|upper|default:"S" }}
+                </div>
+                <div>
+                  <div style="font-weight:700; color:#0a1936;">{{ c.student_name|default:"Student Attendee" }}</div>
+                  <div style="font-size:12px; color:#64748b;">
+                    {% if c.student and c.student.user %}{{ c.student.user.email }}{% else %}Registered Attendee{% endif %}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td style="padding:14px 16px;">
+              <span style="display:inline-block; padding:3px 8px; border-radius:6px; background:#f1f5f9; color:#334155; font-size:11.5px; font-weight:700; font-family:monospace; border:1px solid #cbd5e1;">
+                {{ c.badge_id|default:"N/A" }}
+              </span>
+            </td>
+            <td style="padding:14px 16px;">
+              <span style="display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:600; color:#64748b;">
+                {% if c.punch_method == 'QR Scanner' %}
+                <i data-feather="camera" style="width:13px; height:13px; color:#8b5cf6;"></i> QR Scanner
+                {% else %}
+                <i data-feather="edit-3" style="width:13px; height:13px; color:#64748b;"></i> Manual Punch
+                {% endif %}
+              </span>
+            </td>
+            <td style="padding:14px 16px; color:#475569; font-size:12.5px;">
+              {{ c.notes|default:"1-on-1 Academic Advisory Consultation" }}
+            </td>
+            <td style="padding:14px 16px;">
+              <span style="display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; font-size:11px; font-weight:700; padding:3px 10px; border-radius:12px;">
+                &#10004; Verified (+40 XP)
+              </span>
+            </td>
+            <td style="padding:14px 24px; text-align:right; color:#64748b; font-size:12px;">
+              {{ c.attended_at|date:"M d, Y &bull; g:i A" }}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" style="padding:48px 24px; text-align:center; color:#94a3b8;">
+              <i data-feather="inbox" style="width:40px; height:40px; margin-bottom:12px; color:#cbd5e1;"></i>
+              <div style="font-size:15px; font-weight:700; color:#64748b;">No consultations recorded yet</div>
+              <div style="font-size:13px; color:#94a3b8; margin-top:4px;">Students scanned via the QR scanner will automatically appear here.</div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof feather !== 'undefined') feather.replace();
+});
+</script>
+{% endblock %}
+

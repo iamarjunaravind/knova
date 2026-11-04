@@ -1,0 +1,648 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}SEO & Search Engine Optimization | Dashboard{% endblock %}
+{% block page_category %}Search Engine Optimization{% endblock %}
+{% block page_title %}SEO &amp; Search Engine Manager{% endblock %}
+{% block nav_seo %}active{% endblock %}
+
+{% block content %}
+<style>
+  .seo-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding-bottom: 70px;
+  }
+  .seo-header {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .seo-header-title h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .seo-header-title p {
+    font-size: 13.5px;
+    color: #64748b;
+    margin: 0;
+  }
+
+  /* SEO Dedicated Tabs */
+  .seo-nav-tabs {
+    display: flex;
+    gap: 8px;
+    background: #f1f5f9;
+    padding: 6px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .seo-nav-tab {
+    flex: 1;
+    min-width: 150px;
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #475569;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .seo-nav-tab.active {
+    background: #ffffff;
+    color: #10b981;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  }
+  .seo-nav-tab:hover:not(.active) {
+    color: #0f172a;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  /* SEO Cards */
+  .seo-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+  }
+  .seo-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .seo-card-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .seo-card-subtitle {
+    font-size: 12.5px;
+    color: #64748b;
+    margin-top: 3px;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+  .form-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 6px;
+  }
+  .form-control {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 9px 13px;
+    font-size: 13.5px;
+    color: #1e293b;
+    transition: border-color 0.2s;
+    background: #ffffff;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  .form-control:focus {
+    border-color: #10b981;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  /* Live Google Snippet Preview */
+  .google-serp-preview {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    font-family: Arial, sans-serif;
+  }
+  .google-serp-url {
+    font-size: 12px;
+    color: #202124;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    word-break: break-all;
+  }
+  .google-serp-title {
+    font-size: 18px;
+    color: #1a0dab;
+    line-height: 1.3;
+    font-weight: normal;
+    text-decoration: none;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .google-serp-title:hover {
+    text-decoration: underline;
+  }
+  .google-serp-desc {
+    font-size: 13px;
+    color: #4d5156;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Floating Save Bar */
+  .floating-save-bar {
+    position: fixed;
+    bottom: 24px;
+    left: calc(260px + (100% - 260px) / 2);
+    transform: translateX(-50%);
+    background: #0a1936;
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 12px;
+    box-shadow: 0 12px 36px rgba(10, 25, 54, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 1000;
+  }
+  @media (max-width: 991px) {
+    .floating-save-bar {
+      left: 50%;
+      width: 90%;
+      justify-content: space-between;
+    }
+  }
+</style>
+
+<div class="seo-container">
+
+  <!-- SEO Dedicated Header Banner -->
+  <div class="seo-header">
+    <div class="seo-header-title">
+      <h2><i data-feather="search" style="color:#10b981;"></i> Search Engine Optimization (SEO) &amp; Webmaster Manager</h2>
+      <p>Configure search engine rankings, metadata, Google Search Console verification, social sharing previews, and robots indexing.</p>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <a href="/" target="_blank" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 13px;">
+        <i data-feather="external-link" style="width: 14px; height: 14px;"></i> View Live Site
+      </a>
+      <button type="button" class="btn btn-primary" onclick="submitSeoForm()" style="background:#10b981; border-color:#10b981; display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 13px;">
+        <i data-feather="save" style="width: 14px; height: 14px;"></i> Save SEO Changes
+      </button>
+    </div>
+  </div>
+
+  <!-- Dedicated SEO Navigation Tabs -->
+  <div class="seo-nav-tabs">
+    <button type="button" class="seo-nav-tab {% if seo_tab == 'primary' or not seo_tab %}active{% endif %}" data-tab="primary" onclick="switchSeoTab('primary', this)">
+      <i data-feather="globe" style="width: 16px; height: 16px;"></i> Primary Meta &amp; Canonical
+    </button>
+    <button type="button" class="seo-nav-tab {% if seo_tab == 'social' %}active{% endif %}" data-tab="social" onclick="switchSeoTab('social', this)">
+      <i data-feather="share-2" style="width: 16px; height: 16px;"></i> OpenGraph &amp; Social
+    </button>
+    <button type="button" class="seo-nav-tab {% if seo_tab == 'webmaster' %}active{% endif %}" data-tab="webmaster" onclick="switchSeoTab('webmaster', this)">
+      <i data-feather="check-circle" style="width: 16px; height: 16px;"></i> Search Console &amp; Verification
+    </button>
+    <button type="button" class="seo-nav-tab {% if seo_tab == 'crawling' %}active{% endif %}" data-tab="crawling" onclick="switchSeoTab('crawling', this)">
+      <i data-feather="cpu" style="width: 16px; height: 16px;"></i> Crawling &amp; Robots.txt
+    </button>
+    <button type="button" class="seo-nav-tab {% if seo_tab == 'schema' %}active{% endif %}" data-tab="schema" onclick="switchSeoTab('schema', this)">
+      <i data-feather="code" style="width: 16px; height: 16px;"></i> Schema.org Structured Data
+    </button>
+    <button type="button" class="seo-nav-tab {% if seo_tab == 'perpage' %}active{% endif %}" data-tab="perpage" onclick="switchSeoTab('perpage', this)">
+      <i data-feather="file-text" style="width: 16px; height: 16px;"></i> Per-Page Meta Overrides
+    </button>
+  </div>
+
+  <form method="POST" enctype="multipart/form-data" id="seoMainForm">
+    {% csrf_token %}
+    <input type="hidden" name="seo_tab" id="seoTabInput" value="{{ seo_tab|default:'primary' }}">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: PRIMARY META & CANONICAL            -->
+    <!-- ========================================== -->
+    <div id="seoTabContent-primary" class="seo-tab-content" style="{% if seo_tab and seo_tab != 'primary' %}display: none;{% endif %}">
+      
+      <!-- Live Search Preview Box -->
+      <div class="google-serp-preview">
+        <div style="font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">
+          <i data-feather="eye" style="width:12px; height:12px; vertical-align:middle;"></i> Live Google Search Result Preview
+        </div>
+        <div class="google-serp-url">
+          <i data-feather="globe" style="width:12px; height:12px; color:#10b981;"></i>
+          <span>{{ config.canonical_base_url|default:"https://knovaexpo.com" }} &rsaquo;</span>
+        </div>
+        <a href="#" class="google-serp-title" id="serpPreviewTitle">{{ config.meta_title|default:"KNOVA — Future Begins Here" }}</a>
+        <p class="google-serp-desc" id="serpPreviewDesc">{{ config.meta_description|default:"Meet world-class universities, discover global study opportunities and connect with education experts at KNOVA GCC." }}</p>
+      </div>
+
+      <div class="seo-card">
+        <div class="seo-card-header">
+          <div>
+            <h3 class="seo-card-title"><i data-feather="search" style="color:#10b981;"></i> Core Meta Tags &amp; Canonical URL</h3>
+            <p class="seo-card-subtitle">Default search engine title, description, and canonical URL served across all public pages.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="display:flex; justify-content:space-between;">
+            <span>Default Meta Title</span>
+            <span style="font-size:11px; color:#64748b; font-weight:normal;">Appears in browser tab &amp; Google headlines (max ~60 chars)</span>
+          </label>
+          <input type="text" name="meta_title" id="inputMetaTitle" class="form-control" value="{{ config.meta_title|default:'' }}" placeholder="KNOVA — Future Begins Here" oninput="updateSerpPreview()">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="display:flex; justify-content:space-between;">
+            <span>Default Meta Description</span>
+            <span style="font-size:11px; color:#64748b; font-weight:normal;">Recommended 150 - 160 characters snippet</span>
+          </label>
+          <textarea name="meta_description" id="inputMetaDesc" class="form-control" rows="3" placeholder="Enter concise summary of the website..." oninput="updateSerpPreview()">{{ config.meta_description|default:'' }}</textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Meta Keywords</label>
+            <input type="text" name="meta_keywords" class="form-control" value="{{ config.meta_keywords|default:'' }}" placeholder="education expo, global study, scholarships">
+            <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Separate keywords or phrases with commas</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Canonical Base URL</label>
+            <input type="url" name="canonical_base_url" class="form-control" value="{{ config.canonical_base_url|default:'' }}" placeholder="https://knovaexpo.com">
+            <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Prevents duplicate content penalties across domain variants</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: OPEN GRAPH & SOCIAL MEDIA SHARING   -->
+    <!-- ========================================== -->
+    <div id="seoTabContent-social" class="seo-tab-content" style="{% if seo_tab != 'social' %}display: none;{% endif %}">
+      <div class="seo-card">
+        <div class="seo-card-header">
+          <div>
+            <h3 class="seo-card-title"><i data-feather="share-2" style="color:#3b82f6;"></i> Social Media Sharing &amp; Open Graph Previews</h3>
+            <p class="seo-card-subtitle">Controls rich link previews when links are shared on WhatsApp, Facebook, LinkedIn, Twitter/X, and iMessage.</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">OG Title (Social Card Headline)</label>
+            <input type="text" name="og_title" class="form-control" value="{{ config.og_title|default:'' }}" placeholder="Leave blank to use default Meta Title">
+          </div>
+          <div class="form-group">
+            <label class="form-label">OG Site Name</label>
+            <input type="text" name="og_site_name" class="form-control" value="{{ config.og_site_name|default:'KNOVA Global Education Expo' }}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">OG Description (Social Card Text)</label>
+          <textarea name="og_description" class="form-control" rows="2" placeholder="Leave blank to use Meta Description">{{ config.og_description|default:'' }}</textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Open Graph Social Banner Image (1200 x 630 px)</label>
+            {% if config.og_image %}
+              <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+                <img src="{{ config.og_image.url }}" alt="OG Banner" style="height:44px; width:80px; object-fit:cover; border-radius:4px;">
+                <div>
+                  <div style="font-size:12px; font-weight:700; color:#0f172a;">Current OG Image Loaded</div>
+                  <a href="{{ config.og_image.url }}" target="_blank" style="font-size:11px; color:#1768ff; text-decoration:none;">View Full Banner &rarr;</a>
+                </div>
+              </div>
+            {% endif %}
+            <input type="file" name="og_image" class="form-control" accept="image/*">
+            <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Upload JPG or PNG (recommended 1200x630 ratio)</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">OG Object Type</label>
+            <input type="text" name="og_type" class="form-control" value="{{ config.og_type|default:'website' }}">
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-top:14px; padding-top:14px; border-top:1px dashed #e2e8f0;">
+          <div class="form-group">
+            <label class="form-label">Twitter / X Card Type</label>
+            <select name="twitter_card_type" class="form-control">
+              <option value="summary_large_image" {% if config.twitter_card_type == 'summary_large_image' %}selected{% endif %}>summary_large_image (Large Photo Card)</option>
+              <option value="summary" {% if config.twitter_card_type == 'summary' %}selected{% endif %}>summary (Standard Compact Card)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Twitter / X Site Handle</label>
+            <input type="text" name="twitter_handle" class="form-control" value="{{ config.twitter_handle|default:'@knovaexpo' }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Twitter Creator Handle</label>
+            <input type="text" name="twitter_creator" class="form-control" value="{{ config.twitter_creator|default:'@knovaexpo' }}">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: WEBMASTER & SEARCH CONSOLE          -->
+    <!-- ========================================== -->
+    <div id="seoTabContent-webmaster" class="seo-tab-content" style="{% if seo_tab != 'webmaster' %}display: none;{% endif %}">
+      <div class="seo-card">
+        <div class="seo-card-header">
+          <div>
+            <h3 class="seo-card-title"><i data-feather="check-circle" style="color:#059669;"></i> Webmaster &amp; Search Console Verification</h3>
+            <p class="seo-card-subtitle">Connect and verify domain ownership on Google Search Console and Bing Webmaster Tools.</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Google Search Console Verification Token</label>
+            <input type="text" name="google_site_verification" class="form-control" value="{{ config.google_site_verification|default:'' }}" placeholder="e.g. google-site-verification=abc123xyz">
+            <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Injected automatically into &lt;meta name="google-site-verification"&gt; in &lt;head&gt;</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bing Webmaster Verification Token</label>
+            <input type="text" name="bing_site_verification" class="form-control" value="{{ config.bing_site_verification|default:'' }}" placeholder="e.g. msvalidate.01">
+            <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Injected into &lt;meta name="msvalidate.01"&gt; in &lt;head&gt;</div>
+          </div>
+        </div>
+
+        <h4 style="font-size:13px; font-weight:800; color:#334155; margin:20px 0 10px 0;">Analytics &amp; Custom Tracking Tags:</h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Google Analytics 4 Measurement ID</label>
+            <input type="text" name="google_analytics_id" class="form-control" value="{{ config.google_analytics_id|default:'' }}" placeholder="G-XXXXXXXXXX">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Google Tag Manager Container ID</label>
+            <input type="text" name="google_tag_manager_id" class="form-control" value="{{ config.google_tag_manager_id|default:'' }}" placeholder="GTM-XXXXXXX">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:10px;">
+          <label class="form-label">Custom Header Scripts (&lt;head&gt;)</label>
+          <textarea name="custom_head_code" class="form-control" rows="3" style="font-family:Consolas, monospace; font-size:12px;" placeholder="<!-- Custom meta, Facebook Pixel, or tracking script -->">{{ config.custom_head_code|default:'' }}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: CRAWLING & ROBOTS.TXT               -->
+    <!-- ========================================== -->
+    <div id="seoTabContent-crawling" class="seo-tab-content" style="{% if seo_tab != 'crawling' %}display: none;{% endif %}">
+      <div class="seo-card">
+        <div class="seo-card-header">
+          <div>
+            <h3 class="seo-card-title"><i data-feather="cpu" style="color:#8b5cf6;"></i> Search Engine Indexing &amp; Crawling Controls</h3>
+            <p class="seo-card-subtitle">Manage crawler indexing permissions and dynamic robots.txt file output.</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <a href="/robots.txt" target="_blank" class="btn btn-outline-secondary btn-sm" style="font-size:12px; display:inline-flex; align-items:center; gap:4px;">
+              <i data-feather="external-link" style="width:12px; height:12px;"></i> View /robots.txt
+            </a>
+            <a href="/sitemap.xml" target="_blank" class="btn btn-outline-secondary btn-sm" style="font-size:12px; display:inline-flex; align-items:center; gap:4px;">
+              <i data-feather="external-link" style="width:12px; height:12px;"></i> View /sitemap.xml
+            </a>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Robots Indexing Meta Directive</label>
+          <select name="robots_meta" class="form-control">
+            <option value="index, follow" {% if config.robots_meta == 'index, follow' %}selected{% endif %}>index, follow (Allow search engines to index &amp; follow links - Recommended)</option>
+            <option value="noindex, follow" {% if config.robots_meta == 'noindex, follow' %}selected{% endif %}>noindex, follow (Do not index page, but follow links)</option>
+            <option value="index, nofollow" {% if config.robots_meta == 'index, nofollow' %}selected{% endif %}>index, nofollow (Index page, but do not follow outgoing links)</option>
+            <option value="noindex, nofollow" {% if config.robots_meta == 'noindex, nofollow' %}selected{% endif %}>noindex, nofollow (Completely block search crawlers)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="display:flex; justify-content:space-between;">
+            <span>Dynamic robots.txt Content</span>
+            <span style="font-size:11px; color:#64748b; font-weight:normal;">Served directly at /robots.txt</span>
+          </label>
+          <textarea name="robots_txt_content" class="form-control" rows="6" style="font-family:Consolas, Monaco, monospace; font-size:12.5px;">{{ config.robots_txt_content|default:"User-agent: *\nAllow: /\nDisallow: /dashboard/\nDisallow: /admin/\n\nSitemap: https://knovaexpo.com/sitemap.xml" }}</textarea>
+          <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Use standard robots.txt directives (User-agent, Disallow, Allow, Sitemap).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: SCHEMA.ORG STRUCTURED DATA          -->
+    <!-- ========================================== -->
+    <div id="seoTabContent-schema" class="seo-tab-content" style="{% if seo_tab != 'schema' %}display: none;{% endif %}">
+      <div class="seo-card">
+        <div class="seo-card-header">
+          <div>
+            <h3 class="seo-card-title"><i data-feather="code" style="color:#d97706;"></i> Schema.org Structured Data &amp; Rich Snippets</h3>
+            <p class="seo-card-subtitle">Injected automatically as JSON-LD in the website &lt;head&gt; for Google rich search results.</p>
+          </div>
+          <label class="switch" style="position:relative; display:inline-block; width:44px; height:24px;">
+            <input type="checkbox" name="enable_schema_org" {% if config.enable_schema_org %}checked{% endif %} style="opacity:0; width:0; height:0;">
+            <span style="position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:{% if config.enable_schema_org %}#10b981{% else %}#cbd5e1{% endif %}; transition:.3s; border-radius:24px;"></span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Organization / Event Brand Name</label>
+          <input type="text" name="schema_org_name" class="form-control" value="{{ config.schema_org_name|default:'KNOVA Global Education Expo' }}">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Schema.org JSON-LD Output Preview</label>
+          <pre style="background:#0f172a; color:#38bdf8; padding:16px 20px; border-radius:10px; font-size:12px; line-height:1.6; overflow-x:auto; margin:0;"><code>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "EducationEvent",
+  "name": "{{ config.schema_org_name|default:'KNOVA Global Education Expo' }}",
+  "description": "{{ config.meta_description|default:'Meet world-class universities, discover global study opportunities and connect with education experts.' }}",
+  "startDate": "2027-10-25T09:00",
+  "endDate": "2027-10-26T18:00",
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "organizer": {
+    "@type": "Organization",
+    "name": "Lumentra Global Education Consortium",
+    "url": "https://knovaexpo.com"
+  }
+}
+&lt;/script&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 6: PER-PAGE SEO OVERRIDES              -->
+    <!-- ========================================== -->
+    <div id="seoTabContent-perpage" class="seo-tab-content" style="{% if seo_tab != 'perpage' %}display: none;{% endif %}">
+      <div class="seo-card">
+        <div class="seo-card-header">
+          <div>
+            <h3 class="seo-card-title"><i data-feather="file-text" style="color:#0ea5e9;"></i> Per-Page Meta Title &amp; Description Overrides</h3>
+            <p class="seo-card-subtitle">Override the global default meta title and description for specific public pages.</p>
+          </div>
+        </div>
+
+        <!-- About Page -->
+        <h4 style="font-size:13px; font-weight:800; color:#334155; margin:16px 0 10px 0;">1. About Us Page (/about/)</h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">About Page Meta Title</label>
+            <input type="text" name="seo_about_title" class="form-control" value="{{ config.seo_about_title|default:'' }}" placeholder="About KNOVA | Premier Global Education Expo">
+          </div>
+          <div class="form-group">
+            <label class="form-label">About Page Meta Description</label>
+            <input type="text" name="seo_about_desc" class="form-control" value="{{ config.seo_about_desc|default:'' }}" placeholder="Learn about the mission, vision and world-class universities participating in KNOVA GCC.">
+          </div>
+        </div>
+
+        <!-- Events Page -->
+        <h4 style="font-size:13px; font-weight:800; color:#334155; margin:16px 0 10px 0;">2. Events &amp; Expos Page (/events/)</h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Events Page Meta Title</label>
+            <input type="text" name="seo_events_title" class="form-control" value="{{ config.seo_events_title|default:'' }}" placeholder="Event Locations, Venues &amp; Expo Dates | KNOVA 2027">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Events Page Meta Description</label>
+            <input type="text" name="seo_events_desc" class="form-control" value="{{ config.seo_events_desc|default:'' }}" placeholder="Explore dates, convention center locations, and seminar schedules for KNOVA.">
+          </div>
+        </div>
+
+        <!-- Exhibitors Page -->
+        <h4 style="font-size:13px; font-weight:800; color:#334155; margin:16px 0 10px 0;">3. Exhibitors Directory (/exhibitors/)</h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Exhibitors Page Meta Title</label>
+            <input type="text" name="seo_exhibitors_title" class="form-control" value="{{ config.seo_exhibitors_title|default:'' }}" placeholder="Participating Universities &amp; Exhibitors | KNOVA 2027">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Exhibitors Page Meta Description</label>
+            <input type="text" name="seo_exhibitors_desc" class="form-control" value="{{ config.seo_exhibitors_desc|default:'' }}" placeholder="Meet admissions deans from 60+ world-class universities and institutions.">
+          </div>
+        </div>
+
+        <!-- Courses Page -->
+        <h4 style="font-size:13px; font-weight:800; color:#334155; margin:16px 0 10px 0;">4. Academic Programs &amp; Majors (/courses/)</h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Courses Page Meta Title</label>
+            <input type="text" name="seo_courses_title" class="form-control" value="{{ config.seo_courses_title|default:'' }}" placeholder="Academic Programs &amp; Degree Courses | KNOVA 2027">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Courses Page Meta Description</label>
+            <input type="text" name="seo_courses_desc" class="form-control" value="{{ config.seo_courses_desc|default:'' }}" placeholder="Explore 800+ accredited undergraduate, postgraduate and PhD degree options.">
+          </div>
+        </div>
+
+        <!-- Scholarships Page -->
+        <h4 style="font-size:13px; font-weight:800; color:#334155; margin:16px 0 10px 0;">5. Scholarships &amp; Grants (/scholarships/)</h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Scholarships Page Meta Title</label>
+            <input type="text" name="seo_scholarships_title" class="form-control" value="{{ config.seo_scholarships_title|default:'' }}" placeholder="International Scholarships &amp; Tuition Grants | KNOVA 2027">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Scholarships Page Meta Description</label>
+            <input type="text" name="seo_scholarships_desc" class="form-control" value="{{ config.seo_scholarships_desc|default:'' }}" placeholder="Apply for over $5M+ in verified merit scholarships and financial aid grants.">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Sticky Save Bar -->
+    <div class="floating-save-bar">
+      <div style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600;">
+        <i data-feather="info" style="color:#10b981; width:16px; height:16px;"></i>
+        <span>Remember to save your changes after editing SEO fields.</span>
+      </div>
+      <button type="button" class="btn btn-primary" onclick="submitSeoForm()" style="background:#10b981; border-color:#10b981; font-weight:700; padding:8px 20px; font-size:13px;">
+        Save Changes
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  function switchSeoTab(tabName, btn) {
+    document.querySelectorAll('.seo-nav-tab').forEach(function(b) {
+      b.classList.remove('active');
+    });
+    if (btn) btn.classList.add('active');
+
+    document.querySelectorAll('.seo-tab-content').forEach(function(content) {
+      content.style.display = 'none';
+    });
+    var target = document.getElementById('seoTabContent-' + tabName);
+    if (target) {
+      target.style.display = 'block';
+    }
+    document.getElementById('seoTabInput').value = tabName;
+
+    // Update URL query param without reload
+    var newUrl = window.location.pathname + '?tab=' + tabName;
+    window.history.replaceState({path: newUrl}, '', newUrl);
+
+    if (window.feather) feather.replace();
+  }
+
+  function submitSeoForm() {
+    document.getElementById('seoMainForm').submit();
+  }
+
+  function updateSerpPreview() {
+    var titleVal = document.getElementById('inputMetaTitle').value;
+    var descVal = document.getElementById('inputMetaDesc').value;
+    var titleEl = document.getElementById('serpPreviewTitle');
+    var descEl = document.getElementById('serpPreviewDesc');
+
+    if (titleEl) {
+      titleEl.textContent = titleVal.trim() ? titleVal : 'KNOVA — Future Begins Here';
+    }
+    if (descEl) {
+      descEl.textContent = descVal.trim() ? descVal : 'Meet world-class universities, discover global study opportunities and connect with education experts at KNOVA GCC.';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.feather) feather.replace();
+  });
+</script>
+{% endblock %}
+

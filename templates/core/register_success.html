@@ -1,0 +1,227 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Confirmed | KNOVA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  :root {
+    --bg-light: #f8fafc;
+    --primary: #1768ff;
+    --cyan: #1bd8df;
+    --green: #059669;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+  }
+  body {
+    margin: 0; font-family: 'Inter', sans-serif;
+    background: var(--bg-light); color: var(--text-main);
+    display: flex; justify-content: center; padding: 40px 20px;
+  }
+  .container {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 20px; padding: 40px; max-width: 620px; width: 100%;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  }
+  .logo { text-align: center; margin-bottom: 32px; }
+  .logo img { height: 40px; }
+  h1 { font-size: 22px; color: var(--text-main); margin-bottom: 12px; font-weight: 800; }
+  .info-box {
+    background: #f1f5f9; padding: 20px; border-radius: 12px;
+    margin: 24px 0; border: 1px solid #cbd5e1;
+  }
+  .info-box h3 { color: var(--cyan); margin-top: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
+  .info-box p { margin: 8px 0; font-size: 14px; }
+  .btn {
+    display: block; text-align: center; padding: 14px; border-radius: 12px;
+    background: var(--primary);
+    color: #fff; text-decoration: none; font-weight: 700; font-size: 15px;
+    box-shadow: 0 4px 15px rgba(23, 104, 255, 0.4); transition: all 0.3s;
+    border: none; cursor: pointer; width: 100%; box-sizing: border-box;
+  }
+  .btn:hover { background: #1052d4; transform: translateY(-2px); }
+
+  /* ── Connect Card ── */
+  .connect-card {
+    border: 2px solid #a7f3d0;
+    background: #f0fdf4;
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin: 24px 0;
+  }
+  .connect-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .connect-card-header .icon-wrap {
+    width: 36px; height: 36px;
+    background: #d1fae5;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    color: var(--green);
+    flex-shrink: 0;
+  }
+  .connect-card-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 800;
+    color: #065f46;
+  }
+  .connect-card-header p {
+    margin: 0;
+    font-size: 11.5px;
+    color: #047857;
+  }
+  .connect-candidate {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: #ffffff;
+    border: 1px solid #a7f3d0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 10px;
+  }
+  .candidate-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .candidate-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #d1fae5;
+    color: #065f46;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+  .candidate-name {
+    font-weight: 700;
+    font-size: 13px;
+    color: #0f172a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .candidate-meta {
+    font-size: 11px;
+    color: #64748b;
+  }
+  .btn-connect {
+    flex-shrink: 0;
+    background: #059669;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .btn-connect:hover { background: #047857; }
+
+  /* ── Success Banner ── */
+  .connected-banner {
+    background: #ecfdf5;
+    border: 1.5px solid #6ee7b7;
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #065f46;
+    margin-bottom: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo"><img src="{% static 'assets/logo.webp' %}" alt="KNOVA"></div>
+
+  <h1>Thank you for registering, {{ registration.full_name }}!</h1>
+
+  <p style="color:var(--text-muted); line-height:1.6; font-size:14px;">
+    Watch out for an automated confirmation email containing your digital badge.
+    Please check your spam/clutter folder if you don't receive it in the next few minutes.
+  </p>
+
+  <div class="info-box">
+    <h3>Your Digital Badge</h3>
+    <p>For quick entry to the event, you can:</p>
+    <a href="{% url 'digital_badge' registration.pk %}" class="btn" style="margin-top:14px;">View &amp; Download Digital Badge</a>
+  </div>
+
+  <div class="info-box" style="border-left: 4px solid var(--cyan);">
+    <h3>What You Need To Know</h3>
+    <p><strong>Dates:</strong> {{ event.start_date|date:"l j F" }} – {{ event.end_date|date:"l j F Y" }}</p>
+    <p><strong>Timings:</strong> {{ event.timings }}</p>
+    <p><strong>Venue:</strong> {{ event.venue }}, {{ event.city }}</p>
+  </div>
+
+  {% if connected_name %}
+  <div class="connected-banner">
+    <i class="ti ti-circle-check-filled" style="font-size:18px;color:#059669;"></i>
+    Successfully connected with <strong>&nbsp;{{ connected_name }}</strong>!
+  </div>
+  {% endif %}
+
+  {% if connect_candidates %}
+  <div class="connect-card">
+    <div class="connect-card-header">
+      <div class="icon-wrap"><i class="ti ti-users"></i></div>
+      <div>
+        <h3>Connect with your {{ connect_role }}</h3>
+        <p>
+          {% if registration.role == 'Student' %}
+            We found registered parent(s) at this event. Connect now to let them track your expo schedule.
+          {% else %}
+            We found registered student(s) at this event. Connect now to track their expo journey.
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    {% for cand in connect_candidates %}
+    <div class="connect-candidate">
+      <div class="candidate-info">
+        <div class="candidate-avatar">{{ cand.reg.full_name|slice:":1" }}</div>
+        <div>
+          <div class="candidate-name">{{ cand.reg.full_name }}</div>
+          <div class="candidate-meta">{{ connect_role }} &middot; {{ cand.reg.email }}</div>
+        </div>
+      </div>
+      <form method="POST" action="{% url 'connect_family' registration.pk %}">
+        {% csrf_token %}
+        <input type="hidden" name="target_email" value="{{ cand.reg.email }}">
+        <button type="submit" class="btn-connect">
+          <i class="ti ti-link"></i> Connect
+        </button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <p style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:32px;">
+    If you have any questions, please email us at <a href="mailto:support@knova.com" style="color:var(--primary);">support@knova.com</a>
+  </p>
+</div>
+</body>
+</html>

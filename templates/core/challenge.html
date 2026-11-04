@@ -1,0 +1,4925 @@
+{% extends base_template|default:'dashboard/base.html' %}
+
+{% load static %}
+
+{% block title %}{{ site_config.challenge_page_title|default:"KNOVA Challenge Passport" }} | Dashboard{% endblock %}
+
+{% block page_category %}Gamified Quest{% endblock %}
+
+{% block page_title %}KNOVA Challenge{% endblock %}
+
+{% block nav_challenge %}active{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+<style>
+
+  /* ==========================================================
+
+     KNOVA CHALLENGE RICH COLOR & ATMOSPHERE DESIGN SYSTEM
+
+     High-End Gamified Expo Passport
+
+     ========================================================== */
+
+  :root {
+    --ch-primary: #1768ff;
+    --ch-primary-hover: #0f52cc;
+    --ch-navy: #061022;
+    --ch-navy-card: #0b1c3d;
+    --ch-slate-900: #0f172a;
+    --ch-slate-800: #1e293b;
+    --ch-slate-700: #334155;
+    --ch-slate-600: #475569;
+    --ch-slate-500: #64748b;
+    --ch-slate-100: #f1f5f9;
+    --ch-border: #e2e8f0;
+    --ch-emerald: #10b981;
+    --ch-emerald-dark: #059669;
+    --ch-amber: #f59e0b;
+    --ch-card-shadow: 0 8px 24px rgba(17, 45, 97, 0.05);
+    --ch-hover-shadow: 0 16px 36px rgba(23, 104, 255, 0.12);
+  }
+
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Seamless Dark Atmosphere Hero inside Dashboard */
+
+  .ch-hero {
+    padding: 16px 20px 18px 20px !important;
+    border-radius: 18px;
+    background: radial-gradient(circle at 85% 15%, rgba(23, 104, 255, 0.28) 0%, transparent 55%),
+                radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.18) 0%, transparent 50%),
+                linear-gradient(135deg, #061022 0%, #0a1c3f 50%, #102e6b 100%);
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(6, 16, 34, 0.15);
+    margin-bottom: 24px;
+  }
+
+  .ch-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(6, 16, 34, 0.45) 100%);
+    pointer-events: none;
+  }
+
+  .dash-kpi-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .hero-slogan-bar {
+    text-align: right;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    color: rgba(255, 255, 255, 0.72);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dashboard-header-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  /* Left: Title & Breadcrumbs */
+
+  .dash-title-block {
+    flex: 1;
+    min-width: 280px;
+  }
+
+  .dash-breadcrumb-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .dash-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(23, 104, 255, 0.28);
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 10.5px;
+    font-weight: 850;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  .dash-badge-pill i {
+    font-size: 12px;
+    color: #38bdf8;
+  }
+
+  .dash-crumb-sep {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 12px;
+    font-weight: 300;
+  }
+
+  .dash-crumb-text {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: rgba(241, 245, 249, 0.85);
+  }
+
+  .ch-dash-title {
+    color: #ffffff !important;
+    font-size: clamp(22px, 2.5vw, 29px);
+    font-weight: 900;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+    letter-spacing: -0.6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .ch-dash-title .cyan-accent {
+    color: #38bdf8 !important;
+    font-weight: 900;
+  }
+
+  .dash-live-badge {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    background: rgba(6, 78, 59, 0.65);
+    border: 1px solid rgba(16, 185, 129, 0.5);
+    color: #6ee7b7;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .dash-live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 6px #10b981;
+  }
+
+  .dash-subtitle-text {
+    font-size: 13px;
+    color: rgba(241, 245, 249, 0.85);
+    margin: 0;
+    line-height: 1.45;
+    font-weight: 400;
+    max-width: 620px;
+  }
+
+  /* Right: Compact Glassmorphic KPI Stat Cards */
+
+  .dash-kpi-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .dash-kpi-card {
+    background: rgba(10, 25, 55, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+    padding: 8px 14px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 120px;
+    cursor: default;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .dash-kpi-card:hover {
+    transform: none;
+    background: rgba(15, 34, 72, 0.75);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .kpi-icon-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .dash-kpi-card.kpi-points .kpi-icon-wrap {
+    background: #eab308;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(234, 179, 8, 0.45);
+  }
+
+  .dash-kpi-card.kpi-missions .kpi-icon-wrap {
+    background: #059669;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(5, 150, 105, 0.45);
+  }
+
+  .dash-kpi-card.kpi-rank .kpi-icon-wrap {
+    background: #8b5cf6;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.45);
+  }
+
+  .dash-kpi-card.kpi-badge .kpi-icon-wrap {
+    background: #0284c7;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(2, 132, 199, 0.45);
+  }
+
+  .kpi-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kpi-stat-number {
+    font-size: 15px;
+    font-weight: 850;
+    color: #ffffff;
+    line-height: 1.1;
+    letter-spacing: -0.3px;
+  }
+
+  .kpi-stat-number span {
+    color: #38bdf8;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .kpi-stat-title {
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(241, 245, 249, 0.72);
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  /* Passport Hub Command Card (Sleek Elevated Overlap Matching Reference) */
+
+  .filter-wrapper {
+    position: relative;
+    z-index: 10;
+    margin-top: -24px;
+    margin-bottom: 24px;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .filter-hub-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 20px 24px 16px 24px;
+    box-shadow: 0 10px 30px rgba(10, 25, 55, 0.05);
+    border: none !important;
+  }
+
+  /* Hub Top Row: Student Progress Bar & Quick Action Buttons */
+
+  .hub-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 14px;
+  }
+
+  .hub-attendee-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 280px;
+  }
+
+  .qr-thumbnail-box {
+    width: 58px;
+    height: 58px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 4px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    border: 1.5px solid #e2e8f0;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .qr-thumbnail-box:hover {
+    transform: scale(1.04);
+    border-color: #1768ff;
+  }
+
+  .qr-thumbnail-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+
+  .qr-scan-badge {
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1768ff;
+    color: #ffffff;
+    font-size: 8.5px;
+    font-weight: 850;
+    letter-spacing: 0.5px;
+    padding: 1.5px 7px;
+    border-radius: 9999px;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(23, 104, 255, 0.35);
+  }
+
+  .hub-user-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+
+  .user-avatar-circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #1768ff;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+
+  .student-name-text {
+    font-size: 15px;
+    font-weight: 850;
+    color: #0f172a;
+  }
+
+  .priority-access-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    color: #e11d48;
+    font-size: 11px;
+    font-weight: 750;
+    padding: 2.5px 10px;
+    border-radius: 9999px;
+    margin-left: 6px;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 7px;
+    background: #e2e8f0;
+    border-radius: 9999px;
+    margin: 6px 0 5px 0;
+    position: relative;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1768ff 0%, #10b981 100%);
+    border-radius: 9999px;
+    position: relative;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .progress-milestones {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #64748b;
+  }
+
+  /* Quick Action Buttons */
+
+  .hub-quick-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-quick-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 9px;
+    font-size: 12.5px;
+    font-weight: 750;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .btn-quick-primary {
+    background: #1768ff;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(23, 104, 255, 0.25);
+  }
+
+  .btn-quick-primary:hover {
+    background: #0f52cc;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(23, 104, 255, 0.35);
+  }
+
+  .btn-quick-emerald {
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+  }
+
+  .btn-quick-emerald:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+  }
+
+  .btn-quick-ghost {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1.5px solid #cbd5e1;
+  }
+
+  .btn-quick-ghost:hover {
+    background: #f8fafc;
+    border-color: #0f172a;
+    transform: translateY(-1px);
+  }
+
+  /* Hub Segmented Nav Tabs */
+
+  .challenge-nav-bar {
+    display: flex;
+    gap: 8px;
+    background: transparent;
+    padding: 0;
+    border-radius: 10px;
+    flex-wrap: wrap;
+  }
+
+  .ch-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    font-weight: 750;
+    font-size: 12.5px;
+    color: #475569;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .ch-tab-btn:hover {
+    color: #1768ff;
+  }
+
+  .ch-tab-btn.active {
+    background: #1768ff;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(23, 104, 255, 0.28);
+  }
+
+  .ch-tab-btn .badge-pill {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    background: #eff6ff;
+    color: #1768ff;
+  }
+
+  .ch-tab-btn.active .badge-pill {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+  }
+
+  /* ==========================================================
+
+     GAMIFIED QUEST FLOW SYSTEM
+
+     Continuous Sequential Journey Pipeline
+
+     ========================================================== */
+
+  .quest-flow-card {
+    background: #f4f6fb !important;
+    border-radius: 18px;
+    border: none !important;
+    padding: 12px 18px !important;
+    margin-bottom: 12px !important;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+  }
+
+  .flow-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .flow-track-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10.5px;
+    font-weight: 850;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #0f172a;
+    background: #ffffff;
+    border: none;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    margin-bottom: 4px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+
+  .flow-header-title h3 {
+    margin: 0 0 2px 0;
+    font-size: 16.5px;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -0.3px;
+  }
+
+  .flow-header-title p {
+    margin: 0;
+    font-size: 12px;
+    color: #64748b;
+    max-width: 600px;
+    line-height: 1.4;
+  }
+
+  .flow-status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 11.5px;
+    font-weight: 750;
+    color: #0f172a;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  }
+
+  .flow-pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: flowPulse 1.8s infinite;
+  }
+
+  @keyframes flowPulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+
+    70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+
+  }
+
+  /* Flow Stepper Bar */
+
+  .flow-stepper-track {
+    position: relative;
+    padding: 10px 0 6px 0;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .flow-line-bg {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    right: 40px;
+    height: 3px;
+    background: linear-gradient(to right, #10b981 0%, #10b981 18%, #e2e8f0 18%, #e2e8f0 86%, #fde68a 86%, #fde68a 100%);
+    z-index: 1;
+    border-radius: 2px;
+  }
+
+  .flow-line-progress {
+    display: none;
+  }
+
+  .flow-nodes-wrapper {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    min-width: 680px;
+    gap: 12px;
+  }
+
+  .flow-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    padding: 0;
+    transition: opacity 0.2s ease;
+    flex: 1;
+  }
+
+  .flow-node:hover {
+    transform: none;
+  }
+
+  .flow-node:hover .flow-node-circle {
+    border-color: #1768ff;
+    box-shadow: 0 0 12px rgba(23, 104, 255, 0.35);
+  }
+
+  .flow-node-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 850;
+    color: #64748b;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+  }
+
+  .flow-node.active .flow-node-circle {
+    border: none;
+    background: #1768ff;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(23, 104, 255, 0.35);
+  }
+
+  .flow-node.completed .flow-node-circle {
+    border: none;
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+  }
+
+  .flow-node.goal .flow-node-circle {
+    border: none;
+    background: #fef3c7;
+    color: #d97706;
+  }
+
+  .flow-node.goal.unlocked .flow-node-circle {
+    border: none;
+    background: #f59e0b;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+  }
+
+  .flow-node-info {
+    text-align: center;
+    margin-top: 6px;
+  }
+
+  .flow-node-title {
+    font-size: 11px;
+    font-weight: 750;
+    color: #334155;
+    display: block;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .flow-node.active .flow-node-title {
+    color: #1768ff;
+    font-weight: 850;
+  }
+
+  .flow-node.completed .flow-node-title {
+    color: #059669;
+  }
+
+  .flow-node-pts {
+    font-size: 9.5px;
+    font-weight: 750;
+    color: #475569;
+    margin-top: 1px;
+    display: block;
+  }
+
+  /* Phase Flow Layout */
+
+  .flow-phase-section {
+    margin-bottom: 12px !important;
+    position: relative;
+  }
+
+  .flow-phase-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: none !important;
+  }
+
+  .flow-phase-badge {
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: 0.8px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    background: #1768ff;
+  }
+
+  .flow-phase-section.flow-phase-1 .flow-phase-badge {
+    background: linear-gradient(135deg, #1768ff, #0f52cc);
+  }
+
+  .flow-phase-section.flow-phase-2 .flow-phase-badge {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  }
+
+  .flow-phase-section.flow-phase-3 .flow-phase-badge {
+    background: linear-gradient(135deg, #059669, #10b981);
+  }
+
+  .flow-phase-title {
+    font-size: 13.5px;
+    font-weight: 850;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  .flow-phase-desc {
+    font-size: 11.5px;
+    color: #475569;
+    margin: 0 0 0 auto;
+    font-weight: 600;
+  }
+
+  /* 3-Column Flow Grid */
+
+  .flow-stage-pair,
+  .flow-stages-grid-3col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: stretch;
+    gap: 20px;
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .flow-phase-bridge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 22px 0 24px 0;
+    font-size: 10.5px;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .flow-phase-bridge-line {
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+  }
+
+  .flow-phase-bridge-badge {
+    padding: 4px 14px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .flow-phase-bridge.bridge-1 .flow-phase-bridge-badge {
+    background: #eff6ff;
+    border: none;
+    color: #1768ff;
+    box-shadow: 0 2px 8px rgba(23, 104, 255, 0.08);
+  }
+
+  .flow-phase-bridge.bridge-2 .flow-phase-bridge-badge {
+    background: #faf5ff;
+    border: none;
+    color: #8b5cf6;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.08);
+  }
+
+  .flow-phase-bridge.bridge-3 .flow-phase-bridge-badge {
+    background: #ecfdf5;
+    border: none;
+    color: #059669;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+  }
+
+  /* ==========================================================
+
+     INDIVIDUAL LIGHT BACKGROUND THEMES FOR PASSPORT CARDS
+
+     Each of the 6 cards receives a distinct, modern pastel tone
+
+     ========================================================== */
+
+  #cardMission1 {
+    background: #f0f7ff !important;
+    border: 1px solid #dbeafe !important;
+  }
+
+  #cardMission1:hover {
+    background: #e4effe !important;
+    box-shadow: 0 10px 28px rgba(23, 104, 255, 0.08);
+  }
+
+  #cardMission1 .flow-step-tag { color: #1e40af; }
+
+  #cardMission1 .flow-step-circle-num { background: #1768ff; }
+
+  #cardMission1 .points-tag { background: #dbeafe; color: #1e40af; }
+
+  #cardMission2 {
+    background: #f6f3ff !important;
+    border: 1px solid #ede9fe !important;
+  }
+
+  #cardMission2:hover {
+    background: #ece7fe !important;
+    box-shadow: 0 10px 28px rgba(124, 58, 237, 0.08);
+  }
+
+  #cardMission2 .flow-step-tag { color: #5b21b6; }
+
+  #cardMission2 .flow-step-circle-num { background: #7c3aed; }
+
+  #cardMission2 .points-tag { background: #ede9fe; color: #5b21b6; }
+
+  #cardMission3 {
+    background: #eef2ff !important;
+    border: 1px solid #e0e7ff !important;
+  }
+
+  #cardMission3:hover {
+    background: #e4e9fe !important;
+    box-shadow: 0 10px 28px rgba(99, 102, 241, 0.08);
+  }
+
+  #cardMission3 .flow-step-tag { color: #3730a3; }
+
+  #cardMission3 .flow-step-circle-num { background: #6366f1; }
+
+  #cardMission3 .points-tag { background: #e0e7ff; color: #3730a3; }
+
+  #cardMission4 {
+    background: #faf5ff !important;
+    border: 1px solid #f3e8ff !important;
+  }
+
+  #cardMission4:hover {
+    background: #f3e5fe !important;
+    box-shadow: 0 10px 28px rgba(168, 85, 247, 0.08);
+  }
+
+  #cardMission4 .flow-step-tag { color: #6b21a8; }
+
+  #cardMission4 .flow-step-circle-num { background: #8b5cf6; }
+
+  #cardMission4 .points-tag { background: #f3e8ff; color: #6b21a8; }
+
+  #cardMission5 {
+    background: #ecfeff !important;
+    border: 1px solid #cffafe !important;
+  }
+
+  #cardMission5:hover {
+    background: #def7fa !important;
+    box-shadow: 0 10px 28px rgba(6, 182, 212, 0.08);
+  }
+
+  #cardMission5 .flow-step-tag { color: #155e75; }
+
+  #cardMission5 .flow-step-circle-num { background: #0891b2; }
+
+  #cardMission5 .points-tag { background: #cffafe; color: #155e75; }
+
+  #cardMission6 {
+    background: #fffbeb !important;
+    border: 1px solid #fef3c7 !important;
+  }
+
+  #cardMission6:hover {
+    background: #fef1cc !important;
+    box-shadow: 0 10px 28px rgba(245, 158, 11, 0.08);
+  }
+
+  #cardMission6 .flow-step-tag { color: #92400e; }
+
+  #cardMission6 .flow-step-circle-num { background: #d97706; }
+
+  #cardMission6 .points-tag { background: #fef3c7; color: #92400e; }
+
+  /* Flow Step Header inside Mission Cards */
+
+  .flow-step-lead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding-bottom: 7px;
+    border-bottom: none !important;
+  }
+
+  .flow-step-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    font-weight: 850;
+    letter-spacing: 0.5px;
+  }
+
+  .flow-step-circle-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10.5px;
+    font-weight: 850;
+    flex-shrink: 0;
+  }
+
+  /* Missions Grid Card Foundation */
+
+  .mission-card {
+    border-radius: 18px;
+    padding: 13px 16px !important;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: auto !important;
+    box-sizing: border-box;
+    transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mission-card:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Completed Cards: Preserves Individual Card Light Tint + Adds Refined Emerald Indicators */
+
+  .mission-card.completed {
+    box-shadow: 0 4px 18px rgba(16, 185, 129, 0.06);
+  }
+
+  .mission-card.completed::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #10b981;
+    z-index: 2;
+  }
+
+  .mission-card.completed .flow-step-circle-num {
+    background: #10b981 !important;
+    color: #ffffff !important;
+  }
+
+  .mission-card.completed .points-tag {
+    background: #ecfdf5 !important;
+    color: #059669 !important;
+    border: 1px solid #a7f3d0 !important;
+  }
+
+  .points-tag {
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    letter-spacing: 0.3px;
+    transition: all 0.2s ease;
+  }
+
+  .mission-card h3 {
+    margin: 8px 0 6px 0;
+    font-size: 15.5px;
+    font-weight: 850;
+    color: #0f172a;
+    letter-spacing: -0.3px;
+    line-height: 1.3;
+  }
+
+  .mission-card p {
+    font-size: 12px;
+    color: #475569;
+    font-weight: 500;
+    line-height: 1.48;
+    margin: 0;
+    min-height: auto;
+  }
+
+  .mission-card .mission-desc {
+    display: block !important;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.45;
+  }
+
+  .mission-card-header {
+    user-select: none;
+  }
+
+  /* Sleek Unified Card Bottom Action Bar */
+
+  .mission-card-bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 2px;
+  }
+
+  .card-bar-widget {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 11.5px;
+    box-sizing: border-box;
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  }
+
+  .card-bar-label {
+    font-size: 9.5px;
+    font-weight: 850;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #64748b;
+    flex-shrink: 0;
+  }
+
+  .card-bar-val {
+    font-weight: 750;
+    font-size: 11.5px;
+    color: #1e293b;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  .btn-card-action {
+    background: #1768ff;
+    color: #ffffff !important;
+    font-size: 12px;
+    font-weight: 750;
+    padding: 8px 16px;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.12);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+    line-height: 1.2;
+  }
+
+  .btn-card-action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.18);
+  }
+
+  .btn-card-action:active {
+    transform: translateY(0);
+  }
+
+  .btn-card-action.btn-completed {
+    background: #ffffff !important;
+    color: #059669 !important;
+    border: 1.5px solid #a7f3d0 !important;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.12) !important;
+    font-weight: 750;
+  }
+
+  .btn-card-action.btn-completed:hover {
+    background: #ecfdf5 !important;
+    border-color: #059669 !important;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2) !important;
+  }
+
+  /* Destination Climax Card */
+
+  /* Rewards Tier Cards - Borderless */
+
+  .reward-tier-card {
+    background: #f4f6fb !important;
+    border: none !important;
+    border-top: none !important;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  #rewardCard100 {
+    background: #fffbeb !important;
+    border: none !important;
+  }
+
+  #rewardCard150 {
+    background: #f8fafc !important;
+    border: none !important;
+  }
+
+  #rewardCard200 {
+    background: #fefce8 !important;
+    border: none !important;
+  }
+
+  #rewardCard300 {
+    background: #f5f3ff !important;
+    border: none !important;
+  }
+
+  .reward-tier-card.unlocked {
+    background: #eff6ff !important;
+    border: none !important;
+    box-shadow: 0 8px 24px rgba(23, 104, 255, 0.1);
+  }
+
+  .reward-tier-card.claimed {
+    background: #ecfdf5 !important;
+    border: none !important;
+    border-top: none !important;
+  }
+
+  .card-bar-widget-clickable {
+  cursor: pointer !important;
+  transition: all 0.2s ease;
+}
+.card-bar-widget-clickable:hover {
+  background: rgba(23, 104, 255, 0.08) !important;
+  box-shadow: 0 0 0 1.5px rgba(23, 104, 255, 0.25);
+  transform: translateY(-1px);
+}
+.card-bar-widget-clickable:hover .card-bar-val {
+  color: #1768ff !important;
+}
+
+/* Modals */
+
+  .ch-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 85px 20px 25px 20px;
+    box-sizing: border-box;
+  }
+
+  .ch-modal-box {
+    background: #ffffff;
+    border-radius: 20px;
+    max-width: 520px;
+    width: 100%;
+    padding: 24px;
+    box-shadow: 0 25px 60px -10px rgba(15, 23, 42, 0.25);
+    border: 1px solid #e2e8f0;
+    position: relative;
+    box-sizing: border-box;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    animation: modalPop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (max-width: 680px) {
+    .puzzle-landscape-grid {
+      grid-template-columns: 1fr !important;
+      gap: 16px !important;
+    }
+
+  }
+
+  @keyframes modalPop {
+    from { opacity: 0; transform: scale(0.96); }
+
+    to { opacity: 1; transform: scale(1); }
+
+  }
+
+  /* Option cards */
+
+  .tech-option-card {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 12px;
+    border: 1.5px solid #e2e8f0;
+    background: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #334155;
+    transition: all 0.18s ease;
+    line-height: 1.35;
+    user-select: none;
+    margin: 0;
+  }
+
+  .tech-option-card:hover {
+    border-color: #0f172a;
+    background: #f8fafc;
+  }
+
+  .tech-option-card:has(input:checked) {
+    border-color: #0f172a;
+    background: #f8fafc;
+    color: #0f172a;
+    font-weight: 700;
+  }
+
+  .tech-option-card input[type="radio"] {
+    accent-color: #0f172a;
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* Desktop Software UI - Single-Screen Compact Density */
+  @media (min-width: 1025px) {
+    .ch-hero {
+      padding: 12px 18px 14px 18px !important;
+      border-radius: 12px !important;
+      margin-bottom: 0 !important;
+    }
+    .hero-slogan-bar {
+      display: none !important;
+    }
+    .dash-title-block {
+      min-width: 220px !important;
+    }
+    .dash-breadcrumb-bar {
+      margin-bottom: 3px !important;
+    }
+    .dash-badge-pill {
+      padding: 2px 7px !important;
+      font-size: 9.5px !important;
+    }
+    .ch-dash-title {
+      font-size: 19px !important;
+      margin: 0 0 2px 0 !important;
+    }
+    .dash-subtitle-text {
+      font-size: 11px !important;
+      line-height: 1.3 !important;
+      margin: 0 !important;
+      max-width: 480px !important;
+    }
+    .dash-kpi-row {
+      gap: 8px !important;
+    }
+    .dash-kpi-card {
+      padding: 5px 10px !important;
+      border-radius: 8px !important;
+      gap: 7px !important;
+    }
+    .kpi-icon-wrap {
+      width: 28px !important;
+      height: 28px !important;
+      font-size: 13px !important;
+      border-radius: 6px !important;
+    }
+    .kpi-stat-number {
+      font-size: 14px !important;
+      line-height: 1.1 !important;
+    }
+    .kpi-stat-title {
+      font-size: 9px !important;
+    }
+    .filter-wrapper {
+      margin-top: -8px !important;
+      margin-bottom: 10px !important;
+    }
+    .filter-hub-card {
+      padding: 8px 14px !important;
+      border-radius: 12px !important;
+    }
+    .hub-top-row {
+      gap: 12px !important;
+    }
+    .qr-thumbnail-box {
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 6px !important;
+      padding: 2px !important;
+    }
+    .qr-scan-badge {
+      font-size: 6.5px !important;
+      padding: 1px 3px !important;
+    }
+    .hub-user-meta-row {
+      gap: 6px !important;
+      margin-bottom: 2px !important;
+    }
+    .user-avatar-circle {
+      width: 18px !important;
+      height: 18px !important;
+      font-size: 10px !important;
+    }
+    .student-name-text {
+      font-size: 13px !important;
+    }
+    .priority-access-chip {
+      font-size: 10px !important;
+      padding: 1px 7px !important;
+    }
+    .progress-track {
+      height: 5px !important;
+      margin-top: 3px !important;
+    }
+    .progress-milestones {
+      font-size: 9.5px !important;
+      margin-top: 2px !important;
+    }
+    .hub-quick-actions {
+      gap: 6px !important;
+    }
+    .btn-quick-action {
+      padding: 5px 11px !important;
+      font-size: 11.5px !important;
+      border-radius: 7px !important;
+    }
+    .challenge-nav-bar {
+      margin-top: 6px !important;
+      padding-top: 6px !important;
+      gap: 6px !important;
+    }
+    .ch-tab-btn {
+      padding: 5px 12px !important;
+      font-size: 11.5px !important;
+      border-radius: 7px !important;
+    }
+    .quest-flow-card {
+      padding: 8px 14px !important;
+      border-radius: 12px !important;
+      margin-bottom: 10px !important;
+    }
+    .flow-header-row {
+      margin-bottom: 4px !important;
+    }
+    .flow-track-pill {
+      font-size: 9px !important;
+      padding: 1px 6px !important;
+    }
+    .flow-header-title h3 {
+      font-size: 13.5px !important;
+      margin: 1px 0 0 0 !important;
+    }
+    .flow-header-title p {
+      display: none !important;
+    }
+    .flow-status-chip {
+      font-size: 10.5px !important;
+      padding: 2px 8px !important;
+    }
+    .flow-stepper-track {
+      padding: 4px 0 2px 0 !important;
+    }
+    .flow-line-bg {
+      top: 17px !important;
+      height: 2px !important;
+    }
+    .flow-node-circle {
+      width: 28px !important;
+      height: 28px !important;
+      font-size: 10px !important;
+    }
+    .flow-node-title {
+      font-size: 10.5px !important;
+    }
+    .flow-node-pts {
+      font-size: 9px !important;
+    }
+    .missions-grid {
+      gap: 10px !important;
+    }
+    .mission-card {
+      padding: 12px 14px !important;
+      border-radius: 12px !important;
+    }
+    .mission-card-title {
+      font-size: 13.5px !important;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .ch-hero {
+      padding: 16px 14px 18px 14px !important;
+      border-radius: 14px !important;
+      margin-bottom: 16px !important;
+    }
+
+    .dashboard-header-inner {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 12px !important;
+    }
+
+    .dash-title-block {
+      min-width: 0 !important;
+      width: 100% !important;
+    }
+
+    .ch-dash-title {
+      font-size: 20px !important;
+      line-height: 1.25 !important;
+    }
+
+    .dash-kpi-container {
+      width: 100% !important;
+      align-items: stretch !important;
+    }
+
+    .hero-slogan-bar {
+      display: none !important;
+    }
+
+    .dash-kpi-row {
+      width: 100% !important;
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 6px !important;
+    }
+
+    .dash-kpi-card {
+      padding: 8px 10px !important;
+      border-radius: 10px !important;
+    }
+
+    .kpi-icon-wrap {
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 15px !important;
+    }
+
+    .kpi-stat-number {
+      font-size: 15px !important;
+    }
+
+    .kpi-stat-title {
+      font-size: 9.5px !important;
+    }
+
+    /* Filter & Progress Hub */
+
+    .filter-hub-card {
+      padding: 12px 10px !important;
+      border-radius: 14px !important;
+      margin-bottom: 14px !important;
+    }
+
+    .hub-top-row {
+      flex-direction: column !important;
+      gap: 10px !important;
+    }
+
+    .hub-attendee-info {
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 10px !important;
+      width: 100% !important;
+    }
+
+    .hub-attendee-info > div[style*="min-width: 220px"] {
+      min-width: 0 !important;
+      flex: 1 1 auto !important;
+    }
+
+    .hub-quick-actions {
+      width: 100% !important;
+      display: flex !important;
+      gap: 6px !important;
+    }
+
+    .hub-quick-actions .btn-quick-emerald,
+    .hub-quick-actions .btn-quick-ghost {
+      display: none !important;
+    }
+
+    .hub-quick-actions .btn-quick-primary {
+      width: 100% !important;
+      justify-content: center !important;
+    }
+
+    .btn-quick-action {
+      padding: 7px 6px !important;
+      font-size: 11px !important;
+      border-radius: 8px !important;
+      text-align: center !important;
+      justify-content: center !important;
+      white-space: nowrap !important;
+    }
+
+        /* Remove Navigation Tabs from Mobile View */
+    .challenge-nav-bar {
+      display: none !important;
+    }
+
+    .hub-top-row {
+      border-bottom: none !important;
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    /* Quest Flow Card */
+
+    .quest-flow-card {
+      padding: 12px 10px !important;
+      border-radius: 14px !important;
+      margin-bottom: 14px !important;
+    }
+
+    .flow-header-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 6px !important;
+    }
+
+    .flow-header-title {
+      display: none !important;
+    }
+
+    .flow-header-row {
+      justify-content: center !important;
+      align-items: center !important;
+      margin-bottom: 8px !important;
+    }
+
+    /* Guided Flow Stepper: Fit in 2 clean rows on mobile screen without scrolling */
+
+    .flow-stepper-track {
+      overflow-x: visible !important;
+      padding: 4px 0 2px 0 !important;
+      width: 100% !important;
+    }
+
+    .flow-line-bg {
+      display: none !important;
+    }
+
+    .flow-nodes-wrapper {
+      min-width: 0 !important;
+      width: 100% !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      gap: 10px 4px !important;
+    }
+
+    .flow-node {
+      flex: 0 0 calc(25% - 4px) !important;
+      max-width: calc(25% - 4px) !important;
+      padding: 2px 0 !important;
+    }
+
+    .flow-node-circle {
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 11px !important;
+    }
+
+    .flow-node-circle i {
+      font-size: 13px !important;
+    }
+
+    .flow-node-info {
+      margin-top: 3px !important;
+      width: 100% !important;
+      text-align: center !important;
+    }
+
+    .flow-node-title {
+      font-size: 9.5px !important;
+      font-weight: 750 !important;
+      line-height: 1.15 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      text-align: center !important;
+      color: #334155 !important;
+    }
+
+    .flow-node-title i {
+      display: none !important;
+    }
+
+    .flow-node-pts {
+      font-size: 8.5px !important;
+      font-weight: 750 !important;
+      margin-top: 1px !important;
+      text-align: center !important;
+    }
+
+    .flow-phase-header {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 4px !important;
+    }
+
+    .flow-phase-title {
+      font-size: 15px !important;
+      line-height: 1.3 !important;
+      margin: 0 !important;
+    }
+
+    .flow-phase-desc {
+      margin: 0 !important;
+      font-size: 11px !important;
+      color: #64748b !important;
+    }
+
+    /* CRITICAL FIX: The 6 Mission Cards must be 1 column on mobile, NOT 3 columns! */
+
+    .flow-stages-grid-3col,
+    .flow-stage-pair {
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+      margin-bottom: 14px !important;
+    }
+
+    .mission-card {
+      padding: 14px 12px !important;
+      min-height: auto !important;
+      border-radius: 14px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .mission-card h3 {
+      font-size: 15px !important;
+      margin: 6px 0 !important;
+      line-height: 1.3 !important;
+    }
+
+    .mission-card p {
+      font-size: 12px !important;
+      line-height: 1.45 !important;
+      min-height: auto !important;
+    }
+
+    .flow-step-tag {
+      font-size: 10px !important;
+    }
+
+    .points-tag {
+      font-size: 10px !important;
+    }
+
+    .mission-card-bottom-bar {
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 8px !important;
+      margin-top: 10px !important;
+    }
+
+    .card-bar-widget {
+      flex: 1 1 auto !important;
+      padding: 6px 8px !important;
+      border-radius: 8px !important;
+      font-size: 10.5px !important;
+    }
+
+    .btn-card-action {
+      padding: 6px 12px !important;
+      font-size: 11.5px !important;
+      border-radius: 8px !important;
+      white-space: nowrap !important;
+      flex-shrink: 0 !important;
+    }
+
+  }
+
+  @media (max-width: 480px) {
+    .hub-quick-actions {
+      display: flex !important;
+      width: 100% !important;
+    }
+    .hub-quick-actions .btn-quick-emerald,
+    .hub-quick-actions .btn-quick-ghost {
+      display: none !important;
+    }
+
+    .btn-quick-action {
+      width: 100% !important;
+    }
+
+    .mission-card-bottom-bar {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+
+    .btn-card-action {
+      width: 100% !important;
+      text-align: center !important;
+      justify-content: center !important;
+    }
+
+    .ch-modal-box {
+      width: 95% !important;
+      padding: 16px 14px !important;
+    }
+
+    .puzzle-landscape-grid {
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+    }
+
+    #slidingPuzzleGrid {
+      grid-template-columns: repeat(3, 72px) !important;
+      grid-template-rows: repeat(3, 72px) !important;
+      gap: 5px !important;
+      padding: 8px !important;
+    }
+
+  }
+
+  body.challenge-page #chatWidgetBtn,
+  body.challenge-page .chat-widget {
+    display: none !important;
+  }
+
+  /* De-clutter and Remove Free Space Overrides */
+  .ch-hero {
+    margin-bottom: 12px !important;
+  }
+  .filter-wrapper {
+    margin-bottom: 12px !important;
+  }
+  .filter-hub-card {
+    padding: 12px 18px 10px 18px !important;
+  }
+  .hub-top-row {
+    padding-bottom: 10px !important;
+    margin-bottom: 10px !important;
+    gap: 12px !important;
+  }
+  .quest-flow-card {
+    padding: 10px 16px !important;
+    margin-bottom: 12px !important;
+  }
+  .flow-header-row {
+    margin-bottom: 8px !important;
+  }
+  .flow-phase-header {
+    margin-bottom: 8px !important;
+    padding-bottom: 4px !important;
+  }
+  .flow-stages-grid-3col {
+    gap: 12px !important;
+    margin-bottom: 14px !important;
+  }
+  .mission-card {
+    min-height: auto !important;
+    padding: 13px 15px !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+  }
+  .mission-card h3 {
+    margin: 4px 0 0 0 !important;
+    font-size: 14px !important;
+    line-height: 1.25 !important;
+  }
+  .mission-card-bottom-bar {
+    margin-top: auto !important;
+    padding-top: 0 !important;
+  }
+  .flow-step-lead {
+    margin-bottom: 2px !important;
+  }
+
+</style>
+
+<!-- Futuristic Skyline Hero Header Matching Reference Theme -->
+
+{% if site_config.show_challenge_hero %}
+<div class="ch-hero">
+
+  <div class="container">
+
+    <div class="dashboard-header-inner">
+
+      <!-- Left: Breadcrumb & Title -->
+
+      <div class="dash-title-block">
+
+        <div class="dash-breadcrumb-bar">
+
+          <span class="dash-badge-pill">
+
+            <i class="ti ti-id"></i> STUDENT PASSPORT
+
+          </span>
+
+          <span class="dash-crumb-sep">|</span>
+
+          <span class="dash-crumb-text">Interactive Gamified Quest</span>
+
+        </div>
+
+        <h1 class="ch-dash-title">
+
+          KNOVA Challenge <span class="cyan-accent">Passport</span>
+
+          {% if passport.is_elite_pass %}
+          <span class="dash-live-badge" id="livePassBadge" onclick="openEliteIdCardModal()" style="cursor: pointer; background: linear-gradient(135deg, #7c3aed 0%, #4338ca 100%); border: 1.5px solid #c4b5fd; color: #ffffff; box-shadow: 0 0 16px rgba(124, 58, 237, 0.45);" title="Click to view your Official Elite ID Card!">
+            <span class="dash-live-dot" style="background: #fbbf24; box-shadow: 0 0 8px #fbbf24;"></span> &#x1F451; ELITE PASS &bull; UNLIMITED BOOTHS
+          </span>
+          <button type="button" onclick="openEliteIdCardModal()" class="btn-view-elite-card-header" style="background: linear-gradient(135deg, #7c3aed, #d97706); color: #fff; border: 1.5px solid #fbbf24; border-radius: 20px; padding: 4px 12px; font-size: 11.5px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; margin-left: 8px; box-shadow: 0 2px 10px rgba(124, 58, 237, 0.35);">
+            <i class="ti ti-id-badge-2"></i> View Elite ID Card
+          </button>
+          {% else %}
+          <span class="dash-live-badge" id="livePassBadge" title="Standard Pass: 3 booths max. Complete all 6 tasks to unlock Elite Pass for unlimited visits!">
+            <span class="dash-live-dot"></span> STANDARD PASS &bull; 3 BOOTHS MAX
+          </span>
+          {% endif %}
+
+        </h1>
+
+      </div>
+
+      <!-- Right: Slogan & 4 Clean Glass KPI Stat Cards Matching Reference Image -->
+
+      <div class="dash-kpi-container">
+
+        <!-- Top Right Slogan Matching Reference Image -->
+
+        <div class="hero-slogan-bar">
+
+          EXPLORE &bull; CONNECT &bull; ACHIEVE
+
+        </div>
+
+        <div class="dash-kpi-row">
+
+          <!-- KPI 1: Points -->
+
+          <div class="dash-kpi-card kpi-points">
+
+            <div class="kpi-icon-wrap">
+
+              <i class="ti ti-trophy"></i>
+
+            </div>
+
+            <div class="kpi-details">
+
+              <div class="kpi-stat-number"><span id="hudTotalPoints">{{ passport.total_points }}</span> <span>PTS</span></div>
+
+              <div class="kpi-stat-title">Total XP</div>
+
+            </div>
+
+          </div>
+{% endif %}
+
+          <!-- KPI 2: Missions Done -->
+
+          <div class="dash-kpi-card kpi-missions">
+
+            <div class="kpi-icon-wrap">
+
+              <i class="ti ti-target-arrow"></i>
+
+            </div>
+
+            <div class="kpi-details">
+
+              <div class="kpi-stat-number"><span id="hudMissionsCount">{{ passport.completed_missions_count }}</span> / 6</div>
+
+              <div class="kpi-stat-title">Missions Done</div>
+
+            </div>
+
+          </div>
+
+          <!-- KPI 3: Rank -->
+
+          <div class="dash-kpi-card kpi-rank">
+
+            <div class="kpi-icon-wrap">
+
+              <i class="ti ti-shield-check"></i>
+
+            </div>
+
+            <div class="kpi-details">
+
+              <div class="kpi-stat-number" id="hudRankTitle" style="font-size: 13.5px;">{{ passport.rank_title }}</div>
+
+              <div class="kpi-stat-title">Current Rank</div>
+
+            </div>
+
+          </div>
+
+          <!-- KPI 4: Badge ID / QR -->
+
+          <div class="dash-kpi-card kpi-badge" onclick="openBadgeQrModal()" style="cursor: pointer;" title="Click to view QR Badge">
+
+            <div class="kpi-icon-wrap">
+
+              <i class="ti ti-id-badge-2"></i>
+
+            </div>
+
+            <div class="kpi-details">
+
+              <div class="kpi-stat-number" id="hudBadgeId" style="font-size: 13px; font-family: monospace;">{{ passport.badge_id }}</div>
+
+              <div class="kpi-stat-title">Attendee Pass</div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- MAIN DASHBOARD CONTENT AREA -->
+
+<div style="padding: 0 0 50px 0; min-height: 480px;">
+
+  <div class="container">
+
+    <!-- ============================================== -->
+
+    <!-- TAB 1: 6 MISSIONS & CHALLENGES GRID           -->
+
+    <!-- ============================================== -->
+
+    <div id="tabContentMissions" style="display: block;">
+
+      <!-- ========================================== -->
+
+      {% if site_config.show_challenge_flow %}
+<!-- QUEST FLOW PIPELINE STEPPER                -->
+
+      <!-- ========================================== -->
+
+      <div class="quest-flow-card">
+
+        <div class="flow-header-row">
+
+          <div class="flow-header-title">
+
+            <span class="flow-track-pill"><i class="ti ti-user"></i> GUIDED QUEST FLOW</span>
+
+            <h3>Student Expo Passport Flow</h3>
+
+            <p style="display: none;">Complete the 6 expo stages in sequence to earn XP, level up your rank, and unlock all 4 official VIP reward tiers.</p>
+
+          </div>
+
+          <div class="flow-status-chip">
+
+            <span class="flow-pulse-dot"></span>
+
+            <span id="flowStageSummaryText">Step 1 of 6 In Progress</span>
+
+            <i class="ti ti-chevron-right" style="font-size: 11px; margin-left: 2px;"></i>
+
+          </div>
+
+        </div>
+
+        <!-- Flow Stepper Track Bar -->
+
+        <div class="flow-stepper-track">
+
+          <div class="flow-line-bg">
+
+            <div class="flow-line-progress" id="flowStepperLine" style="width: 14%;"></div>
+
+          </div>
+
+          <div class="flow-nodes-wrapper">
+
+            <!-- Node 1 -->
+
+            <div class="flow-node active" id="flowNode1" onclick="scrollToMission('cardMission1')" title="Go to Step 1: Booth Visits">
+
+              <div class="flow-node-circle">
+
+                <span class="node-num">01</span>
+
+              </div>
+
+              <div class="flow-node-info">
+
+                <span class="flow-node-title"><i class="ti ti-building-store"></i> 1. Booths</span>
+
+                <span class="flow-node-pts">+30 XP</span>
+
+              </div>
+
+            </div>
+
+            <!-- Node 2 -->
+
+            <div class="flow-node" id="flowNode2" onclick="scrollToMission('cardMission2')" title="Go to Step 2: Aptitude Exam">
+
+              <div class="flow-node-circle">
+
+                <span class="node-num">02</span>
+
+              </div>
+
+              <div class="flow-node-info">
+
+                <span class="flow-node-title"><i class="ti ti-brain"></i> 2. Aptitude</span>
+
+                <span class="flow-node-pts">+30 XP</span>
+
+              </div>
+
+            </div>
+
+            <!-- Node 3 -->
+
+            <div class="flow-node" id="flowNode3" onclick="scrollToMission('cardMission3')" title="Go to Step 3: Keynote Seminar">
+
+              <div class="flow-node-circle">
+
+                <span class="node-num">03</span>
+
+              </div>
+
+              <div class="flow-node-info">
+
+                <span class="flow-node-title"><i class="ti ti-microphone"></i> 3. Seminar</span>
+
+                <span class="flow-node-pts">+20 XP</span>
+
+              </div>
+
+            </div>
+
+            <!-- Node 4 -->
+
+            <div class="flow-node" id="flowNode4" onclick="scrollToMission('cardMission4')" title="Go to Step 4: Expert Counselling">
+
+              <div class="flow-node-circle">
+
+                <span class="node-num">04</span>
+
+              </div>
+
+              <div class="flow-node-info">
+
+                <span class="flow-node-title"><i class="ti ti-user-check"></i> 4. Counsel</span>
+
+                <span class="flow-node-pts">+40 XP</span>
+
+              </div>
+
+            </div>
+
+            <!-- Node 5 -->
+
+            <div class="flow-node" id="flowNode5" onclick="scrollToMission('cardMission5')" title="Go to Step 5: Technology & AI Quiz">
+
+              <div class="flow-node-circle">
+
+                <span class="node-num">05</span>
+
+              </div>
+
+              <div class="flow-node-info">
+
+                <span class="flow-node-title"><i class="ti ti-cpu"></i> 5. AI Arena</span>
+
+                <span class="flow-node-pts">+50 XP</span>
+
+              </div>
+
+            </div>
+
+            <!-- Node 6 -->
+
+            <div class="flow-node" id="flowNode6" onclick="scrollToMission('cardMission6')" title="Go to Step 6: KNOVA 8-Puzzle">
+
+              <div class="flow-node-circle">
+
+                <span class="node-num">06</span>
+
+              </div>
+
+              <div class="flow-node-info">
+
+                <span class="flow-node-title"><i class="ti ti-puzzle"></i> 6. Puzzle</span>
+
+                <span class="flow-node-pts">+50 XP</span>
+
+              </div>
+
+            </div>
+
+            <!-- Destination Node -->
+
+            <div class="flow-node goal" id="flowNodeGoal" onclick="openEliteIdCardModal()" title="View Official Elite ID Card">
+              <div class="flow-node-circle">
+                👑
+              </div>
+              <div class="flow-node-info">
+                <span class="flow-node-title">Elite Pass</span>
+                <span class="flow-node-pts">ID Card</span>
+              </div>
+            </div>
+
+          </div>
+{% endif %}
+
+        </div>
+
+      </div>
+
+      <!-- ========================================== -->
+
+      <!-- ========================================== -->
+
+      {% if site_config.show_challenge_missions %}
+<!-- STUDENT EXPO PASSPORT: 6 MISSIONS (3 IN A ROW) -->
+
+      <!-- ========================================== -->
+
+      {% if role == 'parent' or is_parent or request.user.parent_profile %}
+      <div style="background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border: 1.5px solid #bfdbfe; border-radius: 14px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; box-shadow: 0 2px 8px rgba(23,104,255,0.06);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 38px; height: 38px; border-radius: 10px; background: #ffffff; border: 1px solid #bfdbfe; color: #1768ff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+            <i class="ti ti-shield-check"></i>
+          </div>
+          <div>
+            <div style="font-size: 14px; font-weight: 800; color: #0a1936;">Parent Supervision Mode &bull; View-Only Access</div>
+            <div style="font-size: 12px; color: #64748b; margin-top: 1px;">Observing <strong>{{ passport.student_name|default:'Alex Student' }}</strong>'s live challenge missions, XP points, and exam status. Tests, quizzes, and games must be completed by the student.</div>
+          </div>
+        </div>
+        <span style="font-size: 11px; font-weight: 800; background: #1768ff; color: #ffffff; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase;">View Only</span>
+      </div>
+      {% endif %}
+
+      <div class="flow-phase-section flow-phase-1">
+
+        <div class="flow-phase-header">
+
+          <span class="flow-phase-badge"><i class="ti ti-target"></i> PASSPORT MISSIONS</span>
+
+          <h4 class="flow-phase-title">Expo Arrival, Assessment &amp; Innovation Tasks</h4>
+
+          <span class="flow-phase-desc">Steps 01 to 06 &bull; Total 200+ XP &bull; Complete missions to unlock rewards</span>
+
+        </div>
+
+        <div class="flow-stages-grid-3col">
+
+          <!-- MISSION 1: Visit 3 Universities -->
+
+          <div class="mission-card {% if passport.universities_visited_count >= 3 %}completed{% endif %}" id="cardMission1">
+
+            <div class="mission-card-header">
+
+              <div class="flow-step-lead">
+
+                <span class="flow-step-tag">
+
+                  <span class="flow-step-circle-num">1</span> STEP 01 OF 06 &bull; BOOTH CHECK-IN
+
+                </span>
+
+                <span class="points-tag">+10 pts / visit</span>
+
+              </div>
+
+              <h3 style="margin: 0 0 4px 0;">1. Visit 3 Universities</h3>
+
+              <p class="mission-desc" style="display: block; margin: 6px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.45;">
+                Visit university booths at the expo. Show your Student ID to the university representative who will check you in at their dashboard. (3 university visits needed).
+              </p>
+
+            </div>
+
+            <div class="mission-card-bottom-bar">
+
+              <div class="card-bar-widget card-bar-widget-clickable" onclick="openVisitedUniversitiesModal()" style="cursor: pointer; transition: all 0.2s ease; border-radius: 8px; padding: 4px 8px;" title="Click to view visited & punched universities">
+
+                <span class="card-bar-label"><i class="ti ti-info-circle"></i> PROGRESS <i class="ti ti-external-link" style="font-size:10px; opacity:0.7;"></i></span>
+
+                <span class="card-bar-val" style="display:inline-flex; align-items:center; gap:5px;">
+                <strong id="uniVisitedCount">{{ passport.universities_visited_count }}</strong>
+                {% if passport.is_elite_pass %}
+                  Visited &bull; <span style="color: #7c3aed; font-weight: 850;">Unlimited (Elite)</span>
+                {% else %}
+                  / 3 Visited (Standard Limit)
+                {% endif %}
+                <i class="ti ti-eye" style="font-size:12px; color:#1768ff;"></i>
+              </span>
+            </div>
+
+            <div id="cardMission1Action">
+              {% if passport.is_elite_pass %}
+                <span class="status-pill status-ready" style="background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe;" id="uniVisitedStatus">
+                  &#10004; Unlimited (Elite)
+                </span>
+                <button type="button" onclick="openSimulateCheckinModal()" class="btn-card-action" style="background: linear-gradient(135deg, #7c3aed, #6366f1);" id="cardMission1Btn">
+                  <i class="ti ti-plus"></i> Visit More Booths
+                </button>
+              {% elif passport.universities_visited_count >= 3 %}
+                <span class="status-pill status-ready" id="uniVisitedStatus">
+                  &#10004; 3/3 Visited
+                </span>
+                <button type="button" onclick="openVisitedUniversitiesModal()" class="btn-card-action btn-completed" id="cardMission1Btn" title="Standard 3-booth limit reached. Complete remaining tasks to unlock Elite Pass for unlimited visits!">
+                  <i class="ti ti-check"></i> Standard Limit (3/3)
+                </button>
+              {% else %}
+                <span class="status-pill status-ready" id="uniVisitedStatus">
+                  {{ passport.universities_visited_count }}/3 Visited
+                </span>
+                <button type="button" onclick="openSimulateCheckinModal()" class="btn-card-action" id="cardMission1Btn">
+                  <i class="ti ti-layout-grid"></i> Check In (+10)
+                </button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- MISSION 2: Complete Aptitude Test -->
+
+          <div class="mission-card {% if passport.aptitude_test_completed %}completed{% endif %}" id="cardMission2">
+
+            <div class="mission-card-header">
+
+              <div class="flow-step-lead">
+
+                <span class="flow-step-tag">
+
+                  <span class="flow-step-circle-num">2</span> STEP 02 OF 06 &bull; EXAM ASSESSMENT
+
+                </span>
+
+                <span class="points-tag">+30 pts</span>
+
+              </div>
+
+              <h3 style="margin: 0 0 4px 0;">2. Complete Aptitude Test</h3>
+
+              <p class="mission-desc" style="display: block; margin: 6px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.45;">
+                Take the official online aptitude examination on the Exam Portal (minimum 35% mark required to complete) to qualify and earn +30 challenge points.
+              </p>
+
+            </div>
+
+            <div class="mission-card-bottom-bar">
+
+              <div class="card-bar-widget">
+
+                <span class="card-bar-label"><i class="ti ti-clock"></i> STATUS</span>
+
+                <span class="card-bar-val" id="aptitudeStatus">
+
+                  {% if passport.aptitude_test_completed %}
+
+                    <span style="color: #059669;">✔ Completed (+30)</span>
+
+                  {% elif failed_exam %}
+
+                    <span style="color: #ea580c; font-weight: 700;">Score: {{ failed_exam.score|default:0 }}/100 &bull; 35% Mark Needed</span>
+
+                  {% else %}
+
+                    <span style="color: #b45309;">Pending Exam (35% to Pass)</span>
+
+                  {% endif %}
+
+                </span>
+
+              </div>
+
+              {% if passport.aptitude_test_completed %}
+
+                {% if latest_exam_attempt %}
+                <a id="cardMission2Btn" href="{% url 'dashboard_exam_result' latest_exam_attempt.id %}" class="btn-card-action btn-completed">
+                  <i class="ti ti-check"></i> View Result
+                </a>
+                {% else %}
+                <a id="cardMission2Btn" href="{% url 'online_exam_portal' %}" class="btn-card-action btn-completed">
+                  <i class="ti ti-check"></i> View Result
+                </a>
+                {% endif %}
+
+              {% else %}
+
+                {% if role == 'parent' or is_parent or request.user.parent_profile %}
+
+                <span id="cardMission2Btn" class="btn-card-action" style="background: #f3e8ff; color: #7c3aed; border: 1px solid #d8b4fe; cursor: default; font-size: 11.5px;" title="Exams can only be taken by the student attendee. Parents have view-only access.">
+
+                  <i class="ti ti-lock"></i> Student Exam (View Only)
+
+                </span>
+
+                {% elif failed_exam %}
+
+                <div style="display: flex; gap: 6px; align-items: center;">
+                  <a href="{% url 'dashboard_exam_result' failed_exam.id %}" class="btn-card-action" style="background: #f8fafc; color: #64748b; border: 1px solid #cbd5e1; font-size: 11px; padding: 6px 10px;" title="View score analysis">
+                    <i class="ti ti-eye"></i> View Result
+                  </a>
+                  <a id="cardMission2Btn" href="{% url 'dashboard_take_exam' failed_exam.registration.exam.id %}?retake=1" class="btn-card-action" style="background: #ea580c; font-size: 12px; padding: 6px 12px;">
+                    <i class="ti ti-rotate"></i> Retake (&ge; 35%) &rarr;
+                  </a>
+                </div>
+
+                {% else %}
+
+                <a id="cardMission2Btn" href="{% url 'online_exam_portal' %}" class="btn-card-action" style="background: #7c3aed;">
+
+                  <i class="ti ti-pencil"></i> Start Exam &rarr;
+                </a>
+
+                {% endif %}
+
+              {% endif %}
+
+            </div>
+
+          </div>
+
+          <!-- MISSION 3: Attend One Seminar -->
+
+          <div class="mission-card {% if passport.seminars_attended_count >= 1 %}completed{% endif %}" id="cardMission3">
+
+            <div class="mission-card-header">
+
+              <div class="flow-step-lead">
+
+                <span class="flow-step-tag">
+
+                  <span class="flow-step-circle-num">3</span> STEP 03 OF 06 &bull; AUDITORIUM KEYNOTE
+
+                </span>
+
+                <span class="points-tag">+20 pts</span>
+
+              </div>
+
+              <h3 style="margin: 0 0 4px 0;">3. Attend One Seminar</h3>
+
+              <p class="mission-desc" style="display: block; margin: 6px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.45;">
+                Check in to any of our keynote talks by international education speakers in the main auditorium.
+              </p>
+
+            </div>
+
+            <div class="mission-card-bottom-bar">
+
+              <div class="card-bar-widget" style="padding: 4px 10px;">
+
+                <select id="quickSeminarSelect" style="width: 100%; border: none; background: transparent; font-size: 11.5px; font-weight: 700; color: #334155; outline: none; cursor: pointer;" onchange="updateSeminarModalSelection()">
+
+                  {% for s in sessions %}
+
+                    <option value="{{ s.title }}">{{ s.title|truncatechars:26 }}</option>
+
+                  {% empty %}
+
+                    <option value="Future of Global Careers Keynote">Global Careers Keynote</option>
+
+                  {% endfor %}
+
+                </select>
+
+              </div>
+
+              {% if passport.seminars_attended_count >= 1 %}
+                <span class="btn-card-action btn-completed" id="cardMission3Btn" style="cursor: default;">
+                  <i class="ti ti-check"></i> Punched by Coordinator (+20)
+                </span>
+              {% else %}
+                {% if role == 'parent' or is_parent or request.user.parent_profile %}
+                <span id="cardMission3Btn" class="btn-card-action" style="background: #eef2ff; color: #4f46e5; border: 1px solid #c7d2fe; cursor: default; font-size: 11.5px;" title="Keynote attendance is punched for the student attendee.">
+                  <i class="ti ti-lock"></i> Student Keynote (View Only)
+                </span>
+                {% else %}
+                <button type="button" onclick="openSeminarQrModal()" class="btn-card-action" style="background: #4f46e5;" id="cardMission3Btn">
+                  <i class="ti ti-qrcode"></i> Show Badge to Coordinator
+                </button>
+                {% endif %}
+              {% endif %}
+
+            </div>
+
+          </div>
+
+          <!-- MISSION 4: Meet an Education Expert / Counselling -->
+
+          <div class="mission-card {% if passport.expert_meeting_completed or passport.counselling_completed %}completed{% endif %}" id="cardMission4">
+
+            <div class="mission-card-header">
+
+              <div class="flow-step-lead">
+
+                <span class="flow-step-tag">
+
+                  <span class="flow-step-circle-num">4</span> STEP 04 OF 06 &bull; EXPERT COUNSELLING
+
+                </span>
+
+                <span class="points-tag">+40 pts</span>
+
+              </div>
+
+              <h3 style="margin: 0 0 4px 0;">4. Meet an Education Expert</h3>
+
+              <p class="mission-desc" style="display: block; margin: 6px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.45;">
+                Meet Dr. Sarah Jenkins (Senior Academic Counsellor) at Desk 1 for 1-on-1 guidance. Present your QR code for the expert to punch your consultation attendance.
+              </p>
+
+            </div>
+
+            <div class="mission-card-bottom-bar">
+
+              <div class="card-bar-widget">
+
+                <span class="card-bar-label"><i class="ti ti-shield-check"></i> STATUS</span>
+
+                <span class="card-bar-val" id="expertStatus">
+
+                  {% if passport.expert_meeting_completed or passport.counselling_completed %}
+
+                    <span style="color: #059669;">✔ Completed (+40)</span>
+
+                  {% else %}
+
+                    <span style="color: #b45309;">Pending Consultation</span>
+
+                  {% endif %}
+
+                </span>
+
+              </div>
+
+              <div id="cardMission4BtnContainer">
+                {% if passport.expert_meeting_completed or passport.counselling_completed %}
+                  <button type="button" onclick="openExpertQrModal()" class="btn-card-action btn-completed" id="cardMission4Btn">
+                    <i class="ti ti-check"></i> Punched by Counsellor (+40)
+                  </button>
+                {% else %}
+                  {% if role == 'parent' or is_parent or request.user.parent_profile %}
+                  <span id="cardMission4Btn" class="btn-card-action" style="background: #faf5ff; color: #9333ea; border: 1px solid #e9d5ff; cursor: default; font-size: 11.5px;" title="Counselling sessions are attended by the student attendee.">
+                    <i class="ti ti-lock"></i> Student Session (View Only)
+                  </span>
+                  {% else %}
+                  <button type="button" onclick="openExpertQrModal()" class="btn-card-action" style="background: #9333ea;" id="cardMission4Btn">
+                    <i class="ti ti-qrcode"></i> Show QR to Counsellor
+                  </button>
+                  {% endif %}
+                {% endif %}
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- MISSION 5: Complete Technology & AI Quiz -->
+
+          <div class="mission-card {% if passport.tech_challenge_completed %}completed{% endif %}" id="cardMission5">
+
+            <div class="mission-card-header">
+
+              <div class="flow-step-lead">
+
+                <span class="flow-step-tag">
+
+                  <span class="flow-step-circle-num">5</span> STEP 05 OF 06 &bull; TECH &amp; AI ARENA
+
+                </span>
+
+                <span class="points-tag">+30 pts</span>
+
+              </div>
+
+              <h3 style="margin: 0 0 4px 0;">5. Technology &amp; AI Quiz</h3>
+
+              <p class="mission-desc" style="display: block; margin: 6px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.45;">
+                Answer 3 everyday questions about AI, coding, and computer logic. Simple &amp; fun!
+              </p>
+
+            </div>
+
+            <div class="mission-card-bottom-bar">
+
+              <div class="card-bar-widget">
+
+                <span class="card-bar-label"><i class="ti ti-cpu"></i> STATUS</span>
+
+                <span class="card-bar-val" id="techStatus">
+
+                  {% if passport.tech_challenge_completed %}
+
+                    <span style="color: #059669;">✔ Solved (+30)</span>
+
+                  {% else %}
+
+                    <span style="color: #b45309;">Ready</span>
+
+                  {% endif %}
+
+                </span>
+
+              </div>
+
+              {% if passport.tech_challenge_completed %}
+
+                <button onclick="openTechQuizModal()" class="btn-card-action btn-completed" id="cardMission5Btn">
+
+                  <i class="ti ti-check"></i> Solved (+30)
+
+                </button>
+
+              {% else %}
+
+                {% if role == 'parent' or is_parent or request.user.parent_profile %}
+
+                <span id="cardMission5Btn" class="btn-card-action" style="background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; cursor: default; font-size: 11.5px;" title="Quizzes must be taken by the student. Parents have view-only access.">
+
+                  <i class="ti ti-lock"></i> Student Quiz (View Only)
+
+                </span>
+
+                {% else %}
+
+                <button onclick="openTechQuizModal()" class="btn-card-action" style="background: #0891b2;" id="cardMission5Btn">
+
+                  <i class="ti ti-device-desktop"></i> Take Quiz (+30)
+
+                </button>
+
+                {% endif %}
+
+              {% endif %}
+
+            </div>
+
+          </div>
+
+          <!-- MISSION 6: KNOVA 8-Puzzle Game -->
+
+          <div class="mission-card {% if passport.puzzle_completed %}completed{% endif %}" id="cardMission6">
+
+            <div class="mission-card-header">
+
+              <div class="flow-step-lead">
+
+                <span class="flow-step-tag">
+
+                  <span class="flow-step-circle-num">6</span> STEP 06 OF 06 &bull; LOGIC PUZZLE
+
+                </span>
+
+                <span class="points-tag">+50 pts</span>
+
+              </div>
+
+              <h3 style="margin: 0 0 4px 0;">6. KNOVA 8-Puzzle Game</h3>
+
+              <p class="mission-desc" style="display: block; margin: 6px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.45;">
+                Classic 3&times;3 sliding tile logic. Slide numbers 1 to 8 into numerical order to synchronize core.
+              </p>
+
+            </div>
+
+            <div class="mission-card-bottom-bar">
+
+              <div class="card-bar-widget">
+
+                <span class="card-bar-label"><i class="ti ti-puzzle"></i> STATUS</span>
+
+                <span class="card-bar-val" id="puzzleStatus">
+
+                  {% if passport.puzzle_completed %}
+
+                    <span style="color: #059669;">✔ Mastered (+50)</span>
+
+                  {% else %}
+
+                    <span style="color: #b45309;">Ready to Play</span>
+
+                  {% endif %}
+
+                </span>
+
+              </div>
+
+              {% if passport.puzzle_completed %}
+
+                <button id="cardMission6Btn" onclick="openPuzzleModal()" class="btn-card-action btn-completed">
+
+                  <i class="ti ti-check"></i> Mastered (+50)
+
+                </button>
+
+              {% else %}
+
+                {% if role == 'parent' or is_parent or request.user.parent_profile %}
+
+                <span id="cardMission6Btn" class="btn-card-action" style="background: #fef3c7; color: #b45309; border: 1px solid #fde68a; cursor: default; font-size: 11.5px;" title="Logic puzzles and interactive games must be completed by the student. Parents have view-only access.">
+
+                  <i class="ti ti-lock"></i> Student Puzzle (View Only)
+
+                </span>
+
+                {% else %}
+
+                <button id="cardMission6Btn" onclick="openPuzzleModal()" class="btn-card-action" style="background: #d97706;">
+
+                  <i class="ti ti-player-play"></i> Play Puzzle (+50)
+
+                </button>
+
+                {% endif %}
+
+              {% endif %}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+<!-- ============================================== -->
+
+    <!-- TAB 3: REAL-TIME PASSPORT ACTIVITY LOG
+{% endif %}
+<!-- TAB 3: REAL-TIME PASSPORT ACTIVITY LOG         -->
+
+    <!-- ============================================== -->
+
+    <div id="tabContentActivity" style="display: none;">
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 12px 18px !important; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+
+          <h3 style="font-size: 15px; font-weight: 850; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 6px;">
+
+            <i class="ti ti-history" style="color: #0f172a;"></i> Live Student Passport Stream
+
+          </h3>
+
+          <span style="font-size: 11px; color: #64748b; font-weight: 700;">Real-time sync</span>
+
+        </div>
+
+        <div id="activityLogBox">
+
+          {% for act in passport.activity_log %}
+
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid #f8fafc; font-size: 12px;">
+
+              <div>
+
+                <span style="font-weight: 750; color: #0f172a;">{{ act.title }}</span>
+
+                <span style="display: block; font-size: 11px; color: #94a3b8; margin-top: 2px;">{{ act.timestamp }}</span>
+
+              </div>
+
+              {% if act.points > 0 %}
+
+                <span style="font-weight: 800; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 20px; font-size: 11px;">+{{ act.points }} pts</span>
+
+              {% else %}
+
+                <span style="font-weight: 700; color: #0f172a; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 2px 8px; border-radius: 20px; font-size: 10.5px;">Claimed</span>
+
+              {% endif %}
+
+            </div>
+
+          {% empty %}
+
+            <div style="text-align: center; color: #94a3b8; padding: 28px; font-size: 12.5px;">
+
+              No activities recorded yet. Complete missions in the Missions tab to earn your first points!
+
+            </div>
+
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ============================================== -->
+
+    <!-- TAB 4: HOW THE PASSPORT WORKS (GUIDE)         -->
+
+    <!-- ============================================== -->
+
+    <div id="tabContentGuide" style="display: none;">
+
+      <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 12px 18px !important; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);">
+
+        <h3 style="font-size: 16px; font-weight: 850; color: #0f172a; margin: 0 0 14px 0;">
+
+          💡 How to Complete Your Passport &amp; Win Official Rewards
+
+        </h3>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 16px;">
+
+          <div style="background: #f8fafc; padding: 14px 16px; border-radius: 10px; border: 1px solid #e2e8f0;">
+
+            <div style="width: 28px; height: 28px; border-radius: 7px; background: #0f172a; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 850; font-size: 12px; margin-bottom: 8px;">1</div>
+
+            <h4 style="margin: 0 0 4px 0; font-size: 13.5px; font-weight: 800; color: #0f172a;">Select Missions</h4>
+
+            <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.4;">Pick any task from booth check-ins to the quick AI quiz or the 8-puzzle brain teaser.</p>
+
+          </div>
+
+          <div style="background: #f8fafc; padding: 14px 16px; border-radius: 10px; border: 1px solid #e2e8f0;">
+
+            <div style="width: 28px; height: 28px; border-radius: 7px; background: #059669; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 850; font-size: 12px; margin-bottom: 8px;">2</div>
+
+            <h4 style="margin: 0 0 4px 0; font-size: 13.5px; font-weight: 800; color: #0f172a;">Earn Live Points</h4>
+
+            <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.4;">Each completed action immediately updates your badge XP and moves your rank higher.</p>
+
+          </div>
+
+          <div style="background: #f8fafc; padding: 14px 16px; border-radius: 10px; border: 1px solid #e2e8f0;">
+
+            <div style="width: 28px; height: 28px; border-radius: 7px; background: #d97706; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 850; font-size: 12px; margin-bottom: 8px;">3</div>
+
+            <h4 style="margin: 0 0 4px 0; font-size: 13.5px; font-weight: 800; color: #0f172a;">Claim Real Vouchers</h4>
+
+            <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.4;">Unlock milestone rewards at 100, 150, 200, and 300 points and redeem at the expo desk.</p>
+
+          </div>
+
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 11px 14px; font-size: 12px; color: #334155;">
+
+          <strong>Tip for Visitors:</strong> Show your badge QR to expo staff at university booths or the information center to instantly verify check-ins.
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ============================================== -->
+
+<!-- MODAL SYSTEM                                   -->
+
+<!-- ============================================== -->
+
+<!-- Visited Universities / Punched Booths Modal -->
+<div id="visitedUniversitiesModal" class="ch-modal-overlay">
+  <div class="ch-modal-box" style="max-width: 540px; text-align: left; padding: 24px 28px; border-radius: 20px;">
+
+    <!-- Modal Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 14px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); display: flex; align-items: center; justify-content: center; color: #1768ff; font-size: 22px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(23,104,255,0.15);">
+          <i class="ti ti-building-bank"></i>
+        </div>
+        <div>
+          <h3 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+            <span>Visited Universities</span>
+            <span style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 12px;" id="modalVisitedBadge">
+              <span id="modalVisitedCountNum">{{ visited_institutions|length|default:passport.universities_visited_count }}</span> of 3 Visited
+            </span>
+          </h3>
+          <p style="margin: 0; font-size: 12.5px; color: #64748b;">
+            Official booth punches recorded during your expo visits.
+          </p>
+        </div>
+      </div>
+      <button type="button" onclick="closeModal('visitedUniversitiesModal')" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; color: #64748b; transition: all 0.2s ease;">&times;</button>
+    </div>
+
+    <!-- Pass Tier Access Banner -->
+    {% if passport.is_elite_pass %}
+    <div style="background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); border: 1.5px solid #c4b5fd; border-radius: 12px; padding: 12px 16px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+      <div>
+        <div style="font-size: 11px; font-weight: 800; color: #7c3aed; text-transform: uppercase; letter-spacing: 0.5px;">👑 Elite Pass Active</div>
+        <div style="font-size: 13.5px; font-weight: 800; color: #0f172a; margin-top: 1px;">Unlimited University Booth Visits Unlocked!</div>
+        <div style="font-size: 11.5px; color: #6b21a8; margin-top: 2px;">All 6 challenge missions completed. You can visit and punch unlimited booths across the expo floor.</div>
+      </div>
+      <span style="background: #7c3aed; color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; white-space: nowrap;">
+        Unlimited Access
+      </span>
+    </div>
+    {% elif passport.universities_visited_count >= 3 %}
+    <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 12px; padding: 12px 16px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+      <div>
+        <div style="font-size: 11px; font-weight: 800; color: #b45309; text-transform: uppercase; letter-spacing: 0.5px;">Standard Pass &bull; Limit Reached</div>
+        <div style="font-size: 13.5px; font-weight: 800; color: #78350f; margin-top: 1px;">3 of 3 Standard Booth Visits Completed</div>
+        <div style="font-size: 11.5px; color: #92400e; margin-top: 2px;">Complete all 6 challenge missions to upgrade to the <strong>Elite Pass</strong> for unlimited booth visits!</div>
+      </div>
+      <span style="background: #f59e0b; color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; white-space: nowrap;">
+        3 / 3 Visited
+      </span>
+    </div>
+    {% else %}
+    <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 12px; padding: 12px 16px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+      <div>
+        <div style="font-size: 11px; font-weight: 800; color: #1e40af; text-transform: uppercase; letter-spacing: 0.5px;">Standard Pass &bull; {{ passport.universities_visited_count }}/3 Visited</div>
+        <div style="font-size: 12.5px; color: #1e3a8a; margin-top: 2px;">Standard Pass includes up to 3 booth visits. Complete all 6 tasks to unlock <strong>Elite Pass</strong> for unlimited visits!</div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Progress Tracker Strip -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Quest Status</div>
+        <div style="font-size: 13.5px; font-weight: 800; color: #0f172a; margin-top: 2px;">
+          {% if passport.universities_visited_count >= 3 %}
+            <span style="color: #059669;"><i class="ti ti-check-circle"></i> Mission 1 Completed (+30 XP)</span>
+          {% else %}
+            <span>Step 01: Visit 3 University Booths</span>
+          {% endif %}
+        </div>
+      </div>
+      <div style="text-align: right;">
+        <span style="font-size: 12px; font-weight: 800; color: #1768ff; background: #eff6ff; border: 1px solid #bfdbfe; padding: 4px 10px; border-radius: 10px;">
+          +10 XP / Booth
+        </span>
+      </div>
+    </div>
+
+    <!-- Visited Institutions List Container -->
+    <div id="visitedUniversitiesModalList" style="display: flex; flex-direction: column; gap: 12px; max-height: 340px; overflow-y: auto; padding-right: 4px; margin-bottom: 20px;">
+      {% for inst in visited_institutions %}
+      <div class="visited-inst-item" style="border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 14px 16px; background: #ffffff; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 2px 6px rgba(15,23,42,0.03); transition: all 0.2s ease;">
+        <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+          <div style="width: 40px; height: 40px; border-radius: 10px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+            <i class="ti ti-check"></i>
+          </div>
+          <div style="min-width: 0;">
+            <div style="font-size: 14.5px; font-weight: 800; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              {{ inst.name }}
+            </div>
+            <div style="font-size: 12px; color: #64748b; display: flex; align-items: center; gap: 8px; margin-top: 3px; flex-wrap: wrap;">
+              <span style="display: inline-flex; align-items: center; gap: 3px; color: #059669; font-weight: 700;">
+                <i class="ti ti-clock" style="font-size: 12px;"></i> {{ inst.timestamp }}
+              </span>
+              {% if inst.booth_number %}
+              <span style="color: #cbd5e1;">&bull;</span>
+              <span style="background: #f1f5f9; padding: 1px 6px; border-radius: 4px; font-weight: 600; color: #475569;">
+                Booth {{ inst.booth_number }}
+              </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div style="text-align: right; flex-shrink: 0;">
+          <span style="background: #ecfdf5; color: #059669; border: 1px solid #bbf7d0; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 8px; display: inline-block;">
+            {{ inst.points|default:"+20 XP" }}
+          </span>
+          {% if inst.slug %}
+          <div style="margin-top: 4px;">
+            <a href="{% url 'university_detail' inst.slug %}" target="_blank" style="font-size: 11.5px; color: #1768ff; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 2px;">
+              Details &rarr;
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% empty %}
+      <div style="text-align: center; padding: 32px 16px; background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 14px;">
+        <i class="ti ti-building-bank" style="font-size: 36px; color: #94a3b8; display: block; margin-bottom: 8px;"></i>
+        <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">No University Booth Visits Yet</div>
+        <p style="font-size: 12.5px; color: #64748b; margin: 0 auto; max-width: 320px;">
+          Present your Badge QR code at university booths across the expo hall to punch your attendance and unlock 10 XP each!
+        </p>
+      </div>
+      {% endfor %}
+
+      <!-- Pending Remaining Slots if less than 3 -->
+      {% if visited_institutions|length < 3 %}
+        {% for slot_num in "12"|make_list %}
+          {% if forloop.counter <= remaining_count %}
+          <div style="border: 1.5px dashed #cbd5e1; border-radius: 14px; padding: 12px 16px; background: #fcfcfd; display: flex; align-items: center; justify-content: space-between; opacity: 0.85;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 38px; height: 38px; border-radius: 10px; background: #f1f5f9; color: #94a3b8; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                <i class="ti ti-map-pin"></i>
+              </div>
+              <div>
+                <div style="font-size: 13.5px; font-weight: 750; color: #64748b;">
+                  Pending University Booth Punch
+                </div>
+                <div style="font-size: 11.5px; color: #94a3b8;">
+                  Visit next booth &amp; show your QR badge to unlock +10 XP
+                </div>
+              </div>
+            </div>
+            <span style="font-size: 11px; font-weight: 700; color: #94a3b8; background: #f1f5f9; padding: 2px 7px; border-radius: 6px;">
+              Pending
+            </span>
+          </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div style="display: flex; gap: 10px; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 14px;">
+      <button type="button" onclick="closeModal('visitedUniversitiesModal'); openBadgeQrModal();" class="btn-action-primary" style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; font-size: 13px;">
+        <i class="ti ti-qrcode"></i> <span>Show My Badge QR</span>
+      </button>
+      <button type="button" onclick="closeModal('visitedUniversitiesModal')" class="btn-quick-action btn-quick-ghost" style="padding: 9px 18px; font-size: 13px;">
+        Close
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 1. Aptitude Test Modal (Exam Portal Launcher) -->
+
+<div id="aptitudeModal" class="ch-modal-overlay">
+
+  <div class="ch-modal-box" style="max-width: 480px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+
+      <div style="display: flex; align-items: center; gap: 10px;">
+
+        <div style="width: 36px; height: 36px; border-radius: 8px; background: #f8fafc; color: #0f172a; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 18px;">
+
+          <i class="ti ti-school"></i>
+
+        </div>
+
+        <h3 style="margin: 0; font-size: 16.5px; font-weight: 850; color: #0f172a;">KNOVA Aptitude Exam Portal</h3>
+
+      </div>
+
+      <button onclick="closeModal('aptitudeModal')" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b;">&times;</button>
+
+    </div>
+
+    <div style="font-size: 13px; color: #475569; line-height: 1.5; margin-bottom: 16px;">
+
+      To complete <strong>Challenge 2</strong> and claim your <strong>+30 points</strong>, you must attend and submit the official online aptitude examination in the CBT Exam Portal.
+
+    </div>
+
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: #334155;">
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+
+        <i class="ti ti-check" style="color: #059669; font-weight: 800;"></i>
+
+        <span>Full 100-Question CBT Assessment across 5 core aptitude disciplines.</span>
+
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+
+        <i class="ti ti-check" style="color: #059669; font-weight: 800;"></i>
+
+        <span>Instant computerized score evaluation &amp; performance breakdown.</span>
+
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+
+        <i class="ti ti-check" style="color: #059669; font-weight: 800;"></i>
+
+        <span>Automatic synchronization with your {{ site_config.challenge_page_title|default:"KNOVA Challenge Passport" }}.</span>
+
+      </div>
+
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 8px;">
+
+      <button type="button" onclick="closeModal('aptitudeModal')" class="btn-quick-action btn-quick-ghost">Close</button>
+
+      <a href="{% url 'online_exam_portal' %}" class="btn-action-primary" style="width: auto; padding: 8px 18px;">
+
+        <i class="ti ti-pencil"></i> Launch Exam Portal Now &rarr;
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 2. Technology Challenge Modal (Everyday AI & Tech Quiz) -->
+
+<div id="techModal" class="ch-modal-overlay">
+
+  <div class="ch-modal-box">
+
+    <!-- Header -->
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+
+        <span style="font-size: 22px;">💻</span>
+
+        <div style="text-align: left;">
+
+          <h3 style="margin: 0; font-size: 17px; font-weight: 900; color: #0f172a;">Technology &amp; AI Quiz</h3>
+
+          <span style="font-size: 10.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">Everyday Tech &amp; Digital Knowledge</span>
+
+        </div>
+
+      </div>
+
+      <button type="button" onclick="closeModal('techModal')" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b; line-height: 1;" aria-label="Close">&times;</button>
+
+    </div>
+
+    <!-- Intro Banner -->
+
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; text-align: left; display: flex; align-items: center; gap: 8px;">
+
+      <span style="font-size: 16px;">🚀</span>
+
+      <div style="font-size: 12px; color: #334155; line-height: 1.35;">
+
+        Answer these <strong>3 everyday technology questions</strong> encountered in modern university life:
+      </div>
+
+    </div>
+
+    <form id="techForm" onsubmit="submitTechChallenge(event)" style="display: flex; flex-direction: column; gap: 10px; text-align: left;">
+
+      <!-- Question 1: AI Definition -->
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
+
+        <div style="font-weight: 800; font-size: 12px; color: #0f172a; display: flex; align-items: flex-start; gap: 6px; margin-bottom: 8px;">
+
+          <span style="background: #0f172a; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; margin-top: 1px;">1</span>
+
+          <span style="flex: 1; line-height: 1.35;">What does the acronym <strong>AI</strong> stand for in modern technology?</span>
+
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+
+          <label class="tech-option-card">
+
+            <input type="radio" name="techQ1" value="ai" checked>
+
+            <span><strong>Artificial Intelligence</strong> (Smart computer systems that learn &amp; solve tasks)</span>
+
+          </label>
+
+          <label class="tech-option-card">
+
+            <input type="radio" name="techQ1" value="automated">
+
+            <span>Automated Internet (High-speed broadband network connections)</span>
+
+          </label>
+
+          <label class="tech-option-card">
+
+            <input type="radio" name="techQ1" value="interface">
+
+            <span>Advanced Interface (Touchscreen glass displays)</span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- Question 2: Popular Coding Language -->
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
+
+        <div style="font-weight: 800; font-size: 12px; color: #0f172a; display: flex; align-items: flex-start; gap: 6px; margin-bottom: 8px;">
+
+          <span style="background: #0f172a; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; margin-top: 1px;">2</span>
+
+          <span style="flex: 1; line-height: 1.35;">Which programming language is the most popular worldwide for AI &amp; Data Science?</span>
+
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+
+          <label class="tech-option-card">
+
+            <input type="radio" name="techQ2" value="python" checked>
+
+            <span><strong>Python</strong> (Known for clean syntax, versatility, and machine learning)</span>
+
+          </label>
+
+          <label class="tech-option-card">
+
+            <input type="radio" name="techQ2" value="html">
+
+            <span>HTML (Markup language used for web formatting)</span>
+
+          </label>
+
+          <label class="tech-option-card">
+
+            <input type="radio" name="techQ2" value="assembly">
+
+            <span>Assembly Code (Direct hardware electrical instructions)</span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- Question 3: Common Number Logic -->
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px;">
+
+        <div style="font-weight: 800; font-size: 12px; color: #0f172a; display: flex; align-items: flex-start; gap: 6px; margin-bottom: 8px;">
+
+          <span style="background: #0f172a; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; margin-top: 1px;">3</span>
+
+          <span style="flex: 1; line-height: 1.35;">In computer memory, what is the next number in the sequence: <strong>2, 4, 8, 16, ___</strong>?</span>
+
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+
+          <label class="tech-option-card">
+
+            <input type="radio" name="techQ3" value="32" checked>
+
+            <span><strong>32</strong> (Each step doubles: 16 &times; 2 = 32)</span>
+
+          </label>
+
+          <label class="tech-option-card">
+
+            <input type="radio" name="techQ3" value="20">
+
+            <span>20</span>
+
+          </label>
+
+          <label class="tech-option-card">
+
+            <input type="radio" name="techQ3" value="18">
+
+            <span>18</span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- Action buttons -->
+
+      <div style="display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 4px; padding-top: 10px; border-top: 1px solid #e2e8f0;">
+
+        <button type="button" onclick="closeModal('techModal')" class="btn-quick-action btn-quick-ghost">Cancel</button>
+
+        <button type="submit" class="btn-action-primary" style="width: auto; padding: 8px 20px;">Submit &amp; Earn +30 Pts</button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- 3. Puzzle Modal (Interactive Brain Teaser: KNOVA 8-Puzzle - Landscape View) -->
+
+<div id="puzzleModal" class="ch-modal-overlay" style="padding-top: 85px; padding-bottom: 25px;">
+
+  <div class="ch-modal-box" style="text-align: left; max-width: 760px; width: 94%; padding: 22px 26px; border-radius: 20px; box-shadow: 0 25px 60px -10px rgba(15, 23, 42, 0.35);">
+
+    <!-- Modal Header -->
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+
+      <div style="display: flex; align-items: center; gap: 10px;">
+
+        <span style="font-size: 26px;">🧩</span>
+
+        <div>
+
+          <h3 style="margin: 0; font-size: 18px; font-weight: 900; color: #0f172a; letter-spacing: -0.3px;">KNOVA 8-Puzzle Game</h3>
+
+          <span style="font-size: 11px; font-weight: 750; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Spatial Logic Matrix &bull; Challenge 6</span>
+
+        </div>
+
+      </div>
+
+      <button onclick="closeModal('puzzleModal')" style="background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer; color: #475569; display: flex; align-items: center; justify-content: center; transition: all 0.2s; line-height: 1;">&times;</button>
+
+    </div>
+
+    <!-- Landscape 2-Column Grid -->
+
+    <div class="puzzle-landscape-grid" style="display: grid; grid-template-columns: 284px 1fr; gap: 24px; align-items: start;">
+
+      <!-- Left Column: The 3x3 Puzzle Board & In-Game Controls -->
+
+      <div style="display: flex; flex-direction: column; align-items: center;">
+
+        <div id="slidingPuzzleGrid" style="display: grid; grid-template-columns: repeat(3, 82px); grid-template-rows: repeat(3, 82px); gap: 7px; justify-content: center; background: #0f172a; padding: 10px; border-radius: 14px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);">
+
+          <!-- Tiles rendered dynamically by JS -->
+
+        </div>
+
+        <div style="display: flex; justify-content: space-between; gap: 6px; width: 100%; margin-top: 10px;">
+
+          <button type="button" onclick="showSlidingHint()" class="btn-quick-action btn-quick-ghost" style="flex: 1; justify-content: center; padding: 7px 8px; font-size: 11.5px;">
+
+            💡 Hint
+
+          </button>
+
+          <button type="button" onclick="autoSolvePuzzle()" class="btn-quick-action btn-quick-ghost" style="flex: 1; justify-content: center; padding: 7px 8px; font-size: 11.5px;">
+
+            ⚡ Auto-Solve
+
+          </button>
+
+          <button type="button" onclick="resetToSolvedPuzzle()" class="btn-quick-action btn-quick-ghost" style="justify-content: center; padding: 7px 10px; font-size: 11.5px;">
+
+            🔄 Reset
+
+          </button>
+
+        </div>
+
+        <div style="font-size: 11px; color: #64748b; font-weight: 600; text-align: center; margin-top: 8px;" id="puzzleFooterNote">
+
+          👉 Click any tile next to the empty slot to slide it.
+
+        </div>
+
+      </div>
+
+      <!-- Right Column: Target Goal, Stats Dashboard, Difficulty & Action Button -->
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+
+        <!-- Target Goal Visual Box -->
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+
+          <div style="flex: 1;">
+
+            <div style="display: flex; align-items: center; gap: 5px; font-weight: 800; font-size: 12.5px; color: #0f172a;">
+
+              <span>🎯</span> Target Goal: Put numbers 1 to 8 in order!
+
+            </div>
+
+            <div style="font-size: 11.5px; color: #64748b; line-height: 1.35; margin-top: 2px;">
+
+              Slide tiles until numbers 1 through 8 are arranged in numerical sequence.
+
+            </div>
+
+          </div>
+
+          <!-- Mini Map Target Grid Preview -->
+
+          <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; background: #0f172a; padding: 5px 6px; border-radius: 6px;">
+
+            <span style="font-size: 8.5px; font-weight: 800; color: #94a3b8; margin-bottom: 2px; letter-spacing: 0.5px;">TARGET</span>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 15px); gap: 2px; font-size: 8.5px; font-weight: 800; color: #ffffff; text-align: center;">
+
+              <div style="background:#10b981; border-radius:2px; height:15px; line-height:15px;">1</div>
+
+              <div style="background:#10b981; border-radius:2px; height:15px; line-height:15px;">2</div>
+
+              <div style="background:#10b981; border-radius:2px; height:15px; line-height:15px;">3</div>
+
+              <div style="background:#10b981; border-radius:2px; height:15px; line-height:15px;">4</div>
+
+              <div style="background:#10b981; border-radius:2px; height:15px; line-height:15px;">5</div>
+
+              <div style="background:#10b981; border-radius:2px; height:15px; line-height:15px;">6</div>
+
+              <div style="background:#10b981; border-radius:2px; height:15px; line-height:15px;">7</div>
+
+              <div style="background:#10b981; border-radius:2px; height:15px; line-height:15px;">8</div>
+
+              <div style="border:1px dashed #64748b; border-radius:2px; height:15px; line-height:15px; color:#64748b;">·</div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Timer & Stats Dashboard -->
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-around; text-align: center;">
+
+          <div style="display: flex; flex-direction: column; align-items: center;">
+
+            <span style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase;">⏱️ TIME</span>
+
+            <span id="puzzleTimer" style="font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 1px;">00:00</span>
+
+          </div>
+
+          <div style="width: 1px; height: 26px; background: #e2e8f0;"></div>
+
+          <div style="display: flex; flex-direction: column; align-items: center;">
+
+            <span style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase;">🎯 MOVES</span>
+
+            <span id="puzzleMoves" style="font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 1px;">0</span>
+
+          </div>
+
+          <div style="width: 1px; height: 26px; background: #e2e8f0;"></div>
+
+          <div style="display: flex; flex-direction: column; align-items: center;">
+
+            <span style="font-size: 10px; font-weight: 800; color: #059669; text-transform: uppercase;">✓ HOME</span>
+
+            <span style="font-size: 16px; font-weight: 900; color: #059669; margin-top: 1px;"><span id="puzzleCorrectSlots">0</span>/8</span>
+
+          </div>
+
+        </div>
+
+        <!-- Difficulty Controls -->
+
+        <div>
+
+          <div style="font-size: 10.5px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">
+
+            Choose Scramble Difficulty:
+          </div>
+
+          <div style="display: flex; gap: 6px;">
+
+            <button type="button" onclick="scrambleSlidingPuzzle(4)" style="flex: 1; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; font-size: 11px; font-weight: 800; border-radius: 8px; padding: 7px 6px; cursor: pointer; transition: transform 0.15s;">🌱 Easy</button>
+
+            <button type="button" onclick="scrambleSlidingPuzzle(16)" style="flex: 1; background: #f1f5f9; color: #0f172a; border: 1px solid #e2e8f0; font-size: 11px; font-weight: 800; border-radius: 8px; padding: 7px 6px; cursor: pointer; transition: transform 0.15s;">⚡ Normal</button>
+
+            <button type="button" onclick="scrambleSlidingPuzzle(32)" style="flex: 1; background: #fff7ed; color: #b45309; border: 1px solid #fed7aa; font-size: 11px; font-weight: 800; border-radius: 8px; padding: 7px 6px; cursor: pointer; transition: transform 0.15s;">🔥 Hard</button>
+
+          </div>
+
+        </div>
+
+        <!-- Action / Solve Button -->
+
+        <div style="margin-top: 4px;">
+
+          <button id="puzzleSolveBtn" onclick="solvePuzzleChallenge()" class="btn-action-primary" style="width: 100%; padding: 12px; font-size: 13.5px; font-weight: 850; border-radius: 10px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);" disabled>
+
+            Arrange 1-8 to Synchronize (+50 Pts)
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 4. QR Code Scanner Simulation Modal -->
+
+<div id="scanQrModal" class="ch-modal-overlay">
+
+  <div class="ch-modal-box">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+
+      <h3 style="margin: 0; font-size: 17px; font-weight: 850; color: #0f172a;">Scan University Booth QR</h3>
+
+      <button onclick="closeModal('scanQrModal')" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b;">&times;</button>
+
+    </div>
+
+    <form onsubmit="submitQrScan(event)" style="display: flex; flex-direction: column; gap: 12px;">
+
+      <p style="font-size: 12.5px; color: #64748b; margin: 0;">
+
+        Hold camera to university booth QR placard, or enter the printed booth identifier below:
+      </p>
+
+      <div>
+
+        <label style="font-size: 12px; font-weight: 700; color: #0f172a; display: block; margin-bottom: 4px;">Booth Code</label>
+
+        <input type="text" id="qrInputCode" placeholder="e.g. BOOTH-01" required style="width: 100%; padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; box-sizing: border-box;">
+
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px;">
+
+        <button type="button" onclick="closeModal('scanQrModal')" class="btn-quick-action btn-quick-ghost">Cancel</button>
+
+        <button type="submit" class="btn-action-primary" style="width: auto; padding: 8px 18px;">Confirm Scan (+10 Pts)</button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- ============================================== -->
+<!-- OFFICIAL KNOVA ELITE ID BADGE MODAL            -->
+<!-- ============================================== -->
+<div id="eliteIdCardModal" class="ch-modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 10000; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);">
+
+  <div style="position: relative; display: flex; flex-direction: column; align-items: center; max-width: 340px; width: 100%; margin: auto; animation: eliteModalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+
+    <!-- Dismiss 'X' Button -->
+    <button type="button" onclick="closeEliteIdCardModal()" style="position: absolute; top: -14px; right: -14px; z-index: 10; width: 32px; height: 32px; border-radius: 50%; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); color: #475569; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; transition: all 0.15s ease;" onmouseover="this.style.background='#f1f5f9'; this.style.color='#0f172a';" onmouseout="this.style.background='#ffffff'; this.style.color='#475569';" aria-label="Close">&times;</button>
+
+    <!-- Physical ID Badge Card Matching Official Digital Badge Style -->
+    <div class="id-card-wrapper" style="position: relative; width: 100%; max-width: 320px; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(226, 232, 240, 0.9); display: flex; flex-direction: column; margin: 0 auto; text-align: center;">
+
+      <!-- Physical Lanyard Punch Slot -->
+      <div class="id-card-lanyard-slot" style="width: 100%; background: #f8fafc; border-bottom: 1px dashed #cbd5e1; padding: 8px 0; display: flex; justify-content: center; align-items: center;" aria-hidden="true">
+        <div class="lanyard-hole" style="width: 50px; height: 9px; background: #e2e8f0; border: 1px solid #94a3b8; border-radius: 9999px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.18);"></div>
+      </div>
+
+      <!-- Top Banner Strip -->
+      <div class="id-card-top-bar" style="background: #0f172a; color: #fbbf24; text-align: center; padding: 10px 16px; font-size: 12px; font-weight: 850; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid #f59e0b;">
+        &#9733; ELITE PASS &bull; UNLIMITED ACCESS &#9733;
+      </div>
+
+      <!-- Main ID Card Content Body -->
+      <div class="id-card-body" style="padding: 18px 20px 8px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; background: #ffffff; position: relative; z-index: 2;">
+
+        <!-- Expo Brand -->
+        <div class="id-card-brand" style="display: flex; align-items: baseline; justify-content: center; gap: 4px; line-height: 1; margin-bottom: 12px;">
+          <span style="font-size: 30px; font-weight: 750; color: #4b5563; letter-spacing: -0.5px;">Knova</span>
+          <span style="font-size: 30px; font-weight: 850; color: #1768ff; letter-spacing: -0.5px;">2027</span>
+        </div>
+
+        <!-- Student Name -->
+        <h2 style="font-size: 20px; font-weight: 850; color: #0f172a; margin: 0 0 4px 0; letter-spacing: 0.2px; line-height: 1.25; word-break: break-word;">
+          {{ request.user.get_full_name|default:passport.student_name|default:request.user.username }}
+        </h2>
+
+        <!-- Subtitle -->
+        <p style="font-size: 12.5px; font-weight: 500; color: #64748b; margin: 0 0 12px 0; line-height: 1.35; max-width: 260px;">
+          {{ registration.current_education|default:"High School Senior &bull; Global Scholar" }}
+        </p>
+
+        <!-- QR Code -->
+        <div class="id-card-qr-box" style="width: 160px; height: 160px; margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px; box-sizing: border-box;">
+          <img src="data:image/png;base64,{{ qr_base64 }}" alt="Attendee QR Badge" style="width: 100%; height: 100%; object-fit: contain; display: block;">
+        </div>
+
+        <!-- Role -->
+        <div style="font-size: 16px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #0f172a; margin: 0 0 4px 0; line-height: 1;">
+          STUDENT &bull; ELITE
+        </div>
+
+        <!-- Student ID Badge Pill -->
+        <div class="id-card-student-id" style="font-family: 'SF Mono', 'Roboto Mono', 'Inter', monospace; font-size: 11px; font-weight: 600; letter-spacing: 1px; color: #475569; margin: 0 0 8px 0; display: inline-flex; align-items: center; gap: 6px; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 4px 12px; border-radius: 12px;">
+          <span style="color: #64748b; font-size: 10px; font-weight: 700; letter-spacing: 1.2px;">STUDENT ID:</span>
+          <strong style="color: #0f172a; font-weight: 850; letter-spacing: 1px;">{{ passport.badge_id }}</strong>
+        </div>
+
+        <!-- Access Verification Tag -->
+        <div style="font-size: 10.5px; font-weight: 750; color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.4px;">
+          &#10003; UNLIMITED UNIVERSITY BOOTH ACCESS ACTIVE
+        </div>
+
+      </div>
+
+      <!-- Bottom Waves Graphic Matching Official Digital Badge -->
+      <div class="id-card-bottom-waves" aria-hidden="true" style="width: 100%; overflow: hidden; line-height: 0; background: #ffffff; margin-top: 4px; position: relative; z-index: 1;">
+        <svg viewBox="0 0 350 75" preserveAspectRatio="none" style="display: block; width: 100%; height: 46px;">
+          <path d="M 0,42 C 20,32 50,34 82,52 C 102,63 118,72 126,75 L 0,75 Z" fill="#1768ff"></path>
+          <path d="M 142,75 C 175,72 215,58 255,50 C 295,42 328,30 350,24 L 350,75 Z" fill="#1768ff"></path>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- Actions Below Card -->
+    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 14px; width: 100%;">
+      <button type="button" onclick="window.print()" style="flex: 1; background: #1768ff; color: #ffffff; border: none; padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 14px rgba(23, 104, 255, 0.28); transition: background 0.15s ease;" onmouseover="this.style.background='#0d54d9';" onmouseout="this.style.background='#1768ff';">
+        <i class="ti ti-printer"></i> Print / Save (PDF)
+      </button>
+      <button type="button" onclick="closeEliteIdCardModal()" style="background: #ffffff; color: #334155; border: 1px solid #cbd5e1; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 650; cursor: pointer; transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc';" onmouseout="this.style.background='#ffffff';">
+        Close
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<style>
+@keyframes eliteModalPop {
+  0% { opacity: 0; transform: scale(0.92) translateY(12px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #eliteIdCardModal, #eliteIdCardModal * {
+    visibility: visible;
+  }
+  #eliteIdCardModal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: transparent !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  #eliteIdCardModal button {
+    display: none !important;
+  }
+  .id-card-wrapper {
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+    margin: 20px auto !important;
+  }
+}
+</style>
+
+<div id="badgeQrModal" class="ch-modal-overlay">
+
+  <div class="ch-modal-box" style="text-align: center; max-width: 360px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+
+      <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a;">Student Expo Badge ID</h3>
+
+      <button onclick="closeModal('badgeQrModal')" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b;">&times;</button>
+
+    </div>
+
+    <div style="background: #fff; padding: 16px; border: 2px dashed #0f172a; border-radius: 12px; display: inline-block; margin-bottom: 12px;">
+
+      <img src="data:image/png;base64,{{ qr_base64 }}" alt="QR Badge" style="width: 180px; height: 180px; display: block; margin: 0 auto;">
+
+      <div style="font-family: monospace; font-size: 16px; font-weight: 850; color: #0f172a; margin-top: 10px; letter-spacing: 1px;">{{ passport.badge_id }}</div>
+
+    </div>
+
+    <p style="font-size: 12px; color: #64748b; margin: 0 0 14px 0; line-height: 1.4;">
+
+      Present this QR code or Badge ID to the university representative at each booth to be checked in on their dashboard!
+
+    </p>
+
+    <button onclick="closeModal('badgeQrModal')" class="btn-action-primary" style="padding: 9px 22px;">Done</button>
+
+  </div>
+
+</div>
+
+<!-- Simulate University Check-in Modal (for Demo / Testers) -->
+
+<div id="simulateCheckinModal" class="ch-modal-overlay">
+
+  <div class="ch-modal-box" style="max-width: 440px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+
+      <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 6px;">
+
+        <i class="ti ti-building-arch" style="color: #0f172a;"></i> Simulate Booth Check-In
+
+      </h3>
+
+      <button onclick="closeModal('simulateCheckinModal')" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b;">&times;</button>
+
+    </div>
+
+    {% if not passport.is_elite_pass and passport.universities_visited_count >= 3 %}
+    <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 12px; color: #92400e; line-height: 1.4;">
+      <strong>⚠️ Standard Pass Limit Reached (3/3 Booths):</strong><br>
+      You have visited 3 university booths on your Standard Pass. Complete all remaining challenge missions (Aptitude Exam, Keynote Seminar, Expert Counselling, AI Quiz, Logic Puzzle) to upgrade to the <strong>Elite Pass</strong> and unlock unlimited booth visits!
+    </div>
+    {% endif %}
+
+    <p style="font-size: 12px; color: #64748b; margin: 0 0 12px 0; line-height: 1.4;">
+
+      Simulate a university representative checking in your badge (<strong>{{ passport.badge_id }}</strong>) at their booth dashboard:
+    </p>
+
+    <div style="margin-bottom: 12px;">
+
+      <label style="font-size: 11px; font-weight: 700; color: #334155; text-transform: uppercase; margin-bottom: 4px; display: block;">Select University Booth:</label>
+
+      <select id="simUniSelect" style="width: 100%; padding: 9px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 12.5px; color: #0f172a;">
+
+        {% for u in universities %}
+
+          <option value="{{ u.name }}">{{ u.name }}</option>
+
+        {% endfor %}
+
+      </select>
+
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 8px;">
+
+      <button type="button" onclick="closeModal('simulateCheckinModal')" class="btn-quick-action btn-quick-ghost">Cancel</button>
+
+      <button type="button" onclick="submitSimulateCheckin()" class="btn-action-primary" style="width: auto; padding: 8px 16px;">Simulate Check-In (+10 Pts)</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 6. Seminar Attendance QR Punching Modal -->
+
+<div id="seminarQrModal" class="ch-modal-overlay">
+
+  <div class="ch-modal-box" style="text-align: center; max-width: 420px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+
+      <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 7px;">
+
+        <i class="ti ti-qrcode" style="color: #7c3aed; font-size: 20px;"></i> Seminar Attendance QR Punch
+
+      </h3>
+
+      <button onclick="closeModal('seminarQrModal')" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b;">&times;</button>
+
+    </div>
+
+    <!-- Seminar Badge Banner -->
+
+    <div style="background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; text-align: left;">
+
+      <div style="font-size: 10px; font-weight: 800; color: #7c3aed; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 2px;">
+
+        <i class="ti ti-microphone-2"></i> Selected Keynote Session
+
+      </div>
+
+      <div id="modalSeminarTitleDisplay" style="font-size: 13px; font-weight: 800; color: #0f172a; line-height: 1.35;">
+
+        Future of Global Careers Keynote
+
+      </div>
+
+    </div>
+
+    <!-- QR Code Box -->
+
+    <div style="background: #ffffff; padding: 16px; border: 2.5px dashed #7c3aed; border-radius: 16px; display: inline-block; margin-bottom: 12px; box-shadow: 0 8px 24px rgba(124, 58, 237, 0.1);">
+
+      <img src="data:image/png;base64,{{ qr_base64 }}" alt="QR Badge" style="width: 185px; height: 185px; display: block; margin: 0 auto;">
+
+      <div style="font-family: monospace; font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 10px; letter-spacing: 1.5px;">{{ passport.badge_id }}</div>
+
+      <div style="font-size: 11px; font-weight: 700; color: #7c3aed; margin-top: 2px;">{{ passport.student_name }} &bull; ATTENDEE PASS</div>
+
+    </div>
+
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; text-align: left;">
+      <div style="font-size: 11.5px; font-weight: 800; color: #1e40af; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+        <i class="ti ti-shield-check"></i> Official Seminar Coordinator Punch
+      </div>
+      <p style="font-size: 12px; color: #334155; margin: 0; line-height: 1.45;">
+        Seminar attendance punching is strictly handled by the Seminar Representative at the entrance. Show this QR badge to the coordinator to punch attendance and receive +20 Challenge points.
+      </p>
+    </div>
+
+    <div style="display: flex; justify-content: center;">
+      <button type="button" onclick="closeModal('seminarQrModal')" class="btn-quick-action btn-quick-ghost" style="width: 100%;">
+        Close
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- 7. Education Expert Counselling QR Punching Modal -->
+
+<div id="expertQrModal" class="ch-modal-overlay">
+
+  <div class="ch-modal-box" style="text-align: center; max-width: 440px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+
+      <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 7px;">
+
+        <i class="ti ti-school" style="color: #7c3aed; font-size: 20px;"></i> Education Expert QR Pass
+
+      </h3>
+
+      <button onclick="closeModal('expertQrModal')" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b;">&times;</button>
+
+    </div>
+
+    <!-- Expert Hub Banner -->
+
+    <div style="background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; text-align: left;">
+
+      <div style="font-size: 10px; font-weight: 800; color: #7c3aed; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 2px;">
+
+        <i class="ti ti-certificate"></i> Verified Counselling Hub
+
+      </div>
+
+      <div style="font-size: 13px; font-weight: 800; color: #0f172a; line-height: 1.35;">
+
+        Official Education Counselor &amp; Career Expert Consultation
+
+      </div>
+
+    </div>
+
+    <!-- QR Code Box -->
+
+    <div style="background: #ffffff; padding: 16px; border: 2.5px dashed #7c3aed; border-radius: 16px; display: inline-block; margin-bottom: 12px; box-shadow: 0 8px 24px rgba(124, 58, 237, 0.1);">
+
+      <img src="data:image/png;base64,{{ qr_expert_base64|default:qr_base64 }}" alt="QR Consultation Pass" style="width: 185px; height: 185px; display: block; margin: 0 auto;">
+
+      <div style="font-family: monospace; font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 10px; letter-spacing: 1.5px;">{{ passport.badge_id }}</div>
+
+      <div style="font-size: 11px; font-weight: 700; color: #7c3aed; margin-top: 2px;">{{ passport.student_name }} &bull; EXPERT CONSULTATION PASS</div>
+
+      <div style="font-size: 10.5px; font-weight: 700; color: #059669; margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 4px;">
+
+        <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981;"></span>
+
+        Camera Scan Enabled &bull; Scanner Auto-Detect Active
+
+      </div>
+
+    </div>
+
+    <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0; line-height: 1.5;">
+      Show this QR pass to the official <strong>Education Expert</strong> at the Academic Counselling Hub. The counsellor will scan your QR directly from their station dashboard to punch your consultation and award <strong>+40 XP</strong>!
+    </p>
+
+    <div style="display: flex; justify-content: center;">
+      <button type="button" onclick="closeModal('expertQrModal')" class="btn-quick-action btn-quick-ghost" style="min-width: 130px; font-weight: 700;">
+        Close
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Floating Toast Notification -->
+
+<div id="challengeToast" style="position: fixed; top: 20px; right: 20px; z-index: 99999; display: none; align-items: center; gap: 12px; background: #0f172a; color: #fff; padding: 12px 18px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); border-left: 4px solid #10b981; max-width: 380px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; transform: translateY(-8px);">
+
+  <span id="toastIcon" style="font-size: 22px;">🎉</span>
+
+  <div style="flex: 1;">
+
+    <div id="toastTitle" style="font-weight: 800; font-size: 13px; margin-bottom: 2px;">Achievement Unlocked</div>
+
+    <div id="toastMsg" style="font-size: 11.5px; color: #94a3b8; line-height: 1.3;">Notification message</div>
+
+  </div>
+
+  <button onclick="hideChallengeToast()" style="background: none; border: none; color: #64748b; font-size: 18px; cursor: pointer;">&times;</button>
+
+</div>
+
+<script>
+
+  const BADGE_ID = "{{ passport.badge_id }}";
+  // TAB SWITCHING FUNCTION
+
+  function switchChallengeTab(tabName) {
+    const tabs = ['Missions', 'Activity', 'Guide'];
+    tabs.forEach(t => {
+      const btn = document.getElementById('tabBtn' + t);
+      const content = document.getElementById('tabContent' + t);
+      if (btn) {
+        if (t === tabName) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+
+      }
+
+      if (content) {
+        if (t === tabName) {
+          content.style.display = 'block';
+        } else {
+          content.style.display = 'none';
+        }
+
+      }
+
+    });
+  }
+
+  function showChallengeToast(title, message, isSuccess = true, points = 0) {
+    const toast = document.getElementById('challengeToast');
+    const toastIcon = document.getElementById('toastIcon');
+    const toastTitle = document.getElementById('toastTitle');
+    const toastMsg = document.getElementById('toastMsg');
+    toastIcon.textContent = isSuccess ? (points > 0 ? '⚡' : '🎉') : '⚠️';
+    toastTitle.textContent = title;
+    toastMsg.textContent = message;
+    toast.style.borderLeftColor = isSuccess ? '#10b981' : '#ef4444';
+    toast.style.display = 'flex';
+    setTimeout(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+    }, 10);
+    clearTimeout(window._toastTimeout);
+    window._toastTimeout = setTimeout(() => {
+      hideChallengeToast();
+    }, 4000);
+  }
+
+  function hideChallengeToast() {
+    const toast = document.getElementById('challengeToast');
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(-8px)';
+    setTimeout(() => { toast.style.display = 'none'; }, 300);
+  }
+
+  function openModal(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    if (id === 'puzzleModal') {
+      if (!slidingBoardInitialized) {
+        initSlidingPuzzle(18);
+      }
+
+    }
+
+  }
+
+  function closeModal(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = 'none';
+    document.body.style.overflow = '';
+    if (id === 'expertQrModal' && window._expertPollInterval) {
+      clearInterval(window._expertPollInterval);
+      window._expertPollInterval = null;
+    }
+
+  }
+
+  // Close modals when clicking on background backdrop
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.ch-modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+
+      });
+    });
+    if (typeof updateNavbarMask === 'function') {
+      updateNavbarMask();
+    }
+
+    updateFlowStepper();
+  });
+  function scrollToMission(cardId) {
+    switchChallengeTab('Missions');
+    const el = document.getElementById(cardId);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.style.transition = 'box-shadow 0.3s, border-color 0.3s, transform 0.3s';
+    el.style.borderColor = '#0f172a';
+    el.style.boxShadow = '0 0 0 4px rgba(15, 23, 42, 0.15), 0 12px 28px rgba(15, 23, 42, 0.1)';
+    el.style.transform = 'scale(1.02)';
+    setTimeout(() => {
+      el.style.borderColor = '';
+      el.style.boxShadow = '';
+      el.style.transform = '';
+    }, 1200);
+  }
+
+  function updateFlowStepper() {
+    const isM1 = document.getElementById('cardMission1') && document.getElementById('cardMission1').classList.contains('completed');
+    const isM2 = document.getElementById('cardMission2') && document.getElementById('cardMission2').classList.contains('completed');
+    const isM3 = document.getElementById('cardMission3') && document.getElementById('cardMission3').classList.contains('completed');
+    const isM4 = document.getElementById('cardMission4') && document.getElementById('cardMission4').classList.contains('completed');
+    const isM5 = document.getElementById('cardMission5') && document.getElementById('cardMission5').classList.contains('completed');
+    const isM6 = document.getElementById('cardMission6') && document.getElementById('cardMission6').classList.contains('completed');
+    const states = [isM1, isM2, isM3, isM4, isM5, isM6];
+    let completedCount = states.filter(Boolean).length;
+    for (let i = 1; i <= 6; i++) {
+      const node = document.getElementById('flowNode' + i);
+      if (!node) continue;
+      const isDone = states[i - 1];
+      const numSpan = node.querySelector('.node-num');
+      if (isDone) {
+        node.classList.add('completed');
+        node.classList.remove('active');
+        if (numSpan) numSpan.innerHTML = '&#10004;';
+      } else {
+        node.classList.remove('completed');
+        node.classList.remove('active');
+        if (numSpan) numSpan.textContent = '0' + i;
+      }
+
+    }
+
+    let nextStepIdx = states.findIndex(s => !s);
+    const summaryText = document.getElementById('flowStageSummaryText');
+    const goalNode = document.getElementById('flowNodeGoal');
+    if (nextStepIdx !== -1) {
+      const activeNode = document.getElementById('flowNode' + (nextStepIdx + 1));
+      if (activeNode) activeNode.classList.add('active');
+      if (summaryText) summaryText.textContent = `Step ${nextStepIdx + 1} of 6 In Progress`;
+      if (goalNode) goalNode.classList.remove('unlocked');
+    } else {
+      if (summaryText) summaryText.textContent = '🎉 All 6 Steps Completed!';
+      if (goalNode) goalNode.classList.add('unlocked');
+    }
+
+    const line = document.getElementById('flowStepperLine');
+    if (line) {
+      const linePct = Math.min(100, Math.max(10, Math.round((completedCount / 6) * 100)));
+      line.style.width = linePct + '%';
+    }
+
+  }
+
+  function openAptitudeModal() { openModal('aptitudeModal'); }
+
+  function openTechModal() { openModal('techModal'); }
+
+  const isParent = {% if role == 'parent' or is_parent or request.user.parent_profile %}true{% else %}false{% endif %};
+  function openTechQuizModal() {
+    if (isParent) {
+      alert("Quizzes and assessments can only be completed by the student attendee. Parents have view-only access to progress and results.");
+      return;
+    }
+    openModal('techModal');
+  }
+
+  function openPuzzleModal() {
+    if (isParent) {
+      alert("Interactive logic puzzles must be completed by the student attendee. Parents have view-only access.");
+      return;
+    }
+    openModal('puzzleModal');
+  }
+
+  function openScanQrModal() { openModal('scanQrModal'); }
+
+  function openVisitedUniversitiesModal() {
+    openModal('visitedUniversitiesModal');
+  }
+
+  function openEliteIdCardModal() {
+    openModal('eliteIdCardModal');
+  }
+
+  function closeEliteIdCardModal() {
+    sessionStorage.setItem('elite_modal_dismissed', 'true');
+    closeModal('eliteIdCardModal');
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    {% if passport.is_elite_pass %}
+    setTimeout(function() {
+      openEliteIdCardModal();
+    }, 500);
+    {% endif %}
+  });
+  function openBadgeQrModal() { openModal('badgeQrModal'); }
+
+  function openExpertQrModal() {
+    openModal('expertQrModal');
+    // Start live auto-detect: if counselor scans the QR with their mobile camera, attendance is detected automatically
+
+    if (window._expertPollInterval) clearInterval(window._expertPollInterval);
+    window._expertPollInterval = setInterval(async function() {
+      try {
+        const resp = await fetch("{% url 'challenge_action_api' %}", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+
+          },
+          body: JSON.stringify({ action: "check_status", badge_id: BADGE_ID })
+
+        });
+        const data = await resp.json();
+        if (data.success && (data.expert_meeting_completed || data.counselling_completed)) {
+          clearInterval(window._expertPollInterval);
+          window._expertPollInterval = null;
+          closeModal('expertQrModal');
+          updateHud(data);
+          showChallengeToast('Consultation Verified!', 'Education Expert scanned your QR and attendance is punched (+40 pts)!', true, 40);
+        }
+
+      } catch (err) {
+        // quiet poll
+
+      }
+
+    }, 2000);
+  }
+
+  // ==========================================
+
+  // KNOVA 8-PUZZLE SLIDING CORE ENGINE
+
+  // ==========================================
+
+  let slidingBoard = [1, 2, 3, 4, 5, 6, 7, 8, 0];
+  let slidingMoves = 0;
+  let slidingSeconds = 0;
+  let slidingTimerInterval = null;
+  let slidingStarted = false;
+  let slidingSolved = false;
+  let slidingBoardInitialized = false;
+  function initSlidingPuzzle(scrambleMoves = 18) {
+    slidingBoard = [1, 2, 3, 4, 5, 6, 7, 8, 0];
+    slidingMoves = 0;
+    slidingSeconds = 0;
+    slidingStarted = false;
+    slidingSolved = false;
+    clearInterval(slidingTimerInterval);
+    slidingTimerInterval = null;
+    updateSlidingStats();
+    let lastSwapped = -1;
+    for (let i = 0; i < scrambleMoves; i++) {
+      const emptyIdx = slidingBoard.indexOf(0);
+      const row = Math.floor(emptyIdx / 3);
+      const col = emptyIdx % 3;
+      const neighbors = [];
+      if (row > 0) neighbors.push(emptyIdx - 3);
+      if (row < 2) neighbors.push(emptyIdx + 3);
+      if (col > 0) neighbors.push(emptyIdx - 1);
+      if (col < 2) neighbors.push(emptyIdx + 1);
+      const validNeighbors = neighbors.filter(idx => idx !== lastSwapped);
+      const chosen = validNeighbors.length > 0 ? validNeighbors[Math.floor(Math.random() * validNeighbors.length)] : neighbors[0];
+      slidingBoard[emptyIdx] = slidingBoard[chosen];
+      slidingBoard[chosen] = 0;
+      lastSwapped = emptyIdx;
+    }
+
+    slidingBoardInitialized = true;
+    renderSlidingGrid();
+  }
+
+  function renderSlidingGrid() {
+    const grid = document.getElementById('slidingPuzzleGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    const emptyIdx = slidingBoard.indexOf(0);
+    const emptyRow = Math.floor(emptyIdx / 3);
+    const emptyCol = emptyIdx % 3;
+    slidingBoard.forEach((val, idx) => {
+      const tile = document.createElement('div');
+      tile.id = `slideTile_${idx}`;
+      if (val === 0) {
+        tile.style.cssText = 'width: 82px; height: 82px; border: 2px dashed rgba(255, 255, 255, 0.2); border-radius: 10px; background: rgba(255, 255, 255, 0.04); display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; text-align: center; padding: 4px;';
+        tile.innerHTML = `
+
+          <span style="font-size: 15px; margin-bottom: 1px;">⬜</span>
+
+          <span style="font-size: 9.5px; color: #94a3b8; font-weight: 800;">EMPTY</span>
+
+        `;
+      } else {
+        const row = Math.floor(idx / 3);
+        const col = idx % 3;
+        const isMovable = (Math.abs(row - emptyRow) + Math.abs(col - emptyCol)) === 1;
+        const isHome = (val === idx + 1);
+        let slideDir = '';
+        if (isMovable) {
+          if (row === emptyRow && col === emptyCol - 1) slideDir = 'Slide ➔';
+          else if (row === emptyRow && col === emptyCol + 1) slideDir = 'Slide ⬅';
+          else if (col === emptyCol && row === emptyRow - 1) slideDir = 'Slide ⬇';
+          else if (col === emptyCol && row === emptyRow + 1) slideDir = 'Slide ⬆';
+        }
+
+        let bg = isHome
+
+          ? 'linear-gradient(135deg, #059669, #10b981)'
+
+          : (isMovable ? '#1e293b' : '#0f172a');
+        let shadow = isHome
+
+          ? '0 0 14px rgba(16, 185, 129, 0.55)'
+
+          : (isMovable ? '0 3px 12px rgba(0, 0, 0, 0.3)' : 'none');
+        let border = isMovable
+
+          ? '2px solid #38bdf8'
+
+          : (isHome ? '2px solid #6ee7b7' : '1.5px solid rgba(255, 255, 255, 0.12)');
+        let opacity = isMovable || isHome ? '1' : '0.85';
+        tile.style.cssText = `width: 82px; height: 82px; border-radius: 10px; background: ${bg}; box-shadow: ${shadow}; border: ${border}; opacity: ${opacity}; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 26px; font-weight: 900; position: relative; user-select: none; transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); cursor: ${isMovable ? 'pointer' : 'default'}; box-sizing: border-box;`;
+        if (isMovable) {
+          tile.onmouseenter = () => { tile.style.transform = 'scale(1.04)'; };
+          tile.onmouseleave = () => { tile.style.transform = 'scale(1)'; };
+        }
+
+        tile.onclick = () => onSlidingTileClick(idx);
+        tile.innerHTML = `
+
+          ${isMovable ? `<span style="position: absolute; top: 4px; left: 5px; font-size: 8.5px; font-weight: 800; background: rgba(0,0,0,0.6); color: #38bdf8; padding: 1px 4px; border-radius: 4px;">${slideDir}</span>` : ''}
+
+          <span style="font-size: 28px; font-weight: 900; line-height: 1;">${val}</span>
+
+          ${isHome ? '<span style="position: absolute; top: 4px; right: 5px; font-size: 8.5px; font-weight: 800; background: #065f46; color: #a7f3d0; padding: 1px 4px; border-radius: 4px;">✓ Home</span>' : `<span style="position: absolute; bottom: 4px; font-size: 8px; opacity: 0.7; font-weight: 700;">#${val}</span>`}
+
+        `;
+      }
+
+      grid.appendChild(tile);
+    });
+    updateSlidingStats();
+    checkSlidingSolved();
+  }
+
+  function onSlidingTileClick(clickedIdx) {
+    if (slidingSolved) return;
+    const emptyIdx = slidingBoard.indexOf(0);
+    const row = Math.floor(clickedIdx / 3);
+    const col = clickedIdx % 3;
+    const emptyRow = Math.floor(emptyIdx / 3);
+    const emptyCol = emptyIdx % 3;
+    const isAdjacent = (Math.abs(row - emptyRow) + Math.abs(col - emptyCol)) === 1;
+    if (!isAdjacent) {
+      const el = document.getElementById(`slideTile_${clickedIdx}`);
+      if (el) {
+        el.style.transform = 'translateX(-3px)';
+        setTimeout(() => { el.style.transform = 'translateX(3px)'; }, 50);
+        setTimeout(() => { el.style.transform = 'translateX(0)'; }, 100);
+      }
+
+      return;
+    }
+
+    if (!slidingStarted) {
+      slidingStarted = true;
+      startSlidingTimer();
+    }
+
+    slidingBoard[emptyIdx] = slidingBoard[clickedIdx];
+    slidingBoard[clickedIdx] = 0;
+    slidingMoves++;
+    renderSlidingGrid();
+  }
+
+  function startSlidingTimer() {
+    clearInterval(slidingTimerInterval);
+    slidingTimerInterval = setInterval(() => {
+      slidingSeconds++;
+      updateSlidingTimerDisplay();
+    }, 1000);
+  }
+
+  function updateSlidingTimerDisplay() {
+    const mins = String(Math.floor(slidingSeconds / 60)).padStart(2, '0');
+    const secs = String(slidingSeconds % 60).padStart(2, '0');
+    const timerEl = document.getElementById('puzzleTimer');
+    if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+  }
+
+  function updateSlidingStats() {
+    const movesEl = document.getElementById('puzzleMoves');
+    if (movesEl) movesEl.textContent = slidingMoves;
+    let homeCount = 0;
+    for (let i = 0; i < 8; i++) {
+      if (slidingBoard[i] === i + 1) homeCount++;
+    }
+
+    const homeEl = document.getElementById('puzzleCorrectSlots');
+    if (homeEl) homeEl.textContent = homeCount;
+  }
+
+  function checkSlidingSolved() {
+    const isNowSolved = slidingBoard.slice(0, 8).every((val, idx) => val === idx + 1) && slidingBoard[8] === 0;
+    const solveBtn = document.getElementById('puzzleSolveBtn');
+    const footerNote = document.getElementById('puzzleFooterNote');
+    if (isNowSolved && slidingStarted) {
+      slidingSolved = true;
+      clearInterval(slidingTimerInterval);
+      if (solveBtn) {
+        solveBtn.disabled = false;
+        solveBtn.style.background = '#059669';
+        solveBtn.style.boxShadow = '0 4px 18px rgba(16, 185, 129, 0.4)';
+        solveBtn.style.cursor = 'pointer';
+        solveBtn.innerHTML = '✨ 1-8 Aligned! Claim +50 Pts Now';
+      }
+
+      if (footerNote) {
+        footerNote.innerHTML = `🎉 Solved in <strong>${document.getElementById('puzzleTimer').textContent}</strong> and <strong>${slidingMoves} moves</strong>! Click button above to claim +50 points.`;
+        footerNote.style.color = '#10b981';
+      }
+
+      showChallengeToast('Quantum Core Aligned!', `Solved in ${slidingMoves} moves! Click button above to claim +50 points.`, true, 50);
+    } else if (isNowSolved && !slidingStarted) {
+      if (solveBtn) {
+        solveBtn.disabled = false;
+        solveBtn.style.background = '#059669';
+        solveBtn.style.boxShadow = '0 4px 18px rgba(16, 185, 129, 0.3)';
+        solveBtn.style.cursor = 'pointer';
+        solveBtn.innerHTML = '✨ 1-8 Aligned! Claim +50 Pts Now';
+      }
+
+    } else {
+      if (solveBtn) {
+        solveBtn.disabled = true;
+        solveBtn.style.background = '#0f172a';
+        solveBtn.style.boxShadow = 'none';
+        solveBtn.style.cursor = 'not-allowed';
+        const homeSlots = document.getElementById('puzzleCorrectSlots') ? document.getElementById('puzzleCorrectSlots').textContent : 0;
+        solveBtn.innerHTML = `Arrange 1-8 to Synchronize (${homeSlots}/8 Home)`;
+      }
+
+    }
+
+  }
+
+  function scrambleSlidingPuzzle(difficulty = 16) {
+    initSlidingPuzzle(difficulty);
+    let desc = difficulty <= 4 ? 'Easy practice (solve in 4 moves)' : (difficulty <= 16 ? 'Normal challenge' : 'Hard challenge');
+    showChallengeToast('New Puzzle Ready', desc, true);
+  }
+
+  function showSlidingHint() {
+    const emptyIdx = slidingBoard.indexOf(0);
+    const emptyRow = Math.floor(emptyIdx / 3);
+    const emptyCol = emptyIdx % 3;
+    const neighbors = [];
+    if (emptyRow > 0) neighbors.push(emptyIdx - 3);
+    if (emptyRow < 2) neighbors.push(emptyIdx + 3);
+    if (emptyCol > 0) neighbors.push(emptyIdx - 1);
+    if (emptyCol < 2) neighbors.push(emptyIdx + 1);
+    let target = neighbors.find(idx => slidingBoard[idx] !== idx + 1);
+    if (target === undefined) target = neighbors[0];
+    const tile = document.getElementById(`slideTile_${target}`);
+    const movedVal = slidingBoard[target];
+    if (tile) {
+      tile.style.boxShadow = '0 0 20px #fbbf24';
+      tile.style.transform = 'scale(1.08)';
+      setTimeout(() => {
+        tile.style.boxShadow = '';
+        tile.style.transform = 'scale(1)';
+      }, 700);
+      showChallengeToast('💡 Move Hint', `Click tile ${movedVal} to slide it into the empty space.`, true);
+    }
+
+  }
+
+  function autoSolvePuzzle() {
+    slidingBoard = [1, 2, 3, 4, 5, 6, 7, 8, 0];
+    slidingSolved = true;
+    clearInterval(slidingTimerInterval);
+    renderSlidingGrid();
+    checkSlidingSolved();
+    showChallengeToast('Auto-Solve Assist', 'Quantum Core aligned! You can now claim your +50 points.', true);
+  }
+
+  function resetToSolvedPuzzle() {
+    slidingBoard = [1, 2, 3, 4, 5, 6, 7, 8, 0];
+    slidingMoves = 0;
+    slidingSeconds = 0;
+    slidingStarted = false;
+    slidingSolved = false;
+    clearInterval(slidingTimerInterval);
+    slidingTimerInterval = null;
+    updateSlidingTimerDisplay();
+    renderSlidingGrid();
+    checkSlidingSolved();
+    showChallengeToast('Puzzle Reset', 'Tiles restored to order (1 to 8). Pick a difficulty to scramble and play!', true);
+  }
+
+  async function triggerChallengeAction(payload) {
+    payload.badge_id = BADGE_ID;
+    try {
+      const response = await fetch("{% url 'challenge_action_api' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}"
+
+        },
+        body: JSON.stringify(payload)
+
+      });
+      const data = await response.json();
+      if (data.success) {
+        updateHud(data);
+        showChallengeToast('Passport Updated', data.message, true, data.points_awarded || 0);
+      } else {
+        showChallengeToast('Notice', data.error || data.message || 'Action failed.', false);
+      }
+
+    } catch (err) {
+      console.error(err);
+      showChallengeToast('Network Error', 'Could not complete request.', false);
+    }
+
+  }
+
+  function updateHud(data) {
+    if (data.total_points !== undefined) {
+      const ptsEl = document.getElementById('hudTotalPoints');
+      if (ptsEl) ptsEl.textContent = data.total_points;
+      const barEl = document.getElementById('hudProgressBar');
+      if (barEl) {
+        const pct = Math.min(100, Math.round((data.total_points / 300) * 100));
+        barEl.style.width = pct + '%';
+      }
+
+    }
+
+    if (data.rank_title) {
+      const rankEl = document.getElementById('hudRankTitle');
+      if (rankEl) rankEl.textContent = data.rank_title;
+    }
+
+        if (data.is_elite_pass) {
+        setTimeout(() => { openEliteIdCardModal(); }, 700);
+      const badgeEl = document.getElementById('livePassBadge');
+      if (badgeEl) {
+        badgeEl.className = 'dash-live-badge';
+        badgeEl.style.cssText = 'background: linear-gradient(135deg, #7c3aed 0%, #4338ca 100%); border: 1.5px solid #c4b5fd; color: #ffffff; box-shadow: 0 0 16px rgba(124, 58, 237, 0.45);';
+        badgeEl.innerHTML = '<span class="dash-live-dot" style="background: #fbbf24; box-shadow: 0 0 8px #fbbf24;"></span> &#x1F451; ELITE PASS &bull; UNLIMITED BOOTHS';
+      }
+      const rankEl = document.getElementById('hudRankTitle');
+      if (rankEl) rankEl.textContent = 'Elite Pass';
+      const m1Btn = document.getElementById('cardMission1Btn');
+      if (m1Btn) {
+        m1Btn.style.background = 'linear-gradient(135deg, #7c3aed, #6366f1)';
+        m1Btn.innerHTML = '<i class="ti ti-plus"></i> Visit More Booths';
+        m1Btn.onclick = openSimulateCheckinModal;
+      }
+    }
+
+    if (data.completed_missions_count !== undefined) {
+      const mcEl = document.getElementById('hudMissionsCount');
+      if (mcEl) mcEl.textContent = data.completed_missions_count;
+    }
+
+    if (data.universities_visited_count !== undefined) {
+      const uvCount = document.getElementById('uniVisitedCount');
+      if (uvCount) uvCount.textContent = data.universities_visited_count;
+      const mvcNum = document.getElementById('modalVisitedCountNum');
+      if (mvcNum) mvcNum.textContent = data.universities_visited_count;
+      const uvBar = document.getElementById('uniVisitedBar');
+      if (uvBar) {
+        const pct = Math.min(100, Math.round((data.universities_visited_count / 3) * 100));
+        uvBar.style.width = pct + '%';
+      }
+
+      if (data.universities_visited_count >= 3) {
+        const card1 = document.getElementById('cardMission1');
+        if (card1) card1.classList.add('completed');
+        const uvStatus = document.getElementById('uniVisitedStatus');
+        if (uvStatus) uvStatus.innerHTML = '&#10004; Complete';
+        const actionBox = document.getElementById('cardMission1Action');
+        if (actionBox) {
+          actionBox.innerHTML = '<div class="btn-action-completed">&#10004; 3 University Visits Verified (+30 Pts)</div>';
+        }
+
+        const m1Btn = document.getElementById('cardMission1Btn');
+        if (m1Btn) {
+          m1Btn.className = 'btn-card-action btn-completed';
+          m1Btn.innerHTML = '<i class="ti ti-check"></i> 3 Visited (+30)';
+        }
+
+      } else {
+        const m1Btn = document.getElementById('cardMission1Btn');
+        if (m1Btn && isParent) {
+          m1Btn.className = 'btn-card-action';
+          m1Btn.style.background = '#eff6ff';
+          m1Btn.style.color = '#1768ff';
+          m1Btn.style.border = '1px solid #bfdbfe';
+          m1Btn.style.cursor = 'default';
+          m1Btn.innerHTML = '<i class="ti ti-lock"></i> Student Visits (View Only)';
+          m1Btn.onclick = null;
+        }
+
+      }
+
+      if (data.visited_universities && data.visited_universities.length > 0) {
+        const listEl = document.getElementById('visitedUnisList');
+        if (listEl) {
+          listEl.innerHTML = data.visited_universities.map(u =>
+
+            `<span style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; border-radius: 4px; padding: 2px 6px; font-size: 10px; font-weight: 700;">&#10004; ${u}</span>`
+
+          ).join(' ');
+        }
+
+      }
+
+    }
+
+    if (data.aptitude_test_completed !== undefined) {
+      const card2 = document.getElementById('cardMission2');
+      const statusEl = document.getElementById('aptitudeStatus');
+      const btnContainer = document.getElementById('cardMission2BtnContainer');
+      const btn2 = document.getElementById('cardMission2Btn');
+      if (data.aptitude_test_completed) {
+        if (card2) card2.classList.add('completed');
+        const scoreStr = (data.score !== undefined && data.score !== null) ? ` &bull; Score: ${data.score}` : '';
+        if (statusEl) statusEl.innerHTML = `<span style="color: #059669;">&#10004; Completed (+30)${scoreStr}</span>`;
+        const examResultUrl = data.latest_exam_attempt_id ? `/dashboard/exam/attempt/${data.latest_exam_attempt_id}/result/` : '/dashboard/exam/';
+        if (btnContainer) {
+          btnContainer.innerHTML = `
+            <a id="cardMission2Btn" href="${examResultUrl}" class="btn-card-action btn-completed">
+              <i class="ti ti-check"></i> View Result
+            </a>`;
+        } else if (btn2) {
+          btn2.className = 'btn-card-action btn-completed';
+          btn2.style.background = '';
+          btn2.href = examResultUrl;
+          btn2.innerHTML = '<i class="ti ti-check"></i> View Result';
+        }
+
+      } else {
+        if (card2) card2.classList.remove('completed');
+        if (statusEl) statusEl.innerHTML = `<span style="color: #b45309;">Pending Exam</span>`;
+        if (btnContainer) {
+          if (isParent) {
+            btnContainer.innerHTML = `
+              <span id="cardMission2Btn" class="btn-card-action" style="background: #f3e8ff; color: #7c3aed; border: 1px solid #d8b4fe; cursor: default; font-size: 11.5px;" title="Exams can only be taken by the student attendee. Parents have view-only access.">
+                <i class="ti ti-lock"></i> Student Exam (View Only)
+              </span>`;
+          } else {
+            btnContainer.innerHTML = `
+              <a id="cardMission2Btn" href="/dashboard/exam/" class="btn-card-action" style="background: #7c3aed;">
+                <i class="ti ti-pencil"></i> Start Exam &rarr;
+              </a>`;
+          }
+        } else if (btn2) {
+          if (isParent) {
+            btn2.className = 'btn-card-action';
+            btn2.style.background = '#f3e8ff';
+            btn2.style.color = '#7c3aed';
+            btn2.style.border = '1px solid #d8b4fe';
+            btn2.style.cursor = 'default';
+            btn2.innerHTML = '<i class="ti ti-lock"></i> Student Exam (View Only)';
+          } else {
+            btn2.className = 'btn-card-action';
+            btn2.style.background = '#7c3aed';
+            btn2.innerHTML = '<i class="ti ti-pencil"></i> Start Exam &rarr;';
+          }
+        }
+
+      }
+
+    }
+
+    if (data.seminars_attended_count !== undefined) {
+      const card3 = document.getElementById('cardMission3');
+      const statusEl = document.getElementById('seminarStatus');
+      const btn3 = document.getElementById('cardMission3Btn');
+      if (data.seminars_attended_count >= 1) {
+        if (card3) card3.classList.add('completed');
+        if (statusEl) statusEl.innerHTML = `<span style="color: #059669;">&#10004; Punched (+20)</span>`;
+        if (btn3) {
+          btn3.className = 'btn-card-action btn-completed';
+          btn3.style.background = '';
+          btn3.innerHTML = '<i class="ti ti-check"></i> Punched (+20)';
+        }
+
+      } else {
+        if (card3) card3.classList.remove('completed');
+        if (statusEl) statusEl.innerHTML = '<span style="color: #b45309;">Pending Keynote</span>';
+        if (btn3) {
+          if (isParent) {
+            btn3.className = 'btn-card-action';
+            btn3.style.background = '#eef2ff';
+            btn3.style.color = '#4f46e5';
+            btn3.style.border = '1px solid #c7d2fe';
+            btn3.style.cursor = 'default';
+            btn3.innerHTML = '<i class="ti ti-lock"></i> Student Keynote (View Only)';
+            btn3.onclick = null;
+          } else {
+            btn3.className = 'btn-card-action';
+            btn3.style.background = '#4f46e5';
+            btn3.innerHTML = '<i class="ti ti-qrcode"></i> Check In (+20)';
+          }
+
+        }
+
+      }
+
+    }
+
+    if (data.expert_meeting_completed !== undefined || data.counselling_completed !== undefined) {
+      const card4 = document.getElementById('cardMission4');
+      const expStatus = document.getElementById('expertStatus');
+      const btn4 = document.getElementById('cardMission4Btn');
+      if (data.expert_meeting_completed || data.counselling_completed) {
+        if (card4) card4.classList.add('completed');
+        if (expStatus) expStatus.innerHTML = '<span style="color: #059669;">&#10004; Completed (+40)</span>';
+        if (btn4) {
+          btn4.className = 'btn-card-action btn-completed';
+          btn4.style.background = '';
+          btn4.disabled = false;
+          btn4.onclick = openExpertQrModal;
+          btn4.innerHTML = '<i class="ti ti-check"></i> Punched by Counsellor (+40)';
+        }
+
+      } else {
+        if (card4) card4.classList.remove('completed');
+        if (expStatus) expStatus.innerHTML = '<span style="color: #b45309;">Pending</span>';
+        if (btn4) {
+          if (isParent) {
+            btn4.className = 'btn-card-action';
+            btn4.style.background = '#faf5ff';
+            btn4.style.color = '#9333ea';
+            btn4.style.border = '1px solid #e9d5ff';
+            btn4.style.cursor = 'default';
+            btn4.disabled = true;
+            btn4.onclick = null;
+            btn4.innerHTML = '<i class="ti ti-lock"></i> Student Session (View Only)';
+          } else {
+            btn4.className = 'btn-card-action';
+            btn4.style.background = '#9333ea';
+            btn4.disabled = false;
+            btn4.onclick = openExpertQrModal;
+            btn4.innerHTML = '<i class="ti ti-qrcode"></i> Show QR to Counsellor';
+          }
+
+        }
+
+      }
+
+    }
+
+    if (data.tech_challenge_completed !== undefined) {
+      const card5 = document.getElementById('cardMission5');
+      const techStatus = document.getElementById('techStatus');
+      const btn5 = document.getElementById('cardMission5Btn');
+      if (data.tech_challenge_completed) {
+        if (card5) card5.classList.add('completed');
+        if (techStatus) techStatus.innerHTML = '<span style="color: #059669;">&#10004; Solved (+30)</span>';
+        if (btn5) {
+          btn5.className = 'btn-card-action btn-completed';
+          btn5.style.background = '';
+          btn5.innerHTML = '<i class="ti ti-check"></i> Solved (+30)';
+          btn5.onclick = openTechQuizModal;
+        }
+
+      } else {
+        if (card5) card5.classList.remove('completed');
+        if (techStatus) techStatus.innerHTML = '<span style="color: #b45309;">Ready</span>';
+        if (btn5) {
+          if (isParent) {
+            btn5.className = 'btn-card-action';
+            btn5.style.background = '#e0f2fe';
+            btn5.style.color = '#0284c7';
+            btn5.style.border = '1px solid #bae6fd';
+            btn5.style.cursor = 'default';
+            btn5.onclick = null;
+            btn5.innerHTML = '<i class="ti ti-lock"></i> Student Quiz (View Only)';
+          } else {
+            btn5.className = 'btn-card-action';
+            btn5.style.background = '#0891b2';
+            btn5.onclick = openTechQuizModal;
+            btn5.innerHTML = '<i class="ti ti-device-desktop"></i> Take Quiz (+30)';
+          }
+
+        }
+
+      }
+
+    }
+
+    if (data.puzzle_completed !== undefined) {
+      const card6 = document.getElementById('cardMission6');
+      const pzStatus = document.getElementById('puzzleStatus');
+      const btn6 = document.getElementById('cardMission6Btn');
+      if (data.puzzle_completed) {
+        if (card6) card6.classList.add('completed');
+        if (pzStatus) pzStatus.innerHTML = '<span style="color: #059669;">&#10004; Mastered (+50)</span>';
+        if (btn6) {
+          btn6.className = 'btn-card-action btn-completed';
+          btn6.style.background = '';
+          btn6.innerHTML = '<i class="ti ti-check"></i> Mastered (+50)';
+          btn6.onclick = openPuzzleModal;
+        }
+
+      } else {
+        if (card6) card6.classList.remove('completed');
+        if (pzStatus) pzStatus.innerHTML = '<span style="color: #b45309;">Ready to Play</span>';
+        if (btn6) {
+          if (isParent) {
+            btn6.className = 'btn-card-action';
+            btn6.style.background = '#fef3c7';
+            btn6.style.color = '#b45309';
+            btn6.style.border = '1px solid #fde68a';
+            btn6.style.cursor = 'default';
+            btn6.onclick = null;
+            btn6.innerHTML = '<i class="ti ti-lock"></i> Student Puzzle (View Only)';
+          } else {
+            btn6.className = 'btn-card-action';
+            btn6.style.background = '#d97706';
+            btn6.onclick = openPuzzleModal;
+            btn6.innerHTML = '<i class="ti ti-player-play"></i> Play Puzzle (+50)';
+          }
+
+        }
+
+      }
+
+    }
+
+    // Refresh activity log
+
+    if (data.activity_log && data.activity_log.length > 0) {
+      const logBox = document.getElementById('activityLogBox');
+      if (logBox) {
+        let html = '';
+        data.activity_log.forEach(act => {
+          html += `
+
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid #f8fafc; font-size: 12px;">
+
+              <div>
+
+                <span style="font-weight: 750; color: #0f172a;">${act.title}</span>
+
+                <span style="display: block; font-size: 11px; color: #94a3b8; margin-top: 2px;">${act.timestamp}</span>
+
+              </div>
+
+              ${act.points > 0 ? `<span style="font-weight: 800; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 20px; font-size: 11px;">+${act.points} pts</span>` : `<span style="font-weight: 700; color: #0f172a; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 2px 8px; border-radius: 20px; font-size: 10.5px;">Claimed</span>`}
+
+            </div>
+
+          `;
+        });
+        logBox.innerHTML = html;
+      }
+
+    }
+
+    if (typeof updateFlowStepper === 'function') {
+      updateFlowStepper();
+    }
+
+  }
+
+  function openBadgeQrModal() {
+    openModal('badgeQrModal');
+  }
+
+  function openSeminarQrModal() {
+    const selectEl = document.getElementById('quickSeminarSelect');
+    const titleDisplay = document.getElementById('modalSeminarTitleDisplay');
+    if (selectEl && titleDisplay) {
+      titleDisplay.textContent = selectEl.value || 'Keynote Seminar Session';
+    }
+
+    openModal('seminarQrModal');
+  }
+
+  function updateSeminarModalSelection() {
+    const selectEl = document.getElementById('quickSeminarSelect');
+    const titleDisplay = document.getElementById('modalSeminarTitleDisplay');
+    if (selectEl && titleDisplay) {
+      titleDisplay.textContent = selectEl.value || 'Keynote Seminar Session';
+    }
+
+  }
+
+  function openExpertQrModal() {
+    openModal('expertQrModal');
+  }
+
+  function submitExpertQrPunch() {
+    showChallengeToast('Notice', 'Education Expert punch must be scanned by the academic counsellor at their station dashboard.', false);
+    closeModal('expertQrModal');
+  }
+
+  function openSimulateCheckinModal() {
+    openModal('simulateCheckinModal');
+  }
+
+  function submitSimulateCheckin() {
+    const uniSelect = document.getElementById('simUniSelect');
+    if (!uniSelect) return;
+    const uni = uniSelect.value;
+    closeModal('simulateCheckinModal');
+    triggerChallengeAction({ action: 'visit_university', university_name: uni });
+  }
+
+  function logUniversityVisit() {
+    const uniSelect = document.getElementById('simUniSelect');
+    const uni = uniSelect ? uniSelect.value : 'University Booth';
+    triggerChallengeAction({ action: 'visit_university', university_name: uni });
+  }
+
+  function submitQrScan(e) {
+    e.preventDefault();
+    const code = document.getElementById('qrInputCode').value;
+    closeModal('scanQrModal');
+    triggerChallengeAction({ action: 'scan_university_qr', code: code });
+  }
+
+  function submitAptitudeQuiz(e) {
+    e.preventDefault();
+    closeModal('aptitudeModal');
+    triggerChallengeAction({ action: 'submit_aptitude' });
+  }
+
+  function logSeminarAttendance() {
+    openSeminarQrModal();
+  }
+
+  function logCareerCounselling() {
+    openExpertQrModal();
+  }
+
+  function logUniversityMeeting() {
+    openExpertQrModal();
+  }
+
+  function submitTechChallenge(e) {
+    e.preventDefault();
+    closeModal('techModal');
+    triggerChallengeAction({ action: 'submit_tech' });
+  }
+
+  function solvePuzzleChallenge() {
+    closeModal('puzzleModal');
+    triggerChallengeAction({ action: 'solve_puzzle' });
+  }
+
+  function reopenAllMissions() {
+    triggerChallengeAction({ action: 'reset_passport' });
+  }
+
+  function unlockAllMissions() {
+    triggerChallengeAction({ action: 'unlock_all' });
+  }
+
+</script>
+
+{% endblock %}

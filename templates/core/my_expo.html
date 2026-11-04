@@ -1,0 +1,12 @@
+{% extends base_template|default:'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}My Expo Hub | Dashboard{% endblock %}
+{% block page_category %}Student Command Center{% endblock %}
+{% block page_title %}My Expo Hub{% endblock %}
+{% block nav_overview %}active{% endblock %}
+{% block nav_my_expo %}active{% endblock %}
+
+{% block content %}
+{% include 'dashboard/student_my_expo_content.html' %}
+{% endblock %}

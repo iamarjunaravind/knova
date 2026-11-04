@@ -1,0 +1,73 @@
+{% extends base_template|default:'dashboard/base.html' %}
+
+{% block title %}Registration Details | KNOVA{% endblock %}
+{% block nav_registrations %}active{% endblock %}
+{% block page_title %}User Details{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 800px; margin: 0 auto;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom: 1px solid var(--card-border); padding-bottom: 20px;">
+    <h3 style="margin:0; color:var(--text-main);">Registration Information</h3>
+    <a href="{% url 'dashboard_registrations' %}" class="btn" style="background:#f1f5f9; color:#475569; text-decoration:none; padding:8px 16px; border-radius:6px; font-size:14px; font-weight:600;">Back to List</a>
+  </div>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div>
+      <p style="margin: 0 0 4px 0; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Full Name</p>
+      <p style="margin: 0 0 20px 0; font-size:16px; color:var(--text-main); font-weight:500;">{{ reg.full_name }}</p>
+
+      <p style="margin: 0 0 4px 0; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Email Address</p>
+      <p style="margin: 0 0 20px 0; font-size:16px; color:var(--text-main); font-weight:500;">{{ reg.email }}</p>
+
+      <p style="margin: 0 0 4px 0; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Phone Number</p>
+      <p style="margin: 0 0 20px 0; font-size:16px; color:var(--text-main); font-weight:500;">{{ reg.phone|default:"Not Provided" }}</p>
+
+      <p style="margin: 0 0 4px 0; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Role</p>
+      <p style="margin: 0 0 20px 0; font-size:16px; color:var(--text-main); font-weight:500;">
+        <span style="background:var(--primary); color:#fff; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600;">{{ reg.role }}</span>
+      </p>
+    </div>
+
+    <div>
+      <p style="margin: 0 0 4px 0; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Registration ID</p>
+      <p style="margin: 0 0 20px 0; font-size:16px; color:var(--text-main); font-weight:500;">{{ reg.registration_id|default:"N/A" }}</p>
+
+      <p style="margin: 0 0 4px 0; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Registered At</p>
+      <p style="margin: 0 0 20px 0; font-size:16px; color:var(--text-main); font-weight:500;">{{ reg.registered_at|date:"M d, Y H:i" }}</p>
+
+      <p style="margin: 0 0 4px 0; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Event Location</p>
+      <p style="margin: 0 0 20px 0; font-size:16px; color:var(--text-main); font-weight:500;">{{ reg.event_location.city|default:"Not Assigned" }}</p>
+
+      <p style="margin: 0 0 4px 0; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Check-in Status</p>
+      <p style="margin: 0 0 20px 0; font-size:16px; color:var(--text-main); font-weight:500;">
+        {% if reg.is_checked_in %}
+          <span style="color:#10b981; font-weight:600;"><i data-feather="check-circle" style="width:16px; height:16px; vertical-align:middle; margin-right:4px;"></i> Checked In</span>
+        {% else %}
+          <span style="color:#ef4444; font-weight:600;"><i data-feather="x-circle" style="width:16px; height:16px; vertical-align:middle; margin-right:4px;"></i> Not Checked In</span>
+        {% endif %}
+      </p>
+    </div>
+  </div>
+  
+  {% if reg.role == 'Student' %}
+  <div style="margin-top:20px; border-top: 1px solid var(--card-border); padding-top: 20px;">
+    <h4 style="margin: 0 0 16px 0; color:var(--text-main);">Matchmaking Preferences</h4>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+      <div>
+        <p style="margin: 0 0 4px 0; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Preferred Country</p>
+        <p style="margin: 0 0 20px 0; font-size:16px; color:var(--text-main); font-weight:500;">{{ reg.preferred_country|default:"Any" }}</p>
+      </div>
+      <div>
+        <p style="margin: 0 0 4px 0; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Preferred Program</p>
+        <p style="margin: 0 0 20px 0; font-size:16px; color:var(--text-main); font-weight:500;">{{ reg.preferred_program|default:"Any" }}</p>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div style="margin-top:20px; border-top: 1px solid var(--card-border); padding-top: 20px; text-align:right;">
+    <a href="{% url 'registration_update' reg.pk %}" class="btn btn-primary" style="padding:10px 20px; margin-right:10px;">Edit Registration</a>
+    <a href="{% url 'registration_delete' reg.pk %}" class="btn" style="background:#fef2f2; color:#ef4444; border:1px solid #fca5a5; padding:10px 20px;">Delete Registration</a>
+  </div>
+</div>
+{% endblock %}

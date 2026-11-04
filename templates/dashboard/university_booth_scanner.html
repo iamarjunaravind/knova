@@ -1,0 +1,507 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Booth Attendance Punch Scanner — {{ university.name }} | KNOVA{% endblock %}
+{% block nav_uni_scanner %}active{% endblock %}
+{% block page_title %}Booth Attendance Punch Scanner{% endblock %}
+
+{% block content %}
+<style>
+.scanner-main-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 24px;
+  align-items: flex-start;
+}
+@media (max-width: 900px) {
+  .scanner-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+</style>
+
+<!-- Header Bar -->
+<div class="glass-card" style="margin-bottom: 24px; padding: 22px 26px; border-radius: 16px; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border: 1.5px solid #bfdbfe; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, rgba(23,104,255,0.12), rgba(37,99,235,0.22)); border: 1.5px solid rgba(23,104,255,0.3); display: flex; align-items: center; justify-content: center; color: #1768ff;">
+      <i data-feather="camera" style="width: 26px; height: 26px;"></i>
+    </div>
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <h2 style="margin: 0; font-size: 20px; font-weight: 800; color: #0a1936;">Booth Visitor Attendance Punch Scanner</h2>
+        <span style="background: #eff6ff; color: #1768ff; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; border: 1px solid #bfdbfe;">
+          {{ booth.booth_number|default:"Booth Assigned" }} &bull; {{ booth.hall_name|default:"Expo Floor" }}
+        </span>
+      </div>
+      <p style="margin: 4px 0 0; font-size: 13.5px; color: #64748b;">
+        Punch visitor/student attendance at <strong>{{ university.name }}</strong> booth. Punching attendance immediately unlocks the student's full academic dossier & documents.
+      </p>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <a href="{% url 'university_attended_students' %}" class="btn" style="background: #f0fdf4; color: #15803d; border: 1.5px solid #bbf7d0; font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+      <i data-feather="users" style="width: 15px; height: 15px;"></i> View Attended Roster ({{ total_punched }})
+    </a>
+    <a href="{% url 'university_staff_dashboard' %}" class="btn" style="background: #fff; border: 1px solid #cbd5e1; color: #475569; font-weight: 600; font-size: 13px; padding: 9px 14px; border-radius: 8px; text-decoration: none;">
+      &larr; Back to Dashboard
+    </a>
+  </div>
+</div>
+
+<!-- Main 2-Column Grid -->
+<div class="scanner-main-grid">
+  
+  <!-- LEFT COLUMN: Camera Scanner & Manual Input -->
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    
+    <!-- Camera Viewport Card -->
+    <div class="glass-card" style="padding: 24px; border-radius: 16px; position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px;">
+          <i data-feather="video" style="width: 18px; height: 18px; color: #1768ff;"></i> Live Camera QR Scanner
+        </h3>
+        <div style="display: flex; gap: 8px;">
+          <button id="btnToggleCamera" onclick="toggleCamera()" class="btn" style="background: #1768ff; color: #fff; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+            <i data-feather="video" style="width: 14px; height: 14px;"></i> <span id="cameraBtnText">Start Camera</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scanner Container -->
+      <div id="reader" style="width: 100%; min-height: 280px; border-radius: 12px; overflow: hidden; background: #0f172a; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #94a3b8; position: relative;">
+        <div id="cameraPlaceholder" style="text-align: center; padding: 40px 20px;">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+            <i data-feather="camera" style="width: 28px; height: 28px; color: #38bdf8;"></i>
+          </div>
+          <div style="color: #fff; font-weight: 700; font-size: 14.5px;">Camera Viewfinder Standby</div>
+          <div style="font-size: 12px; color: #94a3b8; margin-top: 4px; max-width: 280px;">Click "Start Camera" to scan student badges using your device camera or enter their ID below.</div>
+        </div>
+      </div>
+
+      <!-- Scan Status Notice -->
+      <div id="scanStatusMsg" style="display: none; margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; text-align: center;"></div>
+    </div>
+
+    <!-- Manual Punch Input Card -->
+    <div class="glass-card" style="padding: 24px; border-radius: 16px;">
+      <h3 style="margin: 0 0 14px 0; font-size: 15.5px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px;">
+        <i data-feather="edit-3" style="width: 17px; height: 17px; color: #1768ff;"></i> Manual Attendance Punch & Barcode Entry
+      </h3>
+      
+      <form id="punchForm" onsubmit="handleManualPunch(event)" style="display: flex; flex-direction: column; gap: 14px;">
+        {% csrf_token %}
+        <input type="hidden" name="uni_id" value="{{ university.pk }}">
+
+        <div>
+          <label style="display: block; font-size: 11.5px; font-weight: 750; color: #475569; text-transform: uppercase; margin-bottom: 6px;">
+            Student Identifier (Badge ID / QR Code / Registration ID / Email):
+          </label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="studentCodeInput" name="student_code" placeholder="Scan or enter e.g. KNV-2027-..., KNOVA-..., or student email" required autofocus
+              style="flex: 1; padding: 12px 14px; border-radius: 10px; border: 1.5px solid #cbd5e1; font-size: 14px; font-weight: 600; color: #0a1936; outline: none; transition: border 0.2s;"
+              onfocus="this.style.borderColor='#1768ff'" onblur="this.style.borderColor='#cbd5e1'">
+            <button type="submit" id="btnSubmitPunch" class="btn" style="background: #1768ff; color: #fff; font-weight: 700; font-size: 13.5px; padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(23,104,255,0.25);">
+              <i data-feather="check-circle" style="width: 16px; height: 16px;"></i> Punch Attendance
+            </button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div>
+            <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px;">
+              Attendance Status:
+            </label>
+            <select id="punchStatusInput" name="status" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1.5px solid #e2e8f0; font-size: 12.5px; font-weight: 600; color: #334155;">
+              <option value="Attended" selected>Attended / Checked-in</option>
+              <option value="Interested">High Interest in Admission</option>
+              <option value="Follow-up">Follow-up Meeting Scheduled</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 4px;">
+              Representative Notes:
+            </label>
+            <input type="text" id="punchNotesInput" name="notes" placeholder="e.g. Inquired about Computer Science MS" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1.5px solid #e2e8f0; font-size: 12.5px; color: #334155; box-sizing: border-box;">
+          </div>
+        </div>
+
+        {% if recent_students %}
+        <div style="margin-top: 4px;">
+          <span style="font-size: 11px; color: #64748b; font-weight: 600;">Quick Pick Registered Student:</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">
+            {% for s in recent_students|slice:":6" %}
+            <button type="button" onclick="quickPunch('{{ s.registration_id|default:s.email }}')" style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 6px; cursor: pointer;">
+              + {{ s.full_name }} ({{ s.registration_id|default:s.email|slice:":14" }})
+            </button>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </form>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN: Real-Time Scanned Student Profile & Feed -->
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    
+    <!-- Scanned Student Dossier Card (Becomes Visible on Punch) -->
+    <div id="studentCardContainer" class="glass-card" style="padding: 24px; border-radius: 16px; border: 1.5px solid #bbf7d0; background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%); display: none;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; border-bottom: 1px solid #dcfce7; padding-bottom: 12px;">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <div style="width: 46px; height: 46px; border-radius: 50%; background: #10b981; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px;" id="stuAvatar">
+            S
+          </div>
+          <div>
+            <h3 id="stuName" style="margin: 0; font-size: 17px; font-weight: 800; color: #0a1936;">Student Name</h3>
+            <span id="stuBadgePill" style="display: inline-block; background: #ecfdf5; color: #059669; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-top: 2px;">
+              Badge Verified
+            </span>
+          </div>
+        </div>
+        <span style="background: #dcfce7; color: #15803d; font-size: 11px; font-weight: 750; padding: 3px 9px; border-radius: 20px;">
+          ✓ Attendance Punched
+        </span>
+      </div>
+
+      <!-- Contact Info -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; font-size: 12.5px; background: #ffffff; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0;">
+        <div>
+          <span style="color: #64748b; font-size: 10.5px; font-weight: 700; text-transform: uppercase;">Email:</span>
+          <div id="stuEmail" style="font-weight: 700; color: #0a1936; word-break: break-all;">email@example.com</div>
+        </div>
+        <div>
+          <span style="color: #64748b; font-size: 10.5px; font-weight: 700; text-transform: uppercase;">Mobile:</span>
+          <div id="stuMobile" style="font-weight: 700; color: #0a1936;">+1 234 567 890</div>
+        </div>
+        <div>
+          <span style="color: #64748b; font-size: 10.5px; font-weight: 700; text-transform: uppercase;">Location:</span>
+          <div id="stuLocation" style="font-weight: 600; color: #334155;">City, Country</div>
+        </div>
+        <div>
+          <span style="color: #64748b; font-size: 10.5px; font-weight: 700; text-transform: uppercase;">Passport Score:</span>
+          <div id="stuPoints" style="font-weight: 800; color: #10b981;">100 pts</div>
+        </div>
+      </div>
+
+      <!-- Academic Background Dossier -->
+      <div style="background: #ffffff; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 14px;">
+        <span style="color: #1768ff; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">
+          🎓 Academic Record & Qualifications
+        </span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+          <div><span style="color: #64748b;">Current Education:</span> <strong id="stuEdu">Undergraduate</strong></div>
+          <div><span style="color: #64748b;">Grades / GPA:</span> <strong id="stuGrades">3.8 GPA</strong></div>
+          <div><span style="color: #64748b;">School/College:</span> <strong id="stuSchool">XYZ Academy</strong></div>
+          <div><span style="color: #64748b;">English Test:</span> <strong id="stuEnglish">IELTS</strong></div>
+        </div>
+      </div>
+
+      <!-- Admissions Preferences -->
+      <div style="background: #ffffff; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 14px;">
+        <span style="color: #8b5cf6; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">
+          🎯 Program & Admission Preferences
+        </span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+          <div><span style="color: #64748b;">Desired Degree:</span> <strong id="stuDegree">Master's</strong></div>
+          <div><span style="color: #64748b;">Preferred Field:</span> <strong id="stuProgram">Computer Science</strong></div>
+          <div><span style="color: #64748b;">Target Intake:</span> <strong id="stuIntake">2027</strong></div>
+          <div><span style="color: #64748b;">Budget Range:</span> <strong id="stuBudget">$10k-$30k</strong></div>
+        </div>
+      </div>
+
+      <!-- Uploaded Documents Vault -->
+      <div style="background: #ffffff; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 14px;">
+        <span style="color: #f59e0b; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">
+          📁 Student Academic Documents
+        </span>
+        <div id="stuDocsList" style="font-size: 12px; color: #64748b;">
+          No documents uploaded yet.
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: #64748b;">
+        <span>Punched: <strong id="stuPunchTime">Just now</strong></span>
+        <a id="stuMsgBtn" href="#" class="btn" style="background: #1768ff; color: #fff; font-size: 11.5px; font-weight: 700; padding: 5px 12px; border-radius: 6px; text-decoration: none;">
+          Send Direct Message &rarr;
+        </a>
+      </div>
+    </div>
+
+    <!-- Standby Card When No Scan Has Occurred -->
+    <div id="studentCardStandby" class="glass-card" style="padding: 32px 20px; border-radius: 16px; text-align: center; color: #64748b;">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: #eff6ff; color: #1768ff; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+        <i data-feather="user-check" style="width: 28px; height: 28px;"></i>
+      </div>
+      <h4 style="margin: 0 0 6px 0; font-size: 16px; font-weight: 800; color: #0a1936;">Awaiting Student Attendance Punch</h4>
+      <p style="margin: 0; font-size: 13px; line-height: 1.5; max-width: 340px; margin-left: auto; margin-right: auto;">
+        Point the camera at the attendee's badge or type their registration ID above to punch attendance and unlock their complete admissions record.
+      </p>
+    </div>
+
+    <!-- Recent Punches at this Booth -->
+    <div class="glass-card" style="padding: 22px; border-radius: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h4 style="margin: 0; font-size: 14.5px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 7px;">
+          <i data-feather="clock" style="width: 16px; height: 16px; color: #1768ff;"></i> Recent Attendance Punches
+        </h4>
+        <span style="font-size: 11.5px; font-weight: 700; color: #10b981; background: #ecfdf5; padding: 2px 8px; border-radius: 12px;">
+          {{ total_punched }} Punched
+        </span>
+      </div>
+
+      <div id="recentPunchesList" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">
+        {% for punch in recent_punches %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #fff; border: 1px solid #f1f5f9; border-radius: 8px; font-size: 12.5px;">
+          <div>
+            <strong style="color: #0a1936;">{{ punch.student.user.get_full_name|default:punch.student.user.username }}</strong>
+            <div style="font-size: 11px; color: #64748b;">{{ punch.student.current_education|default:'Student' }} &bull; {{ punch.student.preferred_program|default:'General' }}</div>
+          </div>
+          <div style="text-align: right;">
+            <span style="background: #ecfdf5; color: #059669; font-weight: 700; font-size: 10.5px; padding: 2px 6px; border-radius: 4px;">{{ punch.status }}</span>
+            <div style="font-size: 10px; color: #94a3b8; margin-top: 2px;">{{ punch.interaction_date|date:"g:i A" }}</div>
+          </div>
+        </div>
+        {% empty %}
+        <div style="padding: 18px; text-align: center; color: #94a3b8; font-size: 12px;">
+          No visitor punches recorded yet today.
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- HTML5-QRCode Library -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<script>
+let html5QrCode = null;
+let isCameraRunning = false;
+
+function toggleCamera() {
+  if (isCameraRunning) {
+    stopCamera();
+  } else {
+    startCamera();
+  }
+}
+
+function startCamera() {
+  const readerElement = document.getElementById('reader');
+  const btnText = document.getElementById('cameraBtnText');
+  const placeholder = document.getElementById('cameraPlaceholder');
+
+  if (placeholder) {
+    placeholder.style.display = 'none';
+  }
+
+  html5QrCode = new Html5Qrcode("reader");
+  const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+  html5QrCode.start(
+    { facingMode: "environment" },
+    config,
+    (decodedText, decodedResult) => {
+      // Scanned successfully!
+      handleScannedCode(decodedText);
+    },
+    (errorMessage) => {
+      // scanning in progress, quiet
+    }
+  ).then(() => {
+    isCameraRunning = true;
+    btnText.textContent = "Stop Camera";
+    document.getElementById('btnToggleCamera').style.background = '#ef4444';
+    showStatus("Camera scanner active. Hold QR code in front of lens.", "info");
+  }).catch((err) => {
+    isCameraRunning = false;
+    if (placeholder) placeholder.style.display = 'block';
+    showStatus("Could not access camera: " + err, "error");
+  });
+}
+
+function stopCamera() {
+  if (html5QrCode && isCameraRunning) {
+    html5QrCode.stop().then(() => {
+      isCameraRunning = false;
+      document.getElementById('cameraBtnText').textContent = "Start Camera";
+      document.getElementById('btnToggleCamera').style.background = '#1768ff';
+      const placeholder = document.getElementById('cameraPlaceholder');
+      if (placeholder) placeholder.style.display = 'block';
+      showStatus("Camera stopped.", "info");
+    }).catch(err => {
+      console.error(err);
+    });
+  }
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('scanStatusMsg');
+  el.style.display = 'block';
+  el.textContent = msg;
+  if (type === 'success') {
+    el.style.background = '#ecfdf5';
+    el.style.color = '#065f46';
+    el.style.border = '1px solid #a7f3d0';
+  } else if (type === 'error') {
+    el.style.background = '#fef2f2';
+    el.style.color = '#991b1b';
+    el.style.border = '1px solid #fecaca';
+  } else {
+    el.style.background = '#eff6ff';
+    el.style.color = '#1e40af';
+    el.style.border = '1px solid #bfdbfe';
+  }
+}
+
+function playBeepSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.15);
+  } catch(e) {}
+}
+
+let lastScannedText = "";
+let lastScanTime = 0;
+
+function handleScannedCode(code) {
+  const now = Date.now();
+  if (code === lastScannedText && now - lastScanTime < 3000) {
+    return; // throttle duplicate scans
+  }
+  lastScannedText = code;
+  lastScanTime = now;
+
+  document.getElementById('studentCodeInput').value = code;
+  executePunch(code, 'Attended', 'QR Scanner Punch');
+}
+
+function handleManualPunch(e) {
+  e.preventDefault();
+  const code = document.getElementById('studentCodeInput').value.trim();
+  const status = document.getElementById('punchStatusInput').value;
+  const notes = document.getElementById('punchNotesInput').value.trim();
+  if (!code) return;
+  executePunch(code, status, notes);
+}
+
+function quickPunch(code) {
+  document.getElementById('studentCodeInput').value = code;
+  executePunch(code, 'Attended', 'Quick Staff Punch');
+}
+
+function executePunch(code, status, notes) {
+  showStatus(`Processing attendance punch for "${code}"...`, "info");
+  const btn = document.getElementById('btnSubmitPunch');
+  btn.disabled = true;
+
+  fetch("{% url 'university_punch_attendance' %}", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+    },
+    body: JSON.stringify({
+      student_code: code,
+      status: status || 'Attended',
+      notes: notes || '',
+      uni_id: "{{ university.pk }}"
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    btn.disabled = false;
+    if (data.success) {
+      playBeepSound();
+      showStatus(data.message, "success");
+      renderStudentCard(data.student);
+      prependRecentPunch(data.student);
+    } else {
+      showStatus(data.message, "error");
+    }
+  })
+  .catch(err => {
+    btn.disabled = false;
+    showStatus("Network or server error during punch: " + err, "error");
+  });
+}
+
+function renderStudentCard(s) {
+  document.getElementById('studentCardStandby').style.display = 'none';
+  const card = document.getElementById('studentCardContainer');
+  card.style.display = 'block';
+
+  document.getElementById('stuName').textContent = s.name;
+  document.getElementById('stuAvatar').textContent = s.name.charAt(0).toUpperCase();
+  document.getElementById('stuBadgePill').textContent = `Badge: ${s.badge_id || 'VERIFIED'}`;
+  document.getElementById('stuEmail').textContent = s.email;
+  document.getElementById('stuMobile').textContent = s.mobile;
+  document.getElementById('stuLocation').textContent = `${s.city}, ${s.country}`;
+  document.getElementById('stuPoints').textContent = `${s.passport_points} pts`;
+
+  document.getElementById('stuEdu').textContent = s.education;
+  document.getElementById('stuGrades').textContent = s.grades;
+  document.getElementById('stuSchool').textContent = s.school_college;
+  document.getElementById('stuEnglish').textContent = s.english_proficiency;
+
+  document.getElementById('stuDegree').textContent = s.preferred_degree;
+  document.getElementById('stuProgram').textContent = s.preferred_program;
+  document.getElementById('stuIntake').textContent = s.intake_year;
+  document.getElementById('stuBudget').textContent = s.budget_range;
+  document.getElementById('stuPunchTime').textContent = s.punch_time;
+
+  const msgBtn = document.getElementById('stuMsgBtn');
+  msgBtn.href = `{% url 'dashboard_messages' %}?contact_id=${s.id}`;
+
+  const docsContainer = document.getElementById('stuDocsList');
+  if (s.documents && s.documents.length > 0) {
+    let docsHtml = '<div style="display: flex; flex-direction: column; gap: 4px;">';
+    s.documents.forEach(d => {
+      docsHtml += `<a href="${d.url}" target="_blank" style="color: #1768ff; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+        📄 ${d.title} <span style="color: #94a3b8; font-size: 11px;">(${d.uploaded_at})</span>
+      </a>`;
+    });
+    docsHtml += '</div>';
+    docsContainer.innerHTML = docsHtml;
+  } else {
+    docsContainer.innerHTML = '<span style="color: #94a3b8;">No uploaded documents in vault.</span>';
+  }
+
+  // Smooth scroll into view if on small screen
+  if (window.innerWidth < 768) {
+    card.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function prependRecentPunch(s) {
+  const list = document.getElementById('recentPunchesList');
+  const div = document.createElement('div');
+  div.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #ecfdf5; border: 1.5px solid #a7f3d0; border-radius: 8px; font-size: 12.5px; animation: fadeIn 0.3s ease;";
+  div.innerHTML = `
+    <div>
+      <strong style="color: #0a1936;">${s.name}</strong>
+      <div style="font-size: 11px; color: #059669;">${s.education} &bull; ${s.preferred_program}</div>
+    </div>
+    <div style="text-align: right;">
+      <span style="background: #10b981; color: #fff; font-weight: 700; font-size: 10.5px; padding: 2px 6px; border-radius: 4px;">${s.status}</span>
+      <div style="font-size: 10px; color: #059669; margin-top: 2px;">Just now</div>
+    </div>
+  `;
+  list.insertBefore(div, list.firstChild);
+}
+</script>
+{% endblock %}

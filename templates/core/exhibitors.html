@@ -1,0 +1,1365 @@
+{% extends 'core/base_public.html' %}
+{% load static %}
+
+{% block title %}Featured Universities & Global Exhibitors | KNOVA 2027{% endblock %}
+
+{% block body_class %}has-dark-hero exhibitors-page{% endblock %}
+
+{% block content %}
+<style>
+    /* ==========================================================
+       EXHIBITORS PAGE MODERN DASHBOARD DESIGN SYSTEM
+       ========================================================== */
+    :root {
+        --ex-primary: #1768ff;
+        --ex-primary-dark: #0f52cc;
+        --ex-navy: #061022;
+        --ex-navy-card: #0b1c3d;
+        --ex-slate-900: #0f172a;
+        --ex-slate-700: #334155;
+        --ex-slate-600: #475569;
+        --ex-slate-500: #64748b;
+        --ex-slate-100: #f1f5f9;
+        --ex-border: #e2e8f0;
+        --ex-emerald: #10b981;
+        --ex-amber: #f59e0b;
+        --ex-card-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.07);
+        --ex-hover-shadow: 0 20px 40px -10px rgba(23, 104, 255, 0.16);
+    }
+
+    body.exhibitors-page,
+    body.has-dark-hero {
+        padding-top: 0 !important;
+        background-color: #f4f7fb;
+    }
+
+    /* Seamless Dark Atmosphere Hero */
+    .ex-hero {
+        padding: 122px 0 26px 0;
+        background: radial-gradient(circle at 85% 15%, rgba(23, 104, 255, 0.28) 0%, transparent 55%),
+                    radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.18) 0%, transparent 50%),
+                    linear-gradient(135deg, #061022 0%, #0a1c3f 50%, #102e6b 100%);
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ex-hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, transparent 0%, rgba(6, 16, 34, 0.45) 100%);
+        pointer-events: none;
+    }
+
+    .dashboard-header-inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    /* Left: Title & Breadcrumbs */
+    .dash-title-block {
+        flex: 1;
+        min-width: 260px;
+    }
+
+    .dash-breadcrumb-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 4px;
+    }
+
+    .dash-badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(23, 104, 255, 0.22);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 2px 8px;
+        border-radius: 9999px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #7dd3fc;
+    }
+
+    .dash-badge-pill i {
+        font-size: 12px;
+        color: #38bdf8;
+    }
+
+    .dash-crumb-sep {
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 11px;
+    }
+
+    .dash-crumb-text {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: rgba(241, 245, 249, 0.7);
+    }
+
+    .ex-dash-title {
+        color: #ffffff !important;
+        font-size: clamp(19px, 2.2vw, 24px);
+        font-weight: 800;
+        margin: 0 0 3px 0;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .ex-dash-title .gradient-text {
+        background: linear-gradient(135deg, #67e8f9 0%, #ffffff 50%, #93c5fd 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+
+    .dash-live-badge {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 2px 7px;
+        border-radius: 5px;
+        background: rgba(16, 185, 129, 0.18);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        color: #6ee7b7;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .dash-live-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 6px #10b981;
+    }
+
+    .dash-subtitle-text {
+        font-size: 12.5px;
+        color: rgba(241, 245, 249, 0.8);
+        margin: 0;
+        line-height: 1.4;
+        font-weight: 400;
+    }
+
+    /* Right: Compact Dashboard KPI Stat Cards */
+    .dash-kpi-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    cursor: default; transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    transform: none;
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .kpi-icon-wrap {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .dash-kpi-card.kpi-unis .kpi-icon-wrap {
+        background: rgba(23, 104, 255, 0.22);
+        color: #60a5fa;
+        border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
+    .dash-kpi-card.kpi-countries .kpi-icon-wrap {
+        background: rgba(56, 189, 248, 0.22);
+        color: #38bdf8;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .dash-kpi-card.kpi-programs .kpi-icon-wrap {
+        background: rgba(16, 185, 129, 0.22);
+        color: #34d399;
+        border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .dash-kpi-card.kpi-scholarships .kpi-icon-wrap {
+        background: rgba(168, 85, 247, 0.22);
+        color: #c084fc;
+        border: 1px solid rgba(192, 132, 252, 0.3);
+    }
+
+    .kpi-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kpi-stat-number {
+        font-size: 15px;
+        font-weight: 800;
+        color: #ffffff;
+        line-height: 1.1;
+        letter-spacing: -0.3px;
+    }
+
+    .kpi-stat-number span {
+        color: #38bdf8;
+        font-size: 13px;
+    }
+
+    .kpi-stat-title {
+        font-size: 9.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba(241, 245, 249, 0.72);
+        font-weight: 600;
+        margin-top: 1px;
+    }
+
+    /* Overlapping Filter Panel Hub */
+    .filter-wrapper {
+        position: relative;
+        z-index: 20;
+        margin-top: -14px;
+        margin-bottom: 18px;
+    }
+
+    .filter-hub-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 14px 18px;
+        box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.9);
+        border: 1px solid #e2e8f0;
+    }
+
+    .filter-search-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 11px;
+        align-items: center;
+    }
+
+    .search-input-box {
+        position: relative;
+        flex: 1;
+    }
+
+    .search-input-box i.search-icon {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .search-input-box input {
+        width: 100%;
+        height: 40px;
+        padding: 0 34px 0 38px;
+        border-radius: 10px;
+        border: 1.5px solid #cbd5e1;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #0f172a;
+        background: #f8fafc;
+        outline: none;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .search-input-box input:focus {
+        background: #ffffff;
+        border-color: #1768ff;
+        box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.12);
+    }
+
+    .search-input-box .clear-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #e2e8f0;
+        border: none;
+        color: #64748b;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        cursor: pointer;
+    }
+
+    /* Suggestions Dropdown */
+    .search-suggestions-dropdown {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(23, 104, 255, 0.08);
+        z-index: 1050;
+        overflow: hidden;
+        animation: fadeInDown 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-6px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .suggestions-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 14px;
+        background: #f8fafc;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+    }
+
+    .suggestions-header i {
+        color: #1768ff;
+        margin-right: 4px;
+    }
+
+    .suggestions-header .esc-hint {
+        font-size: 10px;
+        font-weight: 600;
+        color: #94a3b8;
+        background: #e2e8f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .suggestions-list {
+        max-height: 320px;
+        overflow-y: auto;
+        padding: 6px 0;
+    }
+
+    .suggestion-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: background 0.15s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .suggestion-item:hover,
+    .suggestion-item.active {
+        background: #f1f5f9;
+    }
+
+    .suggestion-item.active {
+        background: #eff6ff;
+        border-left: 3px solid #1768ff;
+        padding-left: 11px;
+    }
+
+    .suggestion-icon-wrap {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .suggestion-icon-wrap.type-university {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+    }
+
+    .suggestion-icon-wrap.type-exhibitor {
+        background: rgba(23, 104, 255, 0.1);
+        color: #1768ff;
+    }
+
+    .suggestion-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .suggestion-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+    }
+
+    .suggestion-title mark {
+        background: transparent;
+        color: #1768ff;
+        font-weight: 800;
+        padding: 0;
+    }
+
+    .suggestion-subtitle {
+        font-size: 11.5px;
+        color: #64748b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 1px;
+        display: block;
+    }
+
+    .suggestion-badge {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: #f1f5f9;
+        color: #475569;
+        flex-shrink: 0;
+    }
+
+    .suggestion-empty {
+        padding: 24px 16px;
+        text-align: center;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .suggestion-empty i {
+        font-size: 24px;
+        color: #94a3b8;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .btn-map-companion {
+        height: 40px;
+        padding: 0 16px;
+        background: #f8fafc;
+        color: #334155;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .btn-map-companion:hover {
+        background: #f1f5f9;
+        border-color: #94a3b8;
+        color: #0f172a;
+    }
+
+    .btn-apply-filters {
+        height: 40px;
+        padding: 0 18px;
+        background: #1768ff;
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(23, 104, 255, 0.25);
+    }
+
+    .btn-apply-filters:hover {
+        background: #0f52cc;
+    }
+
+    /* Popular Country Chips Row */
+    .filter-popular-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding-top: 4px;
+        flex-wrap: wrap;
+    }
+
+    .popular-chips-list {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+    .popular-label {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        margin-right: 3px;
+    }
+
+    .popular-chip {
+        padding: 3px 10px;
+        border-radius: 20px;
+        background: #f1f5f9;
+        color: #475569;
+        font-size: 11.5px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        white-space: nowrap;
+    }
+
+    .popular-chip:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+    .popular-chip.active {
+        background: #1768ff;
+        color: #ffffff;
+        font-weight: 700;
+        border-color: #1768ff;
+        box-shadow: 0 2px 8px rgba(23, 104, 255, 0.3);
+    }
+
+    /* Results Header Bar */
+    .results-count-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 12.5px;
+        color: #64748b;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .results-count-bar strong {
+        color: #0f172a;
+    }
+
+    /* Exhibitors 4-Column Compact Grid */
+    .ex-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+
+    .ex-card {
+        background: #f4f6fb;
+        border-radius: 12px;
+        border: none !important;
+        padding: 13px;
+        display: flex;
+        flex-direction: column;
+        transition: background 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+        position: relative;
+    }
+
+    .ex-card:hover {
+        transform: none;
+        background: #eaf0f9 !important;
+        border: none !important;
+        box-shadow: 0 10px 24px -4px rgba(23, 104, 255, 0.12);
+    }
+
+    /* Card Top Row */
+    .card-top-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 8px;
+    }
+
+    .uni-avatar-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 800;
+        color: #ffffff;
+        flex-shrink: 0;
+        text-transform: uppercase;
+        letter-spacing: -0.3px;
+        overflow: hidden;
+    }
+
+    /* 6 dynamic rotating gradient avatars */
+    .ex-card:nth-child(6n+1) .uni-avatar-badge { background: linear-gradient(135deg, #1768ff 0%, #0052cc 100%); }
+    .ex-card:nth-child(6n+2) .uni-avatar-badge { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+    .ex-card:nth-child(6n+3) .uni-avatar-badge { background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); }
+    .ex-card:nth-child(6n+4) .uni-avatar-badge { background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); }
+    .ex-card:nth-child(6n+5) .uni-avatar-badge { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
+    .ex-card:nth-child(6n+6) .uni-avatar-badge { background: linear-gradient(135deg, #db2777 0%, #be185d 100%); }
+
+    .uni-meta {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .uni-name-text {
+        font-size: 13px;
+        font-weight: 800;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        line-height: 1.25;
+        text-decoration: none;
+    }
+
+    .uni-name-text:hover {
+        color: #1768ff;
+    }
+
+    .uni-location-text {
+        font-size: 10.5px;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .uni-location-text i {
+        color: #f43f5e;
+        font-size: 11px;
+    }
+
+    .card-bookmark-btn {
+        background: transparent;
+        border: 1px solid #e2e8f0;
+        color: #94a3b8;
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+
+    .card-bookmark-btn:hover,
+    .card-bookmark-btn.saved {
+        color: #1768ff;
+        background: #eff6ff;
+        border-color: #bfdbfe;
+    }
+
+    /* Exhibitor Description */
+    .ex-card-desc {
+        font-size: 11.5px;
+        color: #64748b;
+        line-height: 1.4;
+        margin: 0 0 8px 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 32px;
+    }
+
+    /* 2x2 Specs Matrix */
+    .ex-specs-matrix {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 7px 9px;
+        margin-bottom: 8px;
+    }
+
+    .spec-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .spec-lbl {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .spec-lbl i {
+        font-size: 10px;
+        color: #1768ff;
+    }
+
+    .spec-val {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .spec-val.val-green {
+        color: #059669;
+        font-weight: 850;
+    }
+
+    /* Standardized Status Strip */
+    .card-status-strip {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 8px;
+        min-height: 24px;
+        box-sizing: border-box;
+        background: #eff6ff;
+        color: #1768ff;
+        border: 1px solid #bfdbfe;
+    }
+
+    /* Card Actions */
+    .ex-card-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: auto;
+    }
+
+    .btn-ex-primary {
+        flex: 1;
+        height: 31px;
+        background: #1768ff;
+        color: #ffffff;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.18s ease;
+        border: none;
+        box-shadow: 0 2px 6px rgba(23, 104, 255, 0.2);
+    }
+
+    .btn-ex-primary:hover {
+        background: #0f52cc;
+    }
+
+    .btn-ex-secondary {
+        height: 31px;
+        padding: 0 10px;
+        background: #ffffff;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        transition: all 0.18s ease;
+    }
+
+    .btn-ex-secondary:hover {
+        background: #f8fafc;
+        border-color: #94a3b8;
+        color: #0f172a;
+    }
+
+    /* Responsive */
+    @media (max-width: 820px) {
+        .ex-hero {
+            padding: 16px 0 22px 0;
+        }
+        .dashboard-header-inner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .dash-kpi-row {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+        .filter-search-row {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+        .filter-search-row .btn-apply-filters,
+        .filter-search-row .btn-map-companion {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+    }
+    @media (max-width: 480px) {
+        .ex-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
+<!-- Modern Compact Dashboard Hero -->
+{% if site_config.show_exhibitors_hero %}
+<section class="ex-hero">
+    <div class="container">
+        <div class="dashboard-header-inner">
+            <!-- Left: Breadcrumb & Title -->
+            <div class="dash-title-block">
+                <div class="dash-breadcrumb-bar">
+                    <span class="dash-badge-pill">
+                        <i class="ti ti-building-bank"></i> {{ site_config.exhibitors_badge|default:"INSTITUTIONS" }}
+                    </span>
+                    <span class="dash-crumb-sep">/</span>
+                    <span class="dash-crumb-text">Exhibitors Directory</span>
+                </div>
+                <h1 class="ex-dash-title">
+                    {{ site_config.exhibitors_page_title|safe|default:"World-Class Exhibitors <span class='gradient-text'>&amp; Universities</span>" }}
+                    <span class="dash-live-badge">
+                        <span class="dash-live-dot"></span> CONFIRMED DELEGATIONS
+                    </span>
+                </h1>
+                <p class="dash-subtitle-text">
+                    {{ site_config.exhibitors_page_subtitle|default:"Explore participating global universities, accredited faculties, on-spot scholarships, and booth allocations." }}
+                
+                </p>
+            </div>
+
+            <!-- Right: 4 KPI Cards -->
+            <div class="dash-kpi-row">
+                <div class="dash-kpi-card kpi-unis">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-building-bank"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">{{ site_config.exhibitors_kpi1_val|default:total_unis|default:"50+" }}</div>
+                        <div class="kpi-stat-title">{{ site_config.exhibitors_kpi1_label|default:"Partner Unis" }}</div>
+                    </div>
+                </div>
+
+                <div class="dash-kpi-card kpi-countries">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-world"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">{{ site_config.exhibitors_kpi2_val|default:total_countries|default:"12+" }}</div>
+                        <div class="kpi-stat-title">{{ site_config.exhibitors_kpi2_label|default:"Destinations" }}</div>
+                    </div>
+                </div>
+
+                <div class="dash-kpi-card kpi-programs">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-school"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">{{ site_config.exhibitors_kpi3_val|default:total_courses|default:"1,000+" }}</div>
+                        <div class="kpi-stat-title">{{ site_config.exhibitors_kpi3_label|default:"Degree Majors" }}</div>
+                    </div>
+                </div>
+
+                <div class="dash-kpi-card kpi-scholarships">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-award"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">{{ site_config.exhibitors_kpi4_val|default:total_scholarships|default:"100%" }}</div>
+                        <div class="kpi-stat-title">{{ site_config.exhibitors_kpi4_label|default:"Direct Awards" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Filter Hub & Controls -->
+{% if site_config.show_exhibitors_filters %}
+<div class="container">
+    <div class="filter-wrapper">
+        <div class="filter-hub-card">
+            <!-- Search Row -->
+            <div class="filter-search-row">
+                <div class="search-input-box" id="exSearchWrapper">
+                    <i class="ti ti-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        id="exhibitorSearchInput" 
+                        placeholder="Search universities by name, country, or keyword..." 
+                        oninput="filterExhibitorsLive(this.value)"
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+                    <button type="button" class="clear-btn" id="exClearBtn" onclick="clearExhibitorSearch()" title="Clear search" style="display: none;">
+                        <i class="ti ti-x"></i>
+                    </button>
+
+                    <!-- Suggestions Dropdown -->
+                    <div class="search-suggestions-dropdown" id="exSuggestionsBox" style="display: none;">
+                        <div class="suggestions-header" id="exSuggestionsHeader">
+                            <span><i class="ti ti-sparkles"></i> Popular Universities</span>
+                            <span class="esc-hint">ESC</span>
+                        </div>
+                        <div class="suggestions-list" id="exSuggestionsList"></div>
+                    </div>
+                </div>
+                <button type="button" class="btn-apply-filters" id="exSearchBtn" onclick="filterExhibitorsLive(document.getElementById('exhibitorSearchInput').value)">
+                    <i class="ti ti-search"></i> Search
+                </button>
+                <a href="{% url 'public_expo_map' %}" class="btn-map-companion">
+                    <i class="ti ti-map-2"></i> View Floor Map
+                </a>
+            </div>
+
+            <!-- Popular Country Chips Row -->
+            <div class="filter-popular-row">
+                <div class="popular-chips-list">
+                    <span class="popular-label"><i class="ti ti-sparkles"></i> Filter by Country:</span>
+                    <button type="button" class="popular-chip active" onclick="filterByCountry('all', this)">
+                        All ({{ exhibitors|length }})
+                    </button>
+                    {% for country in all_countries|slice:":8" %}
+                    <button type="button" class="popular-chip" onclick="filterByCountry('{{ country|lower }}', this)">
+                        {{ country }}
+                    </button>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    <a href="{% url 'portal_register_exhibitor' %}" class="popular-chip" style="background: rgba(23, 104, 255, 0.1); color: #1768ff; font-weight: 700; border: 1px solid rgba(23, 104, 255, 0.25);">
+                        <i class="ti ti-plus"></i> Exhibit With Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+{% if site_config.show_exhibitors_grid %}
+<!-- Results Count Bar -->
+    <div class="results-count-bar">
+        <div>
+            Showing <strong id="visibleCount">{{ exhibitors|length }}</strong> of <strong>{{ total_unis|default:exhibitors|length }}</strong> confirmed institutional exhibitors
+        </div>
+        <div style="font-size: 11.5px; color: #64748b;">
+            All Institutions Fully Accredited &bull; Direct Dean Consultations
+        </div>
+    </div>
+
+    <!-- 4-Column Compact Grid -->
+    <div class="ex-grid" id="exhibitorsGrid">
+        {% for exhibitor in exhibitors %}
+        <div class="ex-card" data-country="{{ exhibitor.profile.location_state_country|lower }}" data-name="{{ exhibitor.name|lower }}" data-search="{{ exhibitor.name|lower }} {{ exhibitor.profile.location_city|lower }} {{ exhibitor.profile.location_state_country|lower }} {{ exhibitor.booth_number|lower }}">
+            <!-- Top Row: Avatar + Name + Country + Bookmark -->
+            <div class="card-top-row">
+                <div class="uni-avatar-badge">
+                    {% if exhibitor.logo %}
+                    <img src="{{ exhibitor.logo.url }}" alt="{{ exhibitor.company_name|default:exhibitor.name }}" style="width: 100%; height: 100%; object-fit: contain; background: #fff;">
+                    {% elif exhibitor.profile.logo %}
+                    <img src="{{ exhibitor.profile.logo.url }}" alt="{{ exhibitor.name }}" style="width: 100%; height: 100%; object-fit: contain; background: #fff;">
+                    {% else %}
+                    {{ exhibitor.company_name|default:exhibitor.name|slice:":2"|upper }}
+                    {% endif %}
+                </div>
+                <div class="uni-meta">
+                    {% if exhibitor.slug %}
+                    <a href="{% url 'university_detail' exhibitor.slug %}" class="uni-name-text" title="{{ exhibitor.name }}">
+                        {{ exhibitor.name }}
+                    </a>
+                    {% else %}
+                    <span class="uni-name-text" title="{{ exhibitor.company_name|default:exhibitor.name }}">
+                        {{ exhibitor.company_name|default:exhibitor.name }}
+                    </span>
+                    {% endif %}
+                    <div class="uni-location-text">
+                        <i class="ti ti-map-pin"></i>
+                        <span>{{ exhibitor.country|default:exhibitor.profile.location_state_country|default:exhibitor.event_location.city|default:"Global" }}</span>
+                    </div>
+                </div>
+                <button 
+                    class="card-bookmark-btn {% if exhibitor.id in saved_uni_ids %}saved{% endif %}" 
+                    onclick="toggleSaveUniversity(this, '{{ exhibitor.id }}')" 
+                    title="Shortlist University" 
+                    aria-label="Bookmark"
+                >
+                    <i class="ti {% if exhibitor.id in saved_uni_ids %}ti-bookmark-filled{% else %}ti-bookmark{% endif %}"></i>
+                </button>
+            </div>
+
+            <!-- Description -->
+            <p class="ex-card-desc">
+                {% if exhibitor.profile.short_description %}{{ exhibitor.profile.short_description|truncatewords:18 }}{% elif exhibitor.profile.description %}{{ exhibitor.profile.description|truncatewords:18 }}{% else %}Accredited institution offering world-recognized undergraduate and postgraduate programs.{% endif %}
+            </p>
+
+            <!-- 2x2 Specs Matrix -->
+            <div class="ex-specs-matrix">
+                <div class="spec-item">
+                    <span class="spec-lbl"><i class="ti ti-school"></i> Programs</span>
+                    <span class="spec-val">{{ exhibitor.courses_count|default:0 }} Degrees</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-lbl"><i class="ti ti-award"></i> Scholarships</span>
+                    <span class="spec-val val-green">{{ exhibitor.scholarships_count|default:"5" }}+ Awards</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-lbl"><i class="ti ti-map-2"></i> Booth</span>
+                    <span class="spec-val">{{ exhibitor.booth_number|default:"Hall 1 • Pavilion A" }}</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-lbl"><i class="ti ti-clock"></i> Interview</span>
+                    <span class="spec-val">On-Spot Ready</span>
+                </div>
+            </div>
+
+            <!-- Standardized Status Strip -->
+            <div class="card-status-strip">
+                <i class="ti ti-certificate"></i> Verified Direct Partner &bull; Fast-Track
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="ex-card-actions">
+                <a href="{% url 'university_detail' exhibitor.slug %}" class="btn-ex-primary">
+                    <i class="ti ti-school"></i> Profile &bull; Courses
+                </a>
+                <a href="{% url 'public_expo_map' %}" class="btn-ex-secondary" title="View Booth on Map">
+                    <i class="ti ti-map"></i> Booth
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: #ffffff; border-radius: 14px; border: 1px solid #e2e8f0;">
+            <div style="font-size: 40px; margin-bottom: 12px;">🏛️</div>
+            <h3 style="font-size: 19px; color: #0a1936; font-weight: 800; margin: 0 0 8px 0;">No universities found</h3>
+            <p style="color: #64748b; font-size: 13.5px; max-width: 480px; margin: 0 auto;">No exhibitors matched your current search. Try clearing your filters.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<script>
+    var currentCountryFilter = 'all';
+
+    function filterByCountry(countryName, button) {
+        currentCountryFilter = countryName.toLowerCase();
+        var chips = document.querySelectorAll('.popular-chip');
+        chips.forEach(function(c) { c.classList.remove('active'); });
+        if (button) button.classList.add('active');
+
+        applyCombinedFilter();
+    }
+
+    function clearExhibitorSearch() {
+        var input = document.getElementById('exhibitorSearchInput');
+        var clearBtn = document.getElementById('exClearBtn');
+        var box = document.getElementById('exSuggestionsBox');
+        if (input) {
+            input.value = '';
+            if (clearBtn) clearBtn.style.display = 'none';
+            if (box) box.style.display = 'none';
+            applyCombinedFilter();
+        }
+    }
+
+    function filterExhibitorsLive(query) {
+        var clearBtn = document.getElementById('exClearBtn');
+        if (clearBtn) {
+            clearBtn.style.display = (query && query.trim().length > 0) ? 'flex' : 'none';
+        }
+        applyCombinedFilter();
+    }
+
+    function applyCombinedFilter() {
+        var input = document.getElementById('exhibitorSearchInput');
+        var q = (input ? input.value : '').toLowerCase().trim();
+        var qWords = q.split(/\s+/).filter(Boolean);
+
+        var cards = document.querySelectorAll('#exhibitorsGrid .ex-card');
+        var visible = 0;
+
+        cards.forEach(function(card) {
+            var c = (card.getAttribute('data-country') || '').toLowerCase();
+            var searchData = (card.getAttribute('data-search') || card.getAttribute('data-name') || '').toLowerCase();
+
+            var matchesCountry = (currentCountryFilter === 'all' || c.indexOf(currentCountryFilter) !== -1);
+            var matchesQuery = true;
+
+            if (qWords.length > 0) {
+                for (var i = 0; i < qWords.length; i++) {
+                    if (searchData.indexOf(qWords[i]) === -1) {
+                        matchesQuery = false;
+                        break;
+                    }
+                }
+            }
+
+            if (matchesCountry && matchesQuery) {
+                card.style.display = 'flex';
+                visible++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        var countEl = document.getElementById('visibleCount');
+        if (countEl) countEl.textContent = visible;
+    }
+
+    // Auto-suggestions & Keyboard Navigation for Exhibitors
+    (function initExhibitorSuggestions() {
+        var input = document.getElementById('exhibitorSearchInput');
+        var wrapper = document.getElementById('exSearchWrapper');
+        var box = document.getElementById('exSuggestionsBox');
+        var list = document.getElementById('exSuggestionsList');
+        var header = document.getElementById('exSuggestionsHeader');
+        var debounceTimer = null;
+        var activeIndex = -1;
+        var currentItems = [];
+
+        if (!input || !box || !list) return;
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function escapeHtml(string) {
+            var div = document.createElement('div');
+            div.textContent = string;
+            return div.innerHTML;
+        }
+
+        function highlightMatch(text, query) {
+            if (!query) return escapeHtml(text);
+            var safeText = escapeHtml(text);
+            var qWords = query.trim().split(/\s+/).filter(Boolean);
+            if (!qWords.length) return safeText;
+            var pattern = '(' + qWords.map(escapeRegExp).join('|') + ')';
+            return safeText.replace(new RegExp(pattern, 'gi'), '<mark>$1</mark>');
+        }
+
+        function renderSuggestions(results, query) {
+            currentItems = results || [];
+            activeIndex = -1;
+
+            if (!currentItems.length) {
+                if (query) {
+                    if (header) header.innerHTML = '<span><i class="ti ti-info-circle"></i> No suggestions found</span><span class="esc-hint">ESC</span>';
+                    list.innerHTML = '<div class="suggestion-empty"><i class="ti ti-mood-empty"></i>Press Search to find universities matching "' + escapeHtml(query) + '"</div>';
+                    box.style.display = 'block';
+                } else {
+                    box.style.display = 'none';
+                }
+                return;
+            }
+
+            if (header) {
+                header.innerHTML = query 
+                    ? '<span><i class="ti ti-sparkles"></i> Top Matching Universities</span><span class="esc-hint">ESC</span>' 
+                    : '<span><i class="ti ti-flame"></i> Popular Partner Institutions</span><span class="esc-hint">ESC</span>';
+            }
+
+            var html = '';
+            currentItems.forEach(function(item, idx) {
+                var typeClass = 'type-' + (item.type || 'university').toLowerCase();
+                var iconClass = item.icon || 'ti ti-building-bank';
+                var highlightedTitle = highlightMatch(item.title, query);
+                html += '<div class="suggestion-item" data-index="' + idx + '" onclick="selectExSuggestion(' + idx + ')">';
+                html += '  <div class="suggestion-icon-wrap ' + typeClass + '"><i class="' + iconClass + '"></i></div>';
+                html += '  <div class="suggestion-content">';
+                html += '    <span class="suggestion-title">' + highlightedTitle + '</span>';
+                html += '    <span class="suggestion-subtitle">' + escapeHtml(item.subtitle || '') + '</span>';
+                html += '  </div>';
+                html += '  <span class="suggestion-badge">' + escapeHtml(item.type || 'Partner') + '</span>';
+                html += '</div>';
+            });
+
+            list.innerHTML = html;
+            box.style.display = 'block';
+        }
+
+        window.selectExSuggestion = function(index) {
+            var item = currentItems[index];
+            if (!item) return;
+
+            box.style.display = 'none';
+            input.value = item.query_val || item.title;
+            filterExhibitorsLive(input.value);
+        };
+
+        function fetchSuggestions(query) {
+            var url = '/api/search/?scope=exhibitors&q=' + encodeURIComponent(query);
+            fetch(url)
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    renderSuggestions(data.results || [], query);
+                })
+                .catch(function(err) {
+                    console.error('Error fetching exhibitor suggestions:', err);
+                });
+        }
+
+        input.addEventListener('input', function() {
+            var val = input.value.trim();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function() {
+                fetchSuggestions(val);
+            }, 180);
+        });
+
+        input.addEventListener('focus', function() {
+            var val = input.value.trim();
+            fetchSuggestions(val);
+        });
+
+        input.addEventListener('keydown', function(e) {
+            if (box.style.display === 'none' || !currentItems.length) {
+                if (e.key === 'Escape') box.style.display = 'none';
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    filterExhibitorsLive(input.value);
+                }
+                return;
+            }
+
+            var items = list.querySelectorAll('.suggestion-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = (activeIndex + 1) >= items.length ? 0 : activeIndex + 1;
+                highlightActive(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = (activeIndex - 1) < 0 ? items.length - 1 : activeIndex - 1;
+                highlightActive(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (activeIndex >= 0 && activeIndex < currentItems.length) {
+                    selectExSuggestion(activeIndex);
+                } else {
+                    box.style.display = 'none';
+                    filterExhibitorsLive(input.value);
+                }
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                box.style.display = 'none';
+            }
+        });
+
+        function highlightActive(items) {
+            items.forEach(function(el, i) {
+                if (i === activeIndex) {
+                    el.classList.add('active');
+                    el.scrollIntoView({ block: 'nearest' });
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (wrapper && !wrapper.contains(e.target)) {
+                box.style.display = 'none';
+            }
+        });
+    })();
+
+    function toggleSaveUniversity(btn, uniId) {
+        {% if not request.user.is_authenticated %}
+        window.location.href = "{% url 'portal_login' %}?next=" + encodeURIComponent(window.location.pathname);
+        return;
+        {% endif %}
+
+        fetch('/university/save/' + uniId + '/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            var icon = btn.querySelector('i');
+            if (data.status === 'saved') {
+                btn.classList.add('saved');
+                if (icon) icon.className = 'ti ti-bookmark-filled';
+            } else {
+                btn.classList.remove('saved');
+                if (icon) icon.className = 'ti ti-bookmark';
+            }
+        })
+        .catch(function(err) {
+            console.error(err);
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,395 @@
+{% extends base_template|default:'dashboard/base.html' %}
+{% load static %}
+
+{% block nav_matches %}active{% endblock %}
+{% block page_category %}Student{% endblock %}
+{% block page_title %}Overview{% endblock %}
+
+{% block content %}
+<style>
+    .matches-header { 
+        margin-bottom: 32px; 
+    }
+    .matches-header h1 { 
+        font-size: 24px; 
+        color: var(--text-main); 
+        margin: 0 0 8px 0; 
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+    .matches-header p { 
+        color: var(--text-muted); 
+        margin: 0; 
+        font-size: 14px;
+    }
+    
+    .search-panel { 
+        background: #ffffff; 
+        padding: 24px; 
+        border-radius: 14px; 
+        border: 1px solid var(--card-border); 
+        margin-bottom: 32px; 
+        box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04); 
+    }
+    .search-panel form { 
+        display: flex; 
+        flex-wrap: wrap; 
+        gap: 16px; 
+        align-items: flex-end; 
+    }
+    .search-field { 
+        flex: 1; 
+        min-width: 180px; 
+    }
+    .search-field label { 
+        display: block; 
+        font-size: 13px; 
+        font-weight: 600; 
+        color: var(--text-muted); 
+        margin-bottom: 6px; 
+    }
+    .search-field input, 
+    .search-field select { 
+        width: 100%; 
+        padding: 10px 14px; 
+        border: 1px solid var(--card-border); 
+        border-radius: 8px; 
+        font-size: 14px; 
+        color: var(--text-main);
+        background: #ffffff;
+        box-sizing: border-box;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .search-field input:focus, 
+    .search-field select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.12);
+    }
+    .search-panel button[type="submit"] { 
+        padding: 10px 24px; 
+        height: 42px; 
+        background: var(--primary); 
+        color: #ffffff; 
+        border: none; 
+        border-radius: 8px; 
+        font-weight: 700; 
+        font-size: 14px;
+        cursor: pointer; 
+        transition: background 0.2s, transform 0.15s; 
+        white-space: nowrap; 
+    }
+    .search-panel button[type="submit"]:hover { 
+        background: var(--primary-hover); 
+        transform: translateY(-1px);
+    }
+    
+    .matches-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+        gap: 24px; 
+    }
+    .match-card { 
+        display: flex; 
+        flex-direction: column; 
+        background: #ffffff;
+        border: 1px solid var(--card-border);
+        border-radius: 14px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .match-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+        border-color: #cbd5e1;
+    }
+    .match-badge { 
+        display: inline-flex; 
+        align-items: center;
+        background: #dcfce7; 
+        color: #166534; 
+        padding: 4px 12px; 
+        border-radius: 20px; 
+        font-size: 12px; 
+        font-weight: 700; 
+        margin-bottom: 16px; 
+        align-self: flex-start;
+    }
+    .match-course-name { 
+        font-size: 18px; 
+        font-weight: 750; 
+        color: var(--text-main); 
+        margin: 0 0 6px 0; 
+        line-height: 1.3;
+    }
+    .match-uni-name { 
+        font-size: 14px; 
+        font-weight: 600; 
+        color: var(--primary); 
+        margin: 0 0 16px 0; 
+    }
+    .match-reasons { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 8px; 
+        margin-bottom: 24px; 
+        flex-grow: 1; 
+    }
+    .reason-item { 
+        display: flex; 
+        align-items: flex-start; 
+        gap: 8px; 
+        font-size: 13.5px; 
+        color: var(--text-muted); 
+        line-height: 1.4;
+    }
+    .reason-icon { 
+        width: 16px; 
+        height: 16px; 
+        color: #10b981; 
+        flex-shrink: 0; 
+        margin-top: 2px; 
+    }
+    .match-footer { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        padding-top: 16px; 
+        border-top: 1px solid var(--card-border); 
+        margin-top: auto; 
+    }
+    .match-fees { 
+        font-size: 14.5px; 
+        font-weight: 750; 
+        color: var(--text-main); 
+    }
+    .btn-shortlist-action {
+        color: var(--primary); 
+        padding: 6px 12px; 
+        background: #eff6ff; 
+        border: 1px solid #bfdbfe;
+        border-radius: 6px;
+        font-weight: 700; 
+        font-size: 12.5px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+    .btn-shortlist-action:hover {
+        background: #dbeafe;
+        color: #0d54d9;
+    }
+    .btn-shortlist-action.is-shortlisted {
+        background: #ecfdf5;
+        color: #059669;
+        border-color: #a7f3d0;
+    }
+
+    .empty-state { 
+        grid-column: 1 / -1; 
+        text-align: center; 
+        padding: 56px 24px; 
+        border: 2px dashed var(--card-border); 
+        border-radius: 14px; 
+        background: #ffffff;
+    }
+    .empty-state svg { 
+        width: 48px; 
+        height: 48px; 
+        color: #cbd5e1; 
+        margin-bottom: 16px; 
+    }
+    
+    .alert-success { 
+        background: #dcfce7; 
+        color: #166534; 
+        padding: 12px 16px; 
+        border-radius: 8px; 
+        margin-bottom: 24px; 
+        font-size: 14px; 
+        font-weight: 500; 
+        border: 1px solid #bbf7d0;
+    }
+
+    @media (max-width: 768px) {
+        .search-panel form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .search-field {
+            min-width: 100%;
+        }
+        .search-panel button[type="submit"] {
+            width: 100%;
+        }
+        .matches-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="matches-header">
+    <h1>AI Course Finder</h1>
+    <p>Adjust your search preferences below to instantly find the best courses and universities for you.</p>
+</div>
+
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="alert-{{ message.tags }} {% if message.tags == 'success' %}alert-success{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="search-panel">
+    <form method="POST" action="{% url 'dashboard_matches' %}">
+        {% csrf_token %}
+        <div class="search-field">
+            <label>Program / Major</label>
+            <input type="text" name="preferred_program" value="{{ profile.preferred_program|default:'' }}" placeholder="e.g. Computer Science">
+        </div>
+        <div class="search-field">
+            <label>Destinations</label>
+            <select name="preferred_country" id="destinationCountrySelect">
+                <option value="">All Destinations (Global)</option>
+                {% for c in countries %}
+                <option value="{{ c.name }}" {% if profile.preferred_country == c.name or profile.preferred_country|lower == c.name|lower or profile.preferred_country == 'UAE' and c.name == 'United Arab Emirates' or profile.preferred_country == 'UK' and c.name == 'United Kingdom' or profile.preferred_country == 'USA' and c.name == 'United States' %}selected{% endif %}>
+                    {{ c.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="search-field">
+            <label>Degree Level</label>
+            <select name="preferred_degree">
+                <option value="UG" {% if profile.preferred_degree == 'UG' %}selected{% endif %}>Bachelors</option>
+                <option value="PG" {% if profile.preferred_degree == 'PG' %}selected{% endif %}>Masters</option>
+                <option value="PHD" {% if profile.preferred_degree == 'PHD' %}selected{% endif %}>PhD</option>
+            </select>
+        </div>
+        <div class="search-field">
+            <label>Budget Range</label>
+            <select name="budget_range">
+                <option value="">Any</option>
+                <option value="Low" {% if profile.budget_range == 'Low' %}selected{% endif %}>Under $10k</option>
+                <option value="Medium" {% if profile.budget_range == 'Medium' %}selected{% endif %}>$10k - $30k</option>
+                <option value="High" {% if profile.budget_range == 'High' %}selected{% endif %}>Over $30k</option>
+            </select>
+        </div>
+        <div class="search-field" style="flex: 0 0 120px;">
+            <label>Intake</label>
+            <input type="text" name="intake_year" value="{{ profile.intake_year|default:'2027' }}" placeholder="2027">
+        </div>
+        <button type="submit">Update Matches</button>
+    </form>
+</div>
+
+<div class="matches-grid">
+    {% for match in matches %}
+    <div class="match-card">
+        <div>
+            <span class="match-badge">{{ match.score }}% Match</span>
+        </div>
+        
+        <h3 class="match-course-name">{{ match.course.name }}</h3>
+        <p class="match-uni-name">{{ match.course.university.name }}</p>
+        
+        <div class="match-reasons">
+            {% for reason in match.reasons %}
+            <div class="reason-item">
+                <svg class="reason-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>{{ reason }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="match-footer" style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px; padding-top:12px; border-top:1px solid #f1f5f9;">
+            <span class="match-fees" style="font-size:15px; font-weight:850; color:#0a1936;">{{ match.course.fees }}</span>
+            <button type="button" 
+                    class="btn-book-course {% if match.is_booked %}is-booked{% endif %}"
+                    style="display:inline-flex; align-items:center; gap:6px; background:{% if match.is_booked %}#ecfdf5{% else %}#1768ff{% endif %}; color:{% if match.is_booked %}#059669{% else %}#ffffff{% endif %}; border:1px solid {% if match.is_booked %}#a7f3d0{% else %}#1768ff{% endif %}; padding:7px 18px; border-radius:8px; font-weight:750; font-size:13px; cursor:pointer; transition:all 0.15s ease; box-shadow:{% if match.is_booked %}none{% else %}0 2px 8px rgba(23,104,255,0.22){% endif %};"
+                    onclick="bookMatchCourse(this, '{{ match.course.university.id }}', '{{ match.course.name|escapejs }}')">
+                {% if match.is_booked %}<i class="ti ti-check"></i> Booked{% else %}<i class="ti ti-calendar-event"></i> Book Course{% endif %}
+            </button>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        <h3 style="margin: 0 0 8px 0; font-size: 18px; font-weight: 700; color: var(--text-main);">No matches found</h3>
+        <p style="margin: 0; color: var(--text-muted); font-size: 14px;">Try adjusting your preferences above to see more results.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function bookMatchCourse(btn, uniId, programName) {
+    if (btn.classList.contains('is-booked')) return;
+    btn.innerHTML = '<i class="ti ti-loader"></i> Booking...';
+    btn.disabled = true;
+
+    const formData = new FormData();
+    formData.append('action', 'book_course');
+    formData.append('university_id', uniId);
+    formData.append('program_name', programName);
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+    fetch("{% url 'dashboard_matches' %}", {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.is_booked) {
+            btn.innerHTML = '<i class="ti ti-check"></i> Booked';
+            btn.style.background = '#ecfdf5';
+            btn.style.color = '#059669';
+            btn.style.borderColor = '#a7f3d0';
+            btn.classList.add('is-booked');
+            btn.disabled = false;
+        } else {
+            btn.innerHTML = '<i class="ti ti-calendar-event"></i> Book Course';
+            btn.disabled = false;
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        btn.innerHTML = '<i class="ti ti-calendar-event"></i> Book Course';
+        btn.disabled = false;
+    });
+}
+
+function toggleShortlist(btn, courseId, uniId, programName) {
+    const formData = new FormData();
+    formData.append('action', 'toggle_shortlist');
+    formData.append('course_id', courseId);
+    formData.append('university_id', uniId);
+    formData.append('program_name', programName);
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+    fetch("{% url 'dashboard_matches' %}", {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.is_shortlisted) {
+            btn.textContent = 'Shortlisted ✓';
+            btn.classList.add('is-shortlisted');
+        } else {
+            btn.textContent = 'Save to Shortlist';
+            btn.classList.remove('is-shortlisted');
+        }
+    })
+    .catch(err => console.error(err));
+}
+</script>
+{% endblock %}

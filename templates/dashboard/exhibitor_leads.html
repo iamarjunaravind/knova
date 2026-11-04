@@ -1,0 +1,123 @@
+{% extends 'dashboard/base.html' %}
+{% block nav_leads %}active{% endblock %}
+{% block page_title %}Captured Leads{% endblock %}
+{% block title %}My Leads | KNOVA{% endblock %}
+
+{% block content %}
+<style>
+.btn-lead-msg:hover {
+    background: #1768ff !important;
+    color: #ffffff !important;
+    border-color: #1768ff !important;
+    box-shadow: 0 4px 12px rgba(23,104,255,0.28) !important;
+    transform: translateY(-1px);
+}
+</style>
+
+<div class="glass-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+        <div>
+            <h3 style="margin:0; color:var(--text-main); font-size:18px; font-weight:800;">
+                Attended Students & Captured Leads 
+                {% if profile %}<span style="font-size:13px; font-weight:600; color:#1768ff; margin-left:6px;">({{ profile.company_name }})</span>{% endif %}
+            </h3>
+            <p style="margin:4px 0 0; font-size:13px; color:var(--text-muted);">Verified students who checked in, punched attendance, or booked courses with your institution.</p>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            {% if all_exhibitors %}
+            <form method="GET" style="display:inline-flex; align-items:center; gap:6px;">
+                <label style="font-size:12px; font-weight:600; color:var(--text-muted);">Exhibitor:</label>
+                <select name="exhibitor_id" onchange="this.form.submit()" style="padding:6px 10px; border-radius:6px; border:1px solid #cbd5e1; font-size:12.5px; font-weight:600; background:#fff;">
+                    {% for exh in all_exhibitors %}
+                    <option value="{{ exh.pk }}" {% if exh.pk == profile.pk %}selected{% endif %}>{{ exh.company_name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            {% endif %}
+            <a href="{% url 'dashboard_exhibitor_scanner' %}" class="btn btn-primary" style="background:#1768ff; color:#fff; font-weight:700; font-size:13px; padding:8px 16px; border-radius:8px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+                <i data-feather="camera" style="width:15px; height:15px;"></i> Launch Booth Scanner
+            </a>
+            <button class="btn" style="background:#f1f5f9; color:var(--text-main); font-weight:600; font-size:13px; padding:8px 14px; border-radius:8px; border:1px solid #cbd5e1;" onclick="alert('Exporting verified attendees CSV...')">Export CSV</button>
+        </div>
+    </div>
+    
+    <div style="overflow-x: auto;">
+      <table style="width:100%; text-align:left; border-collapse:collapse; min-width:650px;">
+        <thead>
+          <tr>
+            <th style="padding:14px 16px; color:var(--text-muted); font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--card-border);">Lead Name & Details</th>
+            <th style="padding:14px 16px; color:var(--text-muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--card-border);">Role</th>
+            <th style="padding:14px 16px; color:var(--text-muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--card-border);">Lead Source</th>
+            <th style="padding:14px 16px; color:var(--text-muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--card-border);">Tags &amp; Booked Details</th>
+            <th style="padding:14px 16px; color:var(--text-muted); font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--card-border);">Captured At</th>
+            <th style="padding:14px 16px; color:var(--text-muted); font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--card-border);">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lead in leads %}
+          <tr style="border-bottom: 1px solid var(--card-border);">
+            <td style="padding:16px 16px;">
+                <div style="font-size:14.5px; font-weight:750; color:#0f172a;">{{ lead.scanned_registration.full_name }}</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:3px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    {% if lead.scanned_registration.email %}<span><i class="ti ti-mail" style="font-size:11px;"></i> {{ lead.scanned_registration.email }}</span>{% endif %}
+                    {% if lead.scanned_registration.phone %}<span>&bull; <i class="ti ti-phone" style="font-size:11px;"></i> {{ lead.scanned_registration.phone }}</span>{% endif %}
+                </div>
+            </td>
+            <td style="padding:16px 16px; font-size:14px; color:var(--text-muted);">{{ lead.scanned_registration.role }}</td>
+            <td style="padding:16px 16px; font-size:13px;">
+                {% if lead.display_source == 'Punch & Book' or lead.lead_source == 'Punch & Book' %}
+                    <span style="display:inline-flex; align-items:center; gap:5px; background:#ecfdf5; color:#047857; font-weight:750; font-size:11.5px; padding:4px 10px; border-radius:6px; border:1px solid #a7f3d0;" title="Both verified Punch at Booth & Booked Course">
+                        <i class="ti ti-circle-check"></i> Punch &amp; Book
+                    </span>
+                {% elif lead.display_source == 'Book' or lead.lead_source == 'Book' %}
+                    <span style="display:inline-flex; align-items:center; gap:5px; background:#f5f3ff; color:#6d28d9; font-weight:750; font-size:11.5px; padding:4px 10px; border-radius:6px; border:1px solid #ddd6fe;" title="Student Course Booking">
+                        <i class="ti ti-bookmark"></i> Book
+                    </span>
+                {% else %}
+                    <span style="display:inline-flex; align-items:center; gap:5px; background:#eff6ff; color:#1d4ed8; font-weight:750; font-size:11.5px; padding:4px 10px; border-radius:6px; border:1px solid #bfdbfe;" title="Booth Punch Scanner / QR Check-in">
+                        <i class="ti ti-qrcode"></i> Punch
+                    </span>
+                {% endif %}
+            </td>
+            <td style="padding:16px 16px; font-size:13px; color:var(--text-muted);">
+                {% if lead.display_source == 'Punch & Book' or lead.lead_source == 'Punch & Book' %}
+                    <div style="display:flex; gap:5px; flex-wrap:wrap; margin-bottom:4px;">
+                        <span style="display:inline-flex; align-items:center; gap:4px; background:#eff6ff; color:#1768ff; font-weight:700; font-size:11px; padding:3px 8px; border-radius:5px; border:1px solid #bfdbfe;">
+                            <i class="ti ti-qrcode"></i> Booth Check-in
+                        </span>
+                        <span style="display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; color:#059669; font-weight:750; font-size:11px; padding:3px 8px; border-radius:5px; border:1px solid #a7f3d0;">
+                            <i class="ti ti-calendar-check"></i> Course Booking
+                        </span>
+                    </div>
+                {% elif lead.display_source == 'Book' or lead.lead_source == 'Book' %}
+                    <span style="display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; color:#059669; font-weight:750; font-size:11px; padding:3px 8px; border-radius:5px; border:1px solid #a7f3d0; margin-bottom:4px;">
+                        <i class="ti ti-calendar-check"></i> Course Booking
+                    </span>
+                {% else %}
+                    <span style="display:inline-flex; align-items:center; gap:4px; background:#eff6ff; color:#1768ff; font-weight:700; font-size:11px; padding:3px 8px; border-radius:5px; border:1px solid #bfdbfe; margin-bottom:4px;">
+                        <i class="ti ti-qrcode"></i> Booth Check-in
+                    </span>
+                {% endif %}
+                {% if lead.action_tags and lead.action_tags != 'Course Booking' %}
+                    <div style="font-weight:600; color:var(--text-main); margin-bottom:3px;">{{ lead.action_tags }}</div>
+                {% endif %}
+                {% if lead.notes %}<div style="font-weight:650; color:#1e293b; line-height:1.4;">{{ lead.notes }}</div>{% endif %}
+            </td>
+            <td style="padding:16px 16px; font-size:13.5px; color:var(--text-muted);">{{ lead.scanned_at|date:"M j, g:i a" }}</td>
+            <td style="padding:16px 16px;">
+                <a href="{% url 'dashboard_messages' %}?lead_id={{ lead.id }}" 
+                   class="btn-lead-msg" 
+                   style="display:inline-flex; align-items:center; gap:5px; color:#1768ff; background:#eff6ff; border:1.5px solid #bfdbfe; font-size:12.5px; font-weight:750; text-decoration:none; padding:6px 14px; border-radius:8px; transition:all 0.15s ease; box-shadow:0 1px 3px rgba(23,104,255,0.08);"
+                   title="Direct Message {{ lead.scanned_registration.full_name }}">
+                    <i class="ti ti-message-circle" style="font-size:14px;"></i> <span>Message</span>
+                </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" style="padding:40px; text-align:center; color:#475569;">No leads captured yet. Head to the Lead Scanner to start scanning badges or wait for student course bookings!</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+</div>
+{% endblock %}

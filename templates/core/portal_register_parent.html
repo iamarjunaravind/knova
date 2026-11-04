@@ -1,0 +1,690 @@
+{% extends 'core/base_public.html' %}
+{% load static %}
+
+{% block body_class %}portal-page{% endblock %}
+
+{% block content %}
+<style>
+  footer#contact {
+    display: none !important;
+  }
+  body.portal-page {
+    background: #ffffff !important;
+  }
+  .portal-reg-wrap {
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px 20px 24px;
+    box-sizing: border-box;
+    background: #ffffff;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Decorative Background Vector Elements */
+  .bg-deco-airplane {
+    position: absolute;
+    top: clamp(80px, 11vh, 120px);
+    right: clamp(10px, 3vw, 60px);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.85;
+  }
+  .bg-deco-cap {
+    position: absolute;
+    bottom: clamp(20px, 5vh, 60px);
+    right: clamp(20px, 4vw, 80px);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.45;
+  }
+
+  .portal-reg-container {
+    max-width: 918px;
+    width: 90%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 432px;
+    gap: 0;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Left Showcase Column */
+  .reg-showcase-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    padding-right: 28px;
+    box-sizing: border-box;
+  }
+  .reg-showcase-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .reg-showcase-kicker .kicker-line {
+    width: 38px;
+    height: 2px;
+    background: #e2e8f0;
+    border-radius: 2px;
+  }
+  .reg-showcase-title {
+    font-size: clamp(28px, 3.2vw, 40px);
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.16;
+    letter-spacing: -0.8px;
+    margin: 0 0 10px 0;
+  }
+  .reg-showcase-title .reg-highlight {
+    color: #0f172a;
+    background: linear-gradient(180deg, transparent 65%, #e2e8f0 65%);
+  }
+  .reg-showcase-sub {
+    font-size: clamp(12.5px, 1.4vh, 13.5px);
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0 0 20px 0;
+    max-width: 480px;
+  }
+
+  /* Feature Value Rows */
+  .reg-feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .reg-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .feature-icon-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: transform 0.25s;
+    background: #f1f5f9;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+  }
+  .feature-icon-circle.green {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+  }
+  .feature-icon-circle.purple {
+    background: #f5f3ff;
+    color: #7c3aed;
+    border: 1px solid #ddd6fe;
+  }
+  .reg-feature-item:hover .feature-icon-circle {
+    transform: scale(1.08);
+  }
+  .feature-text h4 {
+    margin: 0 0 2px 0;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.25;
+  }
+  .feature-text p {
+    margin: 0;
+    font-size: 11.5px;
+    color: #64748b;
+    line-height: 1.35;
+  }
+
+  /* Cityscape Graphic at Bottom */
+  .reg-cityscape-banner {
+    width: 100%;
+    max-width: 460px;
+    height: 110px;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    border: 1px solid #e2e8f0;
+  }
+  .reg-cityscape-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 36%;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .reg-cityscape-banner:hover img {
+    transform: scale(1.03);
+  }
+
+  /* Right Card - Crisp White Theme */
+  .portal-reg-card {
+    background: #ffffff;
+    padding: clamp(18px, 2.4vh, 26px) clamp(18px, 2.4vw, 28px);
+    border-radius: 24px;
+    box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
+    border: 1px solid #e2e8f0;
+    width: 100%;
+    max-width: 432px;
+    margin: 0;
+    box-sizing: border-box;
+    position: relative;
+  }
+  .card-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .role-header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  .portal-reg-card h2 {
+    text-align: center;
+    margin: 0 0 4px 0;
+    color: #0f172a;
+    font-weight: 850;
+    font-size: clamp(20px, 2.4vh, 23px);
+    letter-spacing: -0.4px;
+  }
+  .portal-reg-card p.subhead {
+    text-align: center;
+    margin: 0 0 16px 0;
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.4;
+  }
+  .reg-input-group {
+    margin-bottom: 11px;
+  }
+  .reg-input-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: #1e293b;
+  }
+  .input-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .input-icon-wrap .input-icon {
+    position: absolute;
+    left: 12px;
+    color: #64748b;
+    font-size: 16px;
+    pointer-events: none;
+    transition: color 0.2s;
+  }
+  .input-icon-wrap input, .input-icon-wrap select {
+    width: 100%;
+    padding: 9.5px 12px 9.5px 38px;
+    border: 1.2px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 13px;
+    box-sizing: border-box;
+    background: #ffffff;
+    transition: all 0.2s;
+    color: #0f172a;
+    font-family: inherit;
+  }
+  .input-icon-wrap input:focus, .input-icon-wrap select:focus {
+    outline: none;
+    border-color: #0f172a;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+  }
+  .input-icon-wrap:focus-within .input-icon {
+    color: #0f172a;
+  }
+  .toggle-pwd-btn {
+    position: absolute;
+    right: 12px;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s;
+  }
+  .toggle-pwd-btn:hover {
+    color: #0f172a;
+  }
+  .btn-submit-reg {
+    width: 100%;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 750;
+    font-size: 13.5px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+    transition: all 0.2s;
+    margin-top: 5px;
+  }
+  .btn-submit-reg:hover {
+    background: #000000;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+  }
+  .switch-roles-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 13px;
+    padding-top: 11px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 11.5px;
+    color: #64748b;
+  }
+  .switch-role-link {
+    font-weight: 700;
+    text-decoration: none;
+    padding: 3px 10px;
+    border-radius: 7px;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #0f172a;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+  .switch-role-link:hover {
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+    transform: translateY(-1px);
+  }
+
+  .reg-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 11px;
+  }
+
+  @media (max-width: 991px) {
+    .portal-reg-wrap {
+      min-height: calc(100vh - 65px);
+      padding: 16px 16px 30px 16px;
+      align-items: center;
+    }
+    .portal-reg-container {
+      grid-template-columns: 1fr;
+      gap: 0;
+      max-width: 396px;
+      width: 90%;
+    }
+    .reg-showcase-col {
+      display: none !important;
+    }
+    .bg-deco-airplane,
+    .bg-deco-cap {
+      display: none !important;
+    }
+    .portal-reg-card {
+      margin: 0 auto;
+      padding: 24px 18px;
+      border-radius: 20px;
+      max-width: 100%;
+    }
+    .reg-two-col {
+      grid-template-columns: 1fr !important;
+      gap: 0 !important;
+    }
+    .reg-cityscape-banner {
+      display: none;
+    }
+  }
+</style>
+
+<div class="portal-reg-wrap">
+    <!-- Decorative Airplane Flight Arc SVG -->
+    <svg class="bg-deco-airplane" width="230" height="130" viewBox="0 0 230 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 10 115 C 65 125, 135 65, 205 22" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="6 6" fill="none"/>
+      <g transform="translate(202, 10) rotate(-35)">
+        <path d="M12 2L2 22l10-3 10 3L12 2z" fill="#0f172a"/>
+      </g>
+    </svg>
+
+    <!-- Faint Decorative Graduation Cap SVG -->
+    <svg class="bg-deco-cap" width="160" height="120" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M60 15L15 35L60 55L105 35L60 15Z" stroke="#cbd5e1" stroke-width="1.8" fill="rgba(241, 245, 249, 0.4)"/>
+      <path d="M35 44V65C35 72 46 78 60 78C74 78 85 72 85 65V44" stroke="#cbd5e1" stroke-width="1.8"/>
+      <path d="M105 35V65" stroke="#cbd5e1" stroke-width="1.8"/>
+      <circle cx="105" cy="67" r="3" fill="#cbd5e1"/>
+    </svg>
+
+    <div class="portal-reg-container">
+        <!-- Left Showcase Column -->
+        <div class="reg-showcase-col">
+            <div class="reg-showcase-kicker">
+                <span>KNOVA EDUCATION EXPO 2027</span>
+                <span class="kicker-line"></span>
+            </div>
+            <h1 class="reg-showcase-title">
+                A brighter future<br>
+                <span class="reg-highlight">starts here</span>
+            </h1>
+            <p class="reg-showcase-sub">
+                Explore top universities, discover scholarship opportunities, and plan your child's global education journey — all in one place.
+            </p>
+
+            <div class="reg-feature-list">
+                <div class="reg-feature-item">
+                    <div class="feature-icon-circle">
+                        <i class="ti ti-school"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Discover Top Universities</h4>
+                        <p>Meet leading global universities across multiple destinations.</p>
+                    </div>
+                </div>
+
+                <div class="reg-feature-item">
+                    <div class="feature-icon-circle green">
+                        <i class="ti ti-gift"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Get Scholarship Updates</h4>
+                        <p>Find exclusive scholarship options and financial guidance.</p>
+                    </div>
+                </div>
+
+                <div class="reg-feature-item">
+                    <div class="feature-icon-circle purple">
+                        <i class="ti ti-chart-arrows"></i>
+                    </div>
+                    <div class="feature-text">
+                        <h4>Plan Your Child's Future</h4>
+                        <p>Compare programs, connect with experts, and make informed decisions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reg-cityscape-banner">
+                <img src="{% static 'assets/reg_hero_cityscape.jpg' %}" loading="lazy" decoding="async" alt="Student overlooking global education destination">
+            </div>
+        </div>
+
+        <!-- Right Registration Card -->
+        <div class="portal-reg-card">
+            <!-- Card Top Bar: Role -->
+            <div class="card-top-bar">
+                <span class="role-header-badge">
+                    <i class="ti ti-users"></i>
+                    <span>PARENT PORTAL</span>
+                </span>
+            </div>
+
+            <div style="text-align: center;">
+                <h2>Create Parent Account</h2>
+                <p class="subhead">Compare top universities, track scholarship options, and support your child's education path</p>
+            </div>
+            
+            {% if error %}
+                <div style="background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; padding: 9px 12px; border-radius: 8px; margin-bottom: 13px; text-align: center; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="ti ti-alert-circle"></i> {{ error }}
+                </div>
+            {% endif %}
+            
+            <form method="POST" id="parentRegisterForm">
+                {% csrf_token %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+                
+                <div class="reg-two-col">
+                    <div class="reg-input-group">
+                        <label>Parent's Full Name *</label>
+                        <div class="input-icon-wrap">
+                            <i class="ti ti-user input-icon"></i>
+                            <input type="text" name="full_name" required value="{{ full_name|default:'' }}" placeholder="e.g. Sarah Johnson">
+                        </div>
+                    </div>
+                    <div class="reg-input-group">
+                        <label>Email Address *</label>
+                        <div class="input-icon-wrap">
+                            <i class="ti ti-mail input-icon"></i>
+                            <input type="email" name="email" required autocomplete="email" value="{{ email|default:'' }}" placeholder="parent@example.com">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reg-two-col">
+                    <div class="reg-input-group">
+                        <label>Mobile / Phone *</label>
+                        <div class="input-icon-wrap">
+                            <i class="ti ti-device-mobile input-icon"></i>
+                            <input type="tel" name="phone" required value="{{ phone|default:'' }}" placeholder="+971 50 987 6543">
+                        </div>
+                    </div>
+                    <div class="reg-input-group">
+                        <label>Child's Current Level</label>
+                        <div class="input-icon-wrap">
+                            <i class="ti ti-school input-icon"></i>
+                            <select name="child_grade">
+                                <option value="High School Senior (Grade 12)">Grade 12 / High School Senior</option>
+                                <option value="High School (Grade 10-11)">Grade 10 - 11</option>
+                                <option value="Undergraduate (Seeking Master's)">Undergraduate / Bachelor's</option>
+                                <option value="Other">Other / Foundation</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reg-input-group" style="margin-bottom: 14px;">
+                    <label>Password (Min 12 Chars, Strong) *</label>
+                    <div class="input-icon-wrap">
+                        <i class="ti ti-lock input-icon"></i>
+                        <input type="password" id="parentPassword" name="password" required minlength="12" autocomplete="new-password" placeholder="Create strong password (min 12 chars)">
+                        <i class="ti ti-eye toggle-pwd-btn" id="toggleParentPwd" onclick="toggleParentPassword()"></i>
+                    </div>
+                    <div class="pwd-strength-container" id="parPwdStrengthBox" style="margin-top: 5px; display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 7px 9px;">
+                        <div class="pwd-meter-bar" style="height: 3.5px; width: 100%; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-bottom: 5px;">
+                            <div id="parPwdMeterFill" style="height: 100%; width: 0%; transition: width 0.3s, background-color 0.3s; background-color: #ef4444;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 10.5px; margin-bottom: 4px; color: #64748b;">
+                            <span>Strength: <strong id="parPwdStrengthLabel" style="color: #ef4444;">Too Weak</strong></span>
+                        </div>
+                        <div class="pwd-rules-list" style="display: flex; flex-direction: column; gap: 2px; font-size: 10px; color: #64748b;">
+                            <div id="parRuleLen"><i class="ti ti-circle"></i> 12+ characters</div>
+                            <div id="parRuleUpper"><i class="ti ti-circle"></i> Uppercase letter (A-Z)</div>
+                            <div id="parRuleLower"><i class="ti ti-circle"></i> Lowercase letter (a-z)</div>
+                            <div id="parRuleNum"><i class="ti ti-circle"></i> Number (0-9)</div>
+                            <div id="parRuleSpecial"><i class="ti ti-circle"></i> Special symbol (!@#$% etc.)</div>
+                            <div id="parRuleSpace"><i class="ti ti-circle"></i> No spaces allowed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit-reg">
+                    Create Parent Account &rarr;
+                </button>
+            </form>
+
+            <div class="switch-roles-strip">
+                <span>Register as:</span>
+                <a href="{% url 'portal_register_student' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="switch-role-link">
+                    <i class="ti ti-school"></i> Student
+                </a>
+                <a href="{% url 'portal_register_exhibitor' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="switch-role-link">
+                    <i class="ti ti-building"></i> Exhibitor
+                </a>
+            </div>
+
+            <p style="text-align: center; margin-top: 12px; margin-bottom: 0; color: #64748b; font-size: 12px;">
+                Already have an account? <a href="{% url 'portal_login' %}{% if next %}?next={{ next|urlencode }}{% endif %}" style="color: #0f172a; font-weight: 800; text-decoration: underline;">Login here</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleParentPassword() {
+  const pwd = document.getElementById('parentPassword');
+  const icon = document.getElementById('toggleParentPwd');
+  if (pwd.type === 'password') {
+    pwd.type = 'text';
+    icon.classList.remove('ti-eye');
+    icon.classList.add('ti-eye-off');
+  } else {
+    pwd.type = 'password';
+    icon.classList.remove('ti-eye-off');
+    icon.classList.add('ti-eye');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.body.classList.remove('theme-dark', 'dark-mode');
+  try {
+    localStorage.removeItem('portal_theme');
+    localStorage.removeItem('register_theme');
+    localStorage.removeItem('theme');
+  } catch (e) {}
+
+  if (typeof updateNavbarMask === 'function') {
+    updateNavbarMask();
+  }
+
+function setupPasswordStrength(inputId, boxId, fillId, labelId, rulesPrefix, formId) {
+  const input = document.getElementById(inputId);
+  const box = document.getElementById(boxId);
+  const fill = document.getElementById(fillId);
+  const label = document.getElementById(labelId);
+  const form = document.getElementById(formId);
+  if (!input || !box) return;
+
+  const rules = {
+    len: document.getElementById(rulesPrefix + 'RuleLen'),
+    upper: document.getElementById(rulesPrefix + 'RuleUpper'),
+    lower: document.getElementById(rulesPrefix + 'RuleLower'),
+    num: document.getElementById(rulesPrefix + 'RuleNum'),
+    special: document.getElementById(rulesPrefix + 'RuleSpecial'),
+    space: document.getElementById(rulesPrefix + 'RuleSpace')
+  };
+
+  function updateRule(elem, passed, errorText) {
+    if (!elem) return;
+    const icon = elem.querySelector('i');
+    if (passed) {
+      elem.style.color = '#059669';
+      elem.style.fontWeight = '600';
+      if (icon) icon.className = 'ti ti-circle-check-filled';
+    } else {
+      elem.style.color = errorText ? '#dc2626' : '#64748b';
+      elem.style.fontWeight = 'normal';
+      if (icon) icon.className = errorText ? 'ti ti-circle-x-filled' : 'ti ti-circle';
+    }
+  }
+
+  function checkStrength() {
+    const val = input.value;
+    if (!val) {
+      box.style.display = 'none';
+      return;
+    }
+    box.style.display = 'block';
+
+    const hasLen = val.length >= 12;
+    const hasUpper = /[A-Z]/.test(val);
+    const hasLower = /[a-z]/.test(val);
+    const hasNum = /[0-9]/.test(val);
+    const hasSpecial = /[^A-Za-z0-9]/.test(val);
+    const hasNoSpace = !val.includes(' ');
+
+    updateRule(rules.len, hasLen);
+    updateRule(rules.upper, hasUpper);
+    updateRule(rules.lower, hasLower);
+    updateRule(rules.num, hasNum);
+    updateRule(rules.special, hasSpecial);
+    updateRule(rules.space, hasNoSpace, !hasNoSpace);
+
+    let passedCount = [hasLen, hasUpper, hasLower, hasNum, hasSpecial, hasNoSpace].filter(Boolean).length;
+    const pct = Math.round((passedCount / 6) * 100);
+    if (fill) fill.style.width = pct + '%';
+
+    if (passedCount <= 2 || !hasNoSpace) {
+      if (fill) fill.style.backgroundColor = '#ef4444';
+      if (label) {
+        label.innerText = !hasNoSpace ? 'Invalid (Contains Spaces)' : 'Too Weak';
+        label.style.color = '#ef4444';
+      }
+    } else if (passedCount < 6) {
+      if (fill) fill.style.backgroundColor = '#f59e0b';
+      if (label) {
+        label.innerText = 'Moderate (Fulfill all rules)';
+        label.style.color = '#d97706';
+      }
+    } else {
+      if (fill) fill.style.backgroundColor = '#10b981';
+      if (label) {
+        label.innerText = 'Strong & Secure';
+        label.style.color = '#059669';
+      }
+    }
+  }
+
+  input.addEventListener('focus', function() {
+    box.style.display = 'block';
+    checkStrength();
+  });
+  input.addEventListener('input', checkStrength);
+
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      if (input.offsetParent === null) return;
+      const val = input.value;
+      const valid = val.length >= 12 &&
+                    /[A-Z]/.test(val) &&
+                    /[a-z]/.test(val) &&
+                    /[0-9]/.test(val) &&
+                    /[^A-Za-z0-9]/.test(val) &&
+                    !val.includes(' ');
+      if (!valid) {
+        e.preventDefault();
+        box.style.display = 'block';
+        input.focus();
+        alert('Please enter a strong password meeting all criteria:\n- At least 12 characters\n- Uppercase letter (A-Z)\n- Lowercase letter (a-z)\n- Number (0-9)\n- Special symbol (!@#$% etc.)\n- No spaces allowed');
+        return false;
+      }
+    });
+  }
+}
+
+
+  setupPasswordStrength('parentPassword', 'parPwdStrengthBox', 'parPwdMeterFill', 'parPwdStrengthLabel', 'par', 'parentRegisterForm');
+});
+</script>
+{% endblock %}

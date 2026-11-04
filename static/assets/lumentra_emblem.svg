@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 50" width="60" height="50" fill="none">
+  <defs>
+    <linearGradient id="lumentraGoldEmblem" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <filter id="emblemGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+  <g filter="url(#emblemGlow)">
+    <path d="M 35.75 37.84L 58.31 15.28L 58.31 4.00L 35.75 26.56L 13.26 4.00L 9.94 4.00L 2.01 4.00L 2.01 45.99L 27.77 45.99L 35.76 38.01L 9.99 38.01L 9.99 12.00Z" fill="url(#lumentraGoldEmblem)" />
+  </g>
+</svg>

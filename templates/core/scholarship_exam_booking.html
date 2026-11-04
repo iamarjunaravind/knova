@@ -1,0 +1,752 @@
+{% extends 'core/base_public.html' %}
+{% load static %}
+
+{% block title %}Scholarship Exam Slot Booking | KNOVA 2026{% endblock %}
+
+{% block body_class %}has-dark-hero booking-page{% endblock %}
+
+{% block content %}
+<style>
+  body.booking-page {
+    background-color: #f4f7fb;
+  }
+
+  .booking-hero {
+    padding: 122px 0 28px 0;
+    background: radial-gradient(circle at 85% 15%, rgba(23, 104, 255, 0.28) 0%, transparent 55%),
+                radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.18) 0%, transparent 50%),
+                linear-gradient(135deg, #061022 0%, #0a1c3f 50%, #102e6b 100%);
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .booking-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(6, 16, 34, 0.45) 100%);
+    pointer-events: none;
+  }
+
+  .booking-hero-inner {
+    position: relative;
+    z-index: 2;
+    margin: 0 auto;
+  }
+
+  .dash-breadcrumb-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .dash-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(23, 104, 255, 0.22);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    backdrop-filter: blur(8px);
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #7dd3fc;
+  }
+
+  .booking-dash-title {
+    color: #ffffff !important;
+    font-size: clamp(22px, 2.5vw, 28px);
+    font-weight: 800;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+    letter-spacing: -0.6px;
+  }
+
+  .booking-dash-title .gradient-text {
+    background: linear-gradient(135deg, #67e8f9 0%, #ffffff 50%, #93c5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+
+  .booking-grid-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 32px;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 920px) {
+    .booking-hero {
+      padding: 18px 0 24px 0;
+    }
+    .booking-grid-wrapper {
+      grid-template-columns: 1fr !important;
+      gap: 24px !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .exam-date-tabs-wrapper {
+      flex-direction: column !important;
+    }
+    .exam-date-tabs-wrapper .date-tab-btn {
+      width: 100% !important;
+      justify-content: space-between !important;
+    }
+    .slots-date-group > div {
+      grid-template-columns: 1fr !important;
+    }
+    #submitBookingBtn {
+      width: 100% !important;
+      justify-content: center !important;
+    }
+  }
+</style>
+
+<section class="booking-hero">
+  <div class="container">
+    <div class="booking-hero-inner">
+      <div class="dash-breadcrumb-bar">
+        <span class="dash-badge-pill"><i class="ti ti-award"></i> ASSESSMENT PORTAL</span>
+        <span style="color: rgba(255,255,255,0.3); font-size: 11px;">/</span>
+        <a href="{% if request.user.is_authenticated %}{% url 'dashboard_scholarships' %}{% else %}{% url 'public_scholarships' %}{% endif %}" style="color: rgba(241,245,249,0.7); text-decoration: none; font-size: 11.5px; font-weight: 600;">Scholarships</a>
+        <span style="color: rgba(255,255,255,0.3); font-size: 11px;">/</span>
+        <span style="font-size: 11.5px; font-weight: 600; color: #38bdf8;">Slot Booking</span>
+      </div>
+      <h1 class="booking-dash-title">Scholarship Exam <span class="gradient-text">Slot Booking</span></h1>
+      <p style="font-size: 13px; color: rgba(241,245,249,0.85); margin: 0; line-height: 1.4;">
+        Reserve your time slot for the <strong>KNOVA Global Scholarship Aptitude &amp; Assessment Exam (KG-SAAE)</strong>. Qualified candidates receive on-spot scholarship award slips &amp; expedited university interviews.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="exam-booking-page" style="background: #f4f7fb; min-height: 80vh; padding: 24px 0 80px 0;">
+  <div class="container" style="margin: 0 auto; padding: 0 16px;">
+
+    {% if error_message %}
+    <div style="background: #fef2f2; border: 1.5px solid #fecaca; color: #b91c1c; padding: 14px 20px; border-radius: 14px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px;">
+      <i class="ti ti-alert-circle" style="font-size: 20px; flex-shrink: 0;"></i>
+      <span>{{ error_message }}</span>
+    </div>
+    {% endif %}
+
+    <!-- Online Exam Direct Access Banner -->
+    <div style="background: linear-gradient(135deg, #064e3b 0%, #065f46 100%); border: 1.5px solid #10b981; border-radius: 18px; padding: 18px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 10px 25px rgba(6, 78, 59, 0.25); color: #ffffff;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(52, 211, 153, 0.4); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #34d399; flex-shrink: 0;">
+          <i class="ti ti-device-laptop"></i>
+        </div>
+        <div>
+          <div style="font-size: 11px; font-weight: 800; color: #a7f3d0; text-transform: uppercase; letter-spacing: 0.8px;">Online CBT Testing System</div>
+          <div style="font-size: 16px; font-weight: 800; color: #ffffff; margin-top: 1px;">KNOVA Online Scholarship Exam (100 Questions)</div>
+          <div style="font-size: 12.5px; color: rgba(255,255,255,0.8); margin-top: 2px;">Take the computer-based assessment online now with live scoring &amp; auto-evaluation.</div>
+        </div>
+      </div>
+      <a href="{% url 'dashboard_take_exam' 1 %}" style="display: inline-flex; align-items: center; gap: 8px; background: #10b981; color: #ffffff; padding: 11px 22px; border-radius: 12px; font-weight: 700; font-size: 13.5px; text-decoration: none; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); transition: all 0.2s; white-space: nowrap;">
+        <i class="ti ti-player-play"></i> <span>Launch Online Exam Portal</span> &rarr;
+      </a>
+    </div>
+
+    <!-- Confirmed Hall Ticket Pass (If user already has a booking) -->
+    {% if success_booking and success_booking.status == 'Confirmed' %}
+    <div id="hallTicketCard" style="background: #ffffff; border: 2px solid #38bdf8; border-radius: 24px; padding: 30px; margin-bottom: 35px; box-shadow: 0 15px 40px rgba(56, 189, 248, 0.15); position: relative; overflow: hidden;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px dashed #cbd5e1;">
+        <div>
+          <span style="display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; margin-bottom: 8px;">
+            <i class="ti ti-circle-check-filled"></i> CONFIRMED HALL TICKET & EXAM PASS
+          </span>
+          <h2 style="font-size: 22px; color: #0a1936; font-weight: 800; margin: 0 0 4px 0;">
+            {{ success_booking.slot.title }}
+          </h2>
+          <div style="font-size: 13px; color: #64748b;">
+            Application for: <strong style="color: #1768ff;">{{ success_booking.scholarship_name|default:success_booking.scholarship.name|default:"KNOVA Merit Scholarship" }}</strong>
+          </div>
+        </div>
+        
+        <div style="text-align: right; background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px 16px; border-radius: 14px;">
+          <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px;">Hall Ticket Number</div>
+          <div style="font-size: 16px; font-weight: 900; color: #0a1936; letter-spacing: 0.5px;">{{ success_booking.hall_ticket_number }}</div>
+        </div>
+      </div>
+
+      <!-- Ticket Details Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px;">
+        <div style="background: #f8fafc; padding: 16px; border-radius: 16px; border: 1px solid #f1f5f9;">
+          <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;"><i class="ti ti-calendar" style="color: #1768ff;"></i> Exam Date</div>
+          <div style="font-size: 15px; font-weight: 800; color: #0a1936;">{{ success_booking.slot.exam_date|date:"l, F j, Y" }}</div>
+        </div>
+
+        <div style="background: #f8fafc; padding: 16px; border-radius: 16px; border: 1px solid #f1f5f9;">
+          <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;"><i class="ti ti-clock" style="color: #1768ff;"></i> Slot Timings</div>
+          <div style="font-size: 15px; font-weight: 800; color: #0a1936;">{{ success_booking.slot.start_time|time:"g:i A" }} &ndash; {{ success_booking.slot.end_time|time:"g:i A" }}</div>
+          <div style="font-size: 11px; color: #16a34a; font-weight: 700; margin-top: 3px;">Reporting Time: 15 mins prior</div>
+        </div>
+
+        <div style="background: #f8fafc; padding: 16px; border-radius: 16px; border: 1px solid #f1f5f9;">
+          <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;"><i class="ti ti-armchair" style="color: #1768ff;"></i> Assigned Seat</div>
+          <div style="font-size: 15px; font-weight: 800; color: #0a1936;">Desk {{ success_booking.seat_number }}</div>
+        </div>
+
+        <div style="background: #f8fafc; padding: 16px; border-radius: 16px; border: 1px solid #f1f5f9;">
+          <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;"><i class="ti ti-map-pin" style="color: #1768ff;"></i> Assessment Hall</div>
+          <div style="font-size: 13.5px; font-weight: 700; color: #0a1936;">{{ success_booking.slot.venue }}</div>
+        </div>
+      </div>
+
+      <!-- QR & Action Row -->
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          {% if hall_ticket_qr %}
+          <img src="data:image/png;base64,{{ hall_ticket_qr }}" alt="Hall Ticket QR" style="width: 72px; height: 72px; border-radius: 10px; border: 1px solid #e2e8f0; padding: 4px; background: white;">
+          {% endif %}
+          <div>
+            <div style="font-size: 13px; font-weight: 700; color: #0a1936;">Candidate: {{ request.user.get_full_name|default:request.user.username }}</div>
+            <div style="font-size: 12px; color: #64748b;">Show this digital barcode or print slip at Hall 3 entrance.</div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <a href="{% url 'dashboard_scholarships' %}" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 12px; background: #f8fafc; color: #334155; font-weight: 700; font-size: 13px; text-decoration: none; border: 1.5px solid #cbd5e1; transition: all 0.2s;">
+            <i class="ti ti-arrow-left"></i> Return to Scholarships
+          </a>
+          <a href="{% url 'dashboard_take_exam' 1 %}" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 12px; background: #10b981; color: #fff; font-weight: 700; font-size: 13px; text-decoration: none; box-shadow: 0 4px 12px rgba(16,185,129,0.3);">
+            <i class="ti ti-device-laptop"></i> Take Exam Online
+          </a>
+          
+          <button onclick="window.print()" class="btn-primary" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 12px; background: #1768ff; color: #fff; font-weight: 700; font-size: 13px; border: none; cursor: pointer;">
+            <i class="ti ti-printer"></i> Print Pass
+          </button>
+          
+          <form method="POST" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to cancel this slot reservation?');">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="cancel">
+            <input type="hidden" name="booking_id" value="{{ success_booking.id }}">
+            <button type="submit" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 12px; background: #fff; color: #dc2626; font-weight: 700; font-size: 13px; border: 1.5px solid #fecaca; cursor: pointer;">
+              <i class="ti ti-x"></i> Cancel / Reschedule
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Main Booking Layout -->
+    <div class="booking-grid-wrapper">
+      
+      <!-- Left Column: Slot Selector & Form -->
+      <div>
+        <form method="POST" id="slotBookingForm">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="book">
+          <input type="hidden" name="scholarship_id" value="{{ selected_scholarship.id|default:'' }}">
+          <input type="hidden" name="scholarship_name" value="{{ selected_scholarship.name|default:scholarship_name_param|default:'Merit Excellence Award' }}">
+          
+          <!-- Examination Date & Slot Selection Card -->
+          <div style="background: #ffffff; border-radius: 20px; padding: 28px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #eff6ff; color: #1768ff; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 1px solid #dbeafe;">
+                  <i class="ti ti-calendar-time"></i>
+                </div>
+                <div>
+                  <h3 style="font-size: 18px; font-weight: 800; color: #0a1936; margin: 0;">Select Assessment Date & Time Slot</h3>
+                  <p style="font-size: 12.5px; color: #64748b; margin: 2px 0 0 0;">Pick your preferred sitting to take the scholarship test</p>
+                </div>
+              </div>
+
+              <!-- Student Profile Status Pill -->
+              <div style="display: inline-flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 6px 12px; border-radius: 30px;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></div>
+                <span style="font-size: 12px; color: #475569; font-weight: 600;">Candidate: <strong style="color: #0a1936;">{{ request.user.get_full_name|default:request.user.username }}</strong></span>
+              </div>
+            </div>
+
+            <!-- Active Selected Date Tracker & Custom Test Slot Master Inputs -->
+            <input type="hidden" name="active_date" id="activeDateInput" value="{{ first_date|date:'Y-m-d' }}">
+            <input type="hidden" name="custom_exam_date" id="selectedCustomExamDate" value="{{ today|date:'Y-m-d' }}">
+            <input type="hidden" name="custom_shift_time" id="selectedCustomShiftTime" value="">
+
+            <!-- Date Tabs Header & Test Shift Launcher -->
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+              <div style="font-size: 13px; font-weight: 700; color: #334155;">
+                <i class="ti ti-calendar" style="color: #1768ff; margin-right: 4px;"></i> Select Day (Next 5 Days):
+              </div>
+
+              <!-- Quick Test Shift Setter Launcher Button -->
+              <button type="button" onclick="toggleTestShiftPanel()" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; border: 1.5px dashed #1768ff; background: #eff6ff; color: #1768ff; font-weight: 700; font-size: 12px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#eff6ff'">
+                <i class="ti ti-clock-plus"></i>
+                <span>Set Date &amp; Shift for Testing</span>
+              </button>
+            </div>
+
+            <!-- Expandable Quick Shift Tester Drawer -->
+            <div id="testShiftDrawer" style="display: none; background: #f8fafc; border: 1.5px solid #bfdbfe; border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(23,104,255,0.06);">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                <div style="font-weight: 800; font-size: 13.5px; color: #0a1936; display: flex; align-items: center; gap: 6px;">
+                  <i class="ti ti-flask" style="color: #1768ff;"></i>
+                  <span>Test Shift &amp; Date Setter</span>
+                </div>
+                <span style="font-size: 11.5px; color: #64748b;">Set or type custom shift time and date (e.g. today's date)</span>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px;">
+                <!-- Date selector -->
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <label style="font-size: 11.5px; font-weight: 700; color: #334155;">Exam Date:</label>
+                    <button type="button" onclick="setDrawerDateToToday()" style="background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; font-size: 10.5px; font-weight: 800; border-radius: 6px; padding: 1px 7px; cursor: pointer;">
+                      ⚡ Today ({{ today|date:"M j" }})
+                    </button>
+                  </div>
+                  <input type="date" id="quickDrawerDate" value="{{ today|date:'Y-m-d' }}" style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0a1936; background: #ffffff; box-sizing: border-box;">
+                </div>
+
+                <!-- Shift time input -->
+                <div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <label style="font-size: 11.5px; font-weight: 700; color: #334155;">Shift Time:</label>
+                    <span style="font-size: 10.5px; color: #64748b;">Type or pick:</span>
+                  </div>
+                  <div style="display: flex; gap: 6px;">
+                    <input type="text" id="quickDrawerShiftTime" value="09:15 AM - 10:45 AM" placeholder="e.g. 09:15 AM - 10:45 AM or 9:30 AM" style="flex: 1; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0a1936; background: #ffffff; box-sizing: border-box;">
+                    <input type="time" id="quickDrawerTimePicker" title="Pick start time" style="padding: 6px 8px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 12px; background: #ffffff; cursor: pointer;" onchange="syncDrawerTimePicker(this)">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Time Presets -->
+              <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;">
+                <span style="font-size: 11px; font-weight: 700; color: #64748b;">Quick shifts:</span>
+                <button type="button" onclick="setDrawerPresetShift('09:00 AM - 10:30 AM')" style="font-size: 11px; padding: 3px 8px; border-radius: 6px; border: 1px solid #cbd5e1; background: #ffffff; cursor: pointer;">09:00 - 10:30 AM</button>
+                <button type="button" onclick="setDrawerPresetShift('11:15 AM - 12:45 PM')" style="font-size: 11px; padding: 3px 8px; border-radius: 6px; border: 1px solid #cbd5e1; background: #ffffff; cursor: pointer;">11:15 AM - 12:45 PM</button>
+                <button type="button" onclick="setDrawerPresetShift('02:30 PM - 04:00 PM')" style="font-size: 11px; padding: 3px 8px; border-radius: 6px; border: 1px solid #cbd5e1; background: #ffffff; cursor: pointer;">02:30 - 04:00 PM</button>
+                <button type="button" onclick="setDrawerPresetShift('05:30 PM - 07:00 PM')" style="font-size: 11px; padding: 3px 8px; border-radius: 6px; border: 1px solid #cbd5e1; background: #ffffff; cursor: pointer;">05:30 - 07:00 PM</button>
+              </div>
+
+              <!-- Action buttons -->
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
+                <button type="button" onclick="applyTestShiftFromDrawer(false)" style="padding: 8px 16px; border-radius: 8px; background: #eff6ff; color: #1768ff; font-weight: 700; font-size: 12.5px; border: 1.5px solid #1768ff; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                  <i class="ti ti-check"></i> Set &amp; Select Slot
+                </button>
+                <button type="button" onclick="applyTestShiftFromDrawer(true)" style="padding: 8px 18px; border-radius: 8px; background: linear-gradient(135deg, #1768ff, #0051ff); color: #ffffff; font-weight: 700; font-size: 12.5px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(23,104,255,0.25);">
+                  <i class="ti ti-bolt"></i> Instant Book (Test)
+                </button>
+              </div>
+            </div>
+
+            <!-- Date Tabs (Next 5 Days) -->
+            <div style="display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap;" class="exam-date-tabs-wrapper">
+              {% for exam_date, slots in slots_grouped.items %}
+              <button type="button" class="date-tab-btn {% if forloop.first %}active{% endif %}" onclick="showSlotsForDate('{{ exam_date|date:'Y-m-d' }}', this)" style="padding: 9px 15px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="ti ti-calendar" style="font-size: 14px;"></i>
+                <span>{{ exam_date|date:"D, M j, Y" }}</span>
+                {% if exam_date == today %}
+                <span style="background: #10b981; color: #ffffff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase;">Today</span>
+                {% endif %}
+                <span class="slot-count-badge" style="font-size: 10.5px; padding: 2px 7px; border-radius: 20px; font-weight: 800;">{{ slots|length }} Slots</span>
+              </button>
+              {% endfor %}
+            </div>
+
+            <!-- Slots Grids for each date (8 slots per day) -->
+            {% for exam_date, slots in slots_grouped.items %}
+            <div id="slots-{{ exam_date|date:'Y-m-d' }}" class="slots-date-group" style="{% if not forloop.first %}display: none;{% endif %}">
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px;">
+                {% for slot in slots %}
+                <label class="slot-card-label" style="display: block; border: 2px solid #e2e8f0; border-radius: 16px; padding: 15px 16px; cursor: pointer; transition: all 0.2s; background: #ffffff; position: relative;" onmouseover="this.style.borderColor='#1768ff'" onmouseout="if(!this.querySelector('input').checked) this.style.borderColor='#e2e8f0'">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                    <div style="font-weight: 800; font-size: 15px; color: #0a1936; display: flex; align-items: center; gap: 5px;">
+                      <i class="ti ti-clock" style="color: #1768ff; font-size: 16px;"></i>
+                      <span>{{ slot.start_time|time:"g:i A" }} &ndash; {{ slot.end_time|time:"g:i A" }}</span>
+                    </div>
+                    <input type="radio" name="slot_id" value="{{ slot.id }}" required style="width: 18px; height: 18px; accent-color: #1768ff;" onchange="updateSelectedSlotUI(this)">
+                  </div>
+                  
+                  <div style="font-size: 12px; color: #64748b; margin-bottom: 10px; line-height: 1.4;">
+                    <i class="ti ti-map-pin" style="color: #1768ff; margin-right: 3px;"></i> {{ slot.venue }}
+                  </div>
+
+                  <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; border-top: 1px solid #f1f5f9; padding-top: 8px;">
+                    <span style="color: #64748b;">Duration: 90 Mins</span>
+                    <span style="color: {% if slot.available_seats < 20 %}#ea580c{% else %}#16a34a{% endif %}; background: {% if slot.available_seats < 20 %}#fff7ed{% else %}#f0fdf4{% endif %}; padding: 3px 8px; border-radius: 10px;">
+                      ● {{ slot.available_seats }} Seats Left
+                    </span>
+                  </div>
+                </label>
+                {% endfor %}
+
+                <!-- Slot Card 9: Custom Test Shift Slot (Type Time of Shift & Date) -->
+                <label class="slot-card-label custom-test-slot-card" style="display: block; border: 2px dashed #1768ff; border-radius: 16px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%); position: relative;" onmouseover="this.style.borderColor='#0051ff'" onmouseout="if(!this.querySelector('input[type=radio]').checked) this.style.borderColor='#1768ff'">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                    <div style="font-weight: 800; font-size: 14px; color: #1768ff; display: flex; align-items: center; gap: 6px;">
+                      <i class="ti ti-clock-edit" style="font-size: 17px; color: #1768ff;"></i>
+                      <span>Type Custom Shift &amp; Date (Test)</span>
+                    </div>
+                    <input type="radio" name="slot_id" value="custom" style="width: 18px; height: 18px; accent-color: #1768ff;" onchange="updateSelectedSlotUI(this)">
+                  </div>
+                  
+                  <!-- Shift Date -->
+                  <div style="margin-bottom: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                      <span style="font-size: 11px; font-weight: 700; color: #475569;">Shift Date:</span>
+                      <button type="button" onclick="setSlotCardDateToToday(this)" style="background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; font-size: 10px; font-weight: 800; border-radius: 6px; padding: 1px 7px; cursor: pointer;" title="Set to Today's Date">Today's Date</button>
+                    </div>
+                    <input type="date" class="custom-exam-date-input" value="{{ exam_date|date:'Y-m-d' }}" style="width: 100%; padding: 6px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #0a1936; background: #ffffff; box-sizing: border-box;" onfocus="selectCustomSlot(this)" onchange="selectCustomSlot(this)">
+                  </div>
+
+                  <!-- Shift Time -->
+                  <div style="margin-bottom: 8px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 3px;">Type or pick shift timing:</div>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                      <input type="text" class="custom-shift-text-input" placeholder="e.g. 09:15 AM - 10:45 AM" style="flex: 1; padding: 6px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 12px; font-weight: 700; color: #0a1936; background: #ffffff; box-sizing: border-box;" onfocus="selectCustomSlot(this)" oninput="selectCustomSlot(this)">
+                      <input type="time" class="custom-shift-time-picker" title="Pick start time" style="padding: 5px 6px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 11.5px; background: #ffffff; cursor: pointer;" onchange="syncShiftPicker(this)">
+                    </div>
+                  </div>
+
+                  <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; border-top: 1px dashed #bfdbfe; padding-top: 8px;">
+                    <span style="color: #2563eb;"><i class="ti ti-flask"></i> Testing Shift</span>
+                    <span style="color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 8px;">● Custom Slot</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+            {% endfor %}
+
+            <!-- Optional Accommodations Note -->
+            <div style="margin-top: 22px; border-top: 1px solid #f1f5f9; padding-top: 14px;">
+              <details style="cursor: pointer;">
+                <summary style="font-size: 12.5px; font-weight: 600; color: #1768ff; display: inline-flex; align-items: center; gap: 6px; user-select: none;">
+                  <i class="ti ti-notes"></i>
+                  <span>Need special requirements or accommodations? (Optional)</span>
+                </summary>
+                <div style="margin-top: 10px;">
+                  <textarea name="special_requirements" rows="2" placeholder="e.g. Extra time, wheelchair access, or preferred calculator accommodation..." style="width: 100%; padding: 10px 14px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-family: inherit; font-size: 13px; color: #1e293b; box-sizing: border-box; resize: vertical;"></textarea>
+                </div>
+              </details>
+            </div>
+
+            <!-- Booking Submit Action -->
+            <div style="margin-top: 20px; padding-top: 18px; border-top: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+              <div style="font-size: 12.5px; color: #64748b;">
+                <i class="ti ti-shield-check" style="color: #10b981; font-size: 16px; vertical-align: middle; margin-right: 4px;"></i>
+                Linked with <strong>{{ request.user.email }}</strong> &bull; Instant Hall Ticket Pass
+              </div>
+
+              <button type="submit" id="submitBookingBtn" style="padding: 13px 28px; border-radius: 12px; background: linear-gradient(135deg, #1768ff, #0051ff); color: #ffffff; font-weight: 800; font-size: 14.5px; border: none; cursor: pointer; box-shadow: 0 10px 24px rgba(23,104,255,0.3); transition: all 0.25s; display: inline-flex; align-items: center; gap: 8px;">
+                <span>Confirm &amp; Book Exam Slot</span>
+                <i class="ti ti-arrow-right" style="font-size: 16px;"></i>
+              </button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <!-- Right Column: Scholarship Snapshot & Exam Guidelines -->
+      <div>
+        
+        <!-- Scholarship Card -->
+        <div style="background: #ffffff; border-radius: 20px; padding: 24px; border: 1.5px solid #bfdbfe; box-shadow: 0 10px 30px rgba(23,104,255,0.06); margin-bottom: 24px;">
+          <span style="display: inline-flex; align-items: center; gap: 4px; background: #eff6ff; color: #1768ff; font-weight: 800; font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px;">
+            <i class="ti ti-sparkles"></i> SELECTED SCHOLARSHIP
+          </span>
+          
+          <h4 style="font-size: 17px; font-weight: 800; color: #0a1936; margin: 0 0 8px 0;">
+            {{ selected_scholarship.name|default:scholarship_name_param|default:"KNOVA Merit Excellence Award" }}
+          </h4>
+          
+          <div style="background: #eff6ff; color: #1768ff; font-weight: 800; font-size: 15px; padding: 8px 12px; border-radius: 10px; margin-bottom: 12px; display: inline-flex; align-items: center; gap: 6px;">
+            <i class="ti ti-cash"></i> {{ selected_scholarship.amount|default:"Up to 100% Tuition Waiver" }}
+          </div>
+
+          <div style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 16px;">
+            {{ selected_scholarship.description|default:"Merit scholarship awarded based on aptitude exam scores, qualifying candidates for direct institutional tuition waivers." }}
+          </div>
+
+          <div style="font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Benefits Included</div>
+          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: #475569;">
+            <div style="display: flex; align-items: center; gap: 6px;"><i class="ti ti-check" style="color: #16a34a;"></i> 1-on-1 interview call slip with university deans</div>
+            <div style="display: flex; align-items: center; gap: 6px;"><i class="ti ti-check" style="color: #16a34a;"></i> Official KNOVA Global Certificate of Merit</div>
+            <div style="display: flex; align-items: center; gap: 6px;"><i class="ti ti-check" style="color: #16a34a;"></i> Valid across participating expo universities</div>
+          </div>
+        </div>
+
+        <!-- Exam Guidelines Card -->
+        <div style="background: #ffffff; border-radius: 20px; padding: 22px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+          <h4 style="font-size: 15px; font-weight: 800; color: #0a1936; margin: 0 0 12px 0; display: flex; align-items: center; gap: 6px;">
+            <i class="ti ti-info-circle" style="color: #1768ff;"></i> Examination Rules
+          </h4>
+          <ul style="padding-left: 18px; margin: 0; font-size: 12.5px; color: #64748b; line-height: 1.6;">
+            <li>Bring your <strong>Hall Ticket QR</strong> (digital or printout).</li>
+            <li>Valid Student Photo ID or Passport required for verification.</li>
+            <li>90-Minute Computer-Based Testing (CBT) covering Quantitative, Verbal & Critical Thinking.</li>
+            <li>Score results published within 2 hours of test completion.</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .date-tab-btn {
+    border: 1.5px solid #e2e8f0;
+    background: #ffffff;
+    color: #475569;
+  }
+  .date-tab-btn:hover {
+    border-color: #93c5fd;
+    color: #1768ff;
+  }
+  .date-tab-btn.active {
+    border-color: #1768ff !important;
+    background: #eff6ff !important;
+    color: #1768ff !important;
+  }
+  .date-tab-btn.active .slot-count-badge {
+    background: rgba(23, 104, 255, 0.12) !important;
+    color: #1768ff !important;
+  }
+  .date-tab-btn:not(.active) .slot-count-badge {
+    background: #f1f5f9 !important;
+    color: #64748b !important;
+  }
+  .slot-card-label.selected {
+    border-color: #1768ff !important;
+    background: #f0f7ff !important;
+    box-shadow: 0 6px 18px rgba(23, 104, 255, 0.12);
+  }
+  @media (max-width: 860px) {
+    .booking-grid-wrapper {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
+
+<script>
+  function showSlotsForDate(dateStr, btn) {
+    document.querySelectorAll('.date-tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Update activeDateInput tracker
+    const dateInput = document.getElementById('activeDateInput');
+    if (dateInput) dateInput.value = dateStr;
+
+    document.querySelectorAll('.slots-date-group').forEach(el => el.style.display = 'none');
+    const target = document.getElementById('slots-' + dateStr);
+    if(target) target.style.display = 'block';
+  }
+
+  function updateSelectedSlotUI(radio) {
+    document.querySelectorAll('.slot-card-label').forEach(card => card.classList.remove('selected'));
+    if(radio && radio.checked) {
+      radio.closest('.slot-card-label').classList.add('selected');
+    }
+  }
+
+  function selectCustomSlot(inputElem) {
+    const card = inputElem.closest('.custom-test-slot-card');
+    if (card) {
+      const radio = card.querySelector('input[type="radio"]');
+      if (radio) {
+        radio.checked = true;
+        updateSelectedSlotUI(radio);
+      }
+      const dInp = card.querySelector('.custom-exam-date-input');
+      const tInp = card.querySelector('.custom-shift-text-input');
+      if (dInp && dInp.value) {
+        document.getElementById('selectedCustomExamDate').value = dInp.value;
+      }
+      if (tInp && tInp.value) {
+        document.getElementById('selectedCustomShiftTime').value = tInp.value;
+      }
+    }
+    // If it's time input, sync to other time inputs
+    if (inputElem.classList.contains('custom-shift-text-input')) {
+      document.querySelectorAll('.custom-shift-text-input').forEach(inp => {
+        if (inp !== inputElem) inp.value = inputElem.value;
+      });
+      document.getElementById('selectedCustomShiftTime').value = inputElem.value;
+    }
+    if (inputElem.classList.contains('custom-exam-date-input')) {
+      document.getElementById('selectedCustomExamDate').value = inputElem.value;
+    }
+  }
+
+  function setSlotCardDateToToday(btn) {
+    const card = btn.closest('.custom-test-slot-card');
+    if (card) {
+      const dateInp = card.querySelector('.custom-exam-date-input');
+      const todayStr = '{{ today|date:"Y-m-d" }}';
+      if (dateInp) {
+        dateInp.value = todayStr;
+        selectCustomSlot(dateInp);
+      }
+    }
+  }
+
+  function setDrawerDateToToday() {
+    const inp = document.getElementById('quickDrawerDate');
+    if (inp) {
+      inp.value = '{{ today|date:"Y-m-d" }}';
+    }
+  }
+
+  function setDrawerPresetShift(timeStr) {
+    const inp = document.getElementById('quickDrawerShiftTime');
+    if (inp) {
+      inp.value = timeStr;
+    }
+  }
+
+  function syncDrawerTimePicker(pickerElem) {
+    if (!pickerElem.value) return;
+    const parts = pickerElem.value.split(':');
+    let hour = parseInt(parts[0], 10);
+    const minute = parts[1];
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    const startStr = `${String(displayHour).padStart(2, '0')}:${minute} ${ampm}`;
+    
+    let endHour = hour + 1;
+    let endMin = parseInt(minute, 10) + 30;
+    if (endMin >= 60) {
+      endHour += 1;
+      endMin -= 60;
+    }
+    const endAmpm = endHour >= 12 ? (endHour >= 24 ? 'AM' : 'PM') : 'AM';
+    const displayEndHour = endHour % 12 || 12;
+    const endStr = `${String(displayEndHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')} ${endAmpm}`;
+
+    const inp = document.getElementById('quickDrawerShiftTime');
+    if (inp) inp.value = `${startStr} - ${endStr}`;
+  }
+
+  function syncShiftPicker(pickerElem) {
+    if (!pickerElem.value) return;
+    const parts = pickerElem.value.split(':');
+    let hour = parseInt(parts[0], 10);
+    const minute = parts[1];
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    const startStr = `${String(displayHour).padStart(2, '0')}:${minute} ${ampm}`;
+    
+    // Add 90 mins for standard CBT duration
+    let endHour = hour + 1;
+    let endMin = parseInt(minute, 10) + 30;
+    if (endMin >= 60) {
+      endHour += 1;
+      endMin -= 60;
+    }
+    const endAmpm = endHour >= 12 ? (endHour >= 24 ? 'AM' : 'PM') : 'AM';
+    const displayEndHour = endHour % 12 || 12;
+    const endStr = `${String(displayEndHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')} ${endAmpm}`;
+
+    const shiftStr = `${startStr} - ${endStr}`;
+    const card = pickerElem.closest('.custom-test-slot-card');
+    if (card) {
+      const textInput = card.querySelector('.custom-shift-text-input');
+      if (textInput) {
+        textInput.value = shiftStr;
+        selectCustomSlot(textInput);
+      }
+    }
+  }
+
+  function toggleTestShiftPanel() {
+    const drawer = document.getElementById('testShiftDrawer');
+    if (drawer) {
+      const isHidden = drawer.style.display === 'none' || drawer.style.display === '';
+      drawer.style.display = isHidden ? 'block' : 'none';
+      if (isHidden) {
+        const inp = document.getElementById('quickDrawerShiftTime');
+        if (inp) inp.focus();
+      }
+    }
+  }
+
+  function applyTestShiftFromDrawer(andSubmit = false) {
+    const shiftVal = document.getElementById('quickDrawerShiftTime').value.trim();
+    const dateVal = document.getElementById('quickDrawerDate').value.trim();
+
+    if (!shiftVal) {
+      alert('Please type a shift timing (e.g. 09:15 AM - 10:45 AM or 9:30 AM)');
+      return;
+    }
+
+    // Set master inputs
+    document.getElementById('selectedCustomShiftTime').value = shiftVal;
+    if (dateVal) {
+      document.getElementById('selectedCustomExamDate').value = dateVal;
+      document.getElementById('activeDateInput').value = dateVal;
+    }
+
+    // Set shift time across all custom shift text inputs
+    document.querySelectorAll('.custom-shift-text-input').forEach(inp => {
+      inp.value = shiftVal;
+    });
+
+    // Set date across all custom date inputs
+    if (dateVal) {
+      document.querySelectorAll('.custom-exam-date-input').forEach(inp => {
+        inp.value = dateVal;
+      });
+
+      // Switch to the matching date tab if it exists
+      const targetTabBtn = Array.from(document.querySelectorAll('.date-tab-btn')).find(b => {
+        const oc = b.getAttribute('onclick') || '';
+        return oc.includes(dateVal);
+      });
+      if (targetTabBtn) {
+        showSlotsForDate(dateVal, targetTabBtn);
+      }
+    }
+
+    // Select custom slot radio in the currently visible date group
+    const activeDateGroup = document.querySelector('.slots-date-group:not([style*="none"])') || document.querySelector('.slots-date-group');
+    if (activeDateGroup) {
+      const radio = activeDateGroup.querySelector('.custom-test-slot-card input[type="radio"]');
+      if (radio) {
+        radio.checked = true;
+        updateSelectedSlotUI(radio);
+      }
+    }
+
+    if (andSubmit) {
+      const form = document.getElementById('examBookingForm');
+      if (form) form.submit();
+    } else {
+      toggleTestShiftPanel();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('examBookingForm');
+    if (form) {
+      form.addEventListener('submit', function() {
+        const selectedRadio = form.querySelector('input[name="slot_id"]:checked');
+        if (selectedRadio && selectedRadio.value === 'custom') {
+          const card = selectedRadio.closest('.custom-test-slot-card');
+          if (card) {
+            const dInp = card.querySelector('.custom-exam-date-input');
+            const tInp = card.querySelector('.custom-shift-text-input');
+            if (dInp && dInp.value) document.getElementById('selectedCustomExamDate').value = dInp.value;
+            if (tInp && tInp.value) document.getElementById('selectedCustomShiftTime').value = tInp.value;
+          }
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

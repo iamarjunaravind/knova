@@ -1,0 +1,2487 @@
+{% extends 'core/base_public.html' %}
+
+{% load static %}
+
+{% block title %}Interactive Expo Map & Floor Plan | KNOVA 2027{% endblock %}
+
+{% block body_class %}has-dark-hero map-page{% endblock %}
+
+{% block content %}
+
+<style>
+
+  /* ==========================================================
+
+     EXPO MAP MODERN DASHBOARD DESIGN SYSTEM
+
+     ========================================================== */
+
+  body.map-page,
+  body.has-dark-hero {
+    padding-top: 0 !important;
+    background-color: #f4f7fb;
+  }
+
+  .map-hero {
+    padding: 122px 0 26px 0;
+    background: radial-gradient(circle at 85% 15%, rgba(23, 104, 255, 0.28) 0%, transparent 55%),
+                radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.18) 0%, transparent 50%),
+                linear-gradient(135deg, #061022 0%, #0a1c3f 50%, #102e6b 100%);
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(6, 16, 34, 0.45) 100%);
+    pointer-events: none;
+  }
+
+  .dashboard-header-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .dash-title-block {
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .dash-breadcrumb-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .dash-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(23, 104, 255, 0.22);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #7dd3fc;
+  }
+
+  .dash-badge-pill i {
+    font-size: 12px;
+    color: #38bdf8;
+  }
+
+  .dash-crumb-sep {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 11px;
+  }
+
+  .dash-crumb-text {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: rgba(241, 245, 249, 0.7);
+  }
+
+  .map-dash-title {
+    color: #ffffff !important;
+    font-size: clamp(19px, 2.2vw, 24px);
+    font-weight: 800;
+    margin: 0 0 3px 0;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .map-dash-title .gradient-text {
+    background: linear-gradient(135deg, #67e8f9 0%, #ffffff 50%, #93c5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+
+  .dash-live-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 5px;
+    background: rgba(16, 185, 129, 0.18);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #6ee7b7;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .dash-live-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 6px #10b981;
+  }
+
+  .dash-subtitle-text {
+    font-size: 12.5px;
+    color: rgba(241, 245, 249, 0.8);
+    margin: 0;
+    line-height: 1.4;
+    font-weight: 400;
+  }
+
+  .dash-kpi-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .dash-kpi-card {
+    background: rgba(10, 25, 55, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    padding: 6px 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: default;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .dash-kpi-card:hover {
+    transform: none;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .kpi-icon-wrap {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .dash-kpi-card.kpi-booths .kpi-icon-wrap {
+    background: rgba(23, 104, 255, 0.22);
+    color: #60a5fa;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+  }
+
+  .dash-kpi-card.kpi-zones .kpi-icon-wrap {
+    background: rgba(56, 189, 248, 0.22);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+  }
+
+  .dash-kpi-card.kpi-halls .kpi-icon-wrap {
+    background: rgba(16, 185, 129, 0.22);
+    color: #34d399;
+    border: 1px solid rgba(52, 211, 153, 0.3);
+  }
+
+  .dash-kpi-card.kpi-access .kpi-icon-wrap {
+    background: rgba(168, 85, 247, 0.22);
+    color: #c084fc;
+    border: 1px solid rgba(192, 132, 252, 0.3);
+  }
+
+  .kpi-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kpi-stat-number {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.1;
+    letter-spacing: -0.3px;
+  }
+
+  .kpi-stat-number span {
+    color: #38bdf8;
+    font-size: 13px;
+  }
+
+  .kpi-stat-title {
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(241, 245, 249, 0.72);
+    font-weight: 600;
+    margin-top: 1px;
+  }
+
+  /* ==========================================================
+
+     INTERACTIVE MAP VIEWER & SIDEBAR LAYOUT
+
+     ========================================================== */
+
+  .expo-map-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 16px;
+    margin: 16px 0 40px 0;
+    align-items: stretch;
+  }
+
+  .expo-map-viewer {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+    border: 1px solid #e2e8f0;
+    height: 75vh;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Viewer Top Bar */
+
+  .map-viewer-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid #f1f5f9;
+    z-index: 25;
+    backdrop-filter: blur(8px);
+    flex-shrink: 0;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .map-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f172a;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    transition: all 0.2s;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .map-status-pill.is-active {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+  }
+
+  .status-indicator-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #1768ff;
+    box-shadow: 0 0 6px rgba(23, 104, 255, 0.6);
+    flex-shrink: 0;
+  }
+
+  .map-status-pill.is-active .status-indicator-dot {
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+    animation: indicatorPulse 1.5s infinite;
+  }
+
+  @keyframes indicatorPulse {
+    0% { transform: scale(1); opacity: 1; }
+
+    50% { transform: scale(1.3); opacity: 0.7; }
+
+    100% { transform: scale(1); opacity: 1; }
+
+  }
+
+  .map-controls-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .map-btn {
+    height: 30px;
+    min-width: 30px;
+    padding: 0 8px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+
+  .map-btn:hover {
+    background: #eff6ff;
+    border-color: #1768ff;
+    color: #1768ff;
+  }
+
+  .map-btn.is-toggled {
+    background: #1768ff;
+    border-color: #1768ff;
+    color: #ffffff;
+  }
+
+  /* Viewport & Canvas */
+
+  .map-viewport {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .map-viewport.is-dragging {
+    cursor: grabbing;
+  }
+
+  .map-canvas {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: center center;
+    transition: transform 0.2s ease-out;
+  }
+
+  .map-image-wrapper {
+    position: relative;
+    line-height: 0;
+    display: inline-block;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  #expoFloorSvg {
+    width: 1060px;
+    max-width: 96vw;
+    max-height: 68vh;
+    height: auto;
+    aspect-ratio: 1200 / 800;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+  }
+
+  /* Vector Floor Plan SVG Interactivity */
+  .svg-booth-node {
+    cursor: pointer;
+    transition: transform 0.16s ease, filter 0.16s ease;
+  }
+
+  .svg-booth-node:hover .booth-rect {
+    stroke-width: 3.5px !important;
+    stroke: #2563eb !important;
+    filter: drop-shadow(0 4px 10px rgba(37, 99, 235, 0.35));
+  }
+
+  .svg-booth-node:hover .booth-badge-rect {
+    fill: #1e40af !important;
+  }
+
+  .svg-booth-node.is-active .booth-rect {
+    stroke: #f59e0b !important;
+    stroke-width: 4px !important;
+    filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.85)) !important;
+  }
+
+  .svg-booth-node.is-active .booth-badge-rect {
+    fill: #d97706 !important;
+  }
+
+  .svg-zone-arena, .svg-zone-lounge, .svg-landmark-node {
+    transition: filter 0.16s ease;
+  }
+
+  .svg-zone-arena:hover, .svg-zone-lounge:hover {
+    filter: drop-shadow(0 3px 8px rgba(15, 23, 42, 0.15));
+  }
+
+  /* ==========================================================
+
+     MAP PINS & SPOTLIGHT SONAR
+
+     ========================================================== */
+
+  .map-pins-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .booth-pin {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ef4444;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 9.5px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s ease;
+    z-index: 15;
+    user-select: none;
+    letter-spacing: -0.2px;
+  }
+
+  .booth-pin-code {
+    display: block;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+    pointer-events: none;
+  }
+
+  /* Booth Pin Tooltip Label - Appears ONLY on Hover or when Active */
+
+  .booth-pin-label {
+    position: absolute;
+    bottom: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: rgba(15, 23, 42, 0.95);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+    letter-spacing: 0.2px;
+    z-index: 100;
+  }
+
+  .booth-pin-label::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px 5px 0 5px;
+    border-style: solid;
+    border-color: rgba(15, 23, 42, 0.95) transparent transparent transparent;
+  }
+
+  /* ONLY show label on hover or active pin - NEVER show all at once to prevent collision */
+
+  .booth-pin:hover .booth-pin-label,
+  .booth-pin.is-active .booth-pin-label {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .booth-pin:hover {
+    transform: translate(-50%, -50%) scale(1.28);
+    z-index: 50;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+  }
+
+  .booth-pin.is-active {
+    transform: translate(-50%, -50%) scale(1.38);
+    z-index: 60;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.85), 0 0 0 6px #ef4444, 0 8px 22px rgba(0, 0, 0, 0.6);
+  }
+
+  .booth-pin.is-active .booth-pin-label {
+    background: #0f172a;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.6);
+  }
+
+  .booth-pin.is-active .booth-pin-label::after {
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  /* Active Sonar Ping */
+
+  .booth-spotlight {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 35;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spotlight-core {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ef4444;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.9);
+    z-index: 3;
+    animation: corePulse 1s ease-in-out infinite alternate;
+  }
+
+  .spotlight-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid #ef4444;
+    opacity: 0;
+  }
+
+  .spotlight-ring.ring-1 {
+    width: 38px;
+    height: 38px;
+    animation: sonarPulse 1.8s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  }
+
+  .spotlight-ring.ring-2 {
+    width: 58px;
+    height: 58px;
+    animation: sonarPulse 1.8s cubic-bezier(0, 0.2, 0.8, 1) infinite 0.6s;
+  }
+
+  @keyframes sonarPulse {
+    0% {
+      transform: scale(0.3);
+      opacity: 0.9;
+    }
+
+    100% {
+      transform: scale(1.4);
+      opacity: 0;
+    }
+
+  }
+
+  @keyframes corePulse {
+    from { transform: scale(0.9); }
+
+    to { transform: scale(1.25); }
+
+  }
+
+  /* Floating Tooltip / Pointer Card */
+
+  .map-booth-tooltip {
+    position: absolute;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: 0 16px 32px -8px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(15, 23, 42, 0.05);
+    padding: 8px 12px;
+    min-width: 180px;
+    max-width: 240px;
+    z-index: 90;
+    pointer-events: auto;
+    text-align: left;
+    transition: opacity 0.18s ease;
+  }
+
+  .map-booth-tooltip.is-above {
+    transform: translate(-50%, -100%) translateY(-12px);
+  }
+
+  .map-booth-tooltip.is-above::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 7px 7px 0 7px;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+    filter: drop-shadow(0 2px 2px rgba(15, 23, 42, 0.08));
+  }
+
+  .map-booth-tooltip.is-below {
+    transform: translate(-50%, 0) translateY(12px);
+  }
+
+  .map-booth-tooltip.is-below::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 7px 7px 7px;
+    border-style: solid;
+    border-color: transparent transparent #ffffff transparent;
+    filter: drop-shadow(0 -2px 2px rgba(15, 23, 42, 0.08));
+  }
+
+  /* Docked University Details Card */
+
+  .map-university-card {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1.5px solid #bfdbfe;
+    border-radius: 12px;
+    box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(15, 23, 42, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 12px 16px;
+    z-index: 80;
+    animation: slideUpCard 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: auto;
+  }
+
+  @keyframes slideUpCard {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+  }
+
+  .uni-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .uni-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .uni-header-tags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .uni-card-booth-pill {
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 5px;
+    letter-spacing: 0.3px;
+  }
+
+  .uni-card-hall {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #475569;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .uni-card-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: #16a34a;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 2px 7px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .uni-card-close-btn {
+    background: #f1f5f9;
+    border: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .uni-card-close-btn:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+
+  .uni-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .uni-card-info {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .uni-card-title {
+    margin: 0 0 3px 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: #0a1936;
+    letter-spacing: -0.2px;
+    line-height: 1.25;
+  }
+
+  .uni-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+
+  .uni-meta-item {
+    font-size: 11.5px;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+  }
+
+  .uni-meta-item i {
+    color: #1768ff;
+    font-size: 13px;
+  }
+
+  .uni-card-desc {
+    margin: 0;
+    font-size: 11.5px;
+    color: #475569;
+    line-height: 1.35;
+    max-width: 650px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .uni-card-cta {
+    flex-shrink: 0;
+  }
+
+  .uni-card-explore-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 15px;
+    border-radius: 8px;
+    background: #1768ff;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(23, 104, 255, 0.25);
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .uni-card-explore-btn:hover {
+    background: #0f52cc;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(23, 104, 255, 0.35);
+  }
+
+  .tooltip-close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+
+  .tooltip-close-btn:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+  }
+
+  .tooltip-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    padding-right: 18px;
+  }
+
+  .tooltip-booth-badge {
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 800;
+    background: #1768ff;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+  }
+
+  .tooltip-hall-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tooltip-title {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0a1936;
+    line-height: 1.3;
+  }
+
+  .tooltip-org {
+    margin: 0 0 10px 0;
+    font-size: 11.5px;
+    color: #64748b;
+    line-height: 1.35;
+  }
+
+  .tooltip-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tooltip-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #1768ff;
+    color: #ffffff;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+
+  .tooltip-btn-primary:hover {
+    background: #0f52cc;
+    color: #ffffff;
+  }
+
+  /* Viewer Bottom Legend Bar */
+
+  .map-viewer-bottombar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 8px 14px;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 600;
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .legend-color-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+
+  /* ==========================================================
+
+     BOOTH DIRECTORY SIDEBAR & CARDS
+
+     ========================================================== */
+
+  .expo-map-sidebar {
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+    border: 1px solid #e2e8f0;
+    height: 75vh;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+
+  .booth-search-wrap {
+    position: relative;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+
+  .booth-search-wrap i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 15px;
+  }
+
+  .booth-search-wrap input {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px 0 34px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #0f172a;
+    background: #f8fafc;
+    outline: none;
+    transition: all 0.2s;
+    box-sizing: border-box;
+  }
+
+  .booth-search-wrap input:focus {
+    background: #ffffff;
+    border-color: #1768ff;
+    box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.12);
+  }
+
+  .booth-list-scroll {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+  }
+
+  .booth-list-scroll::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .booth-list-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  .booth-item {
+    padding: 10px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    background: #f8fafc;
+    position: relative;
+  }
+
+  .booth-item:hover {
+    border-color: #1768ff;
+    background: #ffffff;
+    transform: translateX(2px);
+    box-shadow: 0 4px 12px rgba(23, 104, 255, 0.08);
+  }
+
+  .booth-item.is-selected {
+    border-color: #1768ff;
+    background: #f0f7ff;
+    box-shadow: 0 0 0 2px rgba(23, 104, 255, 0.25), 0 4px 12px rgba(23, 104, 255, 0.12);
+    transform: translateX(3px);
+  }
+
+  .booth-item.is-selected::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #1768ff;
+    border-radius: 10px 0 0 10px;
+  }
+
+  .booth-badge-pill {
+    width: 98px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #ffffff;
+    background: #1768ff;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    text-align: center;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(23, 104, 255, 0.2);
+    transition: all 0.18s ease;
+  }
+
+  .booth-item.is-selected .booth-badge-pill {
+    background: #ef4444;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+  }
+
+  .booth-located-tag {
+    display: none;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #ef4444;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-top: 4px;
+  }
+
+  .booth-item.is-selected .booth-located-tag {
+    display: inline-flex;
+  }
+
+  @media (max-width: 900px) {
+    .map-hero {
+      padding: 16px 0 22px 0;
+    }
+
+    .dashboard-header-inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .dash-kpi-row {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
+
+    .expo-map-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .expo-map-viewer {
+      height: 480px;
+      min-height: auto;
+    }
+
+    .expo-map-sidebar {
+      height: 450px;
+      min-height: auto;
+    }
+
+  }
+
+</style>
+
+<!-- Modern Compact Dashboard Hero -->
+
+{% if site_config.show_map_hero %}
+<section class="map-hero">
+
+  <div class="container">
+
+    <div class="dashboard-header-inner">
+
+      <div class="dash-title-block">
+
+        <div class="dash-breadcrumb-bar">
+
+          <span class="dash-badge-pill">
+
+            <i class="ti ti-map-2"></i> {{ site_config.map_badge|default:"VENUE &amp; HALLS" }}
+
+          </span>
+
+          <span class="dash-crumb-sep">/</span>
+
+          <span class="dash-crumb-text">Interactive Floor Map</span>
+
+        </div>
+
+        <h1 class="map-dash-title">
+
+          {{ site_config.map_page_title|safe|default:"Interactive Expo Floor Map <span class='gradient-text'>&amp; Hall Directory</span>" }}
+
+          <span class="dash-live-badge">
+
+            <span class="dash-live-dot"></span> LIVE VENUE LAYOUT
+
+          </span>
+
+        </h1>
+
+        <p class="dash-subtitle-text">
+
+          {{ site_config.map_page_subtitle|default:"Locate university booths, keynote stages, counseling hubs, and food court lounges across Halls 1 &amp; 2." }}
+
+        </p>
+
+      </div>
+
+      <div class="dash-kpi-row">
+
+        <div class="dash-kpi-card kpi-booths">
+
+          <div class="kpi-icon-wrap">
+
+            <i class="ti ti-layout-grid"></i>
+
+          </div>
+
+          <div class="kpi-details">
+
+            <div class="kpi-stat-number">60<span>+</span></div>
+
+            <div class="kpi-stat-title">Uni Booths</div>
+
+          </div>
+
+        </div>
+
+        <div class="dash-kpi-card kpi-zones">
+
+          <div class="kpi-icon-wrap">
+
+            <i class="ti ti-compass"></i>
+
+          </div>
+
+          <div class="kpi-details">
+
+            <div class="kpi-stat-number">6</div>
+
+            <div class="kpi-stat-title">Activity Hubs</div>
+
+          </div>
+
+        </div>
+
+        <div class="dash-kpi-card kpi-halls">
+
+          <div class="kpi-icon-wrap">
+
+            <i class="ti ti-building"></i>
+
+          </div>
+
+          <div class="kpi-details">
+
+            <div class="kpi-stat-number">2</div>
+
+            <div class="kpi-stat-title">Main Halls</div>
+
+          </div>
+
+        </div>
+
+        <div class="dash-kpi-card kpi-access">
+
+          <div class="kpi-icon-wrap">
+
+            <i class="ti ti-wheelchair"></i>
+
+          </div>
+
+          <div class="kpi-details">
+
+            <div class="kpi-stat-number">100%</div>
+
+            <div class="kpi-stat-title">Accessible</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+{% endif %}
+
+<div class="container">
+
+  <div class="expo-map-layout">
+
+    <!-- Map Viewer Container -->
+
+    {% if site_config.show_map_viewer %}
+<div class="expo-map-viewer" id="expoMapViewer">
+<!-- Map Viewer Content -->
+<div class="expo-map-viewer" id="expoMapViewer">
+
+      <!-- Viewer Top Bar Controls -->
+
+      <div class="map-viewer-topbar">
+
+        <div class="map-status-pill" id="mapStatusPill">
+
+          <span class="status-indicator-dot"></span>
+
+          <span id="mapStatusText">Click any booth in directory to view location</span>
+
+        </div>
+
+        <div class="map-controls-group">
+
+          <button type="button" class="map-btn" id="btnZoomIn" title="Zoom In" onclick="zoomMap(0.25)">
+
+            <i class="ti ti-zoom-in"></i>
+
+          </button>
+
+          <button type="button" class="map-btn" id="btnZoomOut" title="Zoom Out" onclick="zoomMap(-0.25)">
+
+            <i class="ti ti-zoom-out"></i>
+
+          </button>
+
+          <button type="button" class="map-btn" id="btnZoomReset" title="Reset View" onclick="resetMapZoom()">
+
+            <i class="ti ti-arrows-maximize"></i>
+
+          </button>
+
+          <button type="button" class="map-btn is-toggled" id="btnTogglePins" title="Toggle Booth Markers" onclick="toggleAllPins()">
+
+            <i class="ti ti-map-pin"></i> <span>Pins</span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Scrollable / Draggable Viewport -->
+
+      <div class="map-viewport" id="mapViewport">
+
+        <div class="map-canvas" id="mapCanvas">
+
+          <div class="map-image-wrapper" id="mapImageWrapper">
+
+            <svg id="expoFloorSvg" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" class="expo-floor-svg">
+  <defs>
+    <linearGradient id="hallBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f8fafc" />
+    </linearGradient>
+    <linearGradient id="stageGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e" />
+      <stop offset="100%" stop-color="#e11d48" />
+    </linearGradient>
+    <linearGradient id="tierAGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#eff6ff" />
+      <stop offset="100%" stop-color="#dbeafe" />
+    </linearGradient>
+    <linearGradient id="tierTGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0f9ff" />
+      <stop offset="100%" stop-color="#e0f2fe" />
+    </linearGradient>
+    <linearGradient id="tierUGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0fdf4" />
+      <stop offset="100%" stop-color="#dcfce7" />
+    </linearGradient>
+    <pattern id="concourseGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f1f5f9" stroke-width="1" />
+    </pattern>
+    <filter id="boothHoverGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#1e40af" flood-opacity="0.25" />
+    </filter>
+  </defs>
+  <!-- Floor Ground & Walls -->
+  <rect x="15" y="15" width="1170" height="770" rx="14" fill="url(#hallBgGrad)" stroke="#cbd5e1" stroke-width="3" />
+
+  <!-- Walkway Tile Patterns -->
+  <rect x="360" y="180" width="810" height="70" fill="url(#concourseGrid)" />
+  <rect x="360" y="445" width="810" height="55" fill="url(#concourseGrid)" />
+  <rect x="325" y="25" width="40" height="750" fill="url(#concourseGrid)" />
+
+  <!-- Directional Labels on Walkways -->
+  <text x="765" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="3">◀ ━━ MAIN EXPO CONCOURSE • WALKWAY ALPHA ━━ ▶</text>
+  <text x="765" y="478" text-anchor="middle" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="2">◀ ━━ SOUTH AISLE &amp; AMENITIES CROSSWAY ━━ ▶</text>
+  <text x="345" y="420" text-anchor="middle" font-size="9" font-weight="700" fill="#94a3b8" transform="rotate(-90 345 420)" letter-spacing="2">◀ ━ WEST CONCOURSE PASSAGE ━ ▶</text>
+
+  <!-- AUDITORIUM WING (LEFT) -->
+  <rect x="30" y="30" width="290" height="740" rx="12" fill="#faf5ff" stroke="#e9d5ff" stroke-width="2" />
+  <rect x="30" y="30" width="290" height="34" rx="12" fill="#f3e8ff" />
+  <text x="175" y="52" text-anchor="middle" font-size="12" font-weight="800" fill="#7e22ce" letter-spacing="0.5">KEYNOTE AUDITORIUM A</text>
+  <text x="175" y="80" text-anchor="middle" font-size="9.5" font-weight="600" fill="#9333ea">Main Stage • 300 Capacity • Live Broadcast</text>
+
+  <!-- Keynote Stage -->
+  <rect x="50" y="95" width="250" height="75" rx="8" fill="url(#stageGrad)" stroke="#be123c" stroke-width="2" />
+  <!-- Stage Steps -->
+  <rect x="42" y="112" width="8" height="40" rx="2" fill="#fda4af" />
+  <rect x="300" y="112" width="8" height="40" rx="2" fill="#fda4af" />
+  <!-- Stage Podium -->
+  <rect x="155" y="103" width="40" height="16" rx="3" fill="#ffffff" opacity="0.9" />
+  <text x="175" y="115" text-anchor="middle" font-size="8" font-weight="800" fill="#be123c">PODIUM</text>
+  <text x="175" y="142" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff" letter-spacing="0.5">MAIN AUDITORIUM STAGE</text>
+  <text x="175" y="157" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ffe4e6">GLOBAL HIGHER ED KEYNOTES &amp; PANELS</text>
+
+  <!-- Auditorium Seating Rows -->
+  <g class="auditorium-seats">
+
+    <text x="45" y="204" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">A</text>
+    <rect x="60" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="196" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="204" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">A</text>
+    <text x="45" y="238" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">B</text>
+    <rect x="60" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="230" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="238" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">B</text>
+    <text x="45" y="272" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">C</text>
+    <rect x="60" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="264" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="272" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">C</text>
+    <text x="45" y="306" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">D</text>
+    <rect x="60" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="298" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="306" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">D</text>
+    <text x="45" y="340" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">E</text>
+    <rect x="60" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="332" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="340" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">E</text>
+    <text x="45" y="374" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">F</text>
+    <rect x="60" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="366" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="374" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">F</text>
+    <text x="45" y="408" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">G</text>
+    <rect x="60" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="400" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="408" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">G</text>
+    <text x="45" y="442" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">H</text>
+    <rect x="60" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="434" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="442" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">H</text>
+    <text x="45" y="476" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">I</text>
+    <rect x="60" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="468" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="476" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">I</text>
+    <text x="45" y="510" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">J</text>
+    <rect x="60" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="502" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="510" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">J</text>
+    <text x="45" y="544" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">K</text>
+    <rect x="60" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="536" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="544" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">K</text>
+    <text x="45" y="578" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">L</text>
+    <rect x="60" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="84" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="108" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="132" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="163" y="570" width="24" height="10" rx="2" fill="none" />
+    <rect x="193" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="217" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="241" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <rect x="265" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
+    <text x="295" y="578" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">L</text>
+  </g>
+  <!-- AV Sound Console -->
+  <rect x="75" y="625" width="200" height="36" rx="6" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5" />
+  <text x="175" y="647" text-anchor="middle" font-size="9" font-weight="700" fill="#6b21a8">AV Broadcast &amp; Interpretation Console</text>
+
+  <!-- Auditorium Exits -->
+  <rect x="50" y="720" width="70" height="22" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" />
+  <text x="85" y="735" text-anchor="middle" font-size="9" font-weight="700" fill="#047857">EXIT A</text>
+  <rect x="190" y="720" width="70" height="22" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" />
+  <text x="225" y="735" text-anchor="middle" font-size="9" font-weight="700" fill="#047857">EXIT B</text>
+
+  <!-- HALL 1: GLOBAL UNIVERSITY PAVILION -->
+  <rect x="370" y="30" width="800" height="24" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+  <text x="770" y="46" text-anchor="middle" font-size="11" font-weight="800" fill="#1d4ed8" letter-spacing="1.5">★ HALL 1: GLOBAL UNIVERSITY PAVILION (TIER A BOOTHS) ★</text>
+
+  <g class="svg-booth-node" id="svg-booth-9" data-booth="Booth A-01" data-id="9" onclick="handleBoothClick('Booth A-01', '9')">
+    <rect x="380" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
+    <rect x="380" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
+    <text x="412.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-01</text>
+    <text x="412.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">MIT</text>
+    <text x="412.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">USA</text>
+    <rect x="386" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="412.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-10" data-booth="Booth A-02" data-id="10" onclick="handleBoothClick('Booth A-02', '10')">
+    <rect x="452" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
+    <rect x="452" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
+    <text x="484.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-02</text>
+    <text x="484.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Stanford</text>
+    <text x="484.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">USA</text>
+    <rect x="458" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="484.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-11" data-booth="Booth A-03" data-id="11" onclick="handleBoothClick('Booth A-03', '11')">
+    <rect x="524" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
+    <rect x="524" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
+    <text x="556.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-03</text>
+    <text x="556.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Oxford</text>
+    <text x="556.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">UK</text>
+    <rect x="530" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="556.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-12" data-booth="Booth A-04" data-id="12" onclick="handleBoothClick('Booth A-04', '12')">
+    <rect x="596" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
+    <rect x="596" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
+    <text x="628.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-04</text>
+    <text x="628.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Cambridge</text>
+    <text x="628.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">UK</text>
+    <rect x="602" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="628.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-13" data-booth="Booth A-05" data-id="13" onclick="handleBoothClick('Booth A-05', '13')">
+    <rect x="668" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
+    <rect x="668" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
+    <text x="700.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-05</text>
+    <text x="700.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Harvard</text>
+    <text x="700.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">USA</text>
+    <rect x="674" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="700.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-14" data-booth="Booth A-06" data-id="14" onclick="handleBoothClick('Booth A-06', '14')">
+    <rect x="740" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
+    <rect x="740" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
+    <text x="772.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-06</text>
+    <text x="772.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Imperial</text>
+    <text x="772.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">UK</text>
+    <rect x="746" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="772.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-15" data-booth="Booth A-07" data-id="15" onclick="handleBoothClick('Booth A-07', '15')">
+    <rect x="812" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
+    <rect x="812" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
+    <text x="844.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-07</text>
+    <text x="844.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">NUS</text>
+    <text x="844.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Singapore</text>
+    <rect x="818" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="844.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-16" data-booth="Booth A-08" data-id="16" onclick="handleBoothClick('Booth A-08', '16')">
+    <rect x="884" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
+    <rect x="884" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
+    <text x="916.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-08</text>
+    <text x="916.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">ETH Zurich</text>
+    <text x="916.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Switzerland</text>
+    <rect x="890" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="916.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-17" data-booth="Booth A-09" data-id="17" onclick="handleBoothClick('Booth A-09', '17')">
+    <rect x="956" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
+    <rect x="956" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
+    <text x="988.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-09</text>
+    <text x="988.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Toronto</text>
+    <text x="988.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Canada</text>
+    <rect x="962" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="988.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-18" data-booth="Booth A-10" data-id="18" onclick="handleBoothClick('Booth A-10', '18')">
+    <rect x="1028" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
+    <rect x="1028" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
+    <text x="1060.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-10</text>
+    <text x="1060.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">TUM Munich</text>
+    <text x="1060.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Germany</text>
+    <rect x="1034" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="1060.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-22" data-booth="Booth A-11" data-id="22" onclick="handleBoothClick('Booth A-11', '22')">
+    <rect x="1100" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
+    <rect x="1100" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
+    <text x="1132.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-11</text>
+    <text x="1132.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">MIT Exh 2</text>
+    <text x="1132.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">USA</text>
+    <rect x="1106" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="1132.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
+  </g>
+  <!-- CENTRAL EXHIBITION ISLANDS & HUBS -->
+  <!-- Block 1: Counselling Desk 1 & Tech Corp -->
+  <g class="svg-booth-node" id="svg-booth-23" data-booth="Booth U-181" data-id="23" onclick="handleBoothClick('Booth U-181', '23')">
+    <rect x="400" y="260" width="105" height="80" rx="8" fill="url(#tierUGrad)" stroke="#059669" stroke-width="2" class="booth-rect" />
+    <rect x="400" y="260" width="105" height="22" rx="6" fill="#059669" class="booth-badge-rect" />
+    <text x="452" y="275" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">U-181</text>
+    <text x="452" y="303" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Academic Desk 1</text>
+    <text x="452" y="318" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Counselling Station</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-21" data-booth="Booth T-01" data-id="21" onclick="handleBoothClick('Booth T-01', '21')">
+    <rect x="400" y="355" width="105" height="80" rx="8" fill="url(#tierTGrad)" stroke="#0284c7" stroke-width="2" class="booth-rect" />
+    <rect x="400" y="355" width="105" height="22" rx="6" fill="#0284c7" class="booth-badge-rect" />
+    <text x="452" y="370" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">T-01</text>
+    <text x="452" y="398" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Tech Corp Global</text>
+    <text x="452" y="413" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Innovation Pavilion</text>
+  </g>
+
+  <!-- Passage 1 -->
+  <text x="530" y="350" text-anchor="middle" font-size="9" font-weight="700" fill="#cbd5e1" transform="rotate(-90 530 350)">AISLE 1</text>
+
+  <!-- Block 2: Counselling Desk 2 & Kerala Univ Exh -->
+  <g class="svg-booth-node" id="svg-booth-24" data-booth="Booth U-182" data-id="24" onclick="handleBoothClick('Booth U-182', '24')">
+    <rect x="555" y="260" width="105" height="80" rx="8" fill="url(#tierUGrad)" stroke="#059669" stroke-width="2" class="booth-rect" />
+    <rect x="555" y="260" width="105" height="22" rx="6" fill="#059669" class="booth-badge-rect" />
+    <text x="607" y="275" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">U-182</text>
+    <text x="607" y="303" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Academic Desk 2</text>
+    <text x="607" y="318" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Advisory Hub</text>
+  </g>
+  <g class="svg-booth-node" id="svg-booth-20" data-booth="Booth EXH-20" data-id="20" onclick="handleBoothClick('Booth EXH-20', '20')">
+    <rect x="555" y="355" width="105" height="80" rx="8" fill="url(#tierTGrad)" stroke="#0284c7" stroke-width="2" class="booth-rect" />
+    <rect x="555" y="355" width="105" height="22" rx="6" fill="#0284c7" class="booth-badge-rect" />
+    <text x="607" y="370" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">EXH-20</text>
+    <text x="607" y="398" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Kerala University</text>
+    <text x="607" y="413" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Regional Pavilion</text>
+  </g>
+
+  <!-- Passage 2 -->
+  <text x="685" y="350" text-anchor="middle" font-size="9" font-weight="700" fill="#cbd5e1" transform="rotate(-90 685 350)">AISLE 2</text>
+
+  <!-- Block 3: Kerala Univ Hub (U-180) & Info Station -->
+  <g class="svg-booth-node" id="svg-booth-19" data-booth="U-180" data-id="19" onclick="handleBoothClick('U-180', '19')">
+    <rect x="710" y="260" width="115" height="80" rx="8" fill="url(#tierUGrad)" stroke="#059669" stroke-width="2" class="booth-rect" />
+    <rect x="710" y="260" width="115" height="22" rx="6" fill="#059669" class="booth-badge-rect" />
+    <text x="767" y="275" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">U-180</text>
+    <text x="767" y="303" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Kerala University</text>
+    <text x="767" y="318" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Central University Hub</text>
+  </g>
+  <g class="svg-landmark-node">
+    <rect x="710" y="355" width="115" height="80" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
+    <rect x="710" y="355" width="115" height="22" rx="6" fill="#64748b" />
+    <text x="767" y="370" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">HELP DESK</text>
+    <text x="767" y="398" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Visitor Information</text>
+    <text x="767" y="413" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Lost &amp; Found • Maps</text>
+  </g>
+
+  <!-- Passage 3 -->
+  <text x="845" y="350" text-anchor="middle" font-size="9" font-weight="700" fill="#cbd5e1" transform="rotate(-90 845 350)">AISLE 3</text>
+
+  <!-- STEM & AI Exploration Arena (Zone 9) -->
+  <g class="svg-zone-arena">
+    <rect x="865" y="260" width="140" height="175" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" />
+    <rect x="865" y="260" width="140" height="26" rx="8" fill="#16a34a" />
+    <text x="935" y="277" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">STEM &amp; AI ARENA</text>
+    <circle cx="935" cy="325" r="22" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" />
+    <text x="935" y="330" text-anchor="middle" font-size="14" font-weight="800" fill="#15803d">AI</text>
+    <text x="935" y="370" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Robotics &amp; Tech Demo</text>
+    <text x="935" y="388" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Hall 2 East • Hands-on Lab</text>
+    <rect x="885" y="405" width="100" height="18" rx="4" fill="#16a34a" />
+    <text x="935" y="417" text-anchor="middle" font-size="8.5" font-weight="750" fill="#ffffff">ACTIVITY ZONE 3</text>
+  </g>
+
+  <!-- Scholarship & Financial Aid Atrium (Zone 10) -->
+  <g class="svg-zone-arena">
+    <rect x="1020" y="260" width="145" height="175" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2" />
+    <rect x="1020" y="260" width="145" height="26" rx="8" fill="#d97706" />
+    <text x="1092" y="277" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">SCHOLARSHIP ATRIUM</text>
+    <circle cx="1092" cy="325" r="22" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+    <text x="1092" y="331" text-anchor="middle" font-size="14" font-weight="800" fill="#b45309">$</text>
+    <text x="1092" y="370" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Global Grant Advisory</text>
+    <text x="1092" y="388" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Central Concourse Desk</text>
+    <rect x="1042" y="405" width="100" height="18" rx="4" fill="#d97706" />
+    <text x="1092" y="417" text-anchor="middle" font-size="8.5" font-weight="750" fill="#ffffff">ACTIVITY ZONE 4</text>
+  </g>
+
+  <!-- BOTTOM FACILITIES & LOUNGES -->
+  <!-- One-on-One Dean Counselling Lounge (Zone 11) -->
+  <g class="svg-zone-lounge">
+    <rect x="370" y="515" width="235" height="110" rx="10" fill="#fefce8" stroke="#ca8a04" stroke-width="1.5" />
+    <rect x="370" y="515" width="235" height="24" rx="8" fill="#ca8a04" />
+    <text x="487" y="531" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">ONE-ON-ONE DEAN COUNSELLING LOUNGE</text>
+    <text x="487" y="565" text-anchor="middle" font-size="11" font-weight="750" fill="#0f172a">Academic Advisory Hub</text>
+    <text x="487" y="583" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Hall 1 North Suite • Station Desks 1–10</text>
+    <text x="487" y="605" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ca8a04">EXPERT CONSULTATIONS</text>
+  </g>
+
+  <!-- Executive VIP Suite & Networking Hub (Zone 14) -->
+  <g class="svg-zone-lounge">
+    <rect x="620" y="515" width="240" height="110" rx="10" fill="#faf5ff" stroke="#9333ea" stroke-width="1.5" />
+    <rect x="620" y="515" width="240" height="24" rx="8" fill="#9333ea" />
+    <text x="740" y="531" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">GRADUATE &amp; MBA EXECUTIVE SUITE</text>
+    <text x="740" y="565" text-anchor="middle" font-size="11" font-weight="750" fill="#0f172a">VIP Executive Lounge</text>
+    <text x="740" y="583" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">University Deans &amp; Corporate Sponsors</text>
+    <text x="740" y="605" text-anchor="middle" font-size="8.5" font-weight="700" fill="#9333ea">NETWORKING &amp; BRIEFINGS</text>
+  </g>
+
+  <!-- Registration Foyer & Document Vault (Zone 15) -->
+  <g class="svg-zone-lounge">
+    <rect x="875" y="515" width="290" height="110" rx="10" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.5" />
+    <rect x="875" y="515" width="290" height="24" rx="8" fill="#0d9488" />
+    <text x="1020" y="531" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">REGISTRATION FOYER &amp; DOCUMENT VAULT</text>
+    <text x="1020" y="565" text-anchor="middle" font-size="11" font-weight="750" fill="#0f172a">Digital Attendee Badge Verification</text>
+    <text x="1020" y="583" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Express QR Check-In • Credentials Desk</text>
+    <text x="1020" y="605" text-anchor="middle" font-size="8.5" font-weight="700" fill="#0d9488">ENTRY TURNSTILES 01–08</text>
+  </g>
+
+  <!-- Bottom Strip: Networking Cafe & Main Entrance -->
+  <rect x="370" y="640" width="490" height="110" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+  <rect x="370" y="640" width="490" height="22" rx="8" fill="#64748b" />
+  <text x="615" y="655" text-anchor="middle" font-size="9.5" font-weight="800" fill="#ffffff">KNOVA NETWORKING CAFE &amp; STUDENT LOUNGE</text>
+  <text x="615" y="690" text-anchor="middle" font-size="11" font-weight="750" fill="#0f172a">Food Court, Seating Lounge &amp; Phone Charging Stations</text>
+  <text x="615" y="710" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Central Concourse South • Restrooms &amp; First Aid</text>
+
+  <!-- Entrance Hall & Gates -->
+  <rect x="875" y="640" width="290" height="110" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2" />
+  <rect x="875" y="640" width="290" height="22" rx="8" fill="#2563eb" />
+  <text x="1020" y="655" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">MAIN EXPO HALL ENTRANCE</text>
+  <text x="1020" y="688" text-anchor="middle" font-size="12" font-weight="800" fill="#1e40af">WELCOME TO KNOVA 2027</text>
+  <text x="1020" y="706" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Main Concourse Gates • Security Screening</text>
+  <text x="1020" y="730" text-anchor="middle" font-size="9" font-weight="800" fill="#2563eb">▲ ENTER EXPO FLOOR HERE ▲</text>
+
+</svg>
+
+            <!-- Active Pulsing Target Ring (Spotlight) -->
+
+            <div class="booth-spotlight" id="boothSpotlight" style="display: none;">
+
+              <div class="spotlight-core"></div>
+
+              <div class="spotlight-ring ring-1"></div>
+
+              <div class="spotlight-ring ring-2"></div>
+
+            </div>
+
+            <!-- Overlaid Interactive Pin Layer -->
+
+            <div class="map-pins-layer" id="mapPinsLayer"></div>
+
+            <!-- Floating Pointer Badge at Booth Pin -->
+
+            <div class="map-booth-tooltip" id="mapBoothTooltip" style="display: none;">
+
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
+
+                <span class="tooltip-booth-badge" id="tooltipBoothBadge" style="background:#ef4444; color:#fff; font-size:10px; font-weight:800; padding:2px 6px; border-radius:4px;">Booth A-01</span>
+
+                <span id="tooltipHallText" style="font-size:10px; color:#64748b; font-weight:600; white-space:nowrap;">Hall 1</span>
+
+                <button type="button" class="tooltip-close-btn" onclick="closeBoothDetails(event)" aria-label="Close" style="position:static; margin-left:auto;">
+
+                  <i class="ti ti-x"></i>
+
+                </button>
+
+              </div>
+
+              <div id="tooltipTitle" style="font-size:12px; font-weight:700; color:#0f172a; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Massachusetts Institute of Technology</div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Docked University Details Card (Never Clipped) -->
+
+      <div class="map-university-card" id="mapUniversityCard" style="display: none;">
+
+        <div class="uni-card-body">
+
+          <div class="uni-card-header">
+
+            <div class="uni-header-tags">
+
+              <span class="uni-card-booth-pill" id="cardBoothPill">Booth A-01</span>
+
+              <span class="uni-card-hall" id="cardHallText"><i class="ti ti-map-pin"></i> Hall 1 - Global Pavilion</span>
+
+              <span class="uni-card-badge"><i class="ti ti-circle-check-filled"></i> Verified Institution</span>
+
+            </div>
+
+            <button type="button" class="uni-card-close-btn" onclick="closeBoothDetails(event)" aria-label="Close" title="Close Details">
+
+              <i class="ti ti-x"></i>
+
+            </button>
+
+          </div>
+
+          <div class="uni-card-content">
+
+            <div class="uni-card-info">
+
+              <h3 class="uni-card-title" id="cardUniTitle">Massachusetts Institute of Technology</h3>
+
+              <div class="uni-card-meta">
+
+                <span class="uni-meta-item"><i class="ti ti-map-pin"></i> <span id="cardLocation">United States</span></span>
+
+                <span class="uni-meta-item"><i class="ti ti-building"></i> <span id="cardType">Higher Education Institution</span></span>
+
+              </div>
+
+              <p class="uni-card-desc" id="cardDesc">Visit booth for direct admissions counseling, faculty discussions, and scholarship evaluations.</p>
+
+            </div>
+
+            <div class="uni-card-cta">
+
+              <a href="#" class="uni-card-explore-btn" id="cardProfileLink">
+
+                <span>Explore University Details</span>
+
+                <i class="ti ti-arrow-right"></i>
+
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom Legend Bar -->
+
+      <div class="map-viewer-bottombar">
+
+        <div class="legend-item"><span class="legend-color-dot" style="background:#ef4444;"></span> Global Kiosks (Row A)</div>
+
+        <div class="legend-item"><span class="legend-color-dot" style="background:#2563eb;"></span> Flagship Pavilions</div>
+
+        <div class="legend-item"><span class="legend-color-dot" style="background:#16a34a;"></span> Academic Booths</div>
+
+        <div class="legend-item"><span class="legend-color-dot" style="background:#ec4899;"></span> Keynote Stages</div>
+
+      </div>
+
+    </div>
+
+    <!-- Booth Directory Sidebar -->
+{% endif %}
+
+    <div class="expo-map-sidebar">
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+
+        <h3 style="margin: 0; font-size: 15px; font-weight: 800; color: #0a1936;">Booth Directory</h3>
+
+        <a href="{% static 'assets/KNOVA_2027_FLOORPLAN.pdf' %}" target="_blank" style="font-size: 11px; font-weight: 700; color: #1768ff; text-decoration: none;">PDF &darr;</a>
+
+      </div>
+
+      <div class="booth-search-wrap">
+
+        <i class="ti ti-search"></i>
+
+        <input
+
+          type="text"
+
+          id="boothSearch"
+
+          placeholder="Filter university or booth..."
+
+          oninput="filterBooths(this.value)"
+
+        >
+
+      </div>
+
+      <div id="noResults" style="display: none; text-align: center; padding: 25px 0; color: #94a3b8; font-size: 13px;">
+
+        <i class="ti ti-search-off" style="font-size: 24px; display: block; margin-bottom: 6px;"></i>
+
+        No booths found
+
+      </div>
+
+      <div class="booth-list-scroll" id="boothList">
+
+        <!-- Dynamic booths from DB -->
+
+        {% for booth in booths %}
+
+        <div class="booth-item"
+
+             id="booth-item-{{ booth.id }}"
+
+             data-id="{{ booth.id }}"
+
+             data-name="{{ booth.get_assigned_organization|lower }}"
+
+             data-title="{% if booth.university %}{{ booth.university.name }}{% elif booth.exhibitor %}{{ booth.exhibitor.company_name }}{% else %}Available Booth{% endif %}"
+
+             data-org="{{ booth.get_assigned_organization }}"
+
+             data-booth="{{ booth.booth_number|default:booth.id }}"
+
+             data-hall="{{ booth.hall|default:'Main Hall' }}"
+
+             data-url="{% if booth.university %}{% url 'university_detail' booth.university.slug %}{% endif %}"
+
+             data-country="{% if booth.university %}{{ booth.university.country|default:booth.university.profile.location_state_country|default:'Global Partner' }}{% endif %}"
+
+             data-city="{% if booth.university %}{{ booth.university.profile.location_city|default:'' }}{% endif %}"
+
+             data-type="{% if booth.university %}{{ booth.university.profile.university_type|default:'Higher Education Institution' }}{% elif booth.exhibitor %}Industry & Education Partner{% else %}Available Space{% endif %}"
+
+             data-desc="{% if booth.university %}{{ booth.university.profile.short_description|default:'Visit booth for direct admissions counseling, faculty discussions, and scholarship evaluations.'|truncatewords:28 }}{% elif booth.exhibitor %}{{ booth.exhibitor.description|default:'Official exhibitor representation at KNOVA 2027 Expo.'|truncatewords:28 }}{% else %}Booth space ready for expo exhibitor.{% endif %}"
+
+             onclick="handleBoothClick('{{ booth.booth_number|default:booth.id }}', {{ booth.id }})">
+
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px;">
+
+            <strong style="color: #0a1936; font-size: 13px; flex: 1; line-height: 1.35;">
+
+              {% if booth.university %}
+
+                  <a href="{% url 'university_detail' booth.university.slug %}" style="color: inherit; text-decoration: none;" onclick="event.stopPropagation()">{{ booth.university.name }}</a>
+
+              {% elif booth.exhibitor %}
+
+                  {{ booth.exhibitor.company_name }}
+
+              {% else %}
+
+                  Available Booth
+
+              {% endif %}
+
+            </strong>
+
+            <span class="booth-badge-pill">{{ booth.booth_number|default:"TBD" }}</span>
+
+          </div>
+
+          <div style="font-size: 11px; color: #64748b; display: flex; align-items: center; justify-content: space-between;">
+
+            <span>📍 {{ booth.hall|default:"Main Hall" }}</span>
+
+            <span class="booth-located-tag"><i class="ti ti-map-pin"></i> ON MAP</span>
+
+          </div>
+
+        </div>
+
+        {% empty %}
+
+        <div style="text-align: center; padding: 30px 15px; color: #94a3b8; font-size: 13px;">
+
+          <i class="ti ti-layout-grid" style="font-size: 24px; display: block; margin-bottom: 8px; opacity: 0.6;"></i>
+
+          No floor booths allocated yet.
+
+        </div>
+
+        {% endfor %}
+
+      </div>
+
+      <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #f1f5f9; font-size: 11.5px; color: #94a3b8; text-align: center;">
+
+        Interactive floor plan &bull; Click any booth to locate
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+  // Exact Blueprint Coordinate Lookup Table (percentages of 1200x848 image)
+
+  const BOOTH_COORDINATES = {
+    'Booth A-01': { x: 34.4, y: 14.1, color: '#ef4444' },
+    'Booth A-02': { x: 40.4, y: 14.1, color: '#ef4444' },
+    'Booth A-03': { x: 46.4, y: 14.1, color: '#ef4444' },
+    'Booth A-04': { x: 52.4, y: 14.1, color: '#ef4444' },
+    'Booth A-05': { x: 58.4, y: 14.1, color: '#ef4444' },
+    'Booth A-06': { x: 64.4, y: 14.1, color: '#ef4444' },
+    'Booth A-07': { x: 70.4, y: 14.1, color: '#ef4444' },
+    'Booth A-08': { x: 76.4, y: 14.1, color: '#ef4444' },
+    'Booth A-09': { x: 82.4, y: 14.1, color: '#ef4444' },
+    'Booth A-10': { x: 88.4, y: 14.1, color: '#ef4444' },
+    'Booth A-11': { x: 94.4, y: 14.1, color: '#ef4444' },
+    'Booth T-01':  { x: 37.7, y: 49.4, color: '#0284c7' },
+    'Booth EXH-20': { x: 50.6, y: 49.4, color: '#0284c7' },
+    'Booth U-181': { x: 37.7, y: 37.5, color: '#059669' },
+    'Booth U-182': { x: 50.6, y: 37.5, color: '#059669' },
+    'U-180':       { x: 63.9, y: 37.5, color: '#059669' }
+  };
+  // Fallback coordinate generator for dynamically created booths
+
+  function getCoordinateForBooth(boothNum, index) {
+    if (BOOTH_COORDINATES[boothNum]) {
+      return BOOTH_COORDINATES[boothNum];
+    }
+
+    // Clean string comparison
+
+    const cleanNum = (boothNum || '').trim();
+    for (const key in BOOTH_COORDINATES) {
+      if (key.toLowerCase() === cleanNum.toLowerCase()) {
+        return BOOTH_COORDINATES[key];
+      }
+
+    }
+
+    // Distributed fallback along available hall grid
+
+    const fallbackSlots = [
+
+      { x: 64.5, y: 27.8, color: '#16a34a' },
+      { x: 70.1, y: 27.8, color: '#16a34a' },
+      { x: 73.5, y: 27.8, color: '#16a34a' },
+      { x: 43.1, y: 32.8, color: '#16a34a' },
+      { x: 52.1, y: 32.8, color: '#16a34a' },
+      { x: 61.1, y: 32.8, color: '#16a34a' },
+      { x: 64.5, y: 32.8, color: '#16a34a' },
+      { x: 70.1, y: 32.8, color: '#16a34a' },
+      { x: 43.2, y: 41.1, color: '#16a34a' },
+      { x: 46.5, y: 41.1, color: '#16a34a' },
+      { x: 52.1, y: 41.1, color: '#16a34a' },
+      { x: 55.5, y: 41.1, color: '#16a34a' },
+      { x: 70.1, y: 41.1, color: '#16a34a' },
+      { x: 73.5, y: 41.1, color: '#16a34a' },
+      { x: 43.2, y: 45.9, color: '#16a34a' },
+      { x: 46.5, y: 45.9, color: '#16a34a' }
+
+    ];
+    return fallbackSlots[(index || 0) % fallbackSlots.length];
+  }
+
+  let currentScale = 1;
+  let currentTranslateX = 0;
+  let currentTranslateY = 0;
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let pinsVisible = true;
+  let activeBoothId = null;
+  // Initialize Map Pins
+  function getShortBoothCode(boothNum) {
+    if (!boothNum) return '';
+    let s = boothNum.trim().replace(/^Booth\s*/i, '');
+    let mA = s.match(/^A-?0*(\d+)$/i);
+    if (mA) return 'A' + (mA[1].length === 1 ? '0' + mA[1] : mA[1]);
+    let mT = s.match(/^T-?0*(\d+)$/i);
+    if (mT) return 'T' + (mT[1].length === 1 ? '0' + mT[1] : mT[1]);
+    let mE = s.match(/^EXH-?0*(\d+)$/i);
+    if (mE) return 'E' + mE[1];
+    let mU = s.match(/^U-?0*(\d+)$/i);
+    if (mU) return mU[1];
+    return s.substring(0, 4);
+  }
+
+  function initMapPins() {
+    const layer = document.getElementById('mapPinsLayer');
+    if (!layer) return;
+    layer.innerHTML = '';
+    const boothItems = document.querySelectorAll('.booth-item');
+    boothItems.forEach((item, idx) => {
+      const boothNum = item.getAttribute('data-booth');
+      const id = item.getAttribute('data-id');
+      const title = item.getAttribute('data-title');
+      const coords = getCoordinateForBooth(boothNum, idx);
+      const pin = document.createElement('div');
+      pin.className = 'booth-pin';
+      pin.id = 'pin-' + id;
+      pin.style.left = coords.x + '%';
+      pin.style.top = coords.y + '%';
+      if (coords.color) {
+        pin.style.backgroundColor = coords.color;
+      }
+      pin.setAttribute('data-id', id);
+      pin.setAttribute('data-booth', boothNum);
+      // Compact Waypoint Badge directly on map
+      const codeSpan = document.createElement('span');
+      codeSpan.className = 'booth-pin-code';
+      codeSpan.textContent = getShortBoothCode(boothNum);
+      pin.appendChild(codeSpan);
+      // Clean Floating Tooltip - shown ONLY on hover or when pin is active
+      const label = document.createElement('div');
+      label.className = 'booth-pin-label';
+      label.innerHTML = '<strong>' + (boothNum || '') + '</strong>' + (title ? ' &bull; ' + title : '');
+      pin.appendChild(label);
+      pin.addEventListener('click', function(e) {
+        e.stopPropagation();
+        handleBoothClick(boothNum, id);
+      });
+      layer.appendChild(pin);
+    });
+  }
+
+  // Handle Booth Selection
+  function handleBoothClick(boothNum, boothId) {
+    activeBoothId = boothId;
+    const item = document.getElementById('booth-item-' + boothId);
+    if (!item) return;
+    // 1. Update Sidebar Active State
+    document.querySelectorAll('.booth-item').forEach(el => el.classList.remove('is-selected'));
+    item.classList.add('is-selected');
+    item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // 2. Retrieve Data Attributes
+    const title = item.getAttribute('data-title') || 'Exhibitor Booth';
+    const org = item.getAttribute('data-org') || '';
+    const hall = item.getAttribute('data-hall') || 'Main Hall';
+    const url = item.getAttribute('data-url') || '';
+    const country = item.getAttribute('data-country') || 'Global Partner';
+    const city = item.getAttribute('data-city') || '';
+    const uniType = item.getAttribute('data-type') || 'Higher Education Institution';
+    const desc = item.getAttribute('data-desc') || 'Visit booth for direct admissions counseling and information.';
+    // Index of the item
+    const allItems = Array.from(document.querySelectorAll('.booth-item'));
+    const itemIndex = allItems.indexOf(item);
+    const coords = getCoordinateForBooth(boothNum, itemIndex);
+    // 3. Highlight Pin on Map
+    document.querySelectorAll('.booth-pin').forEach(el => el.classList.remove('is-active'));
+    const activePin = document.getElementById('pin-' + boothId);
+    if (activePin) {
+      activePin.classList.add('is-active');
+    }
+
+    // 3b. Highlight Vector SVG Booth Element
+    document.querySelectorAll('.svg-booth-node').forEach(el => el.classList.remove('is-active'));
+    const activeSvg = document.getElementById('svg-booth-' + boothId);
+    if (activeSvg) {
+      activeSvg.classList.add('is-active');
+    }
+
+    // 4. Move and Activate Sonar Spotlight
+    const spotlight = document.getElementById('boothSpotlight');
+    if (spotlight) {
+      spotlight.style.left = coords.x + '%';
+      spotlight.style.top = coords.y + '%';
+      spotlight.style.display = 'flex';
+    }
+
+    // 5. Update Floating Pointer Tooltip at the Booth Pin
+    const tooltip = document.getElementById('mapBoothTooltip');
+    const badgeEl = document.getElementById('tooltipBoothBadge');
+    const hallEl = document.getElementById('tooltipHallText');
+    const titleEl = document.getElementById('tooltipTitle');
+    if (badgeEl) badgeEl.textContent = boothNum;
+    if (hallEl) hallEl.textContent = hall;
+    if (titleEl) titleEl.textContent = title;
+    if (tooltip) {
+      const clampedX = Math.max(16, Math.min(84, coords.x));
+      tooltip.style.left = clampedX + '%';
+      tooltip.style.top = coords.y + '%';
+      if (coords.y < 35) {
+        tooltip.classList.remove('is-above');
+        tooltip.classList.add('is-below');
+      } else {
+        tooltip.classList.remove('is-below');
+        tooltip.classList.add('is-above');
+      }
+      tooltip.style.display = 'block';
+    }
+
+    // 6. Update Docked University Details Card (Never clipped)
+    const uniCard = document.getElementById('mapUniversityCard');
+    const cardBoothPill = document.getElementById('cardBoothPill');
+    const cardHallText = document.getElementById('cardHallText');
+    const cardUniTitle = document.getElementById('cardUniTitle');
+    const cardLocation = document.getElementById('cardLocation');
+    const cardType = document.getElementById('cardType');
+    const cardDesc = document.getElementById('cardDesc');
+    const cardProfileLink = document.getElementById('cardProfileLink');
+    if (cardBoothPill) cardBoothPill.textContent = boothNum;
+    if (cardHallText) cardHallText.innerHTML = '<i class="ti ti-map-pin"></i> ' + hall;
+    if (cardUniTitle) cardUniTitle.textContent = title;
+    if (cardLocation) cardLocation.textContent = city ? (city + ', ' + country) : country;
+    if (cardType) cardType.textContent = uniType;
+    if (cardDesc) cardDesc.textContent = desc;
+    if (cardProfileLink) {
+      if (url && url.length > 1) {
+        cardProfileLink.href = url;
+        cardProfileLink.style.display = 'inline-flex';
+      } else {
+        cardProfileLink.style.display = 'none';
+      }
+    }
+
+    if (uniCard) {
+      uniCard.style.display = 'block';
+    }
+
+    // 7. Update Map Status Pill
+    const statusPill = document.getElementById('mapStatusPill');
+    const statusText = document.getElementById('mapStatusText');
+    if (statusText) {
+      statusText.innerHTML = 'Showing <strong>' + title + '</strong> (' + boothNum + ') &bull; ' + hall;
+    }
+    if (statusPill) {
+      statusPill.classList.add('is-active');
+    }
+
+    // 8. Auto-zoom and smooth center onto booth
+    currentScale = Math.max(currentScale, 1.35);
+    panToCoordinate(coords.x, coords.y);
+    applyMapTransform();
+  }
+
+  function closeBoothDetails(e) {
+    if (e) e.stopPropagation();
+    const tooltip = document.getElementById('mapBoothTooltip');
+    const uniCard = document.getElementById('mapUniversityCard');
+    const spotlight = document.getElementById('boothSpotlight');
+    const statusPill = document.getElementById('mapStatusPill');
+    const statusText = document.getElementById('mapStatusText');
+    if (tooltip) tooltip.style.display = 'none';
+    document.querySelectorAll('.svg-booth-node').forEach(el => el.classList.remove('is-active'));
+    if (uniCard) uniCard.style.display = 'none';
+    if (spotlight) spotlight.style.display = 'none';
+    document.querySelectorAll('.booth-pin').forEach(el => el.classList.remove('is-active'));
+    document.querySelectorAll('.booth-item').forEach(el => el.classList.remove('is-selected'));
+    if (statusText) statusText.textContent = 'Click any booth in directory to view location';
+    if (statusPill) statusPill.classList.remove('is-active');
+    activeBoothId = null;
+  }
+
+  // Pan smoothly to a percentage coordinate when zoomed
+
+  function panToCoordinate(pctX, pctY) {
+    const canvas = document.getElementById('mapCanvas');
+    const viewport = document.getElementById('mapViewport');
+    if (!canvas || !viewport) return;
+    const vpWidth = viewport.clientWidth;
+    const vpHeight = viewport.clientHeight;
+    // Calculate offset from center
+
+    const targetX = (0.5 - (pctX / 100)) * (vpWidth * currentScale);
+    const targetY = (0.5 - (pctY / 100)) * (vpHeight * currentScale);
+    currentTranslateX = targetX;
+    currentTranslateY = targetY;
+    applyMapTransform();
+  }
+
+  // Zoom Controls
+
+  function zoomMap(delta) {
+    currentScale = Math.min(2.8, Math.max(1.0, currentScale + delta));
+    if (currentScale === 1.0) {
+      currentTranslateX = 0;
+      currentTranslateY = 0;
+    }
+
+    applyMapTransform();
+  }
+
+  function resetMapZoom() {
+    currentScale = 1;
+    currentTranslateX = 0;
+    currentTranslateY = 0;
+    applyMapTransform();
+  }
+
+  function toggleAllPins() {
+    const layer = document.getElementById('mapPinsLayer');
+    const btn = document.getElementById('btnTogglePins');
+    pinsVisible = !pinsVisible;
+    if (layer) {
+      layer.style.display = pinsVisible ? 'block' : 'none';
+    }
+
+    if (btn) {
+      btn.classList.toggle('is-toggled', pinsVisible);
+    }
+
+  }
+
+  function applyMapTransform() {
+    const canvas = document.getElementById('mapCanvas');
+    const imgWrapper = document.getElementById('mapImageWrapper');
+    if (canvas) {
+      canvas.style.transform = 'translate(' + currentTranslateX + 'px, ' + currentTranslateY + 'px) scale(' + currentScale + ')';
+    }
+
+    if (imgWrapper) {
+      if (currentScale >= 1.15) {
+        imgWrapper.classList.add('is-zoomed-in');
+      } else {
+        imgWrapper.classList.remove('is-zoomed-in');
+      }
+
+    }
+
+  }
+
+  // Viewport Drag & Pan Handlers
+
+  const viewport = document.getElementById('mapViewport');
+  if (viewport) {
+    viewport.addEventListener('mousedown', function(e) {
+      if (currentScale <= 1.05) return;
+      isDragging = true;
+      startX = e.clientX - currentTranslateX;
+      startY = e.clientY - currentTranslateY;
+      viewport.classList.add('is-dragging');
+    });
+    window.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      currentTranslateX = e.clientX - startX;
+      currentTranslateY = e.clientY - startY;
+      applyMapTransform();
+    });
+    window.addEventListener('mouseup', function() {
+      if (isDragging) {
+        isDragging = false;
+        if (viewport) viewport.classList.remove('is-dragging');
+      }
+
+    });
+    // Touch Support for mobile
+
+    let touchStartX = 0, touchStartY = 0;
+    viewport.addEventListener('touchstart', function(e) {
+      if (e.touches.length === 1 && currentScale > 1.05) {
+        isDragging = true;
+        touchStartX = e.touches[0].clientX - currentTranslateX;
+        touchStartY = e.touches[0].clientY - currentTranslateY;
+      }
+
+    }, { passive: true });
+    viewport.addEventListener('touchmove', function(e) {
+      if (isDragging && e.touches.length === 1) {
+        currentTranslateX = e.touches[0].clientX - touchStartX;
+        currentTranslateY = e.touches[0].clientY - touchStartY;
+        applyMapTransform();
+      }
+
+    }, { passive: true });
+    viewport.addEventListener('touchend', function() {
+      isDragging = false;
+    });
+    // Mouse Wheel Zoom
+
+    viewport.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 0.15 : -0.15;
+      zoomMap(zoomFactor);
+    }, { passive: false });
+  }
+
+  // Search Filter
+
+  function filterBooths(val) {
+    val = val.toLowerCase().trim();
+    const items = document.querySelectorAll('.booth-item');
+    let visible = 0;
+    items.forEach(function(item) {
+      const name = item.getAttribute('data-name') || '';
+      const num = item.getAttribute('data-booth') || '';
+      const id = item.getAttribute('data-id');
+      const pin = document.getElementById('pin-' + id);
+      if (!val || name.indexOf(val) !== -1 || num.toLowerCase().indexOf(val) !== -1) {
+        item.style.display = 'block';
+        if (pin && pinsVisible) pin.style.display = 'flex';
+        visible++;
+      } else {
+        item.style.display = 'none';
+        if (pin) pin.style.display = 'none';
+      }
+
+    });
+    const noRes = document.getElementById('noResults');
+    if (noRes) noRes.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  // Initial Setup on DOM Ready
+
+  document.addEventListener('DOMContentLoaded', function() {
+    initMapPins();
+    // Check URL parameters for explicit booth selection (e.g. ?booth=Booth A-02)
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var targetBooth = urlParams.get('booth');
+    var matchedItem = null;
+    if (targetBooth) {
+      var items = document.querySelectorAll('.booth-item');
+      items.forEach(function(item) {
+        var bNum = item.getAttribute('data-booth') || '';
+        var bTitle = item.getAttribute('data-title') || '';
+        if (bNum.toLowerCase() === targetBooth.toLowerCase() || bTitle.toLowerCase().indexOf(targetBooth.toLowerCase()) !== -1) {
+          matchedItem = item;
+        }
+
+      });
+    }
+
+    if (!matchedItem) {
+      matchedItem = document.querySelector('.booth-item');
+    }
+
+    if (matchedItem) {
+      var bNum = matchedItem.getAttribute('data-booth');
+      var bId = matchedItem.getAttribute('data-id');
+      setTimeout(function() {
+        handleBoothClick(bNum, bId);
+      }, 300);
+    }
+
+  });
+</script>
+
+{% endblock %}

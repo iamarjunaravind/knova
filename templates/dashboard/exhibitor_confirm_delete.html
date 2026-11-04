@@ -1,0 +1,21 @@
+{% extends base_template|default:'dashboard/base.html' %}
+
+{% block title %}Delete Exhibitor | KNOVA{% endblock %}
+{% block nav_exhibitors %}active{% endblock %}
+{% block page_title %}Delete Exhibitor{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 600px; margin: 40px auto; text-align:center; padding: 40px;">
+  <div style="font-size:48px; margin-bottom:20px;">⚠️</div>
+  <h2 style="margin-top:0;">Are you sure?</h2>
+  <p style="color:#475569; margin-bottom:30px;">
+    You are about to permanently delete the exhibitor <strong>"{{ exhibitor.company_name }}"</strong>. This action cannot be undone.
+  </p>
+  
+  <form method="POST" style="display:flex; justify-content:center; gap:16px;">
+    {% csrf_token %}
+    <a href="{% url 'dashboard_exhibitors' %}" class="btn" style="background:#f1f5f9; color:#fff;">Cancel</a>
+    <button type="submit" class="btn" style="background:#ef4444; color:#fff;">Yes, Delete Exhibitor</button>
+  </form>
+</div>
+{% endblock %}

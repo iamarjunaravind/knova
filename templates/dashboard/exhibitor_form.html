@@ -1,0 +1,90 @@
+{% extends base_template|default:'dashboard/base.html' %}
+
+{% block title %}{{ action }} Exhibitor | KNOVA{% endblock %}
+{% block nav_exhibitors %}active{% endblock %}
+{% block page_title %}{{ action }} Exhibitor{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="max-width: 800px; margin: 0 auto; background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:24px;">
+  <form method="POST" enctype="multipart/form-data" style="display:flex; flex-direction:column; gap:20px;">
+    {% csrf_token %}
+    
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <label style="font-size:13px; font-weight:600; color:#475569;">Company / University Name</label>
+      {{ form.company_name }}
+    </div>
+
+    <!-- Booth Allocation Card -->
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:18px; display:flex; flex-direction:column; gap:16px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <i data-feather="box" style="width:18px; height:18px; color:#6366f1;"></i>
+        <span style="font-weight:700; font-size:14px; color:#1e293b;">Expo Floor Booth Allocation</span>
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap:16px;">
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:13px; font-weight:600; color:#475569;">Allocated Booth Number</label>
+          {{ form.booth_number }}
+          <span style="font-size:11px; color:#64748b;">e.g., Booth A-04, Booth B-12, or Booth EXH-20</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:13px; font-weight:600; color:#475569;">Floor Hall / Pavilion</label>
+          {{ form.booth_hall }}
+          <span style="font-size:11px; color:#64748b;">e.g., Hall 1 - Global Pavilion</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:20px;">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <label style="font-size:13px; font-weight:600; color:#475569;">Event Location</label>
+        {{ form.event_location }}
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <label style="font-size:13px; font-weight:600; color:#475569;">Website URL</label>
+        {{ form.website }}
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <label style="font-size:13px; font-weight:600; color:#475569;">Profile Description</label>
+      {{ form.profile_description }}
+    </div>
+    
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <label style="font-size:13px; font-weight:600; color:#475569;">Company Logo</label>
+      {{ form.logo }}
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <label style="font-size:13px; font-weight:600; color:#475569;">Company Brochure (PDF)</label>
+      {{ form.brochure }}
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:16px; margin-top:20px; border-top:1px solid var(--card-border); padding-top:20px;">
+      <a href="{% url 'dashboard_exhibitors' %}" style="color:#475569; text-decoration:none; padding:10px 20px;">Cancel</a>
+      <button type="submit" class="btn btn-primary" style="background:#2563eb; border-color:#2563eb; font-weight:600;">Save Exhibitor & Booth</button>
+    </div>
+  </form>
+</div>
+
+<style>
+  form input[type="text"], form input[type="url"], form select, form textarea, form input[type="file"] {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    color: #0f172a;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13.5px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  form input[type="text"]:focus, form input[type="url"]:focus, form select:focus, form textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+  }
+  form select option { background: #fff; color:#0f172a; }
+  form textarea { height: 100px; resize: vertical; }
+</style>
+{% endblock %}

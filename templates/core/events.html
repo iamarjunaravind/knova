@@ -1,0 +1,1569 @@
+{% extends 'core/base_public.html' %}
+{% load static %}
+
+{% block title %}Upcoming Global Education Expos & University Tours | KNOVA 2027{% endblock %}
+
+{% block body_class %}has-dark-hero events-page{% endblock %}
+
+{% block content %}
+<style>
+    /* ==========================================================
+       EVENTS PAGE MODERN DASHBOARD DESIGN SYSTEM
+       ========================================================== */
+    :root {
+        --ev-primary: #1768ff;
+        --ev-primary-dark: #0f52cc;
+        --ev-navy: #061022;
+        --ev-navy-card: #0b1c3d;
+        --ev-slate-900: #0f172a;
+        --ev-slate-700: #334155;
+        --ev-slate-600: #475569;
+        --ev-slate-500: #64748b;
+        --ev-slate-100: #f1f5f9;
+        --ev-border: #e2e8f0;
+        --ev-emerald: #10b981;
+        --ev-amber: #f59e0b;
+        --ev-card-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.07);
+        --ev-hover-shadow: 0 20px 40px -10px rgba(23, 104, 255, 0.16);
+    }
+
+    body.events-page,
+    body.has-dark-hero {
+        padding-top: 0 !important;
+        background-color: #f4f7fb;
+    }
+
+    /* Seamless Dark Atmosphere Hero */
+    .events-hero {
+        padding: 122px 0 26px 0;
+        background: radial-gradient(circle at 85% 15%, rgba(23, 104, 255, 0.28) 0%, transparent 55%),
+                    radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.18) 0%, transparent 50%),
+                    linear-gradient(135deg, #061022 0%, #0a1c3f 50%, #102e6b 100%);
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .events-hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, transparent 0%, rgba(6, 16, 34, 0.45) 100%);
+        pointer-events: none;
+    }
+
+    .dashboard-header-inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    /* Left: Title & Breadcrumbs */
+    .dash-title-block {
+        flex: 1;
+        min-width: 260px;
+    }
+
+    .dash-breadcrumb-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 4px;
+    }
+
+    .dash-badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(23, 104, 255, 0.22);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 2px 8px;
+        border-radius: 9999px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #7dd3fc;
+    }
+
+    .dash-badge-pill i {
+        font-size: 12px;
+        color: #38bdf8;
+    }
+
+    .dash-crumb-sep {
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 11px;
+    }
+
+    .dash-crumb-text {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: rgba(241, 245, 249, 0.7);
+    }
+
+    .events-dash-title {
+        color: #ffffff !important;
+        font-size: clamp(19px, 2.2vw, 24px);
+        font-weight: 800;
+        margin: 0 0 3px 0;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .events-dash-title .gradient-text {
+        background: linear-gradient(135deg, #67e8f9 0%, #ffffff 50%, #93c5fd 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+
+    .dash-live-badge {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 2px 7px;
+        border-radius: 5px;
+        background: rgba(16, 185, 129, 0.18);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        color: #6ee7b7;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .dash-live-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 6px #10b981;
+    }
+
+    .dash-subtitle-text {
+        font-size: 12.5px;
+        color: rgba(241, 245, 249, 0.8);
+        margin: 0;
+        line-height: 1.4;
+        font-weight: 400;
+    }
+
+    /* Right: Compact Dashboard KPI Stat Cards */
+    .dash-kpi-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    cursor: default; transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    transform: none;
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .kpi-icon-wrap {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .dash-kpi-card.kpi-expos .kpi-icon-wrap {
+        background: rgba(23, 104, 255, 0.22);
+        color: #60a5fa;
+        border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
+    .dash-kpi-card.kpi-unis .kpi-icon-wrap {
+        background: rgba(56, 189, 248, 0.22);
+        color: #38bdf8;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .dash-kpi-card.kpi-scholarships .kpi-icon-wrap {
+        background: rgba(16, 185, 129, 0.22);
+        color: #34d399;
+        border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .dash-kpi-card.kpi-entry .kpi-icon-wrap {
+        background: rgba(168, 85, 247, 0.22);
+        color: #c084fc;
+        border: 1px solid rgba(192, 132, 252, 0.3);
+    }
+
+    .kpi-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kpi-stat-number {
+        font-size: 15px;
+        font-weight: 800;
+        color: #ffffff;
+        line-height: 1.1;
+        letter-spacing: -0.3px;
+    }
+
+    .kpi-stat-number span {
+        color: #38bdf8;
+        font-size: 13px;
+    }
+
+    .kpi-stat-title {
+        font-size: 9.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba(241, 245, 249, 0.72);
+        font-weight: 600;
+        margin-top: 1px;
+    }
+
+    /* Overlapping Filter Panel Hub */
+    .filter-wrapper {
+        position: relative;
+        z-index: 20;
+        margin-top: -14px;
+        margin-bottom: 20px;
+    }
+
+    .filter-hub-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 14px 18px;
+        box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.9);
+        border: 1px solid #e2e8f0;
+    }
+
+    .filter-search-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 11px;
+        align-items: center;
+    }
+
+    .search-input-box {
+        position: relative;
+        flex: 1;
+    }
+
+    .search-input-box i.search-icon {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .search-input-box input {
+        width: 100%;
+        height: 40px;
+        padding: 0 34px 0 38px;
+        border-radius: 10px;
+        border: 1.5px solid #cbd5e1;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #0f172a;
+        background: #f8fafc;
+        outline: none;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .search-input-box input:focus {
+        background: #ffffff;
+        border-color: #1768ff;
+        box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.12);
+    }
+
+    .search-input-box .clear-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #e2e8f0;
+        border: none;
+        color: #64748b;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .search-input-box .clear-btn:hover {
+        background: #cbd5e1;
+        color: #0f172a;
+    }
+
+    .btn-apply-filters {
+        height: 40px;
+        padding: 0 18px;
+        background: #1768ff;
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(23, 104, 255, 0.25);
+    }
+
+    .btn-apply-filters:hover {
+        background: #0f52cc;
+    }
+
+    .btn-map-companion {
+        height: 40px;
+        padding: 0 16px;
+        background: #f8fafc;
+        color: #334155;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .btn-map-companion:hover {
+        background: #f1f5f9;
+        border-color: #94a3b8;
+        color: #0f172a;
+    }
+
+    /* Suggestions Dropdown */
+    .search-suggestions-dropdown {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(23, 104, 255, 0.08);
+        z-index: 1050;
+        overflow: hidden;
+        animation: fadeInDown 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-6px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .suggestions-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 14px;
+        background: #f8fafc;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+    }
+
+    .suggestions-header i {
+        color: #1768ff;
+        margin-right: 4px;
+    }
+
+    .suggestions-header .esc-hint {
+        font-size: 10px;
+        font-weight: 600;
+        color: #94a3b8;
+        background: #e2e8f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .suggestions-list {
+        max-height: 320px;
+        overflow-y: auto;
+        padding: 6px 0;
+    }
+
+    .suggestion-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: background 0.15s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .suggestion-item:hover,
+    .suggestion-item.active {
+        background: #f1f5f9;
+    }
+
+    .suggestion-item.active {
+        background: #eff6ff;
+        border-left: 3px solid #1768ff;
+        padding-left: 11px;
+    }
+
+    .suggestion-icon-wrap {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .suggestion-icon-wrap.type-city {
+        background: rgba(23, 104, 255, 0.1);
+        color: #1768ff;
+    }
+
+    .suggestion-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .suggestion-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+    }
+
+    .suggestion-title mark {
+        background: transparent;
+        color: #1768ff;
+        font-weight: 800;
+        padding: 0;
+    }
+
+    .suggestion-subtitle {
+        font-size: 11.5px;
+        color: #64748b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 1px;
+        display: block;
+    }
+
+    .suggestion-badge {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: #f1f5f9;
+        color: #475569;
+        flex-shrink: 0;
+    }
+
+    .suggestion-empty {
+        padding: 24px 16px;
+        text-align: center;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .suggestion-empty i {
+        font-size: 24px;
+        color: #94a3b8;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    /* Popular City Chips Bar */
+    .filter-city-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding-top: 4px;
+        flex-wrap: wrap;
+    }
+
+    .city-chips-list {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .city-chip-btn {
+        padding: 4px 12px;
+        border-radius: 20px;
+        background: #f1f5f9;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .city-chip-btn:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+    .city-chip-btn.active {
+        background: #1768ff;
+        color: #ffffff;
+        font-weight: 700;
+        border-color: #1768ff;
+        box-shadow: 0 2px 8px rgba(23, 104, 255, 0.3);
+    }
+
+    .filter-links-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-quick-cta {
+        font-size: 11.5px;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 20px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.18s;
+    }
+
+    .btn-quick-pass {
+        background: #1768ff;
+        color: #ffffff;
+    }
+
+    .btn-quick-pass:hover {
+        background: #0f52cc;
+    }
+
+    .btn-quick-map {
+        background: #f1f5f9;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+    }
+
+    .btn-quick-map:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+    /* Featured Flagship Event Card (Compact Modern Style) */
+    .featured-event-wrap {
+        margin-bottom: 24px;
+    }
+
+    .featured-dash-card {
+        background: #f4f6fb;
+        border-radius: 14px;
+        border: none !important;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+        transition: background 0.22s, box-shadow 0.22s;
+    }
+
+    .featured-dash-card:hover {
+        transform: none;
+        background: #eaf0f9 !important;
+        border: none !important;
+        box-shadow: 0 14px 30px rgba(23, 104, 255, 0.1);
+    }
+
+    .featured-card-media {
+        position: relative;
+        background: #0f172a;
+        min-height: 220px;
+        overflow: hidden;
+    }
+
+    .featured-card-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .featured-badge-overlay {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: #1768ff;
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        padding: 3px 9px;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .featured-city-overlay {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(8px);
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .featured-card-content {
+        padding: 16px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .featured-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 6px;
+    }
+
+    .featured-kicker-pill {
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: #1768ff;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        padding: 2px 8px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .featured-h2-title {
+        font-size: 17px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0 0 6px 0;
+        line-height: 1.3;
+    }
+
+    .featured-desc {
+        font-size: 12px;
+        color: #64748b;
+        line-height: 1.45;
+        margin: 0 0 12px 0;
+    }
+
+    .featured-specs-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 10px;
+        margin-bottom: 14px;
+    }
+
+    .f-spec {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .f-spec-lbl {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .f-spec-lbl i {
+        color: #1768ff;
+    }
+
+    .f-spec-val {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .featured-actions-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn-f-primary {
+        background: #1768ff;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 7px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: background 0.18s;
+        box-shadow: 0 2px 6px rgba(23, 104, 255, 0.25);
+    }
+
+    .btn-f-primary:hover {
+        background: #0f52cc;
+    }
+
+    .btn-f-secondary {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 6px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.18s;
+    }
+
+    .btn-f-secondary:hover {
+        background: #f8fafc;
+        color: #0f172a;
+    }
+
+    /* Section Subheading */
+    .events-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 20px 0 12px 0;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .events-section-header h2 {
+        font-size: 15.5px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .events-section-header h2 i {
+        color: #1768ff;
+    }
+
+    /* Tour Cards Grid */
+    .tour-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+
+    .tour-card {
+        background: #f4f6fb;
+        border-radius: 12px;
+        border: none !important;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: background 0.22s, box-shadow 0.22s;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+    }
+
+    .tour-card:hover {
+        transform: none;
+        background: #eaf0f9 !important;
+        border: none !important;
+        box-shadow: 0 10px 24px -4px rgba(23, 104, 255, 0.12);
+    }
+
+    .tour-card-banner {
+        height: 120px;
+        position: relative;
+        overflow: hidden;
+        background: #0f172a;
+    }
+
+    .tour-card-banner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .tour-city-pill {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(6px);
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 3px 8px;
+        border-radius: 5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .tour-status-pill {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #10b981;
+        color: #ffffff;
+        font-size: 9.5px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .tour-card-body {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .tour-card-title {
+        font-size: 13.5px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0 0 8px 0;
+        line-height: 1.35;
+        min-height: 38px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .tour-specs-matrix {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 7px;
+        padding: 7px 9px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+        margin-bottom: 8px;
+    }
+
+    .t-spec {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .t-spec-lbl {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .t-spec-lbl i {
+        color: #1768ff;
+    }
+
+    .t-spec-val {
+        font-size: 11px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Standardized Status Strip */
+    .card-status-strip {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-bottom: 8px;
+        min-height: 24px;
+        box-sizing: border-box;
+        background: #eff6ff;
+        color: #1768ff;
+        border: 1px solid #bfdbfe;
+    }
+
+    .tour-card-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: auto;
+    }
+
+    .btn-tour-primary {
+        flex: 1;
+        height: 31px;
+        background: #1768ff;
+        color: #ffffff;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.18s ease;
+        border: none;
+        box-shadow: 0 2px 6px rgba(23, 104, 255, 0.2);
+    }
+
+    .btn-tour-primary:hover {
+        background: #0f52cc;
+    }
+
+    .btn-tour-secondary {
+        height: 31px;
+        padding: 0 10px;
+        background: #ffffff;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        transition: all 0.18s ease;
+    }
+
+    .btn-tour-secondary:hover {
+        background: #f8fafc;
+        border-color: #94a3b8;
+        color: #0f172a;
+    }
+
+    /* Floor Zones Strip (High-Density) */
+    .zones-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .zone-compact-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 11px 13px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        transition: transform 0.18s, border-color 0.18s;
+    }
+
+    .zone-compact-card:hover {
+        transform: none;
+        border-color: #93c5fd;
+    }
+
+    .zone-mini-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        color: #ffffff;
+        flex-shrink: 0;
+    }
+
+    .zone-mini-info h4 {
+        margin: 0 0 2px 0;
+        font-size: 12.5px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .zone-mini-info p {
+        margin: 0;
+        font-size: 10.5px;
+        color: #64748b;
+        line-height: 1.35;
+    }
+
+    /* Responsive */
+    @media (max-width: 820px) {
+        .events-hero {
+            padding: 16px 0 22px 0;
+        }
+        .dashboard-header-inner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .dash-kpi-row {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+        .featured-dash-card {
+            grid-template-columns: 1fr;
+        }
+        .featured-card-media {
+            height: 160px;
+            min-height: 160px;
+        }
+        .featured-specs-row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .filter-search-row {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+        .filter-search-row .btn-apply-filters,
+        .filter-search-row .btn-map-companion {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+    }
+    @media (max-width: 480px) {
+        .tour-cards-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .featured-specs-row {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
+{% if site_config.show_events_hero %}
+<!-- Modern Compact Dashboard Hero -->
+<section class="events-hero">
+    <div class="container">
+        <div class="dashboard-header-inner">
+            <!-- Left: Breadcrumb & Title -->
+            <div class="dash-title-block">
+                <div class="dash-breadcrumb-bar">
+                    <span class="dash-badge-pill">
+                        <i class="ti ti-calendar-event"></i> {{ site_config.events_hero_badge|default:"GLOBAL TOUR" }}
+                    </span>
+                    <span class="dash-crumb-sep">/</span>
+                    <span class="dash-crumb-text">Expos &amp; Summits</span>
+                </div>
+                <h1 class="events-dash-title">
+                    {{ site_config.events_page_title|safe|default:"Global Education Expos <span class='gradient-text'>&amp; Seminars</span>" }}
+                    <span class="dash-live-badge">
+                        <span class="dash-live-dot"></span> LIVE 2026/27 TOUR
+                    </span>
+                </h1>
+                <p class="dash-subtitle-text">
+                    {{ site_config.events_page_subtitle|default:"Meet face-to-face with visiting university deans, secure direct admissions, and win on-spot scholarships across GCC cities." }}
+                
+                </p>
+            </div>
+
+            <!-- Right: 4 KPI Cards -->
+            <div class="dash-kpi-row">
+                <div class="dash-kpi-card kpi-expos">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-calendar-check"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">{{ events|length|default:"4" }}<span>+</span></div>
+                        <div class="kpi-stat-title">Flagship Expos</div>
+                    </div>
+                </div>
+
+                <div class="dash-kpi-card kpi-unis">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-building-bank"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">{{ uni_count|default:0 }}</div>
+                        <div class="kpi-stat-title">Visiting Unis</div>
+                    </div>
+                </div>
+
+                <div class="dash-kpi-card kpi-scholarships">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-award"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">{{ scholarship_count|default:0 }}</div>
+                        <div class="kpi-stat-title">Scholarships</div>
+                    </div>
+                </div>
+
+                <div class="dash-kpi-card kpi-entry">
+                    <div class="kpi-icon-wrap">
+                        <i class="ti ti-ticket"></i>
+                    </div>
+                    <div class="kpi-details">
+                        <div class="kpi-stat-number">100%</div>
+                        <div class="kpi-stat-title">Free Passes</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filter Hub & Controls -->
+<div class="container">
+    <div class="filter-wrapper">
+        <div class="filter-hub-card">
+            <!-- Row 1: Search -->
+            <div class="filter-search-row">
+                <div class="search-input-box" id="eventSearchWrapper">
+                    <i class="ti ti-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        id="eventSearchInput" 
+                        placeholder="{{ site_config.events_search_placeholder|default:'Search expos by city or venue (e.g. Bahrain, Dubai, Riyadh, Doha)...' }}" 
+                        oninput="filterEventsLive(this.value)"
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+                    <button type="button" class="clear-btn" id="eventClearBtn" onclick="clearEventSearch()" title="Clear search" style="display: none;">
+                        <i class="ti ti-x"></i>
+                    </button>
+
+                    <!-- Suggestions Dropdown -->
+                    <div class="search-suggestions-dropdown" id="eventSuggestionsBox" style="display: none;">
+                        <div class="suggestions-header" id="eventSuggestionsHeader">
+                            <span><i class="ti ti-sparkles"></i> Popular GCC Expo Cities</span>
+                            <span class="esc-hint">ESC</span>
+                        </div>
+                        <div class="suggestions-list" id="eventSuggestionsList"></div>
+                    </div>
+                </div>
+                <button type="button" class="btn-apply-filters" id="eventSearchBtn" onclick="filterEventsLive(document.getElementById('eventSearchInput').value)">
+                    <i class="ti ti-search"></i> Search
+                </button>
+                <a href="{% url 'public_register' %}" class="btn-map-companion" style="text-decoration: none;">
+                    <i class="ti ti-ticket"></i> Get Free Pass
+                </a>
+            </div>
+
+            <!-- Row 2: City Quick Filters & Actions -->
+            <div class="filter-city-row">
+                <div class="city-chips-list">
+                    <span style="font-size: 10.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 2px;">
+                        <i class="ti ti-map-pin"></i> Cities:
+                    </span>
+                    <button type="button" class="city-chip-btn active" onclick="filterCity('all', this)">
+                        All GCC Expos
+                    </button>
+                    <button type="button" class="city-chip-btn" onclick="filterCity('bahrain', this)">
+                        Bahrain
+                    </button>
+                    <button type="button" class="city-chip-btn" onclick="filterCity('dubai', this)">
+                        Dubai
+                    </button>
+                    <button type="button" class="city-chip-btn" onclick="filterCity('riyadh', this)">
+                        Riyadh
+                    </button>
+                    <button type="button" class="city-chip-btn" onclick="filterCity('doha', this)">
+                        Doha
+                    </button>
+                </div>
+
+                <div class="filter-links-right">
+                    <a href="{% url 'public_expo_map' %}" class="btn-quick-cta btn-quick-map">
+                        <i class="ti ti-map-2"></i> {{ site_config.events_btn_map_text|default:"Hall Map & Zones" }}
+                    </a>
+                    {% if request.user.is_authenticated %}
+                    <a href="{% url 'my_expo' %}" class="btn-quick-cta btn-quick-pass">
+                        <i class="ti ti-compass"></i> {{ site_config.events_btn_myexpo_text|default:"My Expo Hub" }}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+<div class="container" style="padding-top: 30px;">
+{% endif %}
+
+    {% if site_config.show_events_featured and featured_event %}
+    <!-- Featured Flagship Event Showcase (Compact) -->
+    <div class="featured-event-wrap">
+        <div class="featured-dash-card">
+            <div class="featured-card-media">
+                <img src="{% static featured_event.image_asset %}" onerror="this.src='{% static 'assets/bahrain_promo.webp' %}'" alt="{{ featured_event.name }}" loading="lazy" decoding="async">
+                <span class="featured-badge-overlay">
+                    <i class="ti ti-flame"></i> {{ site_config.events_featured_badge|default:"Flagship Expo" }}
+                </span>
+                <span class="featured-city-overlay">
+                    <i class="ti ti-map-pin"></i> {{ featured_event.city }}, GCC
+                </span>
+            </div>
+
+            <div class="featured-card-content">
+                <div>
+                    <div class="featured-header-row">
+                        <span class="featured-kicker-pill">
+                            <i class="ti ti-sparkles"></i> {{ site_config.events_featured_kicker|default:"2026/27 Tour Opener" }}
+                        </span>
+                        <span style="font-size: 11px; font-weight: 700; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 7px; border-radius: 4px;">
+                            <i class="ti ti-ticket"></i> Free Entry
+                        </span>
+                    </div>
+
+                    <h2 class="featured-h2-title">{{ featured_event.name }}</h2>
+                    <p class="featured-desc">
+                        {{ site_config.events_featured_desc|default:featured_event.description|default:"Connect directly with deans and international admissions committees from the UK, USA, Europe, Canada, and Australia."|truncatewords:35 }}
+                    </p>
+                </div>
+
+                <div>
+                    <div class="featured-specs-row">
+                        <div class="f-spec">
+                            <span class="f-spec-lbl"><i class="ti ti-calendar"></i> Date</span>
+                            <span class="f-spec-val">{{ featured_event.start_date|date:"M d" }}–{{ featured_event.end_date|date:"d, Y" }}</span>
+                        </div>
+                        <div class="f-spec">
+                            <span class="f-spec-lbl"><i class="ti ti-building"></i> Venue</span>
+                            <span class="f-spec-val" title="{{ featured_event.venue }}">{{ featured_event.venue }}</span>
+                        </div>
+                        <div class="f-spec">
+                            <span class="f-spec-lbl"><i class="ti ti-clock"></i> Timings</span>
+                            <span class="f-spec-val">{{ featured_event.timings|default:"10 AM – 7 PM" }}</span>
+                        </div>
+                        <div class="f-spec">
+                            <span class="f-spec-lbl"><i class="ti ti-users"></i> Attendees</span>
+                            <span class="f-spec-val">Students &amp; Parents</span>
+                        </div>
+                    </div>
+
+                    <div class="featured-actions-row">
+                        <a href="{% if request.user.is_authenticated %}{% url 'my_expo' %}{% else %}{% url 'public_register' %}{% endif %}" class="btn-f-primary">
+                            <i class="ti ti-ticket"></i> {{ site_config.events_featured_btn1_text|default:"Claim Free Pass" }} &rarr;
+                        </a>
+                        <a href="{% url 'public_expo_map' %}" class="btn-f-secondary">
+                            <i class="ti ti-map"></i> {{ site_config.events_featured_btn2_text|default:"View Hall Map" }}
+                        </a>
+                        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text={{ featured_event.name|urlencode }}&dates=20271025T070000Z/20271026T160000Z&details=KNOVA+Global+Education+Expo&location={{ featured_event.venue|urlencode }}" target="_blank" rel="noopener noreferrer" class="btn-f-secondary" title="Add to Google Calendar">
+                            <i class="ti ti-calendar-plus"></i> {{ site_config.events_featured_btn3_text|default:"Add to Calendar" }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if site_config.show_events_calendar %}
+    <!-- Tour Cities Section Header -->
+    <div class="events-section-header">
+        <h2><i class="ti ti-compass"></i> {{ site_config.events_calendar_heading|default:"GCC City Tour Calendar" }}</h2>
+        <span style="font-size: 12px; color: #64748b;">
+            {{ site_config.events_calendar_subtitle|default:"Confirmed multi-city higher education exhibitions and keynote auditoriums across the Gulf region." }}
+        </span>
+    </div>
+
+    <!-- 4-Column Compact Tour Events Grid -->
+    <div class="tour-cards-grid" id="eventsGrid">
+        {% for event in events %}
+        <div class="tour-card" data-city="{{ event.city|lower }}" data-name="{{ event.name|lower }} {{ event.venue|lower }}">
+            <!-- Banner -->
+            <div class="tour-card-banner">
+                <img src="{% static event.image_asset %}" onerror="this.src='{% static 'assets/dubai.webp' %}'" alt="{{ event.name }}" loading="lazy">
+                <span class="tour-city-pill"><i class="ti ti-map-pin"></i> {{ event.city }}</span>
+                <span class="tour-status-pill">Confirmed</span>
+            </div>
+
+            <!-- Body -->
+            <div class="tour-card-body">
+                <h3 class="tour-card-title" title="{{ event.name }}">{{ event.name }}</h3>
+
+                <!-- 2x2 Specs -->
+                <div class="tour-specs-matrix">
+                    <div class="t-spec">
+                        <span class="t-spec-lbl"><i class="ti ti-calendar"></i> Date</span>
+                        <span class="t-spec-val">{{ event.start_date|date:"M d" }}–{{ event.end_date|date:"d, Y" }}</span>
+                    </div>
+                    <div class="t-spec">
+                        <span class="t-spec-lbl"><i class="ti ti-clock"></i> Timings</span>
+                        <span class="t-spec-val">{{ event.timings|default:"10 AM – 7 PM" }}</span>
+                    </div>
+                    <div class="t-spec" style="grid-column: 1 / -1;">
+                        <span class="t-spec-lbl"><i class="ti ti-building"></i> Venue</span>
+                        <span class="t-spec-val" title="{{ event.venue }}">{{ event.venue }}</span>
+                    </div>
+                </div>
+
+                <!-- Standardized Status Strip -->
+                <div class="card-status-strip">
+                    <i class="ti ti-sparkles"></i> 120+ Unis &bull; On-Spot Admissions &bull; Free Pass
+                </div>
+
+                <!-- Actions -->
+                <div class="tour-card-actions">
+                    <a href="{% if request.user.is_authenticated %}{% url 'my_expo' %}{% else %}{% url 'public_register' %}{% endif %}" class="btn-tour-primary">
+                        <i class="ti ti-ticket"></i> {{ site_config.events_card_btn_register|default:"Get Free Pass" }}
+                    </a>
+                    <a href="{% url 'public_expo_map' %}" class="btn-tour-secondary" title="View floor layout">
+                        <i class="ti ti-map"></i> {{ site_config.events_card_btn_map|default:"Floor Plan" }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if site_config.show_events_zones %}
+    <!-- Interactive Floor Zones Strip -->
+    <div class="events-section-header" style="margin-top: 25px;">
+        <h2><i class="ti ti-layout-grid"></i> {{ site_config.events_zones_heading|default:"Inside the Expo: Activity Zones" }}</h2>
+        <span style="font-size: 12px; color: #64748b;">{{ site_config.events_zones_subtitle|default:"What to experience on-site" }}</span>
+    </div>
+
+    <div class="zones-summary-grid">
+        <div class="zone-compact-card">
+            <div class="zone-mini-icon" style="background: #1768ff;">
+                <i class="ti ti-building-arch"></i>
+            </div>
+            <div class="zone-mini-info">
+                <h4>{{ site_config.events_zone1_title|default:"University Pavilions" }}</h4>
+                <p>{{ site_config.events_zone1_desc|default:"Booths 01–60: Meet university admissions directors and deans directly." }}</p>
+            </div>
+        </div>
+
+        <div class="zone-compact-card">
+            <div class="zone-mini-icon" style="background: #0284c7;">
+                <i class="ti ti-messages"></i>
+            </div>
+            <div class="zone-mini-info">
+                <h4>{{ site_config.events_zone2_title|default:"Counselling & Visa Hub" }}</h4>
+                <p>{{ site_config.events_zone2_desc|default:"1-on-1 certified advisors for study abroad and embassy visa requirements." }}</p>
+            </div>
+        </div>
+
+        <div class="zone-compact-card">
+            <div class="zone-mini-icon" style="background: #7c3aed;">
+                <i class="ti ti-brain"></i>
+            </div>
+            <div class="zone-mini-info">
+                <h4>{{ site_config.events_zone3_title|default:"Aptitude & Career Lab" }}</h4>
+                <p>{{ site_config.events_zone3_desc|default:"Psychometric evaluations and personality career guidance for students." }}</p>
+            </div>
+        </div>
+
+        <div class="zone-compact-card">
+            <div class="zone-mini-icon" style="background: #059669;">
+                <i class="ti ti-award"></i>
+            </div>
+            <div class="zone-mini-info">
+                <h4>{{ site_config.events_zone4_title|default:"Scholarship Testing" }}</h4>
+                <p>{{ site_config.events_zone4_desc|default:"On-spot diagnostic assessments and fast-track tuition fee waiver interviews." }}</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function filterCity(cityName, button) {
+        var chips = document.querySelectorAll('.city-chip-btn');
+        chips.forEach(function(c) { c.classList.remove('active'); });
+        if (button) button.classList.add('active');
+
+        var cards = document.querySelectorAll('#eventsGrid .tour-card');
+        cards.forEach(function(card) {
+            var cardCity = (card.getAttribute('data-city') || '').toLowerCase();
+            if (cityName === 'all' || cardCity.indexOf(cityName) !== -1) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function clearEventSearch() {
+        var input = document.getElementById('eventSearchInput');
+        var clearBtn = document.getElementById('eventClearBtn');
+        var box = document.getElementById('eventSuggestionsBox');
+        if (input) {
+            input.value = '';
+            if (clearBtn) clearBtn.style.display = 'none';
+            if (box) box.style.display = 'none';
+            filterEventsLive('');
+        }
+    }
+
+    function filterEventsLive(query) {
+        var q = query.toLowerCase().trim();
+        var clearBtn = document.getElementById('eventClearBtn');
+        if (clearBtn) {
+            clearBtn.style.display = q.length > 0 ? 'flex' : 'none';
+        }
+
+        var cards = document.querySelectorAll('#eventsGrid .tour-card');
+        cards.forEach(function(card) {
+            var cardCity = (card.getAttribute('data-city') || '').toLowerCase();
+            var cardName = (card.getAttribute('data-name') || '').toLowerCase();
+            if (!q || cardCity.indexOf(q) !== -1 || cardName.indexOf(q) !== -1) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Auto-suggestions for Events
+    (function initEventSuggestions() {
+        var input = document.getElementById('eventSearchInput');
+        var wrapper = document.getElementById('eventSearchWrapper');
+        var box = document.getElementById('eventSuggestionsBox');
+        var list = document.getElementById('eventSuggestionsList');
+        var header = document.getElementById('eventSuggestionsHeader');
+
+        if (!input || !box || !list) return;
+
+        var popularCities = [
+            { title: 'Bahrain', subtitle: 'Exhibition World Bahrain • Main Flagship Expo', query_val: 'Bahrain' },
+            { title: 'Dubai', subtitle: 'Dubai World Trade Centre (DWTC) • UAE Stop', query_val: 'Dubai' },
+            { title: 'Riyadh', subtitle: 'Riyadh International Convention Center • KSA Stop', query_val: 'Riyadh' },
+            { title: 'Doha', subtitle: 'Doha Exhibition & Convention Center • Qatar Stop', query_val: 'Doha' },
+            { title: 'Kuwait City', subtitle: 'Kuwait International Fairgrounds • Kuwait Stop', query_val: 'Kuwait' },
+            { title: 'Muscat', subtitle: 'Oman Convention & Exhibition Centre • Oman Stop', query_val: 'Muscat' }
+        ];
+
+        function renderSuggestions(query) {
+            var q = (query || '').toLowerCase().trim();
+            var filtered = popularCities.filter(function(item) {
+                return !q || item.title.toLowerCase().indexOf(q) !== -1 || item.subtitle.toLowerCase().indexOf(q) !== -1;
+            });
+
+            if (!filtered.length) {
+                box.style.display = 'none';
+                return;
+            }
+
+            var html = '';
+            filtered.forEach(function(item, idx) {
+                html += '<div class="suggestion-item" onclick="selectEventCity(\'' + item.query_val + '\')">';
+                html += '  <div class="suggestion-icon-wrap type-city"><i class="ti ti-map-pin"></i></div>';
+                html += '  <div class="suggestion-content">';
+                html += '    <span class="suggestion-title">' + item.title + '</span>';
+                html += '    <span class="suggestion-subtitle">' + item.subtitle + '</span>';
+                html += '  </div>';
+                html += '  <span class="suggestion-badge">GCC Expo</span>';
+                html += '</div>';
+            });
+
+            list.innerHTML = html;
+            box.style.display = 'block';
+        }
+
+        window.selectEventCity = function(cityVal) {
+            input.value = cityVal;
+            box.style.display = 'none';
+            filterEventsLive(cityVal);
+        };
+
+        input.addEventListener('input', function() {
+            renderSuggestions(input.value);
+        });
+
+        input.addEventListener('focus', function() {
+            renderSuggestions(input.value);
+        });
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') box.style.display = 'none';
+        });
+
+        document.addEventListener('click', function(e) {
+            if (wrapper && !wrapper.contains(e.target)) {
+                box.style.display = 'none';
+            }
+        });
+    })();
+</script>
+{% endblock %}

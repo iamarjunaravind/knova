@@ -1,0 +1,322 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Attended Students & Scanned Visitors — {{ university.name }} | KNOVA{% endblock %}
+{% block nav_uni_attended %}active{% endblock %}
+{% block page_title %}Attended Students & Scanned Visitors{% endblock %}
+
+{% block content %}
+<!-- Top Header Card -->
+<div class="glass-card" style="margin-bottom: 24px; padding: 22px 26px; border-radius: 16px; background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%); border: 1.5px solid #bbf7d0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(5,150,105,0.25)); border: 1.5px solid rgba(16,185,129,0.3); display: flex; align-items: center; justify-content: center; color: #10b981;">
+      <i data-feather="user-check" style="width: 26px; height: 26px;"></i>
+    </div>
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <h2 style="margin: 0; font-size: 20px; font-weight: 800; color: #0a1936;">Attended Students & Scanned Visitors</h2>
+        <span style="background: #ecfdf5; color: #059669; font-size: 11px; font-weight: 750; padding: 3px 9px; border-radius: 20px; border: 1px solid #a7f3d0;">
+          {{ total_attended }} Verified Attendee{{ total_attended|pluralize }}
+        </span>
+      </div>
+      <p style="margin: 4px 0 0; font-size: 13.5px; color: #64748b;">
+        Complete dossier of students who punched attendance at <strong>{{ university.name }}</strong> booth. Full academic backgrounds, preferences, and documents are unlocked.
+      </p>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <a href="{% url 'university_booth_scanner' %}" class="btn btn-primary" style="background: #1768ff; color: #fff; font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(23,104,255,0.25);">
+      <i data-feather="camera" style="width: 15px; height: 15px;"></i> Launch Booth Scanner
+    </a>
+    <a href="{% url 'university_staff_dashboard' %}" class="btn" style="background: #fff; border: 1px solid #cbd5e1; color: #475569; font-weight: 600; font-size: 13px; padding: 9px 14px; border-radius: 8px; text-decoration: none;">
+      &larr; Dashboard
+    </a>
+  </div>
+</div>
+
+<!-- Filters Bar -->
+<div class="glass-card" style="margin-bottom: 24px; padding: 18px 22px; border-radius: 14px;">
+  <form method="GET" style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 240px; position: relative;">
+      <i data-feather="search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #94a3b8;"></i>
+      <input type="text" name="q" value="{{ search_q }}" placeholder="Search by student name, email, school, or preferred course..."
+        style="width: 100%; padding: 10px 12px 10px 36px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 13px; outline: none; box-sizing: border-box;"
+        onfocus="this.style.borderColor='#1768ff'" onblur="this.style.borderColor='#cbd5e1'">
+    </div>
+
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <select name="status" style="padding: 10px 14px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 600; color: #334155;">
+        <option value="">All Punch Statuses</option>
+        <option value="Attended" {% if status_filter == 'Attended' %}selected{% endif %}>Attended / Checked-in</option>
+        <option value="Interested" {% if status_filter == 'Interested' %}selected{% endif %}>High Interest in Admission</option>
+        <option value="Follow-up" {% if status_filter == 'Follow-up' %}selected{% endif %}>Follow-up Scheduled</option>
+      </select>
+
+      <select name="degree" style="padding: 10px 14px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 600; color: #334155;">
+        <option value="">All Degree Levels</option>
+        <option value="UG" {% if degree_filter == 'UG' %}selected{% endif %}>Undergraduate (Bachelor)</option>
+        <option value="PG" {% if degree_filter == 'PG' %}selected{% endif %}>Postgraduate (Master)</option>
+        <option value="PHD" {% if degree_filter == 'PHD' %}selected{% endif %}>PhD / Doctorate</option>
+      </select>
+
+      <button type="submit" class="btn" style="background: #1768ff; color: #fff; font-weight: 700; font-size: 13px; padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+        <i data-feather="filter" style="width: 14px; height: 14px;"></i> Filter
+      </button>
+
+      {% if search_q or status_filter or degree_filter %}
+      <a href="{% url 'university_attended_students' %}" class="btn" style="background: #f1f5f9; color: #64748b; font-weight: 600; font-size: 13px; padding: 10px 14px; border-radius: 8px; text-decoration: none;">
+        Reset
+      </a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<!-- Attended Students Table Card -->
+<div class="glass-card" style="padding: 24px; border-radius: 16px;">
+  <div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; text-align: left; min-width: 900px;">
+      <thead>
+        <tr style="border-bottom: 2px solid #e2e8f0; background: #f8fafc;">
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase;">Student Attendee</th>
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase;">Contact Info</th>
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase;">Academic Profile</th>
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase;">Program Preference</th>
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase;">Documents</th>
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase;">Punched At</th>
+          <th style="padding: 12px 14px; font-size: 11.5px; font-weight: 800; color: #475569; text-transform: uppercase; text-align: right;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inter in interactions %}
+        <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='none'">
+          
+          <!-- Student Name & Avatar -->
+          <td style="padding: 14px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 38px; height: 38px; border-radius: 50%; background: #1768ff; color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;">
+                {{ inter.student.user.first_name|default:inter.student.user.username|slice:":1"|upper }}
+              </div>
+              <div>
+                <div style="font-weight: 800; color: #0a1936; font-size: 14px;">{{ inter.student.user.get_full_name|default:inter.student.user.username }}</div>
+                <span style="font-size: 11px; font-weight: 700; color: #059669; background: #ecfdf5; padding: 1px 6px; border-radius: 4px;">
+                  {{ inter.status }}
+                </span>
+              </div>
+            </div>
+          </td>
+
+          <!-- Contact Details -->
+          <td style="padding: 14px; font-size: 12.5px; color: #334155;">
+            <div><i data-feather="mail" style="width: 12px; height: 12px; vertical-align: -1px; color: #64748b;"></i> {{ inter.student.user.email }}</div>
+            <div style="margin-top: 3px;"><i data-feather="phone" style="width: 12px; height: 12px; vertical-align: -1px; color: #64748b;"></i> {{ inter.student.mobile|default:'Not provided' }}</div>
+            {% if inter.student.city or inter.student.country_of_residence %}
+            <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+              📍 {{ inter.student.city }}{% if inter.student.city and inter.student.country_of_residence %}, {% endif %}{{ inter.student.country_of_residence }}
+            </div>
+            {% endif %}
+          </td>
+
+          <!-- Academic Profile -->
+          <td style="padding: 14px; font-size: 12.5px; color: #334155;">
+            <div style="font-weight: 700; color: #0a1936;">{{ inter.student.current_education|default:'Undergraduate' }}</div>
+            <div style="font-size: 11px; color: #64748b;">{{ inter.student.school_college|default:'Institution undisclosed' }}</div>
+            <div style="font-size: 11px; color: #1768ff; font-weight: 600; margin-top: 2px;">
+              GPA / Grades: {{ inter.student.grades|default:'N/A' }} &bull; English: {{ inter.student.english_proficiency|default:'None' }}
+            </div>
+          </td>
+
+          <!-- Program Preferences -->
+          <td style="padding: 14px; font-size: 12.5px;">
+            <div style="font-weight: 700; color: #1768ff;">{{ inter.student.preferred_program|default:'General Studies' }}</div>
+            <div style="font-size: 11.5px; color: #64748b;">Degree: {{ inter.student.preferred_degree|default:'Open' }} &bull; Intake: {{ inter.student.intake_year|default:'2027' }}</div>
+            {% if inter.student.budget_range %}
+            <span style="display: inline-block; background: #fef3c7; color: #b45309; font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 4px; margin-top: 3px;">
+              Budget: {{ inter.student.get_budget_range_display|default:inter.student.budget_range }}
+            </span>
+            {% endif %}
+          </td>
+
+          <!-- Uploaded Documents Count -->
+          <td style="padding: 14px; font-size: 12.5px;">
+            {% with doc_count=inter.student.documents.count %}
+              {% if doc_count > 0 %}
+                <span style="background: #eff6ff; color: #1e40af; font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px;">
+                  <i data-feather="file-text" style="width: 12px; height: 12px;"></i> {{ doc_count }} Document{{ doc_count|pluralize }}
+                </span>
+              {% else %}
+                <span style="color: #94a3b8; font-size: 11.5px;">None</span>
+              {% endif %}
+            {% endwith %}
+          </td>
+
+          <!-- Punched Date -->
+          <td style="padding: 14px; font-size: 12px; color: #64748b;">
+            <div style="font-weight: 600; color: #0a1936;">{{ inter.interaction_date|date:"M d, Y" }}</div>
+            <div style="font-size: 11px;">{{ inter.interaction_date|date:"g:i A" }}</div>
+          </td>
+
+          <!-- Action Buttons -->
+          <td style="padding: 14px; text-align: right; white-space: nowrap;">
+            <button onclick="openStudentModal('{{ inter.student.user.get_full_name|default:inter.student.user.username|escapejs }}', '{{ inter.student.user.email|escapejs }}', '{{ inter.student.mobile|default:''|escapejs }}', '{{ inter.student.city|default:''|escapejs }}', '{{ inter.student.country_of_residence|default:''|escapejs }}', '{{ inter.student.current_education|default:'Undergraduate'|escapejs }}', '{{ inter.student.school_college|default:''|escapejs }}', '{{ inter.student.grades|default:''|escapejs }}', '{{ inter.student.english_proficiency|default:''|escapejs }}', '{{ inter.student.work_experience|default:''|escapejs }}', '{{ inter.student.preferred_program|default:''|escapejs }}', '{{ inter.student.preferred_degree|default:''|escapejs }}', '{{ inter.student.intake_year|default:'2027'|escapejs }}', '{{ inter.student.budget_range|default:''|escapejs }}', '{{ inter.interaction_date|date:"M d, Y g:i A" }}', '{{ inter.status }}', '{{ inter.notes|default:''|escapejs }}', '{{ inter.student.user.id }}')"
+              class="btn" style="background: #1768ff; color: #fff; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+              <i data-feather="eye" style="width: 13px; height: 13px;"></i> View File
+            </button>
+            <a href="{% url 'dashboard_messages' %}?contact_id={{ inter.student.user.id }}" class="btn" style="background: #f1f5f9; color: #0a1936; font-size: 12px; font-weight: 700; padding: 6px 10px; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-left: 4px;" title="Send Direct Message">
+              <i data-feather="message-circle" style="width: 13px; height: 13px;"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" style="padding: 40px; text-align: center; color: #64748b;">
+            <div style="font-size: 32px; margin-bottom: 10px;">📋</div>
+            <div style="font-weight: 800; font-size: 16px; color: #0a1936;">No attended student punches found</div>
+            <div style="font-size: 13px; margin-top: 4px;">Once students scan their QR badge at your expo booth, their complete records will be listed here.</div>
+            <div style="margin-top: 16px;">
+              <a href="{% url 'university_booth_scanner' %}" class="btn btn-primary" style="background: #1768ff; font-weight: 700; font-size: 13px; padding: 9px 18px; border-radius: 8px; text-decoration: none;">
+                Open Booth Attendance Scanner &rarr;
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- STUDENT FULL DOSSIER MODAL -->
+<div id="studentDossierModal" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+  <div class="glass-card" style="width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; background: #ffffff; border-radius: 18px; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative;">
+    
+    <!-- Modal Close Button -->
+    <button onclick="closeStudentModal()" style="position: absolute; right: 20px; top: 20px; background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #64748b;">
+      <i data-feather="x" style="width: 18px; height: 18px;"></i>
+    </button>
+
+    <!-- Modal Header -->
+    <div style="display: flex; gap: 14px; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px;">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: #1768ff; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 22px;" id="mAvatar">
+        S
+      </div>
+      <div>
+        <h3 id="mName" style="margin: 0; font-size: 19px; font-weight: 800; color: #0a1936;">Student Full Name</h3>
+        <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
+          <span id="mStatusBadge" style="background: #ecfdf5; color: #059669; font-size: 11px; font-weight: 750; padding: 2px 8px; border-radius: 4px;">Attended</span>
+          <span style="font-size: 11.5px; color: #64748b;">Punched: <span id="mPunchTime">Timestamp</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Details Section -->
+    <div style="margin-bottom: 18px;">
+      <h4 style="margin: 0 0 8px 0; font-size: 12px; font-weight: 800; color: #1768ff; text-transform: uppercase; letter-spacing: 0.5px;">
+        Contact Details
+      </h4>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; background: #f8fafc; padding: 12px 14px; border-radius: 10px; border: 1px solid #e2e8f0;">
+        <div><span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">Email Address</span><strong id="mEmail">-</strong></div>
+        <div><span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">Mobile Number</span><strong id="mMobile">-</strong></div>
+        <div><span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">Residence / City</span><span id="mLocation">-</span></div>
+      </div>
+    </div>
+
+    <!-- Academic Record Section -->
+    <div style="margin-bottom: 18px;">
+      <h4 style="margin: 0 0 8px 0; font-size: 12px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.5px;">
+        Academic Qualifications & Test Scores
+      </h4>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; background: #f8fafc; padding: 12px 14px; border-radius: 10px; border: 1px solid #e2e8f0;">
+        <div><span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">Current Education</span><strong id="mEdu">-</strong></div>
+        <div><span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">School / College</span><strong id="mSchool">-</strong></div>
+        <div><span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">Grades / GPA</span><strong id="mGrades" style="color: #1768ff;">-</strong></div>
+        <div><span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">English Proficiency</span><strong id="mEnglish">-</strong></div>
+      </div>
+      <div id="mWorkExpContainer" style="margin-top: 8px; font-size: 12.5px; background: #f8fafc; padding: 10px 14px; border-radius: 10px; border: 1px solid #e2e8f0;">
+        <span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">Work / Internship Experience:</span>
+        <div id="mWorkExp" style="margin-top: 2px; color: #334155;">None reported</div>
+      </div>
+    </div>
+
+    <!-- Admission Preferences -->
+    <div style="margin-bottom: 18px;">
+      <h4 style="margin: 0 0 8px 0; font-size: 12px; font-weight: 800; color: #8b5cf6; text-transform: uppercase; letter-spacing: 0.5px;">
+        University Admission Preferences
+      </h4>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; background: #f8fafc; padding: 12px 14px; border-radius: 10px; border: 1px solid #e2e8f0;">
+        <div><span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">Desired Field / Course</span><strong id="mProgram" style="color: #8b5cf6;">-</strong></div>
+        <div><span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">Degree Level</span><strong id="mDegree">-</strong></div>
+        <div><span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">Target Intake Year</span><strong id="mIntake">-</strong></div>
+        <div><span style="color: #64748b; font-size: 11px; font-weight: 700; display: block;">Budget Range</span><strong id="mBudget">-</strong></div>
+      </div>
+    </div>
+
+    <!-- Representative Notes -->
+    <div id="mNotesSection" style="margin-bottom: 22px; display: none;">
+      <h4 style="margin: 0 0 6px 0; font-size: 12px; font-weight: 800; color: #475569; text-transform: uppercase;">Representative Notes</h4>
+      <div id="mNotes" style="font-size: 12.5px; color: #334155; background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid #e2e8f0;"></div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 16px;">
+      <button onclick="closeStudentModal()" class="btn" style="background: #f1f5f9; color: #475569; font-weight: 700; font-size: 13px; padding: 9px 18px; border-radius: 8px; border: none; cursor: pointer;">
+        Close File
+      </button>
+      <a id="mDirectMsgLink" href="#" class="btn" style="background: #1768ff; color: #fff; font-weight: 700; font-size: 13px; padding: 9px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+        <i data-feather="message-circle" style="width: 15px; height: 15px;"></i> Send Message
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function openStudentModal(name, email, mobile, city, country, edu, school, grades, english, workExp, program, degree, intake, budget, punchTime, status, notes, userId) {
+  document.getElementById('mName').textContent = name;
+  document.getElementById('mAvatar').textContent = name.charAt(0).toUpperCase();
+  document.getElementById('mEmail').textContent = email || 'N/A';
+  document.getElementById('mMobile').textContent = mobile || 'Not provided';
+  document.getElementById('mLocation').textContent = (city || country) ? `${city}${city && country ? ', ' : ''}${country}` : 'Not specified';
+  
+  document.getElementById('mEdu').textContent = edu || 'Undergraduate';
+  document.getElementById('mSchool').textContent = school || 'Not provided';
+  document.getElementById('mGrades').textContent = grades || 'Not disclosed';
+  document.getElementById('mEnglish').textContent = english || 'Not taken';
+  document.getElementById('mWorkExp').textContent = workExp || 'None reported';
+  
+  document.getElementById('mProgram').textContent = program || 'General Studies';
+  document.getElementById('mDegree').textContent = degree || 'Open';
+  document.getElementById('mIntake').textContent = intake || '2027';
+  document.getElementById('mBudget').textContent = budget || 'Flexible';
+  
+  document.getElementById('mPunchTime').textContent = punchTime;
+  document.getElementById('mStatusBadge').textContent = status;
+  
+  const notesSec = document.getElementById('mNotesSection');
+  if (notes) {
+    notesSec.style.display = 'block';
+    document.getElementById('mNotes').textContent = notes;
+  } else {
+    notesSec.style.display = 'none';
+  }
+
+  document.getElementById('mDirectMsgLink').href = `{% url 'dashboard_messages' %}?contact_id=${userId}`;
+
+  const modal = document.getElementById('studentDossierModal');
+  modal.style.display = 'flex';
+  if (window.feather) feather.replace();
+}
+
+function closeStudentModal() {
+  document.getElementById('studentDossierModal').style.display = 'none';
+}
+
+window.addEventListener('click', (e) => {
+  const modal = document.getElementById('studentDossierModal');
+  if (e.target === modal) {
+    closeStudentModal();
+  }
+});
+</script>
+{% endblock %}

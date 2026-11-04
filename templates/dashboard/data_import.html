@@ -1,0 +1,149 @@
+{% extends base_template|default:'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Import &amp; Sync Data | KNOVA Admin{% endblock %}
+{% block nav_import %}active{% endblock %}
+{% block page_category %}Dashboard{% endblock %}
+{% block page_title %}Import &amp; Sync Data{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="padding: 20px 24px; margin-bottom: 20px; background: linear-gradient(135deg, #0a1936 0%, #1e293b 100%); color: #ffffff; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 25px -5px rgba(10, 25, 54, 0.3);">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+    <div>
+      <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(23,104,255,0.22); border:1px solid rgba(23,104,255,0.4); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; color:#60a5fa; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:6px;">
+        <i data-feather="upload-cloud" style="width:12px; height:12px;"></i> Bulk Data Management
+      </div>
+      <h2 style="margin:0 0 4px 0; font-size:20px; font-weight:800; color:#ffffff;">Bulk Data Import &amp; Sync Hub</h2>
+      <p style="margin:0; font-size:13px; color:#94a3b8; max-width:680px; line-height:1.4;">
+        Upload standardized CSV spreadsheets to batch import exhibitors, degree courses, or scholarship funding records into the platform.
+      </p>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <a href="{% url 'dashboard_settings' %}" class="btn" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#ffffff; padding:8px 14px; border-radius:8px; font-size:12.5px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+        <i data-feather="settings" style="width:14px; height:14px;"></i> Backup &amp; Settings
+      </a>
+    </div>
+  </div>
+</div>
+
+{% if messages %}
+  <div style="margin-bottom: 20px;">
+    {% for msg in messages %}
+      <div style="padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; display:flex; align-items:center; gap:8px; {% if msg.tags == 'error' %}background: #fef2f2; color: #991b1b; border: 1px solid #fecaca;{% else %}background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;{% endif %}">
+        <i data-feather="{% if msg.tags == 'error' %}alert-circle{% else %}check-circle{% endif %}" style="width:16px; height:16px;"></i>
+        {{ msg }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- UPLOAD FORM CARD -->
+<div class="glass-card" style="margin-bottom: 24px; padding: 22px 24px;">
+  <div style="margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+    <h3 style="margin:0 0 4px 0; color:var(--text-main); font-size:16px; font-weight:700;">Upload Spreadsheet File (CSV)</h3>
+    <p style="margin:0; font-size:12.5px; color:#64748b;">Select the destination record type and choose your .csv file</p>
+  </div>
+
+  <form method="POST" enctype="multipart/form-data" action="{% url 'dashboard_data_import' %}" style="display:flex; flex-direction:column; gap:18px;">
+    {% csrf_token %}
+
+    <div style="display:grid; grid-template-columns: 1fr 2fr; gap:18px;">
+      <div>
+        <label style="display:block; font-size:12px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px;">
+          Import Type *
+        </label>
+        <select name="import_type" required style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; font-family:'Inter', sans-serif; color:#0f172a; background:#ffffff; outline:none; box-sizing:border-box;">
+          <option value="UNIVERSITY">Exhibitors / Institutions</option>
+          <option value="COURSE">Degree Courses</option>
+          <option value="SCHOLARSHIP">Scholarships</option>
+        </select>
+      </div>
+
+      <div>
+        <label style="display:block; font-size:12px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px;">
+          Upload CSV File *
+        </label>
+        <input type="file" name="file" accept=".csv" required style="width:100%; height:38px; padding:5px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; font-family:'Inter', sans-serif; color:#0f172a; background:#ffffff; outline:none; box-sizing:border-box;">
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; padding-top:12px; border-top:1px solid #f1f5f9; flex-wrap:wrap; gap:12px;">
+      <span style="font-size:12px; color:#64748b;">
+        <i data-feather="info" style="width:13px; height:13px; vertical-align:middle;"></i> Maximum file size: 10MB. Only standard comma-separated .csv files are supported.
+      </span>
+      <button type="submit" class="btn btn-primary" style="padding:9px 20px; font-size:13px; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+        <i data-feather="upload" style="width:14px; height:14px;"></i> Start Import
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- RECENT IMPORT JOBS TABLE -->
+<div class="glass-card">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <div>
+      <h3 style="margin:0 0 2px 0; color:var(--text-main); font-size:16px; font-weight:700;">Recent Import Jobs</h3>
+      <span style="font-size:12px; color:#64748b;">Audit log of previous background bulk upload jobs</span>
+    </div>
+    {% if jobs %}
+      <span style="background:#eff6ff; color:#1768ff; font-size:11px; font-weight:700; padding:3px 10px; border-radius:12px; border:1px solid #bfdbfe;">
+        {{ jobs|length }} Recorded Jobs
+      </span>
+    {% endif %}
+  </div>
+
+  <div style="overflow-x: auto; max-width: 100vw;">
+    <table style="width:100%; text-align:left; border-collapse:collapse; min-width:650px;">
+      <thead>
+        <tr style="border-bottom: 1px solid var(--card-border); background:#f8fafc;">
+          <th style="padding:10px 14px; font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Job ID</th>
+          <th style="padding:10px 14px; font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Entity Type</th>
+          <th style="padding:10px 14px; font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Status</th>
+          <th style="padding:10px 14px; font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Processed Rows</th>
+          <th style="padding:10px 14px; font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase; text-align:right;">Created Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in jobs %}
+        <tr style="border-bottom: 1px solid var(--card-border); transition:background 0.12s ease;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+          <td style="padding:11px 14px; font-weight:700; color:#0f172a;">#{{ job.id }}</td>
+          <td style="padding:11px 14px; font-weight:600; color:#1e293b;">
+            {% if job.import_type == 'UNIVERSITY' %}
+              Exhibitor / Institution
+            {% else %}
+              {{ job.get_import_type_display }}
+            {% endif %}
+          </td>
+          <td style="padding:11px 14px;">
+            <span style="display:inline-flex; align-items:center; padding:3px 9px; border-radius:6px; font-size:11px; font-weight:700;
+              {% if job.status == 'COMPLETED' %}background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;
+              {% elif job.status == 'PROCESSING' %}background: #eff6ff; color: #1768ff; border: 1px solid #bfdbfe;
+              {% elif job.status == 'FAILED' %}background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;
+              {% elif job.status == 'COMPLETED_WITH_ERRORS' %}background: #fffbeb; color: #d97706; border: 1px solid #fde68a;
+              {% else %}background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;{% endif %}
+            ">
+              {{ job.status }}
+            </span>
+          </td>
+          <td style="padding:11px 14px; font-size:12.5px; color:#334155;">
+            <span style="color:#059669; font-weight:650;">{{ job.successful_rows }} success</span> &bull; 
+            <span style="color:#dc2626; font-weight:650;">{{ job.failed_rows }} failed</span>
+            <div style="font-size:11px; color:#64748b; margin-top:2px;">{{ job.total_rows }} total rows in CSV</div>
+          </td>
+          <td style="padding:11px 14px; text-align:right; font-size:12px; color:#64748b; white-space:nowrap;">
+            {{ job.created_at|date:"M d, Y &bull; H:i" }}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" style="padding:28px 14px; text-align:center; color:#64748b; font-size:13px;">
+            <i data-feather="inbox" style="width:24px; height:24px; display:block; margin:0 auto 8px; opacity:0.5;"></i>
+            No bulk import jobs executed yet.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { padding: 20px; max-width: 600px; margin: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 20px; }
+        .badge-link { color: #d6336c; font-weight: bold; text-decoration: none; }
+        .normal-link { color: #1768ff; font-weight: bold; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2 style="color: #1768ff; margin: 0;">KNOVA</h2>
+            <span style="color: #d4af37; font-weight: bold;">Free Visitor Pass - Confirmation</span>
+        </div>
+        
+        <p>Hi {{ registration.full_name }},</p>
+        
+        <p>You are now registered to attend <strong>{{ event.name }}</strong>, taking place at the <strong>{{ event.venue }}</strong> in <strong>{{ event.city }}</strong> on <strong>{{ event.start_date|date:"j" }} - {{ event.end_date|date:"j F Y" }}</strong>.</p>
+        
+        <p>Kindly <a href="{{ badge_url }}" class="badge-link">click here</a> to save your <span style="color: #d6336c; font-weight: bold;">Digital Badge</span>. Please print or save this on your mobile device, as you will need to present it at the venue to enter the event.</p>
+        
+        {% if matches %}
+        <div style="margin-top: 20px; margin-bottom: 20px; border-left: 4px solid #1768ff; padding: 15px; background: #f8fafc;">
+            <h3 style="margin-top: 0; color: #0b2d58;">✨ Your Top Exhibitor Matches</h3>
+            <p style="font-size: 14px; color: #475569;">Based on your preferences, we highly recommend you visit these booths at the event:</p>
+            <ul style="margin-bottom: 0; padding-left: 20px;">
+                {% for exhibitor, score in matches %}
+                <li style="margin-bottom: 8px;">
+                    <strong>{{ exhibitor.company_name }}</strong> 
+                    <span style="color: #0369a1; font-weight: bold; font-size: 12px; margin-left: 5px;">{{ score }}% Match</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <p>If you have any questions about the event or your registration, please email us at <a href="mailto:support@knova.com">support@knova.com</a>.</p>
+        
+        <p>We look forward to welcoming you there!</p>
+        
+        <p>Best regards,<br>The KNOVA Team</p>
+    </div>
+</body>
+</html>

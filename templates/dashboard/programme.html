@@ -1,0 +1,241 @@
+{% extends base_template|default:'dashboard/base.html' %}
+{% load rbac_tags %}
+
+{% block title %}Seminars | KNOVA{% endblock %}
+{% block nav_programme %}active{% endblock %}
+{% block page_title %}Seminars{% endblock %}
+
+{% block content %}
+<!-- KPI METRIC CARDS -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px;">
+  <!-- Metric 1: Total Sessions -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Total Sessions</div>
+      <div style="font-size: 26px; font-weight: 850; color: #0f172a;">{{ total_sessions_count|default:sessions.count|default:0 }}</div>
+      <div style="font-size: 11.5px; color: #10b981; font-weight: 600; margin-top: 2px;">Keynotes, Panels &amp; Seminars</div>
+    </div>
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; color: #1768ff; display: flex; align-items: center; justify-content: center; border: 1px solid #bfdbfe;">
+      <i data-feather="calendar" style="width: 20px; height: 20px;"></i>
+    </div>
+  </div>
+
+  <!-- Metric 2: Programme Status -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Auditoriums &amp; Halls</div>
+      <div style="font-size: 26px; font-weight: 850; color: #0284c7;">Active</div>
+      <div style="font-size: 11.5px; color: #0284c7; font-weight: 600; margin-top: 2px;">Main Stages &amp; Breakout Rooms</div>
+    </div>
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #f0f9ff; color: #0284c7; display: flex; align-items: center; justify-content: center; border: 1px solid #bae6fd;">
+      <i data-feather="layers" style="width: 20px; height: 20px;"></i>
+    </div>
+  </div>
+
+  <!-- Metric 3: Filtered Count -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Showing in View</div>
+      <div style="font-size: 26px; font-weight: 850; color: #7c3aed;">{{ sessions|length }}</div>
+      <div style="font-size: 11.5px; color: #64748b; font-weight: 600; margin-top: 2px;">Filtered Sessions</div>
+    </div>
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #f5f3ff; color: #7c3aed; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd6fe;">
+      <i data-feather="filter" style="width: 20px; height: 20px;"></i>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER & ACTION TOOLBAR (SINGLE LINE) -->
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+  
+  <form method="GET" action="{% url 'dashboard_programme' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap;">
+    <!-- Date Range -->
+    <input type="date" name="start_date" value="{{ start_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; width: 125px;" title="Start Date">
+    <span style="color: #94a3b8; font-size: 11px; font-weight: 600;">to</span>
+    <input type="date" name="end_date" value="{{ end_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; width: 125px;" title="End Date">
+
+    <!-- Sort By -->
+    <select name="sort_by" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; max-width: 140px;">
+      <option value="date" {% if sort_by == 'date' %}selected{% endif %}>Date (Earliest First)</option>
+      <option value="-date" {% if sort_by == '-date' %}selected{% endif %}>Date (Latest First)</option>
+      <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Title (A-Z)</option>
+      <option value="-title" {% if sort_by == '-title' %}selected{% endif %}>Title (Z-A)</option>
+    </select>
+
+    <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(23,104,255,0.25); white-space: nowrap;">
+      <i data-feather="search" style="width: 13px; height: 13px;"></i> Apply Filter
+    </button>
+
+    {% if start_date or end_date or sort_by != 'date' %}
+    <a href="{% url 'dashboard_programme' %}" style="font-size: 11.5px; color: #64748b; text-decoration: none; font-weight: 600; padding: 4px 6px; white-space: nowrap;">
+      Reset
+    </a>
+    {% endif %}
+
+    <!-- Export Separator -->
+    <div style="width: 1px; height: 18px; background: #e2e8f0; margin: 0 2px;"></div>
+
+    <!-- Export Buttons -->
+    <button type="submit" name="format" value="excel" formaction="{% url 'dashboard_export_generic' 'programmesession' %}" style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
+      <i data-feather="file" style="width: 13px; height: 13px;"></i> Excel
+    </button>
+    <button type="submit" name="format" value="csv" formaction="{% url 'dashboard_export_generic' 'programmesession' %}" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
+      <i data-feather="file-text" style="width: 13px; height: 13px;"></i> CSV
+    </button>
+  </form>
+
+  <!-- Add New Session Button (Pinned to Right) -->
+  {% if request.user.is_superuser or request.user.is_staff %}
+  <a href="{% url 'programme_create' %}" style="background: linear-gradient(135deg, #1768ff 0%, #0d54d9 100%); color: #ffffff; text-decoration: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 750; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(23,104,255,0.25); white-space: nowrap; flex-shrink: 0;">
+    <i data-feather="plus" style="width: 14px; height: 14px;"></i> Add New Seminar
+  </a>
+  {% endif %}
+</div>
+
+<!-- STRUCTURED DATA TABLE CARD -->
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); overflow: hidden;">
+  
+  <!-- Table Header Bar -->
+  <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: #ffffff;">
+    <div>
+      <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+        <i data-feather="clock" style="width: 18px; height: 18px; color: #1768ff;"></i> Seminars &amp; Sessions
+      </h3>
+      <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">Schedule of masterclasses, panel discussions, and keynotes</p>
+    </div>
+    <div style="display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 750; color: #475569;">
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981;"></span>
+      {{ sessions|length }} Scheduled Session{{ sessions|length|pluralize }}
+    </div>
+  </div>
+
+  <!-- Table Responsive Container -->
+  <div style="overflow-x: auto; width: 100%;">
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; min-width: 900px;">
+      <thead>
+        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+          <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 34%;">
+            Session Title
+          </th>
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 20%;">
+            Location &amp; Hall
+          </th>
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 22%;">
+            Date &amp; Time
+          </th>
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 14%;">
+            Speaker
+          </th>
+          <th style="padding: 13px 20px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; text-align: right; width: 10%;">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for session in sessions %}
+        <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc';" onmouseout="this.style.background='transparent';">
+          
+          <!-- Column 1: Session Title -->
+          <td style="padding: 14px 18px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+            <div style="font-weight: 800; color: #0f172a; font-size: 13.5px; line-height: 1.3;">{{ session.title }}</div>
+            {% if session.description %}
+            <div style="font-size: 11.5px; color: #64748b; margin-top: 3px; line-height: 1.3;">{{ session.description|truncatechars:55 }}</div>
+            {% endif %}
+          </td>
+
+          <!-- Column 2: Location & Hall -->
+          <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+            <div style="display: flex; align-items: center; gap: 6px; font-weight: 750; color: #0f172a; font-size: 13px;">
+              <i data-feather="map-pin" style="width: 13px; height: 13px; color: #ef4444;"></i>
+              {{ session.event_location.city|default:"Dubai" }}
+            </div>
+            {% if session.hall_name %}
+            <div style="margin-top: 3px;">
+              <span style="display: inline-flex; align-items: center; gap: 4px; background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 700;">
+                <i data-feather="home" style="width: 10px; height: 10px;"></i> {{ session.hall_name }}
+              </span>
+            </div>
+            {% endif %}
+          </td>
+
+          <!-- Column 3: Date & Time -->
+          <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+            <div style="display: flex; align-items: center; gap: 6px; font-weight: 750; color: #0f172a; font-size: 13px;">
+              <i data-feather="calendar" style="width: 13px; height: 13px; color: #1768ff;"></i>
+              {{ session.date|date:"M d, Y" }}
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #64748b; margin-top: 3px; font-weight: 600;">
+              <i data-feather="clock" style="width: 11px; height: 11px; color: #94a3b8;"></i>
+              {{ session.start_time|time:"g:i A" }} - {{ session.end_time|time:"g:i A" }}
+            </div>
+          </td>
+
+          <!-- Column 4: Speaker -->
+          <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+            {% if session.speaker %}
+            <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: #334155; font-size: 12.5px;">
+              <i data-feather="user" style="width: 12px; height: 12px; color: #7c3aed;"></i>
+              {{ session.speaker.name }}
+            </div>
+            {% else %}
+            <span style="font-size: 11.5px; color: #94a3b8; font-style: italic;">TBA</span>
+            {% endif %}
+          </td>
+
+          <!-- Column 5: Action Buttons -->
+          <td style="padding: 14px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; text-align: right;">
+            <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
+              
+              <!-- Edit Session -->
+              <a href="{% url 'programme_update' session.pk %}" title="Edit Session" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#f1f5f9';" onmouseout="this.style.background='#ffffff';">
+                <i data-feather="edit-2" style="width: 12px; height: 12px;"></i> Edit
+              </a>
+
+              <!-- Delete Session -->
+              {% if request.user.is_superuser or request.user.is_staff %}
+              <a href="{% url 'programme_delete' session.pk %}" title="Delete Session" style="background: #ffffff; border: 1px solid #fed7aa; color: #ea580c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#fff7ed';" onmouseout="this.style.background='#ffffff';">
+                <i data-feather="trash-2" style="width: 12px; height: 12px;"></i> Delete
+              </a>
+              {% endif %}
+
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" style="padding: 48px 20px; text-align: center; background: #ffffff;">
+            <div style="width: 52px; height: 52px; border-radius: 50%; background: #f8fafc; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #94a3b8;">
+              <i data-feather="calendar" style="width: 24px; height: 24px;"></i>
+            </div>
+            <div style="font-weight: 800; color: #0f172a; font-size: 15px; margin-bottom: 4px;">No Sessions Found</div>
+            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0;">No programme sessions match your selected filter criteria.</p>
+            <a href="{% url 'dashboard_programme' %}" style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; text-decoration: none;">
+              Reset Filters
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Table Footer Summary Strip -->
+  <div style="padding: 12px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #64748b; font-weight: 600;">
+    <div>
+      Showing <strong>{{ sessions|length }}</strong> of <strong>{{ total_sessions_count|default:sessions.count|default:0 }}</strong> total sessions
+    </div>
+    <div style="font-size: 11.5px; color: #94a3b8;">
+      KNOVA Global Higher Education Expo 2027
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
+});
+</script>
+{% endblock %}

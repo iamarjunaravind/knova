@@ -1,0 +1,2672 @@
+{% extends 'core/base_public.html' %}
+
+{% load static %}
+
+{% block title %}Explore 830+ Degree Programs & Universities | KNOVA{% endblock %}
+
+{% block body_class %}has-dark-hero courses-page{% endblock %}
+
+{% block content %}
+
+<style>
+
+    /* ==========================================================
+
+       COURSES PAGE MODERN DESIGN SYSTEM
+
+       ========================================================== */
+
+    :root {
+        --courses-primary: #1768ff;
+        --courses-primary-dark: #0f52cc;
+        --courses-navy: #061022;
+        --courses-navy-card: #0b1c3d;
+        --courses-slate-900: #0f172a;
+        --courses-slate-700: #334155;
+        --courses-slate-600: #475569;
+        --courses-slate-500: #64748b;
+        --courses-slate-100: #f1f5f9;
+        --courses-border: #e2e8f0;
+        --courses-emerald: #10b981;
+        --courses-amber: #f59e0b;
+        --courses-card-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.07);
+        --courses-hover-shadow: 0 20px 40px -10px rgba(23, 104, 255, 0.16);
+    }
+
+    /* ==========================================================
+
+       SEAMLESS NAVBAR INTEGRATION & DASHBOARD HEADER
+
+       ========================================================== */
+
+    body.courses-page,
+    body.has-dark-hero {
+        padding-top: 0 !important;
+        background-color: #f4f7fb;
+    }
+
+    .courses-hero {
+        padding: 122px 0 26px 0;
+        background: radial-gradient(circle at 85% 15%, rgba(23, 104, 255, 0.28) 0%, transparent 55%),
+                    radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.18) 0%, transparent 50%),
+                    linear-gradient(135deg, #061022 0%, #0a1c3f 50%, #102e6b 100%);
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .courses-hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, transparent 0%, rgba(6, 16, 34, 0.45) 100%);
+        pointer-events: none;
+    }
+
+    .dashboard-header-inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    /* Left: Title & Context */
+
+    .dash-title-block {
+        flex: 1;
+        min-width: 260px;
+    }
+
+    .dash-breadcrumb-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 4px;
+    }
+
+    .dash-badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(23, 104, 255, 0.22);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 2px 8px;
+        border-radius: 9999px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #7dd3fc;
+    }
+
+    .dash-badge-pill i {
+        font-size: 12px;
+        color: #38bdf8;
+    }
+
+    .dash-crumb-sep {
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 11px;
+    }
+
+    .dash-crumb-text {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: rgba(241, 245, 249, 0.7);
+    }
+
+    .courses-dash-title {
+        color: #ffffff !important;
+        font-size: clamp(19px, 2.2vw, 24px);
+        font-weight: 800;
+        margin: 0 0 3px 0;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .courses-dash-title .gradient-text {
+        background: linear-gradient(135deg, #67e8f9 0%, #ffffff 50%, #93c5fd 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+
+    .dash-live-badge {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 2px 7px;
+        border-radius: 5px;
+        background: rgba(16, 185, 129, 0.18);
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        color: #6ee7b7;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .dash-live-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 6px #10b981;
+    }
+
+    .dash-subtitle-text {
+        font-size: 12.5px;
+        color: rgba(241, 245, 249, 0.8);
+        margin: 0;
+        line-height: 1.4;
+        font-weight: 400;
+    }
+
+    /* Right: Compact Dashboard KPI Stat Cards */
+
+    .dash-kpi-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    cursor: default; transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    transform: none;
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .kpi-icon-wrap {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .dash-kpi-card.kpi-programs .kpi-icon-wrap {
+        background: rgba(23, 104, 255, 0.22);
+        color: #60a5fa;
+        border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
+    .dash-kpi-card.kpi-unis .kpi-icon-wrap {
+        background: rgba(56, 189, 248, 0.22);
+        color: #38bdf8;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .dash-kpi-card.kpi-scholarships .kpi-icon-wrap {
+        background: rgba(16, 185, 129, 0.22);
+        color: #34d399;
+        border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .dash-kpi-card.kpi-destinations .kpi-icon-wrap {
+        background: rgba(168, 85, 247, 0.22);
+        color: #c084fc;
+        border: 1px solid rgba(192, 132, 252, 0.3);
+    }
+
+    .kpi-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kpi-stat-number {
+        font-size: 15px;
+        font-weight: 800;
+        color: #ffffff;
+        line-height: 1.1;
+        letter-spacing: -0.3px;
+    }
+
+    .kpi-stat-number span {
+        color: #38bdf8;
+        font-size: 13px;
+    }
+
+    .kpi-stat-title {
+        font-size: 9.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba(241, 245, 249, 0.72);
+        font-weight: 600;
+        margin-top: 1px;
+    }
+
+    /* Filter Panel Hub (Compact) */
+
+    .filter-wrapper {
+        position: relative;
+        z-index: 20;
+        margin-top: -14px;
+        margin-bottom: 18px;
+    }
+
+    .filter-hub-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 14px 18px;
+        box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.9);
+        border: 1px solid #e2e8f0;
+    }
+
+    /* Search Bar Row */
+
+    .filter-search-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 11px;
+        align-items: center;
+    }
+
+    .search-input-box {
+        position: relative;
+        flex: 1;
+    }
+
+    .search-input-box i.search-icon {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .search-input-box input {
+        width: 100%;
+        height: 40px;
+        padding: 0 34px 0 38px;
+        border-radius: 10px;
+        border: 1.5px solid #cbd5e1;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #0f172a;
+        background: #f8fafc;
+        outline: none;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .search-input-box input:focus {
+        background: #ffffff;
+        border-color: #1768ff;
+        box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.12);
+    }
+
+    .search-input-box .clear-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #e2e8f0;
+        border: none;
+        color: #64748b;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .search-input-box .clear-btn:hover {
+        background: #cbd5e1;
+        color: #0f172a;
+    }
+
+    /* Suggestions Dropdown */
+
+    .search-suggestions-dropdown {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(23, 104, 255, 0.08);
+        z-index: 1050;
+        overflow: hidden;
+        animation: fadeInDown 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-6px); }
+
+        to { opacity: 1; transform: translateY(0); }
+
+    }
+
+    .suggestions-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 14px;
+        background: #f8fafc;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+    }
+
+    .suggestions-header i {
+        color: #1768ff;
+        margin-right: 4px;
+    }
+
+    .suggestions-header .esc-hint {
+        font-size: 10px;
+        font-weight: 600;
+        color: #94a3b8;
+        background: #e2e8f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .suggestions-list {
+        max-height: 320px;
+        overflow-y: auto;
+        padding: 6px 0;
+    }
+
+    .suggestion-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: background 0.15s ease;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .suggestion-item:hover,
+    .suggestion-item.active {
+        background: #f1f5f9;
+    }
+
+    .suggestion-item.active {
+        background: #eff6ff;
+        border-left: 3px solid #1768ff;
+        padding-left: 11px;
+    }
+
+    .suggestion-icon-wrap {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .suggestion-icon-wrap.type-course {
+        background: rgba(23, 104, 255, 0.1);
+        color: #1768ff;
+    }
+
+    .suggestion-icon-wrap.type-university {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+    }
+
+    .suggestion-icon-wrap.type-category {
+        background: rgba(245, 158, 11, 0.12);
+        color: #d97706;
+    }
+
+    .suggestion-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .suggestion-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+    }
+
+    .suggestion-title mark {
+        background: transparent;
+        color: #1768ff;
+        font-weight: 800;
+        padding: 0;
+    }
+
+    .suggestion-subtitle {
+        font-size: 11.5px;
+        color: #64748b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 1px;
+        display: block;
+    }
+
+    .suggestion-badge {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: #f1f5f9;
+        color: #475569;
+        flex-shrink: 0;
+    }
+
+    .suggestion-empty {
+        padding: 24px 16px;
+        text-align: center;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .suggestion-empty i {
+        font-size: 24px;
+        color: #94a3b8;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .btn-apply-filters {
+        height: 40px;
+        padding: 0 18px;
+        border-radius: 10px;
+        background: #1768ff;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 13px;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 12px rgba(23, 104, 255, 0.22);
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .btn-apply-filters:hover {
+        background: #0f52cc;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(23, 104, 255, 0.3);
+    }
+
+    /* Filter Selects Grid */
+
+    .filter-selects-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 9px;
+    }
+
+    .filter-field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .filter-field label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .filter-field label i {
+        color: #1768ff;
+        font-size: 12px;
+    }
+
+    .custom-select-wrap {
+        position: relative;
+    }
+
+    .custom-select-wrap select {
+        width: 100%;
+        height: 35px;
+        padding: 0 26px 0 11px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #1e293b;
+        font-size: 12.5px;
+        font-weight: 500;
+        appearance: none;
+        -webkit-appearance: none;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .custom-select-wrap select:focus {
+        border-color: #1768ff;
+        box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.1);
+    }
+
+    .custom-select-wrap::after {
+        content: '▼';
+        font-size: 8px;
+        color: #94a3b8;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    /* Quick Filter Chips & Toggles Bar */
+
+    .quick-chips-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 11px;
+        padding-top: 10px;
+        border-top: 1px solid #f1f5f9;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .stream-chips {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .stream-chips-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-right: 2px;
+    }
+
+    .chip-item {
+        font-size: 11.5px;
+        font-weight: 600;
+        padding: 3.5px 11px;
+        border-radius: 9999px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #475569;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .chip-item:hover {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1768ff;
+    }
+
+    .chip-item.active {
+        background: #1768ff;
+        border-color: #1768ff;
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(23, 104, 255, 0.25);
+    }
+
+    .filter-toggles-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .scholarship-toggle-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 11px;
+        border-radius: 9999px;
+        background: #ecfdf5;
+        border: 1.5px solid #a7f3d0;
+        color: #065f46;
+        font-size: 11.5px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .scholarship-toggle-chip:hover {
+        background: #d1fae5;
+        border-color: #6ee7b7;
+    }
+
+    .scholarship-toggle-chip input[type="checkbox"] {
+        accent-color: #10b981;
+        width: 14px;
+        height: 14px;
+        cursor: pointer;
+        margin: 0;
+    }
+
+    .scholarship-toggle-chip i {
+        color: #059669;
+        font-size: 13px;
+    }
+
+    .btn-reset-filters {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #ef4444;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        border-radius: 6px;
+        transition: background 0.2s;
+    }
+
+    .btn-reset-filters:hover {
+        background: #fee2e2;
+    }
+
+    /* Active Filters & Counter Header */
+
+    .results-meta-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .results-count-text {
+        font-size: 13px;
+        color: #475569;
+        font-weight: 500;
+    }
+
+    .results-count-text strong {
+        color: #0f172a;
+        font-weight: 800;
+    }
+
+    .active-filters-badges {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .active-filter-pill {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: #1e40af;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .active-filter-pill a {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgba(59, 130, 246, 0.15);
+        font-size: 10px;
+        transition: all 0.2s;
+    }
+
+    .active-filter-pill a:hover {
+        background: #ef4444;
+        color: #ffffff;
+    }
+
+    /* Course Cards Grid (Compact & Denser - Fits 4 Columns on Desktop) */
+
+    .courses-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 16px;
+        margin-bottom: 35px;
+    }
+
+    .course-card-modern {
+        background: #f4f6fb;
+        border-radius: 14px;
+        border: none !important;
+        box-shadow: 0 4px 16px -4px rgba(15, 23, 42, 0.05);
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background 0.2s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .course-card-modern:hover {
+        transform: translateY(-3px);
+        background: #eaf0f9 !important;
+        border: none !important;
+        box-shadow: 0 10px 24px -5px rgba(23, 104, 255, 0.14);
+    }
+
+    /* Top Accent Line */
+
+    .course-card-modern::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2.5px;
+        background: linear-gradient(90deg, #1768ff, #38bdf8);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    .course-card-modern:hover::before {
+        opacity: 1;
+    }
+
+    /* Card University Header (Compact) */
+
+    .card-uni-header {
+        padding: 11px 13px 9px 13px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .uni-branding-box {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .uni-logo-avatar {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        border-radius: 8px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 2px;
+    }
+
+    .uni-logo-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .uni-initials-avatar {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #1768ff 0%, #0c4a6e 100%);
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        letter-spacing: 0.5px;
+    }
+
+    .uni-text-box {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .uni-link {
+        color: #0f172a;
+        font-size: 13px;
+        font-weight: 750;
+        text-decoration: none;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: color 0.2s;
+        line-height: 1.25;
+    }
+
+    .uni-link:hover {
+        color: #1768ff;
+    }
+
+    .uni-location {
+        font-size: 11px;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .uni-location i {
+        color: #ef4444;
+        font-size: 11px;
+    }
+
+    .btn-bookmark-action {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    .btn-bookmark-action:hover,
+    .btn-bookmark-action.saved {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1768ff;
+    }
+
+    .btn-bookmark-action.saved i {
+        color: #1768ff;
+    }
+
+    /* Card Program Body (Compact) */
+
+    .card-body-content {
+        padding: 11px 13px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .course-title {
+        font-size: 15px;
+        font-weight: 750;
+        color: #0f172a;
+        margin: 0 0 5px 0;
+        line-height: 1.3;
+        letter-spacing: -0.2px;
+        min-height: 38px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .course-stream-badge {
+        display: inline-block;
+        background: #f1f5f9;
+        color: #334155;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 9px;
+        width: fit-content;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Highlight Badges Matrix (Compact 2x2 Grid) */
+
+    .course-spec-matrix {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        margin-bottom: 9px;
+    }
+
+    .spec-item {
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+        border-radius: 7px;
+        padding: 5px 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+
+    .spec-item .spec-label {
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #94a3b8;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .spec-item .spec-label i {
+        font-size: 10px;
+        color: #1768ff;
+    }
+
+    .spec-item .spec-value {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #1e293b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .spec-item.fee-highlight {
+        background: #f0fdf4;
+        border-color: #dcfce7;
+    }
+
+    .spec-item.fee-highlight .spec-label {
+        color: #15803d;
+    }
+
+    .spec-item.fee-highlight .spec-value {
+        color: #166534;
+        font-weight: 800;
+    }
+
+    /* Dynamic University Initials Avatar Color Schemes */
+
+    .course-card-modern:nth-child(6n+1) .uni-initials-avatar { background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important; }
+
+    .course-card-modern:nth-child(6n+2) .uni-initials-avatar { background: linear-gradient(135deg, #0d9488 0%, #115e59 100%) !important; }
+
+    .course-card-modern:nth-child(6n+3) .uni-initials-avatar { background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%) !important; }
+
+    .course-card-modern:nth-child(6n+4) .uni-initials-avatar { background: linear-gradient(135deg, #ea580c 0%, #9a3412 100%) !important; }
+
+    .course-card-modern:nth-child(6n+5) .uni-initials-avatar { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important; }
+
+    .course-card-modern:nth-child(6n+6) .uni-initials-avatar { background: linear-gradient(135deg, #e11d48 0%, #9f1239 100%) !important; }
+
+    /* Consistent Card Status Strip (Guarantees Exact Row Alignment Across Grid) */
+
+    .card-status-strip {
+        margin-bottom: 8px;
+        min-height: 24px;
+        display: flex;
+        align-items: center;
+    }
+
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 10px;
+        font-weight: 750;
+        padding: 3px 8px;
+        border-radius: 6px;
+        width: 100%;
+        box-sizing: border-box;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .status-pill.scholarship-active {
+        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+
+    .status-pill.scholarship-active i {
+        color: #059669;
+        font-size: 11px;
+        animation: subtlePulse 2s infinite ease-in-out;
+        flex-shrink: 0;
+    }
+
+    .status-pill.verified-standard {
+        background: #f8fafc;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+    }
+
+    .status-pill.verified-standard i {
+        color: #1768ff;
+        font-size: 11px;
+        flex-shrink: 0;
+    }
+
+    @keyframes subtlePulse {
+        0%, 100% { transform: scale(1); }
+
+        50% { transform: scale(1.15); }
+
+    }
+
+    /* Eligibility Requirement Note (Compact & Consistent) */
+
+    .eligibility-note {
+        font-size: 10.5px;
+        color: #64748b;
+        line-height: 1.35;
+        background: #fafafa;
+        border-radius: 6px;
+        padding: 5px 8px;
+        border-left: 2.5px solid #cbd5e1;
+        margin-top: auto;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .eligibility-note strong {
+        color: #334155;
+    }
+
+    /* Card Footer & CTAs (Balanced & Clear) */
+
+    .card-footer-actions {
+        padding: 8px 12px 10px 12px;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .btn-card-primary {
+        flex: 1.35;
+        background: linear-gradient(135deg, #1768ff 0%, #0f52cc 100%);
+        color: #ffffff;
+        font-size: 11.5px;
+        font-weight: 750;
+        height: 32px;
+        padding: 0 10px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(23, 104, 255, 0.25);
+    }
+
+    .btn-card-primary:hover {
+        background: linear-gradient(135deg, #0f52cc 0%, #0a3d99 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(23, 104, 255, 0.35);
+    }
+
+    .btn-card-secondary {
+        flex: 0.85;
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+        font-size: 11px;
+        font-weight: 700;
+        height: 32px;
+        padding: 0 8px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+
+    .btn-card-secondary:hover {
+        background: #e2e8f0;
+        border-color: #94a3b8;
+        color: #0f172a;
+    }
+
+    /* Modern Compact Pagination */
+
+    .pagination-bar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        margin: 30px 0 50px 0;
+        flex-wrap: wrap;
+    }
+
+    .page-btn {
+        min-width: 34px;
+        height: 34px;
+        padding: 0 10px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #334155;
+        font-size: 12.5px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+
+    .page-btn:hover {
+        border-color: #1768ff;
+        color: #1768ff;
+        background: #eff6ff;
+    }
+
+    .page-btn.active {
+        background: #1768ff;
+        border-color: #1768ff;
+        color: #ffffff;
+        box-shadow: 0 3px 10px rgba(23, 104, 255, 0.3);
+    }
+
+    .page-btn.disabled {
+        opacity: 0.4;
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+
+    .page-ellipsis {
+        color: #94a3b8;
+        font-weight: 700;
+        padding: 0 4px;
+        font-size: 12px;
+    }
+
+    /* Empty State */
+
+    .empty-state-box {
+        text-align: center;
+        padding: 45px 20px;
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px dashed #cbd5e1;
+        margin: 20px 0 40px 0;
+    }
+
+    .empty-state-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        margin: 0 auto 14px auto;
+    }
+
+    .empty-state-box h3 {
+        font-size: 18px;
+        color: #0f172a;
+        font-weight: 800;
+        margin-bottom: 6px;
+    }
+
+    .empty-state-box p {
+        font-size: 13px;
+        color: #64748b;
+        max-width: 380px;
+        margin: 0 auto 16px auto;
+        line-height: 1.5;
+    }
+
+    /* Quick Info Modal */
+
+    .course-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(6, 16, 34, 0.7);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+    }
+
+    .course-modal-backdrop.open {
+        display: flex;
+    }
+
+    .course-modal-content {
+        background: #ffffff;
+        border-radius: 18px;
+        width: 100%;
+        max-width: 540px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+        position: relative;
+        padding: 24px;
+        animation: modalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalScaleIn {
+        from { opacity: 0; transform: scale(0.95); }
+
+        to { opacity: 1; transform: scale(1); }
+
+    }
+
+    .modal-close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: #f1f5f9;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        font-size: 16px;
+        color: #64748b;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    .modal-close-btn:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+    /* Responsive Adjustments */
+
+    @media (max-width: 1200px) {
+        .filter-selects-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+    }
+
+    @media (max-width: 992px) {
+        .dashboard-header-inner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .dash-kpi-row {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .dash-kpi-card {
+            min-width: 0;
+            padding: 5px 8px;
+        }
+
+        .filter-selects-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .courses-cards-grid {
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+    }
+
+    @media (max-width: 820px) {
+        body.courses-page,
+        body.has-dark-hero {
+            padding-top: 58px !important;
+        }
+
+        .courses-hero {
+            padding: 16px 0 22px 0;
+        }
+
+    }
+
+    @media (max-width: 640px) {
+        .courses-hero {
+            padding: 14px 0 22px 0;
+        }
+
+        .dash-kpi-row {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+        .filter-wrapper {
+            margin-top: -10px;
+            margin-bottom: 14px;
+        }
+
+        .filter-hub-card {
+            padding: 12px 14px;
+            border-radius: 12px;
+        }
+
+        .filter-search-row {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-apply-filters {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .filter-selects-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .quick-chips-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .courses-cards-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+    }
+
+</style>
+
+<!-- Courses Dashboard Header -->
+
+{% if site_config.show_courses_hero %}
+<section class="courses-hero">
+
+    <div class="container">
+
+        <div class="dashboard-header-inner">
+
+            <!-- Left: Title & Subtitle -->
+
+            <div class="dash-title-block">
+
+                <div class="dash-breadcrumb-bar">
+
+                    <span class="dash-badge-pill">
+
+                        <i class="ti ti-layout-dashboard"></i> Academic Explorer
+
+                    </span>
+
+                    <span class="dash-crumb-sep">/</span>
+
+                    <span class="dash-crumb-text">Directory</span>
+
+                </div>
+
+                <h1 class="courses-dash-title">
+
+                    {{ site_config.courses_page_title|safe|default:"Academic Programs <span class='gradient-text'>&amp; Degrees</span>" }}
+
+                    <span class="dash-live-badge"><span class="dash-live-dot"></span> Live</span>
+
+                </h1>
+
+                <p class="dash-subtitle-text">
+
+                    {{ site_config.courses_page_subtitle|default:"Browse, filter, and compare global undergraduate, postgraduate &amp; doctoral degree programs." }}
+
+                </p>
+
+            </div>
+
+            <!-- Right: Compact KPI Cards -->
+
+            <div class="dash-kpi-row">
+
+                <div class="dash-kpi-card kpi-programs">
+
+                    <div class="kpi-icon-wrap"><i class="ti ti-book-2"></i></div>
+
+                    <div class="kpi-details">
+
+                        <span class="kpi-stat-number">{{ hero_stats.total_courses|default:0 }}</span>
+
+                        <span class="kpi-stat-title">Active Programs</span>
+
+                    </div>
+
+                </div>
+
+                <div class="dash-kpi-card kpi-unis">
+
+                    <div class="kpi-icon-wrap"><i class="ti ti-building-bank"></i></div>
+
+                    <div class="kpi-details">
+
+                        <span class="kpi-stat-number">{{ hero_stats.total_universities|default:0 }}</span>
+
+                        <span class="kpi-stat-title">Partner Unis</span>
+
+                    </div>
+
+                </div>
+
+                <div class="dash-kpi-card kpi-scholarships">
+
+                    <div class="kpi-icon-wrap"><i class="ti ti-award"></i></div>
+
+                    <div class="kpi-details">
+
+                        <span class="kpi-stat-number">{{ hero_stats.total_scholarships|default:0 }}</span>
+
+                        <span class="kpi-stat-title">Scholarships</span>
+
+                    </div>
+
+                </div>
+
+                <div class="dash-kpi-card kpi-destinations">
+
+                    <div class="kpi-icon-wrap"><i class="ti ti-world"></i></div>
+
+                    <div class="kpi-details">
+
+                        <span class="kpi-stat-number">{{ hero_stats.total_countries|default:0 }}</span>
+
+                        <span class="kpi-stat-title">Destinations</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+{% endif %}
+
+{% if site_config.show_courses_filters %}
+<!-- Search & Filter Hub -->
+
+<div class="container filter-wrapper">
+
+    <div class="filter-hub-card">
+
+        <form method="GET" action="{% url 'courses_list' %}" id="courseFilterForm">
+
+            <!-- Search & Filter Submit Row -->
+
+            <div class="filter-search-row">
+
+                <div class="search-input-box" id="searchInputWrapper">
+
+                    <i class="ti ti-search search-icon"></i>
+
+                    <input type="text" name="q" id="searchCourseInput" value="{{ selected_q }}" placeholder="Search by course name, subject, or university (e.g. Computer Science, MBA)..." autocomplete="off" spellcheck="false">
+
+                    <button type="button" class="clear-btn" id="searchClearBtn" onclick="clearSearchInput()" title="Clear search" style="{% if not selected_q %}display:none;{% endif %}">✕</button>
+
+                    <!-- Search Suggestions Autocomplete Dropdown -->
+
+                    <div class="search-suggestions-dropdown" id="searchSuggestionsBox" style="display: none;">
+
+                        <div class="suggestions-header" id="suggestionsHeader">
+
+                            <span><i class="ti ti-sparkles"></i> Popular Suggestions</span>
+
+                            <span class="esc-hint">ESC</span>
+
+                        </div>
+
+                        <div class="suggestions-list" id="suggestionsList"></div>
+
+                    </div>
+{% endif %}
+
+                </div>
+
+                <button type="submit" class="btn-apply-filters" id="searchSubmitBtn">
+
+                    <i class="ti ti-search"></i> Search
+
+                </button>
+
+            </div>
+
+            <!-- Select Filters Grid -->
+
+            <div class="filter-selects-grid">
+
+                <!-- Category -->
+
+                <div class="filter-field">
+
+                    <label><i class="ti ti-category"></i> Category</label>
+
+                    <div class="custom-select-wrap">
+
+                        <select name="category" onchange="submitFilterForm()">
+
+                            <option value="">All Categories</option>
+
+                            {% for cat in categories %}
+
+                                <option value="{{ cat.id }}" {% if selected_cat == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <!-- Destination / Country -->
+
+                <div class="filter-field">
+
+                    <label><i class="ti ti-world"></i> Country</label>
+
+                    <div class="custom-select-wrap">
+
+                        <select name="country" onchange="submitFilterForm()">
+
+                            <option value="">All Countries</option>
+
+                            {% for c in all_countries %}
+
+                                <option value="{{ c }}" {% if selected_country == c %}selected{% endif %}>{{ c }}</option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <!-- Degree Level -->
+
+                <div class="filter-field">
+
+                    <label><i class="ti ti-school"></i> Degree</label>
+
+                    <div class="custom-select-wrap">
+
+                        <select name="degree_type" onchange="submitFilterForm()">
+
+                            <option value="">All Degrees</option>
+
+                            <option value="UG" {% if selected_degree == 'UG' %}selected{% endif %}>Undergraduate (UG)</option>
+
+                            <option value="PG" {% if selected_degree == 'PG' %}selected{% endif %}>Postgraduate (PG)</option>
+
+                            <option value="PhD" {% if selected_degree == 'PhD' %}selected{% endif %}>PhD / Doctoral</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <!-- Study Mode -->
+
+                <div class="filter-field">
+
+                    <label><i class="ti ti-device-laptop"></i> Study Mode</label>
+
+                    <div class="custom-select-wrap">
+
+                        <select name="mode" onchange="submitFilterForm()">
+
+                            <option value="">All Modes</option>
+
+                            <option value="Full Time" {% if selected_mode == 'Full Time' %}selected{% endif %}>Full Time</option>
+
+                            <option value="Part Time" {% if selected_mode == 'Part Time' %}selected{% endif %}>Part Time</option>
+
+                            <option value="Online" {% if selected_mode == 'Online' %}selected{% endif %}>Online</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <!-- Sort By -->
+
+                <div class="filter-field">
+
+                    <label><i class="ti ti-arrows-sort"></i> Sort By</label>
+
+                    <div class="custom-select-wrap">
+
+                        <select name="sort_by" onchange="submitFilterForm()">
+
+                            <option value="">Top Recommended</option>
+
+                            <option value="name_asc" {% if selected_sort == 'name_asc' %}selected{% endif %}>Course Name (A-Z)</option>
+
+                            <option value="name_desc" {% if selected_sort == 'name_desc' %}selected{% endif %}>Course Name (Z-A)</option>
+
+                            <option value="university_asc" {% if selected_sort == 'university_asc' %}selected{% endif %}>University (A-Z)</option>
+
+                            <option value="university_desc" {% if selected_sort == 'university_desc' %}selected{% endif %}>University (Z-A)</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Quick Filter Chips & Toggles -->
+
+            <div class="quick-chips-row">
+
+                <div class="stream-chips">
+
+                    <span class="stream-chips-label"><i class="ti ti-sparkles"></i> Popular:</span>
+
+                    <a href="{% url 'courses_list' %}" class="chip-item {% if not selected_stream and not selected_q and not selected_cat %}active{% endif %}">
+
+                        All
+
+                    </a>
+
+                    {% for stream_name in all_streams|slice:":6" %}
+
+                    <a href="?stream={{ stream_name|urlencode }}{% if selected_country %}&country={{ selected_country|urlencode }}{% endif %}{% if selected_degree %}&degree_type={{ selected_degree }}{% endif %}"
+
+                       class="chip-item {% if selected_stream == stream_name %}active{% endif %}">
+
+                        {{ stream_name }}
+
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+                <div class="filter-toggles-right">
+
+                    <label class="scholarship-toggle-chip" title="Filter programs with scholarship eligibility">
+
+                        <input type="checkbox" name="scholarship" value="1" {% if selected_scholarship == '1' %}checked{% endif %} onchange="submitFilterForm()">
+
+                        <i class="ti ti-award"></i> Scholarships Only
+
+                    </label>
+
+                    {% if selected_q or selected_country or selected_cat or selected_stream or selected_degree or selected_mode or selected_scholarship or selected_sort %}
+
+                    <a href="{% url 'courses_list' %}" class="btn-reset-filters" title="Reset all filters">
+
+                        <i class="ti ti-rotate"></i> Reset All
+
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- Main Results Container -->
+
+<div class="container" style="padding-bottom: 50px;">
+
+    <!-- Results Count & Active Filter Tags Bar -->
+
+    <div class="results-meta-header">
+
+        <div class="results-count-text">
+
+            Showing <strong>{{ page_obj.start_index|default:0 }}–{{ page_obj.end_index|default:0 }}</strong> of <strong>{{ filtered_count }}</strong> academic programs
+
+        </div>
+
+        {% if selected_q or selected_country or selected_cat_obj or selected_stream or selected_degree or selected_mode or selected_scholarship %}
+
+        <div class="active-filters-badges">
+
+            {% if selected_q %}
+
+            <span class="active-filter-pill">
+
+                Keyword: "{{ selected_q }}"
+
+                <a href="?{% if selected_country %}country={{ selected_country|urlencode }}&{% endif %}{% if selected_cat %}category={{ selected_cat }}&{% endif %}{% if selected_degree %}degree_type={{ selected_degree }}&{% endif %}{% if selected_mode %}mode={{ selected_mode|urlencode }}&{% endif %}{% if selected_stream %}stream={{ selected_stream|urlencode }}&{% endif %}{% if selected_scholarship %}scholarship=1&{% endif %}{% if selected_sort %}sort_by={{ selected_sort }}&{% endif %}">✕</a>
+
+            </span>
+
+            {% endif %}
+
+            {% if selected_cat_obj %}
+
+            <span class="active-filter-pill">
+
+                Category: {{ selected_cat_obj.name }}
+
+                <a href="?{% if selected_q %}q={{ selected_q|urlencode }}&{% endif %}{% if selected_country %}country={{ selected_country|urlencode }}&{% endif %}{% if selected_degree %}degree_type={{ selected_degree }}&{% endif %}{% if selected_mode %}mode={{ selected_mode|urlencode }}&{% endif %}{% if selected_stream %}stream={{ selected_stream|urlencode }}&{% endif %}{% if selected_scholarship %}scholarship=1&{% endif %}{% if selected_sort %}sort_by={{ selected_sort }}&{% endif %}">✕</a>
+
+            </span>
+
+            {% endif %}
+
+            {% if selected_country %}
+
+            <span class="active-filter-pill">
+
+                Country: {{ selected_country }}
+
+                <a href="?{% if selected_q %}q={{ selected_q|urlencode }}&{% endif %}{% if selected_cat %}category={{ selected_cat }}&{% endif %}{% if selected_degree %}degree_type={{ selected_degree }}&{% endif %}{% if selected_mode %}mode={{ selected_mode|urlencode }}&{% endif %}{% if selected_stream %}stream={{ selected_stream|urlencode }}&{% endif %}{% if selected_scholarship %}scholarship=1&{% endif %}{% if selected_sort %}sort_by={{ selected_sort }}&{% endif %}">✕</a>
+
+            </span>
+
+            {% endif %}
+
+            {% if selected_degree %}
+
+            <span class="active-filter-pill">
+
+                Degree: {{ selected_degree }}
+
+                <a href="?{% if selected_q %}q={{ selected_q|urlencode }}&{% endif %}{% if selected_country %}country={{ selected_country|urlencode }}&{% endif %}{% if selected_cat %}category={{ selected_cat }}&{% endif %}{% if selected_mode %}mode={{ selected_mode|urlencode }}&{% endif %}{% if selected_stream %}stream={{ selected_stream|urlencode }}&{% endif %}{% if selected_scholarship %}scholarship=1&{% endif %}{% if selected_sort %}sort_by={{ selected_sort }}&{% endif %}">✕</a>
+
+            </span>
+
+            {% endif %}
+
+            {% if selected_mode %}
+
+            <span class="active-filter-pill">
+
+                Mode: {{ selected_mode }}
+
+                <a href="?{% if selected_q %}q={{ selected_q|urlencode }}&{% endif %}{% if selected_country %}country={{ selected_country|urlencode }}&{% endif %}{% if selected_cat %}category={{ selected_cat }}&{% endif %}{% if selected_degree %}degree_type={{ selected_degree }}&{% endif %}{% if selected_stream %}stream={{ selected_stream|urlencode }}&{% endif %}{% if selected_scholarship %}scholarship=1&{% endif %}{% if selected_sort %}sort_by={{ selected_sort }}&{% endif %}">✕</a>
+
+            </span>
+
+            {% endif %}
+
+            {% if selected_stream %}
+
+            <span class="active-filter-pill">
+
+                Stream: {{ selected_stream }}
+
+                <a href="?{% if selected_q %}q={{ selected_q|urlencode }}&{% endif %}{% if selected_country %}country={{ selected_country|urlencode }}&{% endif %}{% if selected_cat %}category={{ selected_cat }}&{% endif %}{% if selected_degree %}degree_type={{ selected_degree }}&{% endif %}{% if selected_mode %}mode={{ selected_mode|urlencode }}&{% endif %}{% if selected_scholarship %}scholarship=1&{% endif %}{% if selected_sort %}sort_by={{ selected_sort }}&{% endif %}">✕</a>
+
+            </span>
+
+            {% endif %}
+
+            {% if selected_scholarship %}
+
+            <span class="active-filter-pill" style="background: #ecfdf5; border-color: #a7f3d0; color: #065f46;">
+
+                ✨ Scholarships Only
+
+                <a href="?{% if selected_q %}q={{ selected_q|urlencode }}&{% endif %}{% if selected_country %}country={{ selected_country|urlencode }}&{% endif %}{% if selected_cat %}category={{ selected_cat }}&{% endif %}{% if selected_degree %}degree_type={{ selected_degree }}&{% endif %}{% if selected_mode %}mode={{ selected_mode|urlencode }}&{% endif %}{% if selected_stream %}stream={{ selected_stream|urlencode }}&{% endif %}{% if selected_sort %}sort_by={{ selected_sort }}&{% endif %}">✕</a>
+
+            </span>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- Courses Grid -->
+
+    {% if courses %}
+
+    <div class="courses-cards-grid">
+
+        {% for course in courses %}
+
+        <div class="course-card-modern">
+
+            <!-- University Header -->
+
+            <div class="card-uni-header">
+
+                <div class="uni-branding-box">
+
+                    {% if course.university.profile.logo %}
+
+                    <div class="uni-logo-avatar">
+
+                        <img src="{{ course.university.profile.logo.url }}" alt="{{ course.university.name }}" loading="lazy" width="32" height="32">
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="uni-initials-avatar">
+
+                        {{ course.university.name|slice:":2"|upper }}
+
+                    </div>
+
+                    {% endif %}
+
+                    <div class="uni-text-box">
+
+                        <a href="{% url 'university_detail' course.university.slug %}" class="uni-link" title="{{ course.university.name }}">
+
+                            {{ course.university.name }}
+
+                        </a>
+
+                        <div class="uni-location" title="{{ course.university.profile.location_city }}, {{ course.university.profile.location_state_country }}">
+
+                            <i class="ti ti-map-pin"></i>
+
+                            {{ course.university.profile.location_city|default:course.university.profile.location_state_country|default:"Global Campus" }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Shortlist Bookmark Action -->
+
+                <button type="button"
+
+                        class="btn-bookmark-action {% if course.university.id in saved_uni_ids %}saved{% endif %}"
+
+                        onclick="toggleUniversitySave(this, '{{ course.university.id }}')"
+
+                        title="{% if course.university.id in saved_uni_ids %}Saved to shortlist{% else %}Save to shortlist{% endif %}">
+
+                    <i class="ti {% if course.university.id in saved_uni_ids %}ti-bookmark-filled{% else %}ti-bookmark{% endif %}"></i>
+
+                </button>
+
+            </div>
+
+            <!-- Card Body -->
+
+            <div class="card-body-content">
+
+                <h3 class="course-title">{{ course.name }}</h3>
+
+                {% if course.stream %}
+
+                <span class="course-stream-badge">{{ course.stream }}</span>
+
+                {% elif course.category %}
+
+                <span class="course-stream-badge">{{ course.category.name }}</span>
+
+                {% endif %}
+
+                <!-- Spec Matrix Grid -->
+
+                <div class="course-spec-matrix">
+
+                    <!-- Degree -->
+
+                    <div class="spec-item">
+
+                        <span class="spec-label"><i class="ti ti-school"></i> Degree</span>
+
+                        <span class="spec-value">{{ course.degree_type|default:"Undergraduate" }}</span>
+
+                    </div>
+
+                    <!-- Duration -->
+
+                    <div class="spec-item">
+
+                        <span class="spec-label"><i class="ti ti-clock"></i> Duration</span>
+
+                        <span class="spec-value">
+
+                            {% if course.duration == '1 Years' %}1 Year{% else %}{{ course.duration|default:"Flexible" }}{% endif %}
+
+                        </span>
+
+                    </div>
+
+                    <!-- Mode -->
+
+                    <div class="spec-item">
+
+                        <span class="spec-label"><i class="ti ti-device-laptop"></i> Mode</span>
+
+                        <span class="spec-value">
+
+                            {% if course.mode == 'Online' %}
+
+                            <span style="color: #10b981;">●</span> Online
+
+                            {% else %}
+
+                            {{ course.mode|default:"Full Time" }}
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                    <!-- Fees -->
+
+                    <div class="spec-item fee-highlight">
+
+                        <span class="spec-label"><i class="ti ti-currency-dollar"></i> Tuition</span>
+
+                        <span class="spec-value">{{ course.fees|default:"Inquire for fees" }}</span>
+
+                    </div>
+
+                </div>
+
+                <!-- Consistent Status Strip (Guarantees Matching Row Cadence) -->
+
+                <div class="card-status-strip">
+
+                    {% if course.scholarship_available %}
+
+                    {% if has_scholarship_exam %}
+
+                    <span class="status-pill scholarship-active" style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0;" title="Common Scholarship Examination on file - automatically considered">
+
+                        <i class="ti ti-circle-check" style="color:#10b981;"></i> Scholarship Exam on File &bull; Considered
+
+                    </span>
+
+                    {% else %}
+
+                    {% if request.user.is_authenticated and request.user.parent_profile %}
+
+                    <span class="status-pill scholarship-active" title="Scholarship Eligible (Student Examination &bull; Parent View-Only)">
+
+                        <i class="ti ti-sparkles"></i> Scholarship Eligible &bull; <span style="color:#64748b; font-weight:700; cursor:not-allowed;"><i class="ti ti-lock" style="font-size:11px;"></i> Student Only</span>
+
+                    </span>
+
+                    {% else %}
+
+                    <span class="status-pill scholarship-active" title="Scholarship Eligible: Take Common Scholarship Exam to qualify">
+
+                        <i class="ti ti-sparkles"></i> Scholarship Eligible &bull; <a href="{% url 'dashboard_scholarship_exam_booking' %}" onclick="event.stopPropagation();" style="color:#1768ff; text-decoration:underline; font-weight:800;">Take Exam &rarr;</a>
+
+                    </span>
+
+                    {% endif %}
+
+                    {% endif %}
+
+                    {% else %}
+
+                    <span class="status-pill verified-standard">
+
+                        <i class="ti ti-certificate"></i> Verified Degree &bull; Direct Partner
+
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+                <!-- Eligibility Preview -->
+
+                {% if course.eligibility %}
+
+                <div class="eligibility-note" title="{{ course.eligibility }}">
+
+                    <strong>Req:</strong> {{ course.eligibility|truncatechars:75 }}
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- Card Footer Actions -->
+
+            <div class="card-footer-actions">
+
+                <button type="button" class="btn-card-primary"
+
+                        onclick="openCourseDetailsModal(
+
+                            '{{ course.name|escapejs }}',
+                            '{{ course.university.name|escapejs }}',
+                            '{{ course.university.profile.location_city|default:course.university.profile.location_state_country|escapejs }}',
+                            '{{ course.degree_type|escapejs }}',
+                            '{{ course.duration|escapejs }}',
+                            '{{ course.mode|escapejs }}',
+                            '{{ course.fees|escapejs }}',
+                            '{{ course.stream|default:"General Studies"|escapejs }}',
+                            '{{ course.eligibility|escapejs }}',
+                            '{{ course.scholarship_available|yesno:"yes,no" }}',
+                            '{% url "university_detail" course.university.slug %}'
+
+                        )">
+
+                    <i class="ti ti-eye"></i> Quick View &bull; Details
+
+                </button>
+
+                <a href="{% url 'university_detail' course.university.slug %}" class="btn-card-secondary" title="View {{ course.university.name }} Profile">
+
+                    <i class="ti ti-building-bank"></i> Uni &nearr;
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- Pagination Controls -->
+
+    {% if page_obj.has_other_pages %}
+
+    <nav class="pagination-bar" aria-label="Course pagination">
+
+        {% if page_obj.has_previous %}
+
+        <a href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.previous_page_number }}" class="page-btn" title="Previous page">
+
+            <i class="ti ti-chevron-left"></i> Prev
+
+        </a>
+
+        {% else %}
+
+        <span class="page-btn disabled"><i class="ti ti-chevron-left"></i> Prev</span>
+
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+
+            {% if page_obj.number == num %}
+
+                <span class="page-btn active">{{ num }}</span>
+
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+
+                <a href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ num }}" class="page-btn">{{ num }}</a>
+
+            {% elif num == 1 or num == page_obj.paginator.num_pages %}
+
+                <a href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ num }}" class="page-btn">{{ num }}</a>
+
+            {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+
+                <span class="page-ellipsis">...</span>
+
+            {% endif %}
+
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+
+        <a href="?{% if pagination_query %}{{ pagination_query }}&{% endif %}page={{ page_obj.next_page_number }}" class="page-btn" title="Next page">
+
+            Next <i class="ti ti-chevron-right"></i>
+
+        </a>
+
+        {% else %}
+
+        <span class="page-btn disabled">Next <i class="ti ti-chevron-right"></i></span>
+
+        {% endif %}
+
+    </nav>
+
+    {% endif %}
+
+    {% else %}
+
+    <!-- Empty State -->
+
+    <div class="empty-state-box">
+
+        <div class="empty-state-icon">
+
+            <i class="ti ti-search-off"></i>
+
+        </div>
+
+        <h3>No Courses Match Your Criteria</h3>
+
+        <p>We couldn't find any programs matching your current filter selections. Try broadening your search or resetting filters.</p>
+
+        <a href="{% url 'courses_list' %}" class="btn-card-primary" style="display: inline-flex; width: auto; padding: 12px 24px;">
+
+            <i class="ti ti-rotate"></i> Reset All Filters & View All
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+<!-- Quick Course Details Modal -->
+
+<div class="course-modal-backdrop" id="courseModal" onclick="closeCourseModal(event)">
+
+    <div class="course-modal-content" onclick="event.stopPropagation()">
+
+        <button type="button" class="modal-close-btn" onclick="closeCourseModalDirect()" aria-label="Close modal">✕</button>
+
+        <div style="margin-bottom: 20px;">
+
+            <span id="modalDegreeBadge" class="course-stream-badge">Undergraduate</span>
+
+            <h2 id="modalCourseTitle" style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 8px 0 6px 0; line-height: 1.25;">Course Name</h2>
+
+            <div id="modalUniLocation" style="font-size: 14px; color: #1768ff; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+
+                <i class="ti ti-building"></i> University Name
+
+            </div>
+
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+
+            <div class="spec-item">
+
+                <span class="spec-label"><i class="ti ti-clock"></i> Duration</span>
+
+                <span id="modalDuration" class="spec-value">-</span>
+
+            </div>
+
+            <div class="spec-item">
+
+                <span class="spec-label"><i class="ti ti-device-laptop"></i> Study Mode</span>
+
+                <span id="modalMode" class="spec-value">-</span>
+
+            </div>
+
+            <div class="spec-item fee-highlight">
+
+                <span class="spec-label"><i class="ti ti-currency-dollar"></i> Tuition Fees</span>
+
+                <span id="modalFees" class="spec-value">-</span>
+
+            </div>
+
+            <div class="spec-item">
+
+                <span class="spec-label"><i class="ti ti-category"></i> Academic Stream</span>
+
+                <span id="modalStream" class="spec-value">-</span>
+
+            </div>
+
+        </div>
+
+        <div id="modalScholarshipBadge" class="scholarship-beacon-card" style="display: none; margin-bottom: 18px;">
+
+            <i class="ti ti-sparkles"></i>
+
+            <span><strong>Scholarship Eligible:</strong> Students enrolled in this program may apply for institutional and merit-based grants.</span>
+
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; margin-bottom: 24px;">
+
+            <h4 style="font-size: 13px; font-weight: 800; color: #334155; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
+
+                <i class="ti ti-file-certificate" style="color: #1768ff;"></i> Admission & Eligibility
+
+            </h4>
+
+            <p id="modalEligibility" style="font-size: 14px; color: #475569; line-height: 1.6; margin: 0;">-</p>
+
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+
+            <a id="modalUniProfileLink" href="{% url 'public_exhibitors' %}" class="btn-card-primary" style="padding: 13px 20px; font-size: 14px;">
+
+                View University & Full Program List <i class="ti ti-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    // Submit form automatically on dropdown change
+
+    function submitFilterForm() {
+        var form = document.getElementById('courseFilterForm');
+        if (form) {
+            form.submit();
+        }
+
+    }
+
+    // Clear search input
+
+    function clearSearchInput() {
+        var input = document.getElementById('searchCourseInput');
+        var clearBtn = document.getElementById('searchClearBtn');
+        var box = document.getElementById('searchSuggestionsBox');
+        if (input) {
+            input.value = '';
+            if (clearBtn) clearBtn.style.display = 'none';
+            if (box) box.style.display = 'none';
+            submitFilterForm();
+        }
+
+    }
+
+    // Auto-suggestions & Keyboard Navigation
+
+    (function initSearchSuggestions() {
+        var input = document.getElementById('searchCourseInput');
+        var wrapper = document.getElementById('searchInputWrapper');
+        var box = document.getElementById('searchSuggestionsBox');
+        var list = document.getElementById('suggestionsList');
+        var header = document.getElementById('suggestionsHeader');
+        var clearBtn = document.getElementById('searchClearBtn');
+        var debounceTimer = null;
+        var activeIndex = -1;
+        var currentItems = [];
+        if (!input || !box || !list) return;
+        function updateClearBtn() {
+            if (clearBtn) {
+                clearBtn.style.display = input.value.trim().length > 0 ? 'flex' : 'none';
+            }
+
+        }
+
+        function highlightMatch(text, query) {
+            if (!query) return escapeHtml(text);
+            var safeText = escapeHtml(text);
+            var qWords = query.trim().split(/\s+/).filter(Boolean);
+            if (!qWords.length) return safeText;
+            var pattern = '(' + qWords.map(escapeRegExp).join('|') + ')';
+            return safeText.replace(new RegExp(pattern, 'gi'), '<mark>$1</mark>');
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function escapeHtml(string) {
+            var div = document.createElement('div');
+            div.textContent = string;
+            return div.innerHTML;
+        }
+
+        function renderSuggestions(results, query) {
+            currentItems = results || [];
+            activeIndex = -1;
+            if (!currentItems.length) {
+                if (query) {
+                    if (header) {
+                        header.innerHTML = '<span><i class="ti ti-info-circle"></i> No exact suggestions</span><span class="esc-hint">ESC</span>';
+                    }
+
+                    list.innerHTML = '<div class="suggestion-empty"><i class="ti ti-mood-empty"></i>Press Search to search for "' + escapeHtml(query) + '"</div>';
+                    box.style.display = 'block';
+                } else {
+                    box.style.display = 'none';
+                }
+
+                return;
+            }
+
+            if (header) {
+                header.innerHTML = query
+
+                    ? '<span><i class="ti ti-sparkles"></i> Top Matching Results</span><span class="esc-hint">ESC to close</span>'
+
+                    : '<span><i class="ti ti-flame"></i> Popular Academic Searches</span><span class="esc-hint">ESC</span>';
+            }
+
+            var html = '';
+            currentItems.forEach(function(item, idx) {
+                var typeClass = 'type-' + (item.type || 'course').toLowerCase();
+                var iconClass = item.icon || 'ti ti-school';
+                var highlightedTitle = highlightMatch(item.title, query);
+                html += '<div class="suggestion-item" data-index="' + idx + '" onclick="selectSuggestion(' + idx + ')">';
+                html += '  <div class="suggestion-icon-wrap ' + typeClass + '"><i class="' + iconClass + '"></i></div>';
+                html += '  <div class="suggestion-content">';
+                html += '    <span class="suggestion-title">' + highlightedTitle + '</span>';
+                html += '    <span class="suggestion-subtitle">' + escapeHtml(item.subtitle || '') + '</span>';
+                html += '  </div>';
+                html += '  <span class="suggestion-badge">' + escapeHtml(item.type || 'Course') + '</span>';
+                html += '</div>';
+            });
+            list.innerHTML = html;
+            box.style.display = 'block';
+        }
+
+        window.selectSuggestion = function(index) {
+            var item = currentItems[index];
+            if (!item) return;
+            box.style.display = 'none';
+            if (item.url && item.type === 'Category') {
+                window.location.href = item.url;
+            } else {
+                input.value = item.query_val || item.title;
+                updateClearBtn();
+                var form = document.getElementById('courseFilterForm');
+                if (form) form.submit();
+            }
+
+        };
+        function fetchSuggestions(query) {
+            var url = '/api/search/?scope=courses&q=' + encodeURIComponent(query);
+            fetch(url)
+
+                .then(function(res) { return res.json(); })
+
+                .then(function(data) {
+                    renderSuggestions(data.results || [], query);
+                })
+
+                .catch(function(err) {
+                    console.error('Error fetching suggestions:', err);
+                });
+        }
+
+        // Input event
+
+        input.addEventListener('input', function() {
+            var val = input.value.trim();
+            updateClearBtn();
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(function() {
+                fetchSuggestions(val);
+            }, 180);
+        });
+        // Focus event
+
+        input.addEventListener('focus', function() {
+            var val = input.value.trim();
+            updateClearBtn();
+            fetchSuggestions(val);
+        });
+        // Keyboard navigation
+
+        input.addEventListener('keydown', function(e) {
+            if (box.style.display === 'none' || !currentItems.length) {
+                if (e.key === 'Escape') {
+                    box.style.display = 'none';
+                }
+
+                return;
+            }
+
+            var items = list.querySelectorAll('.suggestion-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = (activeIndex + 1) >= items.length ? 0 : activeIndex + 1;
+                highlightActive(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = (activeIndex - 1) < 0 ? items.length - 1 : activeIndex - 1;
+                highlightActive(items);
+            } else if (e.key === 'Enter') {
+                if (activeIndex >= 0 && activeIndex < currentItems.length) {
+                    e.preventDefault();
+                    selectSuggestion(activeIndex);
+                }
+
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                box.style.display = 'none';
+            }
+
+        });
+        function highlightActive(items) {
+            items.forEach(function(el, i) {
+                if (i === activeIndex) {
+                    el.classList.add('active');
+                    el.scrollIntoView({ block: 'nearest' });
+                } else {
+                    el.classList.remove('active');
+                }
+
+            });
+        }
+
+        // Close dropdown when clicking outside
+
+        document.addEventListener('click', function(e) {
+            if (wrapper && !wrapper.contains(e.target)) {
+                box.style.display = 'none';
+            }
+
+        });
+        // Update clear button initially
+
+        updateClearBtn();
+    })();
+    // Bookmark / Save University AJAX handler
+
+    function toggleUniversitySave(button, universityId) {
+        if (!button || !universityId) return;
+        button.disabled = true;
+        fetch('/university/save/' + universityId + '/', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': getCookie('csrftoken')
+
+            }
+
+        })
+
+        .then(function(response) {
+            if (response.status === 401 || response.status === 403 || response.redirected) {
+                // User is not logged in
+
+                window.location.href = '/portal/login/?next=' + encodeURIComponent(window.location.pathname);
+                return null;
+            }
+
+            return response.json();
+        })
+
+        .then(function(data) {
+            button.disabled = false;
+            if (!data) return;
+            var icon = button.querySelector('i');
+            if (data.status === 'success') {
+                if (data.message.indexOf('Added') !== -1) {
+                    button.classList.add('saved');
+                    if (icon) {
+                        icon.className = 'ti ti-bookmark-filled';
+                    }
+
+                    button.title = 'Saved to shortlist';
+                } else {
+                    button.classList.remove('saved');
+                    if (icon) {
+                        icon.className = 'ti ti-bookmark';
+                    }
+
+                    button.title = 'Save to shortlist';
+                }
+
+            } else {
+                alert(data.message || 'Unable to update shortlist.');
+            }
+
+        })
+
+        .catch(function() {
+            button.disabled = false;
+            window.location.href = '/portal/login/?next=' + encodeURIComponent(window.location.pathname);
+        });
+    }
+
+    // Helper to get CSRF token
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+
+            }
+
+        }
+
+        return cookieValue;
+    }
+
+    // Open Quick Info Modal
+
+    function openCourseDetailsModal(title, uniName, location, degree, duration, mode, fees, stream, eligibility, hasScholarship, uniUrl) {
+        document.getElementById('modalCourseTitle').textContent = title || 'Program Details';
+        document.getElementById('modalUniLocation').innerHTML = '<i class="ti ti-building"></i> ' + uniName + (location ? ' • ' + location : '');
+        document.getElementById('modalDegreeBadge').textContent = degree || 'Undergraduate';
+        document.getElementById('modalDuration').textContent = duration || 'N/A';
+        document.getElementById('modalMode').textContent = mode || 'Full Time';
+        document.getElementById('modalFees').textContent = fees || 'Inquire for fees';
+        document.getElementById('modalStream').textContent = stream || 'General';
+        document.getElementById('modalEligibility').textContent = eligibility || 'Please consult the university department for specific academic prerequisites and admission eligibility.';
+        var scholarshipBox = document.getElementById('modalScholarshipBadge');
+        if (hasScholarship === 'yes') {
+            scholarshipBox.style.display = 'flex';
+        } else {
+            scholarshipBox.style.display = 'none';
+        }
+
+        var link = document.getElementById('modalUniProfileLink');
+        if (link && uniUrl) {
+            link.href = uniUrl;
+        }
+
+        var modal = document.getElementById('courseModal');
+        if (modal) {
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+    }
+
+    function closeCourseModal(event) {
+        if (event.target === document.getElementById('courseModal')) {
+            closeCourseModalDirect();
+        }
+
+    }
+
+    function closeCourseModalDirect() {
+        var modal = document.getElementById('courseModal');
+        if (modal) {
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+    }
+
+    // Escape key listener for modal
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeCourseModalDirect();
+        }
+
+    });
+</script>
+
+{% endblock %}
