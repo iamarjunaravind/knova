@@ -826,6 +826,17 @@
             </label>
           </div>
 
+          <div class="toggle-item-card" id="card-show_about_spotlight">
+            <div class="toggle-info">
+              <h4>3b. Media Spotlight &amp; Video Card <span class="toggle-status-pill {% if config.show_about_spotlight %}status-visible{% else %}status-hidden{% endif %}" id="pill-show_about_spotlight">{% if config.show_about_spotlight %}Visible{% else %}Hidden{% endif %}</span></h4>
+              <p>Right-side expo crowd image, 2-min overview video button modal, and 3 key live stat badges.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" name="show_about_spotlight" id="chk-show_about_spotlight" {% if config.show_about_spotlight %}checked{% endif %} onchange="ajaxToggle('show_about_spotlight')">
+              <span class="slider"></span>
+            </label>
+          </div>
+
           <div class="toggle-item-card" id="card-show_about_metrics">
             <div class="toggle-info">
               <h4>4. Key Scale &amp; Impact Metrics <span class="toggle-status-pill {% if config.show_about_metrics %}status-visible{% else %}status-hidden{% endif %}" id="pill-show_about_metrics">{% if config.show_about_metrics %}Visible{% else %}Hidden{% endif %}</span></h4>
@@ -1564,6 +1575,71 @@
     <!-- ========================================== -->
     <div id="cmsTabContent-navbar" class="cms-tab-content" style="{% if active_tab != 'navbar' %}display: none;{% endif %}">
       
+      
+      <!-- Master Brand Logos & Navigation Assets -->
+      <div class="cms-card" style="border-left: 4px solid #2563eb;">
+        <div class="cms-card-header">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="award" style="color:#2563eb;"></i> Website Brand Logos &amp; AI Chatbot Avatar</h3>
+            <p class="cms-card-subtitle">Change main header navbar logo, footer logo, and AI Assistant Mr. K avatar image</p>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">
+            <!-- Header Logo -->
+            <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:14px;">
+              <div style="display:flex; gap:12px; align-items:center;">
+                <div style="width:90px; height:50px; border-radius:8px; overflow:hidden; background:#0f172a; border:1px solid #cbd5e1; display:flex; align-items:center; justify-content:center; padding:4px; flex-shrink:0;">
+                  <img id="preview-site_logo" src="{% if config.site_logo %}{{ config.site_logo.url }}{% else %}{% static 'assets/logo.webp' %}{% endif %}" style="max-width:100%; max-height:100%; object-fit:contain;" alt="Header Logo Preview">
+                </div>
+                <div style="flex:1;">
+                  <label style="font-size:12px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">Main Navbar Logo</label>
+                  <label class="btn-cms-action" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:5px 10px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; font-weight:600;">
+                    <i data-feather="upload-cloud" style="width:12px; height:12px; color:#2563eb;"></i> Change Logo
+                    <input type="file" name="site_logo" accept="image/*" style="display:none;" onchange="previewImageFile(this, 'preview-site_logo', 'label-site_logo')">
+                  </label>
+                  <span id="label-site_logo" style="font-size:10.5px; color:#64748b; display:block; margin-top:3px;">Default logo.webp</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Logo -->
+            <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:14px;">
+              <div style="display:flex; gap:12px; align-items:center;">
+                <div style="width:90px; height:50px; border-radius:8px; overflow:hidden; background:#0f172a; border:1px solid #cbd5e1; display:flex; align-items:center; justify-content:center; padding:4px; flex-shrink:0;">
+                  <img id="preview-site_footer_logo" src="{% if config.site_footer_logo %}{{ config.site_footer_logo.url }}{% elif config.site_logo %}{{ config.site_logo.url }}{% else %}{% static 'assets/logo.webp' %}{% endif %}" style="max-width:100%; max-height:100%; object-fit:contain;" alt="Footer Logo Preview">
+                </div>
+                <div style="flex:1;">
+                  <label style="font-size:12px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">Footer Logo</label>
+                  <label class="btn-cms-action" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:5px 10px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; font-weight:600;">
+                    <i data-feather="upload-cloud" style="width:12px; height:12px; color:#2563eb;"></i> Change Logo
+                    <input type="file" name="site_footer_logo" accept="image/*" style="display:none;" onchange="previewImageFile(this, 'preview-site_footer_logo', 'label-site_footer_logo')">
+                  </label>
+                  <span id="label-site_footer_logo" style="font-size:10.5px; color:#64748b; display:block; margin-top:3px;">Default logo.webp</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chatbot Avatar -->
+            <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:14px;">
+              <div style="display:flex; gap:12px; align-items:center;">
+                <div style="width:50px; height:50px; border-radius:50%; overflow:hidden; background:#e2e8f0; border:1px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <img id="preview-chatbot_avatar" src="{% if config.chatbot_avatar %}{{ config.chatbot_avatar.url }}{% else %}{% static 'assets/chat-avatar.webp' %}{% endif %}" style="width:100%; height:100%; object-fit:cover;" alt="Chatbot Avatar Preview">
+                </div>
+                <div style="flex:1;">
+                  <label style="font-size:12px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">Mr. K Chatbot Avatar</label>
+                  <label class="btn-cms-action" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11px; padding:5px 10px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; font-weight:600;">
+                    <i data-feather="upload-cloud" style="width:12px; height:12px; color:#2563eb;"></i> Change Avatar
+                    <input type="file" name="chatbot_avatar" accept="image/*" style="display:none;" onchange="previewImageFile(this, 'preview-chatbot_avatar', 'label-chatbot_avatar')">
+                  </label>
+                  <span id="label-chatbot_avatar" style="font-size:10.5px; color:#64748b; display:block; margin-top:3px;">Default Mr. K</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Master Navbar Control -->
       <div class="cms-card" style="border-left: 4px solid #ef4444;">
         <div class="cms-card-header">
@@ -1864,6 +1940,47 @@
           </div>
         </div>
         <div class="cms-card-body">
+        <!-- Hero Background & Sponsor Logo Uploaders -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px; margin-bottom:16px;">
+          <!-- Hero Background Image -->
+          <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:14px;">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div style="width:110px; height:70px; border-radius:8px; overflow:hidden; background:#e2e8f0; border:1px solid #cbd5e1; flex-shrink:0;">
+                <img id="preview-hero_image" src="{% if config.hero_image %}{{ config.hero_image.url }}{% else %}{% static 'assets/dubai.webp' %}{% endif %}" style="width:100%; height:100%; object-fit:cover;" alt="Hero Preview">
+              </div>
+              <div style="flex:1;">
+                <label style="font-size:12px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">
+                  <i data-feather="image" style="width:13px; height:13px; color:#2563eb;"></i> Hero Background Image
+                </label>
+                <label class="btn-cms-action" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11.5px; padding:6px 12px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; font-weight:600;">
+                  <i data-feather="upload-cloud" style="width:13px; height:13px; color:#2563eb;"></i> Change Image
+                  <input type="file" name="hero_image" accept="image/*" style="display:none;" onchange="previewImageFile(this, 'preview-hero_image', 'label-hero_image')">
+                </label>
+                <span id="label-hero_image" style="font-size:11px; color:#64748b; display:block; margin-top:4px;">Default static background</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Sponsor Logo -->
+          <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:14px;">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div style="width:110px; height:70px; border-radius:8px; overflow:hidden; background:#1e293b; border:1px solid #cbd5e1; display:flex; align-items:center; justify-content:center; padding:6px; flex-shrink:0;">
+                <img id="preview-hero_logo" src="{% if config.hero_logo %}{{ config.hero_logo.url }}{% else %}{% static 'assets/lumentra_logo_horizontal.svg' %}{% endif %}" style="max-width:100%; max-height:100%; object-fit:contain;" alt="Sponsor Logo Preview">
+              </div>
+              <div style="flex:1;">
+                <label style="font-size:12px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">
+                  <i data-feather="award" style="width:13px; height:13px; color:#f59e0b;"></i> Presented-By Sponsor Logo
+                </label>
+                <label class="btn-cms-action" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11.5px; padding:6px 12px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; font-weight:600;">
+                  <i data-feather="upload-cloud" style="width:13px; height:13px; color:#2563eb;"></i> Change Logo
+                  <input type="file" name="hero_logo" accept="image/*" style="display:none;" onchange="previewImageFile(this, 'preview-hero_logo', 'label-hero_logo')">
+                </label>
+                <span id="label-hero_logo" style="font-size:11px; color:#64748b; display:block; margin-top:4px;">Default Lumentra logo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Badge Pill Main Text</label>
@@ -2052,6 +2169,25 @@
           </div>
         </div>
         <div class="cms-card-body">
+        <!-- Why KNOVA Side Image Upload -->
+        <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:14px; margin-bottom:16px;">
+          <div style="display:flex; gap:12px; align-items:center;">
+            <div style="width:110px; height:70px; border-radius:8px; overflow:hidden; background:#e2e8f0; border:1px solid #cbd5e1; flex-shrink:0;">
+              <img id="preview-why_image" src="{% if config.why_image %}{{ config.why_image.url }}{% else %}{% static 'assets/dubai.webp' %}{% endif %}" style="width:100%; height:100%; object-fit:cover;" alt="Why Image Preview">
+            </div>
+            <div style="flex:1;">
+              <label style="font-size:12px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">
+                <i data-feather="image" style="width:13px; height:13px; color:#2563eb;"></i> Why KNOVA Side Feature Photo
+              </label>
+              <label class="btn-cms-action" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11.5px; padding:6px 12px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; font-weight:600;">
+                <i data-feather="upload-cloud" style="width:13px; height:13px; color:#2563eb;"></i> Change Image
+                <input type="file" name="why_image" accept="image/*" style="display:none;" onchange="previewImageFile(this, 'preview-why_image', 'label-why_image')">
+              </label>
+              <span id="label-why_image" style="font-size:11px; color:#64748b; display:block; margin-top:4px;">Default static showcase</span>
+            </div>
+          </div>
+        </div>
+
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Kicker Badge</label>
@@ -2169,6 +2305,25 @@
           </div>
         </div>
         <div class="cms-card-body">
+        <!-- Featured Venue Skyline Photo Upload -->
+        <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:14px; margin-bottom:16px;">
+          <div style="display:flex; gap:12px; align-items:center;">
+            <div style="width:110px; height:70px; border-radius:8px; overflow:hidden; background:#e2e8f0; border:1px solid #cbd5e1; flex-shrink:0;">
+              <img id="preview-featured_expo_image" src="{% if config.featured_expo_image %}{{ config.featured_expo_image.url }}{% else %}{% static 'assets/dubai_venue_exterior.jpg' %}{% endif %}" style="width:100%; height:100%; object-fit:cover;" alt="Skyline Preview">
+            </div>
+            <div style="flex:1;">
+              <label style="font-size:12px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">
+                <i data-feather="image" style="width:13px; height:13px; color:#2563eb;"></i> Featured Host City Skyline / Venue Photo
+              </label>
+              <label class="btn-cms-action" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11.5px; padding:6px 12px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; font-weight:600;">
+                <i data-feather="upload-cloud" style="width:13px; height:13px; color:#2563eb;"></i> Change Image
+                <input type="file" name="featured_expo_image" accept="image/*" style="display:none;" onchange="previewImageFile(this, 'preview-featured_expo_image', 'label-featured_expo_image')">
+              </label>
+              <span id="label-featured_expo_image" style="font-size:11px; color:#64748b; display:block; margin-top:4px;">Default venue exterior skyline</span>
+            </div>
+          </div>
+        </div>
+
 
         <!-- Section Header Bar -->
         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:18px;">
@@ -2551,6 +2706,25 @@
           </div>
         </div>
         <div class="cms-card-body">
+        <!-- Student Testimonial Photo Upload -->
+        <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:14px; margin-bottom:16px;">
+          <div style="display:flex; gap:12px; align-items:center;">
+            <div style="width:72px; height:90px; border-radius:8px; overflow:hidden; background:#e2e8f0; border:1px solid #cbd5e1; flex-shrink:0;">
+              <img id="preview-testimonial_image" src="{% if config.testimonial_image %}{{ config.testimonial_image.url }}{% else %}{% static 'assets/arjun_student.webp' %}{% endif %}" style="width:100%; height:100%; object-fit:cover;" alt="Testimonial Preview">
+            </div>
+            <div style="flex:1;">
+              <label style="font-size:12px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">
+                <i data-feather="user" style="width:13px; height:13px; color:#2563eb;"></i> Student Testimonial Photo
+              </label>
+              <label class="btn-cms-action" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11.5px; padding:6px 12px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; font-weight:600;">
+                <i data-feather="upload-cloud" style="width:13px; height:13px; color:#2563eb;"></i> Change Photo
+                <input type="file" name="testimonial_image" accept="image/*" style="display:none;" onchange="previewImageFile(this, 'preview-testimonial_image', 'label-testimonial_image')">
+              </label>
+              <span id="label-testimonial_image" style="font-size:11px; color:#64748b; display:block; margin-top:4px;">Default student portrait</span>
+            </div>
+          </div>
+        </div>
+
 
         <h4 style="font-size:13px; font-weight:800; color:#334155; margin:16px 0 10px 0;">Left Card: Expo Highlights Video &amp; CTA</h4>
         <div class="form-row">
@@ -2743,6 +2917,7 @@
             <option value="all">⚡ View All Sections (Dropdown Accordion)</option>
             <option value="sec-about-hero">⭐ 1. About Us Hero Header</option>
             <option value="sec-about-overview">📋 2. Executive Overview & 4 Feature Pillars</option>
+            <option value="sec-about-spotlight">🎥 2b. Overview Media Spotlight & Video Card</option>
             <option value="sec-about-metrics">📊 3. Scale & Proven Impact Key Metrics</option>
             <option value="sec-about-mission">🎯 4. Mission, Vision & 3 Foundational Pillars</option>
             <option value="sec-about-values">🛡️ 5. Core Institutional Values</option>
@@ -2864,6 +3039,91 @@
             </div>
           </div>
         </div>
+        </div>
+
+        
+        <!-- Media Spotlight & Video Card Editor -->
+        <div class="cms-card cms-card-collapsible is-collapsed" id="sec-about-spotlight">
+          <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-about-spotlight', event)">
+            <div>
+              <h3 class="cms-card-title"><i data-feather="video" style="color:#0ea5e9;"></i> Overview Media Spotlight &amp; Video Card</h3>
+              <p class="cms-card-subtitle">Expo media card image, 2-minute overview video modal, summit year badge, and 3 live stat pills</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="cms-card-toggle-pill">
+                <span class="cms-toggle-text">Expand</span>
+                <i data-feather="chevron-down"></i>
+              </span>
+            </div>
+          </div>
+          <div class="cms-card-body">
+            <!-- Image Upload & Preview Component -->
+            <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:16px; margin-bottom:16px;">
+              <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+                <div style="width:140px; height:85px; border-radius:8px; overflow:hidden; background:#e2e8f0; border:1px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                  <img id="preview-about_spotlight_image" src="{% if config.about_spotlight_image %}{{ config.about_spotlight_image.url }}{% else %}{% static 'assets/about/story_expo.webp' %}{% endif %}" style="width:100%; height:100%; object-fit:cover;" alt="Spotlight Preview">
+                </div>
+                <div style="flex:1; min-width:220px;">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                    <label style="font-size:12.5px; font-weight:700; color:#334155; margin:0;">
+                      <i data-feather="image" style="width:14px; height:14px; color:#2563eb; vertical-align:middle;"></i> Spotlight Expo Image
+                    </label>
+                    {% if config.about_spotlight_image %}
+                      <span style="font-size:11px; font-weight:700; color:#059669; background:#ecfdf5; padding:2px 8px; border-radius:12px; border:1px solid #a7f3d0;">Custom Uploaded</span>
+                    {% else %}
+                      <span style="font-size:11px; font-weight:600; color:#64748b; background:#f1f5f9; padding:2px 8px; border-radius:12px;">Default Static Asset</span>
+                    {% endif %}
+                  </div>
+                  <p style="font-size:11.5px; color:#64748b; margin:0 0 10px 0;">Right-side spotlight photo on About page. Recommended: 800x480px WebP/JPG</p>
+                  <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                    <label class="btn-cms-action" style="cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:7px 14px; background:#ffffff; border:1px solid #cbd5e1; border-radius:8px; font-weight:600; color:#1e293b; box-shadow:0 1px 2px rgba(0,0,0,0.05);">
+                      <i data-feather="upload-cloud" style="width:14px; height:14px; color:#2563eb;"></i> Change Image
+                      <input type="file" name="about_spotlight_image" accept="image/*" style="display:none;" onchange="previewImageFile(this, 'preview-about_spotlight_image', 'label-about_spotlight_image')">
+                    </label>
+                    <span id="label-about_spotlight_image" style="font-size:11.5px; color:#64748b;">No new file chosen</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Top Badge Tag</label>
+                <input type="text" name="about_spotlight_badge" class="form-control" value="{{ config.about_spotlight_badge }}" placeholder="Expo In-Session">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Video Modal Embed / Stream URL</label>
+                <input type="text" name="about_spotlight_video_url" class="form-control" value="{{ config.about_spotlight_video_url }}" placeholder="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Media Caption (Header Line)</label>
+                <input type="text" name="about_spotlight_caption_top" class="form-control" value="{{ config.about_spotlight_caption_top }}" placeholder="KNOVA Higher Education Summit">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Media Caption (Sub-Line / Intake Year)</label>
+                <input type="text" name="about_spotlight_caption_sub" class="form-control" value="{{ config.about_spotlight_caption_sub }}" placeholder="2026/27 Intake">
+              </div>
+            </div>
+
+            <h4 style="font-size:13px; font-weight:800; color:#334155; margin:16px 0 10px 0;">3 Bottom Live Stat Badges</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Badge 1</label>
+                <input type="text" name="about_spotlight_stat1" class="form-control" value="{{ config.about_spotlight_stat1 }}" placeholder="98.4% Match Rate">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Badge 2</label>
+                <input type="text" name="about_spotlight_stat2" class="form-control" value="{{ config.about_spotlight_stat2 }}" placeholder="Global Attendees">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Badge 3</label>
+                <input type="text" name="about_spotlight_stat3" class="form-control" value="{{ config.about_spotlight_stat3 }}" placeholder="Direct Offers">
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Scale & Proven Impact Metrics -->
@@ -3784,7 +4044,27 @@
             </a>
           </div>
 
-          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
+          
+          <!-- Interactive Floor Map Blueprint Image Upload -->
+          <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:14px; margin-bottom:16px;">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div style="width:130px; height:80px; border-radius:8px; overflow:hidden; background:#e2e8f0; border:1px solid #cbd5e1; flex-shrink:0;">
+                <img id="preview-map_image" src="{% if config.map_image %}{{ config.map_image.url }}{% else %}{% static 'assets/expo_map.webp' %}{% endif %}" style="width:100%; height:100%; object-fit:cover;" alt="Floor Map Preview">
+              </div>
+              <div style="flex:1;">
+                <label style="font-size:12px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">
+                  <i data-feather="map" style="width:13px; height:13px; color:#059669;"></i> Expo Floor Plan / Hall Blueprint Map Image
+                </label>
+                <p style="font-size:11px; color:#64748b; margin:0 0 6px 0;">Replaces the 2D floorplan layout across the website and modal.</p>
+                <label class="btn-cms-action" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11.5px; padding:6px 12px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; font-weight:600;">
+                  <i data-feather="upload-cloud" style="width:13px; height:13px; color:#2563eb;"></i> Change Floor Map
+                  <input type="file" name="map_image" accept="image/*" style="display:none;" onchange="previewImageFile(this, 'preview-map_image', 'label-map_image')">
+                </label>
+                <span id="label-map_image" style="font-size:11px; color:#64748b; display:inline-block; margin-left:8px;">Default blueprint</span>
+              </div>
+            </div>
+          </div>
+<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:12px; font-weight:700; color:#475569;"><i data-feather="sliders" style="width:13px; height:13px; vertical-align:middle; margin-right:4px;"></i> Section Visibility &amp; Layout:</span>
             <a href="javascript:void(0)" onclick="switchCmsTab('sections')" style="font-size:12px; color:#2563eb; font-weight:700; text-decoration:none;">Configure in Section Visibility Tab &rarr;</a>
           </div>
@@ -3959,7 +4239,26 @@
             </a>
           </div>
 
-          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
+          
+          <!-- Registration Cityscape Photo Upload -->
+          <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:14px; margin-bottom:16px;">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div style="width:110px; height:70px; border-radius:8px; overflow:hidden; background:#e2e8f0; border:1px solid #cbd5e1; flex-shrink:0;">
+                <img id="preview-register_hero_image" src="{% if config.register_hero_image %}{{ config.register_hero_image.url }}{% else %}{% static 'assets/reg_hero_cityscape.jpg' %}{% endif %}" style="width:100%; height:100%; object-fit:cover;" alt="Registration Photo Preview">
+              </div>
+              <div style="flex:1;">
+                <label style="font-size:12px; font-weight:700; color:#334155; display:block; margin-bottom:4px;">
+                  <i data-feather="image" style="width:13px; height:13px; color:#1768ff;"></i> Registration Page Left Cityscape Photo
+                </label>
+                <label class="btn-cms-action" style="cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11.5px; padding:6px 12px; background:#fff; border:1px solid #cbd5e1; border-radius:6px; font-weight:600;">
+                  <i data-feather="upload-cloud" style="width:13px; height:13px; color:#2563eb;"></i> Change Photo
+                  <input type="file" name="register_hero_image" accept="image/*" style="display:none;" onchange="previewImageFile(this, 'preview-register_hero_image', 'label-register_hero_image')">
+                </label>
+                <span id="label-register_hero_image" style="font-size:11px; color:#64748b; display:block; margin-top:4px;">Default student overlooking cityscape</span>
+              </div>
+            </div>
+          </div>
+<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:12px; font-weight:700; color:#475569;"><i data-feather="sliders" style="width:13px; height:13px; vertical-align:middle; margin-right:4px;"></i> Section Visibility &amp; Layout:</span>
             <a href="javascript:void(0)" onclick="switchCmsTab('sections')" style="font-size:12px; color:#2563eb; font-weight:700; text-decoration:none;">Configure in Section Visibility Tab &rarr;</a>
           </div>
@@ -4515,7 +4814,7 @@
   // Bulk show / hide all core sections
   function bulkToggleAbout(shouldShow) {
     var fields = [
-      'show_about_hero', 'show_about_nav', 'show_about_overview', 'show_about_metrics',
+      'show_about_hero', 'show_about_nav', 'show_about_overview', 'show_about_spotlight', 'show_about_metrics',
       'show_about_mission', 'show_about_values', 'show_about_journey', 'show_about_cta'
     ];
     fields.forEach(function(field) {
@@ -4658,6 +4957,30 @@
   // Expand / Collapse All Sections (Homepage wrapper)
   function toggleAllSections(expand) {
     toggleTabSections('cmsTabContent-homepage', 'homepageSectionDropdown', expand);
+  }
+
+
+  // Live Image Upload Preview for CMS Image Fields
+  function previewImageFile(input, previewId, labelId) {
+    if (input.files && input.files[0]) {
+      var file = input.files[0];
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = document.getElementById(previewId);
+        if (img) {
+          img.src = e.target.result;
+        }
+      };
+      reader.readAsDataURL(file);
+      if (labelId) {
+        var lbl = document.getElementById(labelId);
+        if (lbl) {
+          lbl.textContent = file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
+          lbl.style.color = '#059669';
+          lbl.style.fontWeight = '700';
+        }
+      }
+    }
   }
 
 </script>

@@ -1803,7 +1803,7 @@
           </div>
           <div style="display: flex; align-items: center; justify-content: center;">
             <a href="/sponsors/" title="Lumentra Ventures - Headline Sponsor" style="display: flex; align-items: center; text-decoration: none;">
-              <img src="{% static 'assets/lumentra_logo_horizontal.svg' %}" alt="Lumentra Ventures - Global Minds" width="165" height="44" loading="eager" decoding="async" style="height: clamp(26px, 3.5vh, 36px); width: auto; max-width: clamp(140px, 18vw, 190px); object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45)); display: block;">
+              <img src="{% if site_config.hero_logo %}{{ site_config.hero_logo.url }}{% else %}{% static 'assets/lumentra_logo_horizontal.svg' %}{% endif %}" alt="Presented By" width="165" height="44" loading="eager" decoding="async" style="height: clamp(26px, 3.5vh, 36px); width: auto; max-width: clamp(140px, 18vw, 190px); object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45)); display: block;">
             </a>
           </div>
         </div>
@@ -7587,7 +7587,7 @@
           <img id="expoImgHall" class="expo-featured-img active" src="{% static 'assets/dubai.webp' %}?v=3" onerror="this.src='{% static 'assets/dubai_expo_grand.jpg' %}'" alt="Grand Expo Pavilion" width="600" height="340" loading="lazy" decoding="async">
 
           <!-- Layer 2: Twilight Venue & Skyline -->
-          <img id="expoImgSkyline" class="expo-featured-img" src="{% static 'assets/dubai_venue_exterior.jpg' %}?v=1" alt="Dubai World Trade Centre & Skyline" width="600" height="340" loading="lazy" decoding="async">
+          <img id="expoImgSkyline" class="expo-featured-img" src="{% if site_config.featured_expo_image %}{{ site_config.featured_expo_image.url }}{% else %}{% static 'assets/dubai_venue_exterior.jpg' %}?v=1{% endif %}" alt="Featured Expo Skyline" width="600" height="340" loading="lazy" decoding="async">
 
           <!-- Gradient Overlay -->
           <div class="event-img-gradient-overlay" aria-hidden="true"></div>
@@ -8987,7 +8987,7 @@
               <span style="width: 6px; height: 6px; border-radius: 50%; background: #38bdf8; display: inline-block; box-shadow: 0 0 6px #38bdf8;"></span>
               Active Radar View
             </div>
-            <img src="{% static 'assets/expo_map.webp' %}" alt="KNOVA Expo Floor Plan" width="800" height="566" loading="lazy" decoding="async">
+            <img src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.webp' %}{% endif %}" alt="KNOVA Expo Floor Plan" width="800" height="566" loading="lazy" decoding="async">
 
             <!-- Hotspot Pin 1: University Pavilions -->
             <div class="map-hotspot-pin active-pin" id="pinZone1" style="top: 38%; left: 52%;" onclick="event.stopPropagation(); selectLiveZone(1);" title="University Discovery Pavilions">
@@ -9147,7 +9147,7 @@
 
         <!-- Modal Viewer Body -->
         <div style="flex: 1; overflow: auto; background: #f1f5f9; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 420px; cursor: grab;" id="modalMapViewport">
-          <img id="modalFloorMapImg" src="{% static 'assets/expo_map.webp' %}" alt="Floorplan Map" width="1000" height="707" loading="lazy" decoding="async" style="max-width: 100%; height: auto; transition: transform 0.25s ease; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+          <img id="modalFloorMapImg" src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.webp' %}{% endif %}" alt="Floorplan Map" width="1000" height="707" loading="lazy" decoding="async" style="max-width: 100%; height: auto; transition: transform 0.25s ease; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
         </div>
       </div>
     </div>
@@ -9434,7 +9434,7 @@
       <!-- Right: Testimonial Card with Faisal S. -->
       <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 28px 26px; box-shadow: 0 8px 24px -4px rgba(10, 25, 54, 0.06); display: flex; align-items: center; gap: 20px;">
         <div style="flex-shrink: 0; width: 72px; height: 98px; border-radius: 12px; overflow: hidden; background: #f1f5f9; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-          <img src="{% static 'assets/arjun_student.webp' %}" alt="Student testimonial photo" width="72" height="98" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;">
+          <img src="{% if site_config.testimonial_image %}{{ site_config.testimonial_image.url }}{% else %}{% static 'assets/arjun_student.webp' %}{% endif %}" alt="Student testimonial photo" width="72" height="98" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
           <p style="font-size: 13.5px; font-weight: 700; color: #0a1936; line-height: 1.55; margin: 0 0 8px 0;">

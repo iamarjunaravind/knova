@@ -1227,7 +1227,7 @@
     {% if site_config.show_about_overview %}
     <!-- 1. EXECUTIVE OVERVIEW & MEDIA SPOTLIGHT -->
     <section class="dash-panel-card" id="overview">
-      <div class="overview-grid">
+      <div class="overview-grid" style="{% if not site_config.show_about_spotlight %}grid-template-columns: 1fr;{% endif %}">
         <div class="overview-left-content">
           <div>
             <div class="section-kicker"><i class="ti ti-info-circle"></i> Institutional Profile</div>
@@ -1274,18 +1274,19 @@
         </div>
 
         <!-- Right Side: Compact Media Spotlight Card -->
+        {% if site_config.show_about_spotlight %}
         <div class="media-spotlight-card">
           <div class="media-thumb-box" onclick="openVideoModal()" role="button" aria-label="Play KNOVA Summit Overview Video">
-            <img src="{% static 'assets/about/story_expo.webp' %}" alt="KNOVA Summit Floor" loading="eager">
+            <img src="{% if site_config.about_spotlight_image %}{{ site_config.about_spotlight_image.url }}{% else %}{% static 'assets/about/story_expo.webp' %}{% endif %}" alt="KNOVA Summit Floor" loading="eager">
             <div class="media-thumb-overlay">
-              <span class="media-badge-tag"><i class="ti ti-video"></i> Expo In-Session</span>
+              <span class="media-badge-tag"><i class="ti ti-video"></i> {{ site_config.about_spotlight_badge|default:"Expo In-Session" }}</span>
               <div class="media-play-pill">
                 <i class="ti ti-player-play-filled"></i>
                 <span>{{ site_config.about_hero_btn1_text|default:"Watch 2-Min Overview" }}</span>
               </div>
               <div class="media-caption-bar">
-                <span>KNOVA Higher Education Summit</span>
-                <span>2026/27 Intake</span>
+                <span>{{ site_config.about_spotlight_caption_top|default:"KNOVA Higher Education Summit" }}</span>
+                <span>{{ site_config.about_spotlight_caption_sub|default:"2026/27 Intake" }}</span>
               </div>
             </div>
           </div>
@@ -1293,18 +1294,19 @@
           <div class="media-bottom-stats">
             <div class="stat-pill-mini">
               <i class="ti ti-check-circle"></i>
-              <span>98.4% Match Rate</span>
+              <span>{{ site_config.about_spotlight_stat1|default:"98.4% Match Rate" }}</span>
             </div>
             <div class="stat-pill-mini">
               <i class="ti ti-users"></i>
-              <span>Global Attendees</span>
+              <span>{{ site_config.about_spotlight_stat2|default:"Global Attendees" }}</span>
             </div>
             <div class="stat-pill-mini">
               <i class="ti ti-badge"></i>
-              <span>Direct Offers</span>
+              <span>{{ site_config.about_spotlight_stat3|default:"Direct Offers" }}</span>
             </div>
           </div>
         </div>
+        {% endif %}
       </div>
     </section>
     {% endif %}
@@ -1538,7 +1540,9 @@
   function openVideoModal() {
     var modal = document.getElementById('videoModal');
     var iframe = document.getElementById('videoIframe');
-    iframe.src = "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1";
+    var vid = "{{ site_config.about_spotlight_video_url|default:'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ'|escapejs }}";
+    if (vid.indexOf('?') === -1) { vid += '?autoplay=1'; } else { vid += '&autoplay=1'; }
+    iframe.src = vid;
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
   }

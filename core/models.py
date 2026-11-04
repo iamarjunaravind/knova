@@ -372,6 +372,7 @@ class SiteConfiguration(models.Model):
     show_about_hero = models.BooleanField(default=True, verbose_name="About: Hero Header & Intro")
     show_about_nav = models.BooleanField(default=True, verbose_name="About: Sticky Navigation Hub")
     show_about_overview = models.BooleanField(default=True, verbose_name="About: Executive Overview & Feature Pillars")
+    show_about_spotlight = models.BooleanField(default=True, verbose_name="About: Media Spotlight & Video Card")
     show_about_metrics = models.BooleanField(default=True, verbose_name="About: Key Scale & Impact Metrics")
     show_about_mission = models.BooleanField(default=True, verbose_name="About: Mission & Foundational Pillars")
     show_about_values = models.BooleanField(default=True, verbose_name="About: Core Institutional Values")
@@ -508,6 +509,14 @@ class SiteConfiguration(models.Model):
     hero_search_placeholder = models.CharField(max_length=255, default="Search universities, courses or keywords...", blank=True)
     hero_video_disclaimer = models.CharField(max_length=255, default="The video is for illustration purpose only. Not real, AI generated", blank=True)
     hero_image = models.ImageField(upload_to='site_images/', blank=True, null=True, help_text="Main hero image (leave blank for default)")
+    hero_logo = models.ImageField(upload_to='site_images/', blank=True, null=True, help_text="Presented-By Sponsor Logo in Hero (leave blank for default)")
+    site_logo = models.ImageField(upload_to='site_images/', blank=True, null=True, help_text="Main Website Header Logo (leave blank for default)")
+    site_footer_logo = models.ImageField(upload_to='site_images/', blank=True, null=True, help_text="Footer Logo (leave blank for default)")
+    map_image = models.ImageField(upload_to='site_images/', blank=True, null=True, help_text="Venue Floor Plan Map Image (leave blank for default)")
+    testimonial_image = models.ImageField(upload_to='site_images/', blank=True, null=True, help_text="Student Testimonial photo (leave blank for default)")
+    featured_expo_image = models.ImageField(upload_to='site_images/', blank=True, null=True, help_text="Featured City Skyline photo (leave blank for default)")
+    register_hero_image = models.ImageField(upload_to='site_images/', blank=True, null=True, help_text="Registration pages side cityscape photo (leave blank for default)")
+    chatbot_avatar = models.ImageField(upload_to='site_images/', blank=True, null=True, help_text="Chatbot Mr. K avatar image (leave blank for default)")
 
     # Quick Stats Bar
     stat_1_number = models.CharField(max_length=50, default="1000+", blank=True)
@@ -606,6 +615,16 @@ class SiteConfiguration(models.Model):
     about_overview_card4_desc = models.TextField(default="Annual summits spanning Dubai, Riyadh, Doha, Bahrain & Muscat.", blank=True)
     about_quote_text = models.TextField(default="Higher education is the single most powerful catalyst for individual transformation and regional economic diversification. Our mission is to make world-class learning accessible without borders.", blank=True)
     about_quote_author = models.CharField(max_length=255, default="Executive Director, KNOVA Higher Education Summit", blank=True)
+
+    # About Media Spotlight & Video Card
+    about_spotlight_image = models.ImageField(upload_to='site_images/', blank=True, null=True, help_text="Custom spotlight image for About page overview card")
+    about_spotlight_badge = models.CharField(max_length=100, default="Expo In-Session", blank=True)
+    about_spotlight_video_url = models.CharField(max_length=255, default="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ", blank=True, help_text="YouTube embed or video URL for overview modal")
+    about_spotlight_caption_top = models.CharField(max_length=150, default="KNOVA Higher Education Summit", blank=True)
+    about_spotlight_caption_sub = models.CharField(max_length=100, default="2026/27 Intake", blank=True)
+    about_spotlight_stat1 = models.CharField(max_length=100, default="98.4% Match Rate", blank=True)
+    about_spotlight_stat2 = models.CharField(max_length=100, default="Global Attendees", blank=True)
+    about_spotlight_stat3 = models.CharField(max_length=100, default="Direct Offers", blank=True)
 
     about_metrics_heading = models.CharField(max_length=255, default="Scale & Proven Impact Across the Region", blank=True)
     about_metrics_desc = models.TextField(default="Verified data from our annual summits, university partnerships, and student placement audits.", blank=True)

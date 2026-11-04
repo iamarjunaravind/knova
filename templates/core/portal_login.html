@@ -481,7 +481,7 @@
             </div>
 
             <div class="login-cityscape-banner">
-                <img src="{% static 'assets/reg_hero_cityscape.jpg' %}" alt="Student overlooking global education destination" loading="lazy" decoding="async">
+                <img src="{% if site_config.register_hero_image %}{{ site_config.register_hero_image.url }}{% else %}{% static 'assets/reg_hero_cityscape.jpg' %}{% endif %}" alt="Student overlooking global education destination" loading="lazy" decoding="async">
             </div>
         </div>
 

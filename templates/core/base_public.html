@@ -1363,7 +1363,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <a class="logo" href="{% url 'index' %}" aria-label="KNOVA - Back to homepage">
 
-      <img src="{% static 'assets/logo.webp' %}" alt="KNOVA Logo" width="80" height="38" fetchpriority="high" decoding="async" style="height: 38px; width: auto; aspect-ratio: 80/38; display: block;">
+      <img src="{% if site_config.site_logo %}{{ site_config.site_logo.url }}{% else %}{% static 'assets/logo.webp' %}{% endif %}" alt="KNOVA Logo" width="80" height="38" fetchpriority="high" decoding="async" style="height: 38px; width: auto; aspect-ratio: 80/38; display: block;">
 
     </a>
 
@@ -1690,7 +1690,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <a class="eventor-footer-logo" href="{% url 'index' %}" aria-label="KNOVA Homepage">
 
-          <img src="{% static 'assets/logo.webp' %}" alt="KNOVA Logo" width="88" height="42" loading="lazy" decoding="async" class="eventor-footer-logo-img">
+          <img src="{% if site_config.site_footer_logo %}{{ site_config.site_footer_logo.url }}{% elif site_config.site_logo %}{{ site_config.site_logo.url }}{% else %}{% static 'assets/logo.webp' %}{% endif %}" alt="KNOVA Logo" width="88" height="42" loading="lazy" decoding="async" class="eventor-footer-logo-img">
 
         </a>
 
@@ -1908,7 +1908,7 @@ function handleEventorNewsletterSubmit(e) {
   <div class="mrk-chat-header">
     <div class="mrk-header-profile">
       <div class="mrk-avatar-wrap">
-        <img src="{% static 'assets/chat-avatar.webp' %}" alt="{{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}" width="38" height="38" loading="lazy" decoding="async">
+        <img src="{% if site_config.chatbot_avatar %}{{ site_config.chatbot_avatar.url }}{% else %}{% static 'assets/chat-avatar.webp' %}{% endif %}" alt="{{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}" width="38" height="38" loading="lazy" decoding="async">
         <span class="mrk-online-dot"></span>
       </div>
       <div>
@@ -1976,7 +1976,7 @@ function handleEventorNewsletterSubmit(e) {
       <!-- Default Welcome Message -->
       <div class="mrk-msg-row mrk-msg-assistant">
         <div class="mrk-msg-avatar">
-          <img src="{% static 'assets/chat-avatar.webp' %}" alt="Mr.K" width="28" height="28">
+          <img src="{% if site_config.chatbot_avatar %}{{ site_config.chatbot_avatar.url }}{% else %}{% static 'assets/chat-avatar.webp' %}{% endif %}" alt="Mr.K" width="28" height="28">
         </div>
         <div class="mrk-msg-bubble">
           <div class="mrk-bubble-sender">
@@ -1996,7 +1996,7 @@ function handleEventorNewsletterSubmit(e) {
       <!-- Typing Indicator -->
       <div id="mrkTypingIndicator" class="mrk-msg-row mrk-msg-assistant mrk-typing-row" style="display:none;">
         <div class="mrk-msg-avatar">
-          <img src="{% static 'assets/chat-avatar.webp' %}" alt="Mr.K" width="28" height="28">
+          <img src="{% if site_config.chatbot_avatar %}{{ site_config.chatbot_avatar.url }}{% else %}{% static 'assets/chat-avatar.webp' %}{% endif %}" alt="Mr.K" width="28" height="28">
         </div>
         <div class="mrk-typing-bubble">
           <span class="mrk-dot"></span>
@@ -2693,7 +2693,7 @@ function handleEventorNewsletterSubmit(e) {
 <button type="button" class="chat-widget" id="chatWidgetBtn" aria-label="Open {{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}" onclick="toggleChat(event)" style="background:none; border:none; padding:0; cursor:pointer;">
   <div class="chat-tooltip">Chat with {{ site_config.chatbot_name|default:"Mr. K - Your eBuddy" }}!</div>
   <div class="chat-avatar">
-    <img src="{% static 'assets/chat-avatar.webp' %}" alt="{{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}" width="48" height="48" loading="lazy" decoding="async">
+    <img src="{% if site_config.chatbot_avatar %}{{ site_config.chatbot_avatar.url }}{% else %}{% static 'assets/chat-avatar.webp' %}{% endif %}" alt="{{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}" width="48" height="48" loading="lazy" decoding="async">
     <span class="chat-badge" id="chatBadge">1</span>
   </div>
 </button>
@@ -2825,7 +2825,7 @@ function handleEventorNewsletterSubmit(e) {
     history.innerHTML = `
       <div class="mrk-msg-row mrk-msg-assistant">
         <div class="mrk-msg-avatar">
-          <img src="{% static 'assets/chat-avatar.webp' %}" alt="Mr.K" width="28" height="28">
+          <img src="{% if site_config.chatbot_avatar %}{{ site_config.chatbot_avatar.url }}{% else %}{% static 'assets/chat-avatar.webp' %}{% endif %}" alt="Mr.K" width="28" height="28">
         </div>
         <div class="mrk-msg-bubble">
           <div class="mrk-bubble-sender">
@@ -2873,7 +2873,7 @@ function handleEventorNewsletterSubmit(e) {
     row.className = "mrk-msg-row mrk-msg-assistant";
     row.innerHTML = `
       <div class="mrk-msg-avatar">
-        <img src="{% static 'assets/chat-avatar.webp' %}" alt="Mr.K" width="28" height="28">
+        <img src="{% if site_config.chatbot_avatar %}{{ site_config.chatbot_avatar.url }}{% else %}{% static 'assets/chat-avatar.webp' %}{% endif %}" alt="Mr.K" width="28" height="28">
       </div>
       <div class="mrk-msg-bubble">
         <div class="mrk-bubble-sender">

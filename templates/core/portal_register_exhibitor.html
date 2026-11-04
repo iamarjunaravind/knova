@@ -436,7 +436,7 @@
             </div>
 
             <div class="reg-cityscape-banner">
-                <img src="{% static 'assets/reg_hero_cityscape.jpg' %}" loading="lazy" decoding="async" alt="Global education destination">
+                <img src="{% if site_config.register_hero_image %}{{ site_config.register_hero_image.url }}{% else %}{% static 'assets/reg_hero_cityscape.jpg' %}{% endif %}" loading="lazy" decoding="async" alt="Global education destination">
             </div>
         </div>
 
