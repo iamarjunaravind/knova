@@ -591,15 +591,15 @@ class SiteConfiguration(models.Model):
     # SERVICES & PUBLIC PAGES CONTENT
     # ==========================================
     # About Page
-    about_title = models.CharField(max_length=255, default="Empowering Global Education")
-    about_subtitle = models.CharField(max_length=255, default="Connecting ambitious minds with prestigious institutions across the globe.")
+    about_title = models.CharField(max_length=255, default="Bridging Aspirations <span class=\"gradient-text\">and Education</span>")
+    about_subtitle = models.TextField(default="Where ambition meets opportunity. Bringing students, families and educational institutions together to connect, explore possibilities and shape the future of education.")
     about_mission = models.TextField(default="To bridge the gap between world-class global education and aspiring students across the GCC through interactive, transparent, and technology-driven expo experiences.")
     about_vision = models.TextField(default="To become the premier international higher education summit in the Middle East, fostering cross-border academic excellence and lifelong student success.")
     about_history = models.TextField(default="Established in 2024, KNOVA has connected tens of thousands of students with leading universities from the UK, USA, Europe, Asia, and the Middle East.", blank=True)
 
     about_hero_badge = models.CharField(max_length=200, default="OFFICIAL MISSION & INSTITUTIONAL PROFILE", blank=True)
-    about_hero_title = models.CharField(max_length=255, default="Empowering Global Education Across the GCC", blank=True)
-    about_hero_subtitle = models.TextField(default="The Gulf's premier international higher education platform connecting aspiring students with world-renowned universities, deans, and funding bodies.", blank=True)
+    about_hero_title = models.CharField(max_length=255, default="Bridging Aspirations and Education", blank=True)
+    about_hero_subtitle = models.TextField(default="Where ambition meets opportunity. Bringing students, families and educational institutions together to connect, explore possibilities and shape the future of education.", blank=True)
     about_hero_btn1_text = models.CharField(max_length=100, default="Watch 2-Min Overview", blank=True)
     about_hero_btn2_text = models.CharField(max_length=100, default="Register for Expo", blank=True)
     about_hero_btn2_url = models.CharField(max_length=255, default="/register/", blank=True)

@@ -1,7 +1,7 @@
 {% extends 'core/base_public.html' %}
 {% load static %}
 
-{% block title %}About Us | KNOVA — {{ site_config.about_title|default:"Empowering Global Education" }} Opportunities{% endblock %}
+{% block title %}About Us | KNOVA — {{ site_config.about_title|striptags|default:"Bridging Aspirations and Education" }}{% endblock %}
 
 {% block body_class %}has-dark-hero about-page{% endblock %}
 
@@ -1342,13 +1342,13 @@
       <div class="dash-title-block">
 
         <h1 class="about-dash-title">
-          {{ site_config.about_title|safe|default:"Empowering <span class='gradient-text'>Global Education</span>" }}
+          {{ site_config.about_title|safe|default:"Bridging Aspirations <span class='gradient-text'>and Education</span>" }}
           <span class="dash-live-badge">
             <span class="dash-live-dot"></span> EST. 2026 &bull; GCC
           </span>
         </h1>
         <p class="dash-subtitle-text">
-          {{ site_config.about_subtitle|default:"The Gulf's premier international higher education platform connecting ambitious students and parents directly with accredited global universities." }}
+          {{ site_config.about_subtitle|default:"Where ambition meets opportunity. Bringing students, families and educational institutions together to connect, explore possibilities and shape the future of education." }}
         </p>
       </div>
 
