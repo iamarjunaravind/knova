@@ -756,10 +756,22 @@
           <div class="toggle-item-card" id="card-show_faq_section">
             <div class="toggle-info">
               <h4>13. FAQ Section <span class="toggle-status-pill {% if config.show_faq_section %}status-visible{% else %}status-hidden{% endif %}" id="pill-show_faq_section">{% if config.show_faq_section %}Visible{% else %}Hidden{% endif %}</span></h4>
-              <p>Interactive accordion questions &amp; 1-on-1 advisor support box.</p>
+              <p>Interactive accordion questions &amp; answers.</p>
             </div>
             <label class="switch">
               <input type="checkbox" name="show_faq_section" id="chk-show_faq_section" {% if config.show_faq_section %}checked{% endif %} onchange="ajaxToggle('show_faq_section')">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- 13b. FAQ 1-on-1 Guidance Support Card -->
+          <div class="toggle-item-card" id="card-show_faq_support_card">
+            <div class="toggle-info">
+              <h4>FAQ 1-on-1 Guidance Card <span class="toggle-status-pill {% if config.show_faq_support_card %}status-visible{% else %}status-hidden{% endif %}" id="pill-show_faq_support_card">{% if config.show_faq_support_card %}Visible{% else %}Hidden{% endif %}</span></h4>
+              <p>Left column advisory &amp; admissions desk guidance card under FAQ title.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" name="show_faq_support_card" id="chk-show_faq_support_card" {% if config.show_faq_support_card %}checked{% endif %} onchange="ajaxToggle('show_faq_support_card')">
               <span class="slider"></span>
             </label>
           </div>
@@ -2792,7 +2804,16 @@
 
         <!-- Left 1-on-1 Guidance Support Box Editor -->
         <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:10px; padding:14px; margin-bottom:18px;">
-          <h4 style="font-size:12.5px; font-weight:800; color:#0f172a; margin:0 0 10px 0;">Need 1-on-1 Guidance? Left Sidebar Box</h4>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h4 style="font-size:12.5px; font-weight:800; color:#0f172a; margin:0;">Need 1-on-1 Guidance? Left Sidebar Box</h4>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="toggle-status-pill {% if config.show_faq_support_card %}status-visible{% else %}status-hidden{% endif %}" id="pill-show_faq_support_card-tab">{% if config.show_faq_support_card %}Visible{% else %}Hidden{% endif %}</span>
+              <label class="switch" style="margin:0;">
+                <input type="checkbox" name="show_faq_support_card" id="chk-show_faq_support_card-tab" {% if config.show_faq_support_card %}checked{% endif %} onchange="ajaxToggle('show_faq_support_card')">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Box Title</label>

@@ -364,6 +364,7 @@ class SiteConfiguration(models.Model):
     show_experience_video_card = models.BooleanField(default=True, verbose_name="Experience: Expo Highlights Video Card (Left)")
     show_experience_testimonial_card = models.BooleanField(default=True, verbose_name="Experience: Student Testimonial Quote Card (Right)")
     show_faq_section = models.BooleanField(default=True, verbose_name="Frequently Asked Questions (FAQ)")
+    show_faq_support_card = models.BooleanField(default=False, verbose_name="FAQ: 1-on-1 Guidance Support Card (Left Column)")
     show_register_cta_section = models.BooleanField(default=True, verbose_name="Register Today Call-to-Action")
 
     # ==========================================
