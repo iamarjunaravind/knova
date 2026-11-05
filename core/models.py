@@ -350,7 +350,7 @@ class SiteConfiguration(models.Model):
     seo_about_title = models.CharField(max_length=255, blank=True, default="About KNOVA | Premier Global Education Expo")
     seo_about_desc = models.TextField(blank=True, default="Learn about the mission, vision and world-class universities partnering with KNOVA across the GCC.")
     seo_courses_title = models.CharField(max_length=255, blank=True, default="Academic Programs & Degree Courses | KNOVA")
-    seo_courses_desc = models.TextField(blank=True, default="Explore 800+ accredited undergraduate, postgraduate and doctoral degree courses.")
+    seo_courses_desc = models.TextField(blank=True, default="Explore 1000+ accredited undergraduate, postgraduate and doctoral degree courses.")
     seo_exhibitors_title = models.CharField(max_length=255, blank=True, default="Participating Universities & Exhibitors | KNOVA")
     seo_exhibitors_desc = models.TextField(blank=True, default="Meet admissions deans from 60+ world-class universities across the USA, UK, Europe and Asia.")
     seo_events_title = models.CharField(max_length=255, blank=True, default="Event Locations, Venues & Expo Schedule | KNOVA")
@@ -700,7 +700,7 @@ class SiteConfiguration(models.Model):
     about_cta_desc = models.TextField(default="", blank=True)
     about_cta_btn1_text = models.CharField(max_length=100, default="Register for Expo", blank=True)
     about_cta_btn1_url = models.CharField(max_length=255, default="/register/", blank=True)
-    about_cta_btn2_text = models.CharField(max_length=100, default="Explore 800+ Courses", blank=True)
+    about_cta_btn2_text = models.CharField(max_length=100, default="Explore 1000+ Courses", blank=True)
     about_cta_btn2_url = models.CharField(max_length=255, default="/courses/", blank=True)
 
     # Events Page
