@@ -1639,18 +1639,24 @@
     {% endif %}
 
     {% if site_config.show_about_journey %}
-    <!-- 5. THE ORGANISER -->
+    <!-- 5. POWERED BY LUMENTRA VENTURES -->
     <div id="journey"></div>
     <section class="dash-panel-card" id="organiser">
-      <div class="section-kicker"><i class="ti ti-building-community"></i> THE ORGANISER</div>
       <div class="organiser-header-row">
         <div>
           <h2 class="panel-title" style="margin-bottom: 4px;">Powered by Lumentra Ventures</h2>
-          <div class="organiser-location-tag"><i class="ti ti-map-pin"></i> Bahrain based events and education platform company</div>
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 6px;">
+            <div class="organiser-location-tag" style="margin-top: 0;"><i class="ti ti-map-pin"></i> Bahrain based events and education platform company</div>
+            <a href="https://www.lumentra.org" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 5px; color: var(--knova-blue, #1768ff); font-size: 12.5px; font-weight: 700; text-decoration: none; background: #eff6ff; border: 1px solid #bfdbfe; padding: 3px 10px; border-radius: 20px; transition: all 0.2s ease;">
+              <i class="ti ti-world" style="font-size: 14px;"></i>
+              <span>www.lumentra.org</span>
+              <i class="ti ti-arrow-up-right" style="font-size: 11px;"></i>
+            </a>
+          </div>
         </div>
-        <div class="organiser-logo-badge">
-          <img src="{% static 'assets/lumentra_logo_dark.svg' %}" alt="Lumentra Ventures Logo" class="organiser-logo-img">
-        </div>
+        <a href="https://www.lumentra.org" target="_blank" rel="noopener noreferrer" class="organiser-logo-badge" title="Visit Lumentra Ventures (www.lumentra.org)" style="text-decoration: none;">
+          <img src="{% static 'assets/lumentra_official_latest.png' %}" alt="Lumentra Ventures Logo" class="organiser-logo-img" style="height: 42px; width: auto; object-fit: contain;">
+        </a>
       </div>
 
       <div class="organiser-content-grid">
