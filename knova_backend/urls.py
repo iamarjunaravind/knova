@@ -24,47 +24,19 @@ from core import public_views, dashboard_views
 from django.http import HttpResponse
 
 def robots_txt(request):
-    from core.models import SiteConfiguration
-    config = SiteConfiguration.get_solo()
-    if config.robots_txt_content.strip():
-        content = config.robots_txt_content
-    else:
-        domain = config.canonical_base_url.rstrip('/') if config.canonical_base_url else 'https://knovaexpo.com'
-        lines = [
-            "User-agent: *",
-            "Allow: /",
-            "Disallow: /admin/",
-            "Disallow: /dashboard/",
-            "Disallow: /api/",
-            f"Sitemap: {domain}/sitemap.xml",
-        ]
-        content = "\n".join(lines)
-    return HttpResponse(content, content_type="text/plain")   
+    lines = [
+        "User-agent: *",
+        "Disallow: /",
+    ]
+    resp = HttpResponse("\n".join(lines) + "\n", content_type="text/plain")
+    resp['X-Robots-Tag'] = 'noindex, nofollow, noarchive, nosnippet, noimageindex'
+    return resp   
 
 def sitemap_xml(request):
-    from core.models import SiteConfiguration
-    config = SiteConfiguration.get_solo()
-    domain = config.canonical_base_url.rstrip('/') if config.canonical_base_url else 'https://knovaexpo.com'
-    urls = [
-        "",
-        "/events/",
-        "/exhibitors/",
-        "/map/",
-        "/scholarships/",
-        "/speakers/",
-        "/programme/",
-        "/sponsors/",
-        "/about/",
-        "/courses/",
-    ]
-    xml_lines = [
-        '<?xml version="1.0" encoding="UTF-8"?>',
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ]
-    for u in urls:
-        xml_lines.append(f'  <url><loc>{domain}{u}</loc><changefreq>weekly</changefreq><priority>{"1.0" if u == "" else "0.8"}</priority></url>')
-    xml_lines.append('</urlset>')
-    return HttpResponse("\n".join(xml_lines), content_type="application/xml")
+    # Completely hidden from search crawlers
+    resp = HttpResponse("User-agent: *\nDisallow: /\n", content_type="text/plain", status=404)
+    resp['X-Robots-Tag'] = 'noindex, nofollow, noarchive, nosnippet, noimageindex'
+    return resp
 
 urlpatterns = [
     path('robots.txt', robots_txt, name='robots_txt'),

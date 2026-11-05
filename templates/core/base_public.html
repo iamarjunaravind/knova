@@ -18,7 +18,8 @@
 <meta name="keywords" content="{{ site_config.meta_keywords }}">
 {% endif %}
 
-<meta name="robots" content="{{ site_config.robots_meta|default:'index, follow' }}">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 
 {% if site_config.canonical_base_url %}
 <link rel="canonical" href="{{ site_config.canonical_base_url }}{{ request.path }}">
