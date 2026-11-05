@@ -461,7 +461,7 @@
             </div>
             <div class="info-field-item">
               <span class="info-field-label">Current Education Level</span>
-              <span class="info-field-value">{{ profile.current_education|title|default:"Undergraduate" }}</span>
+              <span class="info-field-value">{{ profile.current_education|default:"Undergraduate" }}</span>
             </div>
             <div class="info-field-item">
               <span class="info-field-label">Graduation Year / Class</span>
@@ -650,7 +650,23 @@
           </div>
           <div class="form-group">
             <label>Current Education Level</label>
-            <input type="text" name="current_education" value="{{ profile.current_education|default:'' }}" placeholder="e.g. High School, Undergraduate">
+            <select name="current_education">
+              <option value="">Select Education Level</option>
+              <option value="High School (Grade 9-11)" {% if profile.current_education == 'High School (Grade 9-11)' %}selected{% endif %}>High School (Grade 9-11)</option>
+              <option value="High School Senior (Grade 12)" {% if profile.current_education == 'High School Senior (Grade 12)' or profile.current_education == 'High School Senior' %}selected{% endif %}>High School Senior (Grade 12)</option>
+              <option value="High School Graduate" {% if profile.current_education == 'High School Graduate' %}selected{% endif %}>High School Graduate</option>
+              <option value="Diploma / Vocational" {% if profile.current_education == 'Diploma / Vocational' %}selected{% endif %}>Diploma / Vocational</option>
+              <option value="Undergraduate (Bachelor's Student)" {% if profile.current_education == "Undergraduate (Bachelor's Student)" or profile.current_education == 'Undergraduate' or profile.current_education|lower == 'undergraduate' %}selected{% endif %}>Undergraduate (Bachelor's Student)</option>
+              <option value="Graduate / Bachelor's Completed" {% if profile.current_education == "Graduate / Bachelor's Completed" or profile.current_education|upper == 'GRADUATE' or profile.current_education|lower == 'graduate' %}selected{% endif %}>Graduate / Bachelor's Completed</option>
+              <option value="Postgraduate (Master's Student)" {% if profile.current_education == "Postgraduate (Master's Student)" or profile.current_education == 'Postgraduate' or profile.current_education|lower == 'postgraduate' %}selected{% endif %}>Postgraduate (Master's Student)</option>
+              <option value="Master's Degree Completed" {% if profile.current_education == "Master's Degree Completed" %}selected{% endif %}>Master's Degree Completed</option>
+              <option value="Doctorate / Ph.D." {% if profile.current_education == 'Doctorate / Ph.D.' or profile.current_education == 'PhD' or profile.current_education == 'Doctorate' %}selected{% endif %}>Doctorate / Ph.D.</option>
+              <option value="Working Professional" {% if profile.current_education == 'Working Professional' %}selected{% endif %}>Working Professional</option>
+              <option value="Other" {% if profile.current_education == 'Other' %}selected{% endif %}>Other</option>
+              {% if profile.current_education and profile.current_education != "High School (Grade 9-11)" and profile.current_education != "High School Senior (Grade 12)" and profile.current_education != "High School Senior" and profile.current_education != "High School Graduate" and profile.current_education != "Diploma / Vocational" and profile.current_education != "Undergraduate (Bachelor's Student)" and profile.current_education != "Undergraduate" and profile.current_education != "Graduate / Bachelor's Completed" and profile.current_education != "Graduate" and profile.current_education != "GRADUATE" and profile.current_education != "Postgraduate (Master's Student)" and profile.current_education != "Postgraduate" and profile.current_education != "Master's Degree Completed" and profile.current_education != "Doctorate / Ph.D." and profile.current_education != "PhD" and profile.current_education != "Working Professional" and profile.current_education != "Other" %}
+                <option value="{{ profile.current_education }}" selected>{{ profile.current_education }}</option>
+              {% endif %}
+            </select>
           </div>
           <div class="form-group">
             <label>Expected Graduation Year / Class</label>

@@ -1098,7 +1098,20 @@ class StudentProfile(models.Model):
     country_of_residence = models.CharField(max_length=100, blank=True)
 
     # Education & Experience
-    current_education = models.CharField(max_length=100, blank=True)
+    EDUCATION_LEVEL_CHOICES = [
+        ('High School (Grade 9-11)', 'High School (Grade 9-11)'),
+        ('High School Senior (Grade 12)', 'High School Senior (Grade 12)'),
+        ('High School Graduate', 'High School Graduate'),
+        ('Diploma / Vocational', 'Diploma / Vocational'),
+        ("Undergraduate (Bachelor's Student)", "Undergraduate (Bachelor's Student)"),
+        ("Graduate / Bachelor's Completed", "Graduate / Bachelor's Completed"),
+        ("Postgraduate (Master's Student)", "Postgraduate (Master's Student)"),
+        ("Master's Degree Completed", "Master's Degree Completed"),
+        ('Doctorate / Ph.D.', 'Doctorate / Ph.D.'),
+        ('Working Professional', 'Working Professional'),
+        ('Other', 'Other'),
+    ]
+    current_education = models.CharField(max_length=100, blank=True, choices=EDUCATION_LEVEL_CHOICES)
     school_college = models.CharField(max_length=255, blank=True)
     class_year = models.CharField(max_length=50, blank=True)
     grades = models.CharField(max_length=100, blank=True, help_text="e.g., GPA 3.8, 95%, A-Levels")
