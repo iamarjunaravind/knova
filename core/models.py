@@ -973,7 +973,7 @@ class SiteConfiguration(models.Model):
     # ==========================================
     # FOOTER, CONTACT & SOCIAL LINKS
     # ==========================================
-    footer_tagline = models.TextField(default="Join 10,000+ students and global academic leaders for the GCC's premier higher education expo series with 3+ fully immersive events covering top universities, scholarships, and career pathways.", blank=True)
+    footer_tagline = models.TextField(default="KNOVA connects universities, academic institutions, students and families through engaging education experiences, meaningful institutional connections and digital opportunities across local, regional and international landscapes.", blank=True)
     footer_copyright = models.CharField(max_length=255, default="© 2027 KNOVA International Higher Education Summit. All rights reserved.", blank=True)
     footer_contact_email = models.EmailField(default="contact@knovaexpo.com", blank=True)
     footer_contact_phone = models.CharField(max_length=100, default="+966 11 000 0000 / +971 4 000 0000", blank=True)
