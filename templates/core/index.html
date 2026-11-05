@@ -9087,7 +9087,7 @@
               Explore the KNOVA exhibition, meet leading universities, discover exciting programmes and find the opportunities that shape your future.
             </p>
             <a href="/register/" style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 800; color: #0284c7; text-decoration: none;">
-              Register as Visitor &rarr;
+              Register for Expo &rarr;
             </a>
           </div>
 
@@ -9608,7 +9608,7 @@
           </p>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
             <a href="{% url 'public_register' %}" class="btn-faq-primary">
-              <i class="ti ti-ticket"></i> Get Free Pass
+              <i class="ti ti-ticket"></i> {{ site_config.faq_support_btn1|default:"Register for Expo" }}
             </a>
             <a href="{% url 'public_about' %}" class="btn-faq-secondary">
               About Expo &rarr;

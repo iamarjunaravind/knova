@@ -585,7 +585,7 @@ class SiteConfiguration(models.Model):
     faq_subtitle = models.CharField(max_length=255, default="Everything you need to know about attending KNOVA 2027.", blank=True)
     cta_heading = models.CharField(max_length=255, default="Ready to Shape Your Future?")
     cta_subtitle = models.CharField(max_length=255, default="Register today to claim your fast-track digital badge and personalized expo itinerary.", blank=True)
-    cta_btn_text = models.CharField(max_length=100, default="Register for Free", blank=True)
+    cta_btn_text = models.CharField(max_length=100, default="Register for Expo", blank=True)
 
     # ==========================================
     # SERVICES & PUBLIC PAGES CONTENT
@@ -678,7 +678,7 @@ class SiteConfiguration(models.Model):
 
     about_cta_title = models.CharField(max_length=255, default="Every Journey Begins with a Possibility.", blank=True)
     about_cta_desc = models.TextField(default="", blank=True)
-    about_cta_btn1_text = models.CharField(max_length=100, default="Claim Free Entrance Pass", blank=True)
+    about_cta_btn1_text = models.CharField(max_length=100, default="Register for Expo", blank=True)
     about_cta_btn1_url = models.CharField(max_length=255, default="/register/", blank=True)
     about_cta_btn2_text = models.CharField(max_length=100, default="Explore 800+ Courses", blank=True)
     about_cta_btn2_url = models.CharField(max_length=255, default="/courses/", blank=True)
@@ -704,7 +704,7 @@ class SiteConfiguration(models.Model):
 
     events_calendar_heading = models.CharField(max_length=255, default="GCC City Tour Calendar", blank=True)
     events_calendar_subtitle = models.CharField(max_length=255, default="Confirmed multi-city higher education exhibitions and keynote auditoriums across the Gulf region.", blank=True)
-    events_card_btn_register = models.CharField(max_length=100, default="Register Pass", blank=True)
+    events_card_btn_register = models.CharField(max_length=100, default="Register for Expo", blank=True)
     events_card_btn_map = models.CharField(max_length=100, default="View Map", blank=True)
 
     events_zones_heading = models.CharField(max_length=255, default="Inside the Expo: Activity Zones", blank=True)
@@ -787,7 +787,7 @@ class SiteConfiguration(models.Model):
     programme_badge = models.CharField(max_length=100, default="OFFICIAL EXPO ITINERARY", blank=True)
     programme_cta_title = models.CharField(max_length=200, default="Don't Miss Any Exclusive Masterclass", blank=True)
     programme_cta_desc = models.TextField(default="Seats for VIP keynote sessions are limited. Secure your free pass today to receive real-time schedule alerts.", blank=True)
-    programme_cta_btn_text = models.CharField(max_length=100, default="Register for Expo Pass", blank=True)
+    programme_cta_btn_text = models.CharField(max_length=100, default="Register for Expo", blank=True)
 
     # Sponsors Page Content
     sponsors_badge = models.CharField(max_length=100, default="GLOBAL INDUSTRY & EDUCATION LEADERS", blank=True)
@@ -935,7 +935,7 @@ class SiteConfiguration(models.Model):
     faq_desc = models.TextField(default="Everything you need to know about KNOVA 2027 ,  free attendee entry, meeting international university , applying for scholarships, and earning challenge rewards.", blank=True)
     faq_support_title = models.CharField(max_length=200, default="Need 1-on-1 Guidance?", blank=True)
     faq_support_desc = models.TextField(default="Have a unique question regarding international visa pathways, degree choices, or VIP keynote seats? Speak with our admissions desk.", blank=True)
-    faq_support_btn1 = models.CharField(max_length=100, default="Get Free Pass", blank=True)
+    faq_support_btn1 = models.CharField(max_length=100, default="Register for Expo", blank=True)
     faq_support_btn2 = models.CharField(max_length=100, default="About Expo →", blank=True)
 
     faq_1_q = models.CharField(max_length=255, default="Is entry to the KNOVA 2027 Expo completely free?", blank=True)

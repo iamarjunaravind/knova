@@ -510,7 +510,7 @@
                     <i class="ti ti-download"></i> Download Full Agenda (PDF)
                 </a>
                 <a href="{% url 'public_register' %}" class="btn-download-pdf" style="background: #1768ff; color: #fff; border-color: #1768ff;">
-                    <i class="ti ti-ticket"></i> Claim Free Pass
+                    <i class="ti ti-ticket"></i> Register for Expo
                 </a>
             </div>
         </div>
@@ -565,7 +565,7 @@
             <p style="font-size: 13.5px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.5;">{{ site_config.programme_cta_desc|default:"Seats for VIP keynote sessions are limited. Secure your free pass today to receive real-time schedule alerts." }}</p>
         </div>
         <a href="{% url 'public_register' %}" style="background: #ffffff; color: #091e42; font-weight: 800; font-size: 13.5px; padding: 12px 24px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-            {{ site_config.programme_cta_btn_text|default:"Register for Expo Pass" }} <i class="ti ti-arrow-right"></i>
+            {{ site_config.programme_cta_btn_text|default:"Register for Expo" }} <i class="ti ti-arrow-right"></i>
         </a>
     </div>
 </div>

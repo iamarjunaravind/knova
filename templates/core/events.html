@@ -1224,7 +1224,7 @@
                     <i class="ti ti-search"></i> Search
                 </button>
                 <a href="{% url 'public_register' %}" class="btn-map-companion" style="text-decoration: none;">
-                    <i class="ti ti-ticket"></i> Get Free Pass
+                    <i class="ti ti-ticket"></i> {{ site_config.events_card_btn_register|default:"Register for Expo" }}
                 </a>
             </div>
 
@@ -1321,7 +1321,7 @@
 
                     <div class="featured-actions-row">
                         <a href="{% if request.user.is_authenticated %}{% url 'my_expo' %}{% else %}{% url 'public_register' %}{% endif %}" class="btn-f-primary">
-                            <i class="ti ti-ticket"></i> {{ site_config.events_featured_btn1_text|default:"Claim Free Pass" }} &rarr;
+                            <i class="ti ti-ticket"></i> {{ site_config.events_featured_btn1_text|default:"Register for Expo" }} &rarr;
                         </a>
                         <a href="{% url 'public_expo_map' %}" class="btn-f-secondary">
                             <i class="ti ti-map"></i> {{ site_config.events_featured_btn2_text|default:"View Hall Map" }}
