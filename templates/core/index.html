@@ -7840,76 +7840,67 @@
 
 <section class="section-how-and-main" style="padding: 85px 0 40px 0; background: #ffffff;">
   <div class="container">
-    <div style="display: grid; grid-template-columns: 1.35fr 1fr; gap: 36px; align-items: stretch;" class="participate-main-grid">
+    <div class="participate-main-grid" style="width: 100%;">
 
-      <!-- Left: How to Participate -->
-      <div class="how-to-participate-card eventor-reveal-left" style="display: flex; flex-direction: column; justify-content: center; background: #f4f6fb; border: none; border-radius: 20px; padding: 36px 34px; box-shadow: 0 4px 20px rgba(10, 25, 54, 0.04);">
+      <!-- How to Participate (Full Width) -->
+      <div class="how-to-participate-card eventor-reveal" style="display: flex; flex-direction: column; justify-content: center; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 24px; padding: 42px 48px; box-shadow: 0 6px 24px rgba(10, 25, 54, 0.04); width: 100%;">
 
-        <div class="section-kicker-dash" style="margin-bottom: 10px;">
-          <div class="dash" style="background: #1768ff;"></div>
-          <span style="font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 800; color: #1768ff; letter-spacing: 2px; text-transform: uppercase;">{{ site_config.how_kicker|default:"SIMPLE 4-STEP JOURNEY" }}</span>
+        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 24px;">
+          <div class="section-kicker-dash" style="margin-bottom: 8px;">
+            <div class="dash" style="background: #1768ff;"></div>
+            <span style="font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 800; color: #1768ff; letter-spacing: 2px; text-transform: uppercase;">{{ site_config.how_kicker|default:"SIMPLE 4-STEP JOURNEY" }}</span>
+          </div>
+          <h3 style="font-family: 'Poppins', sans-serif; font-size: 26px; font-weight: 900; color: #0a1936; margin: 0 0 8px 0; letter-spacing: -0.5px;">{{ site_config.how_heading|default:"How to Participate" }}</h3>
+          <p class="participate-subtext" style="font-size: 14px; color: #64748b; margin: 0; line-height: 1.55; max-width: 620px;">
+            {{ site_config.how_subtitle|default:"A streamlined, guided roadmap from registration to your university offer." }}
+          </p>
         </div>
-        <h3 style="font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 900; color: #0a1936; margin: 0 0 8px 0; letter-spacing: -0.5px;">{{ site_config.how_heading|default:"How to Participate" }}</h3>
-        <p class="participate-subtext" style="font-size: 13px; color: #64748b; margin: 0 0 28px 0; line-height: 1.55;">
-          {{ site_config.how_subtitle|default:"A streamlined, guided roadmap from registration to your university offer." }}
-        </p>
-        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;" class="steps-flow-row eventor-stagger-parent">
+
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;" class="steps-flow-row eventor-stagger-parent">
 
           <!-- Step 1 (Blue) -->
           <div class="participate-step-item" style="text-align: center; flex: 1;">
-            <div class="step-icon-wrap" style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #1768ff 0%, #0284c7 100%); color: #ffffff; font-size: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; box-shadow: 0 6px 16px rgba(23,104,255,0.32);">
+            <div class="step-icon-wrap" style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #1768ff 0%, #0284c7 100%); color: #ffffff; font-size: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; box-shadow: 0 6px 18px rgba(23,104,255,0.32);">
               <i class="ti ti-user-plus"></i>
             </div>
-            <div class="step-badge" style="display: inline-block; font-size: 10px; font-weight: 800; color: #1768ff; background: #eff6ff; padding: 2px 8px; border-radius: 12px; margin-bottom: 6px;">{{ site_config.how_step1_badge|default:"STEP 01" }}</div>
-            <h4 class="step-title" style="font-size: 13px; font-weight: 800; color: #0a1936; margin: 0 0 4px 0;">{{ site_config.how_step1_title|default:"Register for Expo" }}</h4>
-            <p class="step-desc-p" style="font-size: 11.5px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step1_desc|default:"Create your student ID" }}</p>
+            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #1768ff; background: #eff6ff; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px;">{{ site_config.how_step1_badge|default:"STEP 01" }}</div>
+            <h4 class="step-title" style="font-size: 14px; font-weight: 800; color: #0a1936; margin: 0 0 5px 0;">{{ site_config.how_step1_title|default:"Register for Expo" }}</h4>
+            <p class="step-desc-p" style="font-size: 12px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step1_desc|default:"Create your student ID" }}</p>
           </div>
-          <div class="step-arrow" style="color: #cbd5e1; font-size: 16px; margin-top: 14px;"><i class="ti ti-chevron-right"></i></div>
+          <div class="step-arrow" style="color: #cbd5e1; font-size: 18px; margin-top: 16px;"><i class="ti ti-chevron-right"></i></div>
 
           <!-- Step 2 (Indigo) -->
           <div class="participate-step-item" style="text-align: center; flex: 1;">
-            <div class="step-icon-wrap" style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; font-size: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; box-shadow: 0 6px 16px rgba(99,102,241,0.32);">
+            <div class="step-icon-wrap" style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; font-size: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; box-shadow: 0 6px 18px rgba(99,102,241,0.32);">
               <i class="ti ti-qrcode"></i>
             </div>
-            <div class="step-badge" style="display: inline-block; font-size: 10px; font-weight: 800; color: #6366f1; background: #eef2ff; padding: 2px 8px; border-radius: 12px; margin-bottom: 6px;">{{ site_config.how_step2_badge|default:"STEP 02" }}</div>
-            <h4 class="step-title" style="font-size: 13px; font-weight: 800; color: #0a1936; margin: 0 0 4px 0;">{{ site_config.how_step2_title|default:"Get Digital Pass" }}</h4>
-            <p class="step-desc-p" style="font-size: 11.5px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step2_desc|default:"Scan booths &amp; keynotes" }}</p>
+            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #6366f1; background: #eef2ff; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px;">{{ site_config.how_step2_badge|default:"STEP 02" }}</div>
+            <h4 class="step-title" style="font-size: 14px; font-weight: 800; color: #0a1936; margin: 0 0 5px 0;">{{ site_config.how_step2_title|default:"Get Digital Pass" }}</h4>
+            <p class="step-desc-p" style="font-size: 12px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step2_desc|default:"Scan booths &amp; keynotes" }}</p>
           </div>
-          <div class="step-arrow" style="color: #cbd5e1; font-size: 16px; margin-top: 14px;"><i class="ti ti-chevron-right"></i></div>
+          <div class="step-arrow" style="color: #cbd5e1; font-size: 18px; margin-top: 16px;"><i class="ti ti-chevron-right"></i></div>
 
           <!-- Step 3 (Violet) -->
           <div class="participate-step-item" style="text-align: center; flex: 1;">
-            <div class="step-icon-wrap" style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: #ffffff; font-size: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; box-shadow: 0 6px 16px rgba(139,92,246,0.32);">
+            <div class="step-icon-wrap" style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: #ffffff; font-size: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; box-shadow: 0 6px 18px rgba(139,92,246,0.32);">
               <i class="ti ti-calendar-event"></i>
             </div>
-            <div class="step-badge" style="display: inline-block; font-size: 10px; font-weight: 800; color: #7c3aed; background: #f5f3ff; padding: 2px 8px; border-radius: 12px; margin-bottom: 6px;">{{ site_config.how_step3_badge|default:"STEP 03" }}</div>
-            <h4 class="step-title" style="font-size: 13px; font-weight: 800; color: #0a1936; margin: 0 0 4px 0;">{{ site_config.how_step3_title|default:"Plan Your Agenda" }}</h4>
-            <p class="step-desc-p" style="font-size: 11.5px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step3_desc|default:"Shortlist seminars & talks" }}</p>
+            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #7c3aed; background: #f5f3ff; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px;">{{ site_config.how_step3_badge|default:"STEP 03" }}</div>
+            <h4 class="step-title" style="font-size: 14px; font-weight: 800; color: #0a1936; margin: 0 0 5px 0;">{{ site_config.how_step3_title|default:"Plan Your Agenda" }}</h4>
+            <p class="step-desc-p" style="font-size: 12px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step3_desc|default:"Shortlist seminars & talks" }}</p>
           </div>
-          <div class="step-arrow" style="color: #cbd5e1; font-size: 16px; margin-top: 14px;"><i class="ti ti-chevron-right"></i></div>
+          <div class="step-arrow" style="color: #cbd5e1; font-size: 18px; margin-top: 16px;"><i class="ti ti-chevron-right"></i></div>
 
           <!-- Step 4 (Emerald) -->
           <div class="participate-step-item" style="text-align: center; flex: 1;">
-            <div class="step-icon-wrap" style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-size: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; box-shadow: 0 6px 16px rgba(16,185,129,0.32);">
+            <div class="step-icon-wrap" style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-size: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; box-shadow: 0 6px 18px rgba(16,185,129,0.32);">
               <i class="ti ti-building-bank"></i>
             </div>
-            <div class="step-badge" style="display: inline-block; font-size: 10px; font-weight: 800; color: #059669; background: #ecfdf5; padding: 2px 8px; border-radius: 12px; margin-bottom: 6px;">{{ site_config.how_step4_badge|default:"STEP 04" }}</div>
-            <h4 class="step-title" style="font-size: 13px; font-weight: 800; color: #0a1936; margin: 0 0 4px 0;">{{ site_config.how_step4_title|default:"Meet Universities" }}</h4>
-            <p class="step-desc-p" style="font-size: 11.5px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step4_desc|default:"Secure offers & funding" }}</p>
+            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #059669; background: #ecfdf5; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px;">{{ site_config.how_step4_badge|default:"STEP 04" }}</div>
+            <h4 class="step-title" style="font-size: 14px; font-weight: 800; color: #0a1936; margin: 0 0 5px 0;">{{ site_config.how_step4_title|default:"Meet Universities" }}</h4>
+            <p class="step-desc-p" style="font-size: 12px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step4_desc|default:"Secure offers & funding" }}</p>
           </div>
         </div>
-      </div>
-
-      <!-- Right: Desktop The Main Expo Featured Card -->
-      <div class="desktop-main-expo-card eventor-reveal-right reveal-delay-2" style="background: linear-gradient(135deg, rgba(8, 22, 54, 0.94), rgba(12, 35, 78, 0.88)), url('{% static 'assets/bahrain_promo.webp' %}') center/cover; border-radius: 20px; padding: 36px 36px; color: #ffffff; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); min-height: 180px;">
-        <span style="font-size: 10.5px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: #38bdf8; margin-bottom: 8px;">{{ site_config.how_card_badge|default:"FEATURED EVENT" }}</span>
-        <h4 style="font-size: 23px; font-weight: 900; color: #ffffff; margin: 0 0 10px 0; letter-spacing: -0.5px;">{{ site_config.how_card_title|default:"The Main Expo" }}</h4>
-        <p style="font-size: 13px; color: rgba(255,255,255,0.88); line-height: 1.6; margin: 0 0 24px 0; max-width: 380px;">
-          {{ site_config.how_card_desc|default:"Join us at the flagship KNOVA 2027 Education Expo in 3 GCC locations." }}
-        </p>
-        <a href="{% url 'public_events' %}" style="display: inline-flex; align-items: center; gap: 6px; background: #1768ff; color: #ffffff; padding: 10px 22px; border-radius: 25px; font-size: 12.5px; font-weight: 700; text-decoration: none; width: fit-content; box-shadow: 0 4px 12px rgba(23,104,255,0.35);">
-          {{ site_config.how_card_btn|default:"View Event Details &rarr;" }}
-        </a>
       </div>
     </div>
 
@@ -8007,73 +7998,6 @@
       </div>
     </div>
 
-    <!-- Mobile-Only Section: The Main Expo (Featured Event matching Slice 3) -->
-    <div class="mobile-main-expo-block" style="display: none; margin: 26px 0;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-        <span style="font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: #0b4fc7;">FEATURED EVENT</span>
-        <a href="{% url 'public_events' %}" class="view-all-link" aria-label="View all sessions and events" style="font-size: 12px; font-weight: 700; color: #0b4fc7; text-decoration: none; display: flex; align-items: center; gap: 3px;">
-          View All &rarr;
-        </a>
-      </div>
-      <h3 style="font-size: 18px; font-weight: 900; color: #0a1936; margin: 0 0 4px 0;">The Main Expo</h3>
-      <p style="font-size: 11.5px; color: #64748b; margin: 0 0 16px 0;">
-        Join us at the flagship KNOVA 2027 Education Expo in 3 GCC locations.
-      </p>
-      <div class="mobile-expo-split" style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 12px; align-items: center; margin-bottom: 14px;">
-
-        <!-- Left: Bahrain Event Card -->
-        <div style="background: linear-gradient(135deg, rgba(8, 22, 54, 0.92), rgba(12, 35, 78, 0.85)), url('{% static 'assets/bahrain_promo.webp' %}') center/cover; border-radius: 14px; padding: 16px 14px; color: #ffffff; box-shadow: 0 8px 22px rgba(10,25,54,0.18);">
-          <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 8.5px; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 15px; padding: 2px 7px; margin-bottom: 8px;">
-            <i class="ti ti-map-pin" style="font-size: 10px;"></i> 3 GCC LOCATIONS
-          </div>
-          <h4 style="font-size: 14px; font-weight: 900; color: #ffffff; margin: 0 0 4px 0; line-height: 1.2;">KNOVA Bahrain 2027</h4>
-          <div style="font-size: 9.5px; color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 4px; margin-bottom: 4px;">
-            <i class="ti ti-calendar" style="color: #38bdf8; font-size: 11px;"></i> October 22&ndash;23, 2027
-          </div>
-          <div style="font-size: 9px; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 4px; margin-bottom: 12px; line-height: 1.25;">
-            <i class="ti ti-map-pin" style="color: #38bdf8; font-size: 11px; flex-shrink: 0;"></i> Bahrain Intl. Exhibition Centre
-          </div>
-          <a href="{% url 'public_events' %}" aria-label="Learn more about Bahrain event" style="display: inline-flex; align-items: center; gap: 4px; background: #1768ff; color: #ffffff; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; text-decoration: none; box-shadow: 0 4px 10px rgba(23,104,255,0.35);">
-            Learn More About Events &rarr;
-          </a>
-        </div>
-
-        <!-- Right: 4 Features list -->
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #0a1936;">
-            <div style="width: 24px; height: 24px; border-radius: 50%; background: #eff6ff; color: #0b4fc7; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;"><i class="ti ti-map-pin"></i></div>
-            <span>3 GCC Locations</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #0a1936;">
-            <div style="width: 24px; height: 24px; border-radius: 50%; background: #eff6ff; color: #0b4fc7; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;"><i class="ti ti-building-bank"></i></div>
-            <span>{{ total_exhibitors|default:0 }} Exhibitors</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #0a1936;">
-            <div style="width: 24px; height: 24px; border-radius: 50%; background: #eff6ff; color: #0b4fc7; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;"><i class="ti ti-notebook"></i></div>
-            <span>{{ total_courses|default:0 }} Programmes</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: #0a1936;">
-            <div style="width: 24px; height: 24px; border-radius: 50%; background: #eff6ff; color: #0b4fc7; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;"><i class="ti ti-microphone"></i></div>
-            <span>Expert Sessions</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3 Metrics row underneath -->
-      <div class="expo-metrics-3col" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
-        <div style="background: #ffffff; border: 1px solid #eef2f6; border-radius: 12px; padding: 10px 6px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-          <div style="font-size: 14px; font-weight: 900; color: #1768ff; line-height: 1.1;">{{ total_registrations|default:0 }}</div>
-          <div style="font-size: 9px; color: #64748b; font-weight: 600; margin-top: 2px;">Registered Visitors</div>
-        </div>
-        <div style="background: #ffffff; border: 1px solid #eef2f6; border-radius: 12px; padding: 10px 6px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-          <div style="font-size: 14px; font-weight: 900; color: #1768ff; line-height: 1.1;">{{ total_sessions|default:0 }}</div>
-          <div style="font-size: 9px; color: #64748b; font-weight: 600; margin-top: 2px;">Expert Sessions</div>
-        </div>
-        <div style="background: #ffffff; border: 1px solid #eef2f6; border-radius: 12px; padding: 10px 6px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-          <div style="font-size: 14px; font-weight: 900; color: #1768ff; line-height: 1.1;">{{ total_courses|default:0 }}</div>
-          <div style="font-size: 9px; color: #64748b; font-weight: 600; margin-top: 2px;">Verified Courses</div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
