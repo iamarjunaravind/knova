@@ -950,84 +950,57 @@
   }
 
   /* --------------------------------------------------------
-     4. CORE VALUES (4 Compact Grid Cards)
+     4. OPPORTUNITIES BEYOND THE EXPO (2x2 Reference Cards)
      -------------------------------------------------------- */
   .values-grid-compact {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-top: 14px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+    margin-top: 18px;
   }
 
   .val-card-dash {
-    border-radius: 12px;
-    padding: 16px 18px;
-    border: 1px solid transparent;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: #272453;
+    border-radius: 32px;
+    padding: 42px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: none !important;
+    box-shadow: 0 10px 28px rgba(39, 36, 83, 0.16);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
 
   .val-card-dash:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(11, 26, 51, 0.06);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(39, 36, 83, 0.24);
   }
-
-  .val-card-dash.v-blue {
-    background: #f0f7ff;
-    border-color: rgba(23, 104, 255, 0.15);
-  }
-  .val-card-dash.v-green {
-    background: #f0fdf4;
-    border-color: rgba(16, 185, 129, 0.15);
-  }
-  .val-card-dash.v-amber {
-    background: #fffbeb;
-    border-color: rgba(245, 158, 11, 0.18);
-  }
-  .val-card-dash.v-purple {
-    background: #faf5ff;
-    border-color: rgba(168, 85, 247, 0.15);
-  }
-
-  .val-card-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-
-  .val-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
-    background: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    flex-shrink: 0;
-  }
-
-  .val-card-dash.v-blue .val-icon { color: #1768ff; }
-  .val-card-dash.v-green .val-icon { color: #10b981; }
-  .val-card-dash.v-amber .val-icon { color: #f59e0b; }
-  .val-card-dash.v-purple .val-icon { color: #8b5cf6; }
 
   .val-card-dash h4 {
-    font-size: 13.5px;
-    font-weight: 700;
-    color: var(--knova-navy);
-    margin: 0;
+    font-size: 21px;
+    font-weight: 800;
+    color: #ffda4c;
+    margin: 0 0 14px 0;
+    line-height: 1.32;
+    letter-spacing: -0.2px;
+    font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif;
+    text-align: center;
   }
 
   .val-card-dash p {
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--knova-text-body);
+    font-size: 14.5px;
+    line-height: 1.62;
+    color: #ffffff;
     margin: 0;
+    font-weight: 400;
+    text-align: center;
+    max-width: 440px;
+    opacity: 0.95;
   }
 
-  /* --------------------------------------------------------
+/* --------------------------------------------------------
      5. GROWTH JOURNEY (Compact Horizontal Timeline)
      -------------------------------------------------------- */
   .timeline-grid-compact {
@@ -1635,38 +1608,26 @@
     <!-- 4. OPPORTUNITIES BEYOND THE EXPO -->
     <section class="dash-panel-card" id="values">
       <h2 class="panel-title">{{ site_config.about_values_heading|default:"Opportunities That Go Beyond the Expo" }}</h2>
-      <p style="font-size: 13.5px; color: #64748b; margin-top: -8px; margin-bottom: 20px;">{{ site_config.about_values_desc|default:"The operational and ethical standards that guide every expo, university partnership, and student consultation." }}</p>
+      {% if site_config.about_values_desc %}<p style="font-size: 14px; color: #64748b; margin-top: -8px; margin-bottom: 20px;">{{ site_config.about_values_desc }}</p>{% endif %}
       <div class="values-grid-compact">
-        <div class="val-card-dash v-blue">
-          <div class="val-card-header">
-            <div class="val-icon"><i class="ti ti-user-check"></i></div>
-            <h4>{{ site_config.about_val1_title|default:"Student First" }}</h4>
-          </div>
-          <p>{{ site_config.about_val1_desc|default:"Every guidance session, panel, and scholarship matching algorithm puts student long-term potential at the center." }}</p>
+        <div class="val-card-dash">
+          <h4>{{ site_config.about_val1_title|default:"Connect with Tomorrow's Decision Makers:" }}</h4>
+          <p>{{ site_config.about_val1_desc|default:"Engage directly with students exploring higher education and parents who play an important role in academic decisions." }}</p>
         </div>
 
-        <div class="val-card-dash v-green">
-          <div class="val-card-header">
-            <div class="val-icon"><i class="ti ti-shield-check"></i></div>
-            <h4>{{ site_config.about_val2_title|default:"Integrity" }}</h4>
-          </div>
-          <p>{{ site_config.about_val2_desc|default:"Complete transparency in tuition fees, admission requirements, and partner university accreditation credentials." }}</p>
+        <div class="val-card-dash">
+          <h4>{{ site_config.about_val2_title|default:"Turn Conversations into Opportunities:" }}</h4>
+          <p>{{ site_config.about_val2_desc|default:"Discuss programmes, admissions, scholarships where available, and academic pathways face-to-face, creating opportunities for meaningful follow-up with interested students." }}</p>
         </div>
 
-        <div class="val-card-dash v-amber">
-          <div class="val-card-header">
-            <div class="val-icon"><i class="ti ti-world"></i></div>
-            <h4>{{ site_config.about_val3_title|default:"Global Perspective" }}</h4>
-          </div>
-          <p>{{ site_config.about_val3_desc|default:"Encouraging international academic mobility and cross-cultural understanding for future global leaders." }}</p>
+        <div class="val-card-dash">
+          <h4>{{ site_config.about_val3_title|default:"Extend Your Reach Beyond the Expo:" }}</h4>
+          <p>{{ site_config.about_val3_desc|default:"Introduce your institution through KNOVA's physical exhibition and digital platform, creating opportunities for visibility and engagement beyond the event dates." }}</p>
         </div>
 
-        <div class="val-card-dash v-purple">
-          <div class="val-card-header">
-            <div class="val-icon"><i class="ti ti-sparkles"></i></div>
-            <h4>{{ site_config.about_val4_title|default:"Digital Innovation" }}</h4>
-          </div>
-          <p>{{ site_config.about_val4_desc|default:"Leveraging AI-driven program discovery and real-time degree comparison to simplify decision-making for families." }}</p>
+        <div class="val-card-dash">
+          <h4>{{ site_config.about_val4_title|default:"Explore Strategic Partnerships:" }}</h4>
+          <p>{{ site_config.about_val4_desc|default:"Explore potential connections with schools, institutions, and relevant public and private sector stakeholders." }}</p>
         </div>
       </div>
     </section>
