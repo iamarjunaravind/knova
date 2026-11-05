@@ -604,7 +604,7 @@ class SiteConfiguration(models.Model):
     about_hero_btn2_url = models.CharField(max_length=255, default="/register/", blank=True)
 
     about_overview_heading = models.CharField(max_length=255, default="Where Education Connects, Futures Take Shape.", blank=True)
-    about_overview_desc = models.TextField(default="KNOVA was founded to eliminate informational gaps in international education. We bridge the Gulf region's brightest students directly with certified admissions deans, accredited university leaders, and verified scholarship allocations — all without intermediaries.", blank=True)
+    about_overview_desc = models.TextField(default="KNOVA is an integrated education platform designed to connect the diverse education ecosystem through physical experiences and digital engagement. Bringing together academic institutions, universities, education professionals, students and families, KNOVA facilitates meaningful connections across local, regional and international markets.\n\nThrough exhibitions, institutional collaborations, digital platforms and ongoing engagement, KNOVA extends the reach of education beyond traditional boundaries creating an interconnected space for knowledge exchange, opportunity discovery and informed academic decision making.", blank=True)
     about_overview_card1_title = models.CharField(max_length=200, default="Accredited Universities", blank=True)
     about_overview_card1_desc = models.TextField(default="Direct official admissions desks with global top-ranked universities.", blank=True)
     about_overview_card2_title = models.CharField(max_length=200, default="Zero Intermediaries", blank=True)
@@ -660,8 +660,8 @@ class SiteConfiguration(models.Model):
     about_val4_title = models.CharField(max_length=200, default="Digital Innovation", blank=True)
     about_val4_desc = models.TextField(default="Leveraging AI-driven program discovery and real-time degree comparison to simplify decision-making for families.", blank=True)
 
-    about_journey_heading = models.CharField(max_length=255, default="The Evolution and Trajectory of KNOVA", blank=True)
-    about_journey_desc = models.TextField(default="From an inaugural regional convention to the Gulf's most influential higher education platform.", blank=True)
+    about_journey_heading = models.CharField(max_length=255, default="Powered by Lumentra Ventures", blank=True)
+    about_journey_desc = models.TextField(default="KNOVA is conceived, developed and organised by Lumentra Ventures, a Bahrain based events and education platform company focused on creating meaningful connections across the education ecosystem.", blank=True)
     about_step1_badge = models.CharField(max_length=100, default="Phase 1: 2024", blank=True)
     about_step1_title = models.CharField(max_length=200, default="Regional Genesis & First Expo", blank=True)
     about_step1_desc = models.TextField(default="Launched the first regional education forum, uniting 30+ premier institutions with 2,500+ attendees in Dubai.", blank=True)

@@ -379,10 +379,153 @@
   }
 
   .panel-desc {
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: 14.5px;
+    line-height: 1.7;
     color: var(--knova-text-body);
     margin: 0;
+  }
+  .panel-desc p {
+    margin: 0 0 12px 0;
+    line-height: 1.7;
+  }
+  .panel-desc p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* --------------------------------------------------------
+     5. THE ORGANISER SECTION
+     -------------------------------------------------------- */
+  .organiser-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #edf2f7;
+  }
+
+  .organiser-location-tag {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+  }
+
+  .organiser-logo-badge {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(11, 26, 51, 0.05);
+  }
+
+  .organiser-logo-img {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .organiser-content-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 28px;
+    align-items: center;
+  }
+
+  .organiser-lead-p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #1e293b;
+    margin: 0 0 14px 0;
+    font-weight: 500;
+  }
+
+  .organiser-p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #475569;
+    margin: 0 0 14px 0;
+  }
+
+  .organiser-statement-box {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(217, 119, 6, 0.04) 50%, rgba(15, 23, 42, 0.03) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.08);
+  }
+
+  .statement-emblem {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 14px;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.32);
+  }
+
+  .statement-badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #d97706;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .statement-text {
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.45;
+    color: #0f172a;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.3px;
+  }
+
+  .statement-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .st-pill {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #0f172a;
+    background: #ffffff;
+    border: 1px solid rgba(245, 158, 11, 0.28);
+    border-radius: 20px;
+    padding: 5px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .st-pill i {
+    color: #f59e0b;
+    font-size: 13px;
+  }
+
+  @media (max-width: 900px) {
+    .organiser-content-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
   }
 
   /* --------------------------------------------------------
@@ -1218,7 +1361,7 @@
         {% if site_config.show_about_metrics %}<a href="#metrics" class="hub-tab"><i class="ti ti-chart-bar"></i> Key Metrics</a>{% endif %}
         {% if site_config.show_about_mission %}<a href="#mission" class="hub-tab"><i class="ti ti-target-arrow"></i> Mission &amp; Pillars</a>{% endif %}
         {% if site_config.show_about_values %}<a href="#values" class="hub-tab"><i class="ti ti-shield-heart"></i> Core Values</a>{% endif %}
-        {% if site_config.show_about_journey %}<a href="#journey" class="hub-tab"><i class="ti ti-git-branch"></i> Growth Journey</a>{% endif %}
+        {% if site_config.show_about_journey %}<a href="#organiser" class="hub-tab"><i class="ti ti-building-community"></i> The Organiser</a>{% endif %}
       </div>
       <div class="hub-action-box">
         <a href="{{ site_config.about_hero_btn2_url|default:'/register/' }}" class="hub-action-btn">
@@ -1243,9 +1386,14 @@
           <div>
             <div class="section-kicker"><i class="ti ti-info-circle"></i> Institutional Profile</div>
             <h2 class="panel-title">{{ site_config.about_overview_heading|default:"Where Education Connects, Futures Take Shape." }}</h2>
-            <p class="panel-desc">
-              {{ site_config.about_overview_desc|default:"KNOVA is the Gulf's flagship international education platform, uniting global university admissions directors, academic leaders, and prospective students. By eliminating commercial middlemen, we enable verified, direct institutional pathways for GCC youth to excel worldwide." }}
-            </p>
+            <div class="panel-desc">
+              {% if site_config.about_overview_desc %}
+                {{ site_config.about_overview_desc|linebreaks }}
+              {% else %}
+                <p>KNOVA is an integrated education platform designed to connect the diverse education ecosystem through physical experiences and digital engagement. Bringing together academic institutions, universities, education professionals, students and families, KNOVA facilitates meaningful connections across local, regional and international markets.</p>
+                <p>Through exhibitions, institutional collaborations, digital platforms and ongoing engagement, KNOVA extends the reach of education beyond traditional boundaries creating an interconnected space for knowledge exchange, opportunity discovery and informed academic decision making.</p>
+              {% endif %}
+            </div>
           </div>
 
           <!-- 4 Compact Core Capabilities -->
@@ -1426,46 +1574,48 @@
     {% endif %}
 
     {% if site_config.show_about_journey %}
-    <!-- 5. GROWTH ROADMAP -->
-    <section class="dash-panel-card" id="journey">
-      <div class="section-kicker"><i class="ti ti-timeline"></i> Strategic Milestones</div>
-      <h2 class="panel-title">{{ site_config.about_journey_heading|default:"The Evolution and Trajectory of KNOVA" }}</h2>
-      <p style="font-size: 13.5px; color: #64748b; margin-top: -8px; margin-bottom: 20px;">{{ site_config.about_journey_desc|default:"From an inaugural regional convention to the Gulf's most influential higher education platform." }}</p>
-      <div class="timeline-grid-compact">
-        <div class="timeline-step-card">
-          <div class="step-header-row">
-            <span class="step-year-pill">{{ site_config.about_step1_badge|default:"2024" }}</span>
-            <span class="step-status-tag">Inaugural</span>
-          </div>
-          <div class="step-title-text">{{ site_config.about_step1_title|default:"The Inception" }}</div>
-          <p class="step-desc">{{ site_config.about_step1_desc|default:"Launched the first regional education forum, uniting 30+ premier institutions with 2,500+ attendees." }}</p>
+    <!-- 5. THE ORGANISER -->
+    <div id="journey"></div>
+    <section class="dash-panel-card" id="organiser">
+      <div class="section-kicker"><i class="ti ti-building-community"></i> THE ORGANISER</div>
+      <div class="organiser-header-row">
+        <div>
+          <h2 class="panel-title" style="margin-bottom: 4px;">Powered by Lumentra Ventures</h2>
+          <div class="organiser-location-tag"><i class="ti ti-map-pin"></i> Bahrain based events and education platform company</div>
+        </div>
+        <div class="organiser-logo-badge">
+          <img src="{% static 'assets/lumentra_logo_dark.svg' %}" alt="Lumentra Ventures Logo" class="organiser-logo-img">
+        </div>
+      </div>
+
+      <div class="organiser-content-grid">
+        <div class="organiser-narrative-col">
+          <p class="organiser-lead-p">
+            KNOVA is conceived, developed and organised by <strong>Lumentra Ventures</strong>, a Bahrain based events and education platform company focused on creating meaningful connections across the education ecosystem.
+          </p>
+          <p class="organiser-p">
+            Driven by a vision to bring institutions, students, educators and opportunities closer together, Lumentra Ventures develops platforms that combine impactful physical experiences with digital engagement and institutional collaboration.
+          </p>
+          <p class="organiser-p">
+            From concept development and strategic partnerships to event management, technology and audience engagement, Lumentra Ventures brings together the capabilities and networks required to deliver KNOVA.
+          </p>
         </div>
 
-        <div class="timeline-step-card">
-          <div class="step-header-row">
-            <span class="step-year-pill">{{ site_config.about_step2_badge|default:"2025" }}</span>
-            <span class="step-status-tag">Expanded</span>
+        <div class="organiser-callout-col">
+          <div class="organiser-statement-box">
+            <div class="statement-emblem">
+              <i class="ti ti-award"></i>
+            </div>
+            <div class="statement-body">
+              <span class="statement-badge">Official Organiser Statement</span>
+              <h3 class="statement-text">"KNOVA is proudly owned, developed and organised by Lumentra Ventures."</h3>
+              <div class="statement-pills">
+                <span class="st-pill"><i class="ti ti-check"></i> Physical Experiences</span>
+                <span class="st-pill"><i class="ti ti-check"></i> Digital Engagement</span>
+                <span class="st-pill"><i class="ti ti-check"></i> Institutional Collaboration</span>
+              </div>
+            </div>
           </div>
-          <div class="step-title-text">{{ site_config.about_step2_title|default:"GCC Multi-City Tour" }}</div>
-          <p class="step-desc">{{ site_config.about_step2_desc|default:"Expanded across Dubai, Riyadh, and Doha, doubling institutional participation and student engagement." }}</p>
-        </div>
-
-        <div class="timeline-step-card active">
-          <div class="step-header-row">
-            <span class="step-year-pill">{{ site_config.about_step3_badge|default:"2026" }}</span>
-            <span class="step-status-tag">Active Intake</span>
-          </div>
-          <div class="step-title-text">{{ site_config.about_step3_title|default:"Digital Arena & AI" }}</div>
-          <p class="step-desc">{{ site_config.about_step3_desc|default:"Integrated virtual counselor matching, verified scholarship exam booking, and digital application portals." }}</p>
-        </div>
-
-        <div class="timeline-step-card">
-          <div class="step-header-row">
-            <span class="step-year-pill">{{ site_config.about_step4_badge|default:"2027" }}</span>
-            <span class="step-status-tag">Upcoming</span>
-          </div>
-          <div class="step-title-text">{{ site_config.about_step4_title|default:"Flagship Mega Summit" }}</div>
-          <p class="step-desc">{{ site_config.about_step4_desc|default:"Connecting global universities, aspiring delegates, and verified scholarship aid pools." }}</p>
         </div>
       </div>
     </section>
