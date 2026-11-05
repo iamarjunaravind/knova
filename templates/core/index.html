@@ -8784,7 +8784,7 @@
       }
       .inline-map-viewport {
         width: 100%;
-        height: 450px;
+        height: 500px;
         overflow: hidden;
         position: relative;
         display: flex;
@@ -8798,10 +8798,35 @@
         object-fit: contain;
         display: block;
         margin: 0 auto;
+        image-rendering: high-quality;
         image-rendering: -webkit-optimize-contrast;
-        image-rendering: crisp-edges;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        transform: translateZ(0);
         transition: transform 0.15s ease-out;
         user-select: none;
+      }
+      .map-prominent-zoom-btn {
+        pointer-events: auto;
+        background: #0a1936;
+        color: #ffffff;
+        border: 1.5px solid rgba(255, 255, 255, 0.25);
+        padding: 8px 18px;
+        border-radius: 25px;
+        font-size: 12.5px;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+        transition: all 0.2s ease;
+      }
+      .map-prominent-zoom-btn:hover {
+        background: #1768ff;
+        border-color: #38bdf8;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(23, 104, 255, 0.45);
       }
       .map-top-control-bar {
         position: absolute;
@@ -8977,6 +9002,7 @@
               <div class="map-control-pill">
                 <i class="ti ti-zoom-in" style="color: #38bdf8; font-size: 13px;"></i>
                 <span>Zoom &amp; Pan Active</span>
+                <span id="inlineZoomBadge" style="background: rgba(56,189,248,0.25); color: #38bdf8; padding: 2px 7px; border-radius: 10px; font-size: 10.5px; font-weight: 800; margin-left: 4px;">100%</span>
               </div>
               <div class="map-btn-group">
                 <button type="button" class="map-ctrl-btn" onclick="zoomInlineMap(0.25)" title="Zoom In"><i class="ti ti-plus"></i></button>
@@ -8991,9 +9017,14 @@
               <img id="inlineFloorMapImg" src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.webp' %}{% endif %}" alt="KNOVA Exhibition Floor Plan" width="5848" height="4136" loading="eager" decoding="async">
             </div>
 
-            <!-- Bottom Floating Interaction Hint -->
-            <div class="map-bottom-hint">
-              <i class="ti ti-hand-grab" style="color: #38bdf8;"></i> Drag to Pan &bull; Scroll to Zoom
+            <!-- Bottom Floating Prominent Zoom & Pan Button + Hint -->
+            <div style="position: absolute; bottom: 12px; left: 12px; right: 12px; z-index: 10; display: flex; justify-content: space-between; align-items: center; pointer-events: none; flex-wrap: wrap; gap: 8px;">
+              <div class="map-bottom-hint" style="position: static;">
+                <i class="ti ti-hand-grab" style="color: #38bdf8;"></i> Drag to Pan &bull; Scroll to Zoom
+              </div>
+              <button type="button" class="map-prominent-zoom-btn" onclick="openLiveFloorModal()" title="Click to open layout preview with area zoom">
+                <i class="ti ti-zoom-in" style="font-size: 14px; color: #38bdf8;"></i> Click to Zoom &amp; Pan
+              </button>
             </div>
           </div>
 
@@ -9163,7 +9194,7 @@
         <!-- Modal Viewer Body with High-Contrast Canvas, Drag / Pan & Wheel Zoom -->
         <div style="flex: 1; overflow: hidden; background: #0a1936; padding: 24px; display: flex; align-items: center; justify-content: center; position: relative; cursor: grab;" id="modalMapViewport">
           <div id="modalMapCanvas" style="transform-origin: center center; transition: transform 0.15s ease-out; will-change: transform; display: inline-flex; align-items: center; justify-content: center;">
-            <img id="modalFloorMapImg" src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.webp' %}{% endif %}" alt="KNOVA Floorplan Layout" width="5848" height="4136" loading="eager" decoding="async" style="max-width: 90vw; max-height: calc(90vh - 170px); width: auto; height: auto; border-radius: 10px; box-shadow: 0 15px 45px rgba(0,0,0,0.4); user-select: none; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+            <img id="modalFloorMapImg" src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.webp' %}{% endif %}" alt="KNOVA Floorplan Layout" width="5848" height="4136" loading="eager" decoding="async" style="max-width: 90vw; max-height: calc(90vh - 170px); width: auto; height: auto; border-radius: 10px; box-shadow: 0 15px 45px rgba(0,0,0,0.4); user-select: none; image-rendering: high-quality; image-rendering: -webkit-optimize-contrast; -webkit-backface-visibility: hidden; backface-visibility: hidden;">
           </div>
         </div>
       </div>
@@ -9182,6 +9213,10 @@
         const img = document.getElementById('inlineFloorMapImg');
         if (img) {
           img.style.transform = `scale(${inlineZoom}) translate(${inlinePanX}px, ${inlinePanY}px)`;
+        }
+        const badge = document.getElementById('inlineZoomBadge');
+        if (badge) {
+          badge.textContent = Math.round(inlineZoom * 100) + '%';
         }
       }
 
