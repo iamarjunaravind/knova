@@ -579,7 +579,7 @@ class SiteConfiguration(models.Model):
     scholarships_heading = models.CharField(max_length=255, default="Scholarships & Financial Aid")
     scholarships_subtitle = models.CharField(max_length=255, default="Discover merit awards, tuition grants, and financial support packages.", blank=True)
     map_heading = models.CharField(max_length=255, default="Interactive Expo Floor Map")
-    map_subtitle = models.CharField(max_length=255, default="Locate university booths, counseling lounges, and keynote stages.", blank=True)
+    map_subtitle = models.CharField(max_length=255, default="Locate university booths, counseling lounges, and keynote stages across the Main Exhibition Hall.", blank=True)
     faq_heading = models.CharField(max_length=255, default="Frequently Asked Questions")
     faq_subtitle = models.CharField(max_length=255, default="Everything you need to know about attending KNOVA 2027.", blank=True)
     cta_heading = models.CharField(max_length=255, default="Ready to Shape Your Future?")
@@ -741,7 +741,7 @@ class SiteConfiguration(models.Model):
 
     # Floor Map Page
     map_page_title = models.CharField(max_length=255, default="Interactive Expo Floor Map & Hall Directory")
-    map_page_subtitle = models.CharField(max_length=255, default="Locate university booths, keynote stages, counseling hubs, and food court lounges across Halls 1 & 2.")
+    map_page_subtitle = models.CharField(max_length=255, default="Locate university booths, keynote stages, counseling hubs, and sponsor pavilions across the Main Exhibition Hall.")
 
     # Courses Page
     courses_page_title = models.CharField(max_length=255, default="Academic Programs & Degrees")
