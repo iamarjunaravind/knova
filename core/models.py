@@ -614,7 +614,7 @@ class SiteConfiguration(models.Model):
     about_title = models.CharField(max_length=255, default="Bridging Aspirations <span class=\"gradient-text\">and Education</span>")
     about_subtitle = models.TextField(default="Where ambition meets opportunity. Bringing students, families and educational institutions together to connect, explore possibilities and shape the future of education.")
     about_mission = models.TextField(default="To bridge the gap between world-class global education and aspiring students across the GCC through interactive, transparent, and technology-driven expo experiences.")
-    about_vision = models.TextField(default="To become the premier international higher education summit in the Middle East, fostering cross-border academic excellence and lifelong student success.")
+    about_vision = models.TextField(default="To become the premier regional and global education expo in the Middle East, fostering cross-border academic excellence and lifelong student success.")
     about_history = models.TextField(default="Established in 2024, KNOVA has connected tens of thousands of students with leading universities from the UK, USA, Europe, Asia, and the Middle East.", blank=True)
 
     about_hero_badge = models.CharField(max_length=200, default="OFFICIAL MISSION & INSTITUTIONAL PROFILE", blank=True)
@@ -635,13 +635,13 @@ class SiteConfiguration(models.Model):
     about_overview_card4_title = models.CharField(max_length=200, default="A Commitment to Quality", blank=True)
     about_overview_card4_desc = models.TextField(default="A considered approach to planning, coordination and the exhibitor experience, led by Lumentra Ventures.", blank=True)
     about_quote_text = models.TextField(default="Higher education is the single most powerful catalyst for individual transformation and regional economic diversification. Our mission is to make world-class learning accessible without borders.", blank=True)
-    about_quote_author = models.CharField(max_length=255, default="Executive Director, KNOVA Higher Education Summit", blank=True)
+    about_quote_author = models.CharField(max_length=255, default="Executive Director, KNOVA Regional & Global Education Expo", blank=True)
 
     # About Media Spotlight & Video Card
     about_spotlight_image = models.ImageField(upload_to='site_images/', blank=True, null=True, help_text="Custom spotlight image for About page overview card")
     about_spotlight_badge = models.CharField(max_length=100, default="Expo In-Session", blank=True)
     about_spotlight_video_url = models.CharField(max_length=255, default="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ", blank=True, help_text="YouTube embed or video URL for overview modal")
-    about_spotlight_caption_top = models.CharField(max_length=150, default="KNOVA Higher Education Summit", blank=True)
+    about_spotlight_caption_top = models.CharField(max_length=150, default="KNOVA Regional & Global Education Expo", blank=True)
     about_spotlight_caption_sub = models.CharField(max_length=100, default="2026/27 Intake", blank=True)
     about_spotlight_stat1 = models.CharField(max_length=100, default="98.4% Match Rate", blank=True)
     about_spotlight_stat2 = models.CharField(max_length=100, default="Global Attendees", blank=True)
@@ -693,7 +693,7 @@ class SiteConfiguration(models.Model):
     about_step3_title = models.CharField(max_length=200, default="Digital Intelligence Platform", blank=True)
     about_step3_desc = models.TextField(default="Integrated virtual counselor matching, verified scholarship exam booking, and digital application fast-tracking.", blank=True)
     about_step4_badge = models.CharField(max_length=100, default="Present: 2027", blank=True)
-    about_step4_title = models.CharField(max_length=200, default="The Premier Higher Ed Summit", blank=True)
+    about_step4_title = models.CharField(max_length=200, default="The Premier Education Expo", blank=True)
     about_step4_desc = models.TextField(default="Connecting global universities, aspiring delegates, and verified scholarship aid pools across the GCC.", blank=True)
 
     about_cta_title = models.CharField(max_length=255, default="Every Journey Begins with a Possibility.", blank=True)
@@ -708,7 +708,7 @@ class SiteConfiguration(models.Model):
     events_page_subtitle = models.CharField(max_length=255, default="Explore upcoming multi-city education exhibitions across the United Arab Emirates and Saudi Arabia.")
     events_page_notice = models.CharField(max_length=255, default="Free admission for registered attendees. Present digital QR badge at the registration gate.", blank=True)
 
-    events_hero_badge = models.CharField(max_length=200, default="GCC HIGHER EDUCATION SUMMIT TOUR", blank=True)
+    events_hero_badge = models.CharField(max_length=200, default="REGIONAL & GLOBAL EDUCATION EXPO TOUR", blank=True)
     events_hero_title = models.CharField(max_length=255, default="Global Education Expos & Keynote Seminars 2027", blank=True)
     events_hero_subtitle = models.TextField(default="Meet face-to-face with visiting university deans, secure direct spot offers, and explore $50M+ in international merit scholarships across premier GCC convention venues.", blank=True)
     events_search_placeholder = models.CharField(max_length=255, default="Search by city, venue, or expo title (e.g. Dubai, Riyadh, Bahrain)...", blank=True)
@@ -728,7 +728,7 @@ class SiteConfiguration(models.Model):
     events_card_btn_map = models.CharField(max_length=100, default="View Map", blank=True)
 
     events_zones_heading = models.CharField(max_length=255, default="Inside the Expo: Activity Zones", blank=True)
-    events_zones_subtitle = models.CharField(max_length=255, default="Every KNOVA summit features four specialized activity concourses for students and families.", blank=True)
+    events_zones_subtitle = models.CharField(max_length=255, default="Every KNOVA expo features four specialized activity concourses for students and families.", blank=True)
     events_zone1_title = models.CharField(max_length=200, default="University Pavilions", blank=True)
     events_zone1_desc = models.TextField(default="Booths 01–60: Meet university admissions directors and deans directly.", blank=True)
     events_zone2_title = models.CharField(max_length=200, default="Counselling & Visa Hub", blank=True)
@@ -937,7 +937,7 @@ class SiteConfiguration(models.Model):
     # ==========================================
     # EXPERIENCE HIGHLIGHTS SECTION
     # ==========================================
-    experience_badge = models.CharField(max_length=100, default="EXPERIENCE THE SUMMIT", blank=True)
+    experience_badge = models.CharField(max_length=100, default="EXPERIENCE THE EXPO", blank=True)
     experience_heading = models.CharField(max_length=255, default="Interactive Expo Experience Zones", blank=True)
     experience_subtitle = models.TextField(default="Navigate cutting-edge experiential stations, counseling hubs, and keynote masterclass stages.", blank=True)
     experience_card_badge = models.CharField(max_length=100, default="EXPO ATMOSPHERE", blank=True)
@@ -995,7 +995,7 @@ class SiteConfiguration(models.Model):
     # FOOTER, CONTACT & SOCIAL LINKS
     # ==========================================
     footer_tagline = models.TextField(default="KNOVA connects universities, academic institutions, students and families through engaging education experiences, meaningful institutional connections and digital opportunities across local, regional and international landscapes.", blank=True)
-    footer_copyright = models.CharField(max_length=255, default="© 2027 KNOVA International Higher Education Summit. All rights reserved.", blank=True)
+    footer_copyright = models.CharField(max_length=255, default="© 2027 KNOVA Regional & Global Education Expo. All rights reserved.", blank=True)
     footer_contact_email = models.EmailField(default="connect@knovaexpo.com", blank=True)
     email_partners = models.EmailField(default="partners@knovaexpo.com", blank=True, verbose_name="Exhibitors & Sponsors Email")
     email_speakers = models.EmailField(default="connect@knovaexpo.com", blank=True, verbose_name="Speakers & Keynotes Email")
