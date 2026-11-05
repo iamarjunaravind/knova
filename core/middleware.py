@@ -11,3 +11,4 @@ class NoIndexRobotsMiddleware:
         response = self.get_response(request)
         response['X-Robots-Tag'] = 'noindex, nofollow, noarchive, nosnippet, noimageindex'
         return response
+

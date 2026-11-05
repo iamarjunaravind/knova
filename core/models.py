@@ -865,7 +865,7 @@ class SiteConfiguration(models.Model):
     why_card4_badge = models.CharField(max_length=100, default="50% Scholarship", blank=True)
     why_card4_title = models.CharField(max_length=200, default="Plan & Fund Studies", blank=True)
     why_card4_desc = models.TextField(default="Verified global scholarships, tuition waivers & grants", blank=True)
-    why_card4_btn = models.CharField(max_length=100, default="Apply for Grants →", blank=True)
+    why_card4_btn = models.CharField(max_length=100, default="Unlock \u2192", blank=True)
 
     # ==========================================
     # HOW IT WORKS 4 STEPS & FEATURE CARD
