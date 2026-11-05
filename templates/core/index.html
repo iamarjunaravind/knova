@@ -7638,11 +7638,11 @@
       <div class="featured-event-showcase eventor-reveal-left">
         <div class="event-showcase-img-wrap" id="featuredExpoImgWrap">
 
-          <!-- Layer 1: Grand Exhibition Pavilion -->
-          <img id="expoImgHall" class="expo-featured-img active" src="{% static 'assets/bahrain_edition.webp' %}" onerror="this.src='{% static 'assets/bahrain_edition.jpg' %}'" alt="KNOVA Bahrain Grand Exhibition Hall" width="600" height="340" loading="eager" decoding="async">
+          <!-- Layer 1: Bahrain Picture (First / Default Active) -->
+          <img id="expoImgBahrain" class="expo-featured-img active" src="{% if site_config.featured_expo_image %}{{ site_config.featured_expo_image.url }}{% else %}{% static 'assets/bahrain_skyline.webp' %}{% endif %}" onerror="this.src='{% static 'assets/bahrain_skyline.jpg' %}'" alt="KNOVA Bahrain Expo Edition" width="600" height="340" loading="eager" decoding="async">
 
-          <!-- Layer 2: Twilight Venue & Skyline -->
-          <img id="expoImgSkyline" class="expo-featured-img" src="{% if site_config.featured_expo_image %}{{ site_config.featured_expo_image.url }}{% else %}{% static 'assets/bahrain_skyline.webp' %}{% endif %}" onerror="this.src='{% static 'assets/bahrain_skyline.jpg' %}'" alt="Featured Expo Skyline" width="600" height="340" loading="lazy" decoding="async">
+          <!-- Layer 2: KNOVA Official Brand Logo Card -->
+          <img id="expoImgLogo" class="expo-featured-img" src="{% static 'assets/knova_brand_card.webp' %}" onerror="this.src='{% static 'assets/knova_brand_card.jpg' %}'" alt="KNOVA Official Brand" width="600" height="340" loading="lazy" decoding="async">
 
           <!-- Gradient Overlay -->
           <div class="event-img-gradient-overlay" aria-hidden="true"></div>
@@ -7660,11 +7660,11 @@
           <!-- Bottom Interactive Switcher -->
           <div class="event-img-switcher-controls">
             <div class="event-view-toggles" role="tablist">
-              <button type="button" class="view-toggle-btn active" id="btnViewHall" onclick="switchExpoView('hall')" aria-label="Grand Hall View">
-                <i class="ti ti-building-arch"></i> Grand Hall
+              <button type="button" class="view-toggle-btn active" id="btnViewBahrain" onclick="switchExpoView('bahrain')" aria-label="Bahrain View">
+                <i class="ti ti-building-skyscraper"></i> Bahrain
               </button>
-              <button type="button" class="view-toggle-btn" id="btnViewSkyline" onclick="switchExpoView('skyline')" aria-label="Skyline View">
-                <i class="ti ti-building-skyscraper"></i> Skyline
+              <button type="button" class="view-toggle-btn" id="btnViewLogo" onclick="switchExpoView('logo')" aria-label="KNOVA Logo View">
+                <i class="ti ti-sparkles"></i> KNOVA Logo
               </button>
             </div>
             <a href="#map" class="event-map-shortcut-btn" title="View Venue Floorplan">
@@ -7780,22 +7780,21 @@
 
   <script>
     function switchExpoView(view) {
-      var hallImg = document.getElementById('expoImgHall');
-      var skylineImg = document.getElementById('expoImgSkyline');
-      var btnHall = document.getElementById('btnViewHall');
-      var btnSkyline = document.getElementById('btnViewSkyline');
-      if (view === 'skyline') {
-        if (hallImg) hallImg.classList.remove('active');
-        if (skylineImg) skylineImg.classList.add('active');
-        if (btnHall) btnHall.classList.remove('active');
-        if (btnSkyline) btnSkyline.classList.add('active');
+      var bahrainImg = document.getElementById('expoImgBahrain') || document.getElementById('expoImgHall');
+      var logoImg = document.getElementById('expoImgLogo') || document.getElementById('expoImgSkyline');
+      var btnBahrain = document.getElementById('btnViewBahrain') || document.getElementById('btnViewHall');
+      var btnLogo = document.getElementById('btnViewLogo') || document.getElementById('btnViewSkyline');
+      if (view === 'logo' || view === 'skyline') {
+        if (bahrainImg) bahrainImg.classList.remove('active');
+        if (logoImg) logoImg.classList.add('active');
+        if (btnBahrain) btnBahrain.classList.remove('active');
+        if (btnLogo) btnLogo.classList.add('active');
       } else {
-        if (skylineImg) skylineImg.classList.remove('active');
-        if (hallImg) hallImg.classList.add('active');
-        if (btnSkyline) btnSkyline.classList.remove('active');
-        if (btnHall) btnHall.classList.add('active');
+        if (logoImg) logoImg.classList.remove('active');
+        if (bahrainImg) bahrainImg.classList.add('active');
+        if (btnLogo) btnLogo.classList.remove('active');
+        if (btnBahrain) btnBahrain.classList.add('active');
       }
-
     }
 
   </script>
