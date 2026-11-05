@@ -265,6 +265,15 @@ h1, h2, h3, h4, h5, h6, .btn, .navlinks a {
 
   }
 
+
+
+  /* Disable Microsoft Edge / IE native password reveal icon to prevent duplicate eye buttons */
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
 </style>
 
 {% if site_config.custom_head_code %}
