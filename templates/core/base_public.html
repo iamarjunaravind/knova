@@ -1783,32 +1783,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div class="eventor-footer-links-list">
 
-          <a href="mailto:{{ site_config.footer_contact_email|default:'connect@knovaexpo.com' }}?subject=Contact%20KNOVA%202027" class="eventor-footer-link" title="Contact Us">
-            <span style="color: #cbd5e1; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.4px;">Contact Us</span><br>
-            <span style="color: #38bdf8; font-weight: 700;">{{ site_config.footer_contact_email|default:'connect@knovaexpo.com' }}</span>
-          </a>
+          <a href="mailto:{{ site_config.footer_contact_email|default:'connect@knovaexpo.com' }}?subject=Contact%20KNOVA%202027" class="eventor-footer-link">Contact Us</a>
 
-          <a href="mailto:{{ site_config.email_partners|default:'partners@knovaexpo.com' }}?subject=Exhibitor%20%26%20Sponsorship%20Inquiry" class="eventor-footer-link" title="Exhibitor & Sponsorship Partnerships">
-            <span style="color: #cbd5e1; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.4px;">Exhibitors &amp; Sponsors</span><br>
-            <span style="color: #38bdf8; font-weight: 700;">{{ site_config.email_partners|default:'partners@knovaexpo.com' }}</span>
-          </a>
+          <a href="mailto:{{ site_config.email_coordination|default:'coordination@knovaexpo.com' }}?subject=Event%20Coordination%20Inquiry" class="eventor-footer-link">Event Coordination</a>
 
-          <a href="mailto:{{ site_config.email_speakers|default:'connect@knovaexpo.com' }}?subject=Speaker%20Connection%20Inquiry" class="eventor-footer-link" title="Keynote & Speaker Connections">
-            <span style="color: #cbd5e1; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.4px;">Speakers &amp; Keynotes</span><br>
-            <span style="color: #38bdf8; font-weight: 700;">{{ site_config.email_speakers|default:'connect@knovaexpo.com' }}</span>
-          </a>
+          <a href="mailto:{{ site_config.email_outreach|default:'outreach@knovaexpo.com' }}?subject=Institutional%20Outreach%20Inquiry" class="eventor-footer-link">Institutional Outreach</a>
 
-          <a href="mailto:{{ site_config.email_coordination|default:'coordination@knovaexpo.com' }}?subject=Event%20Coordination%20Inquiry" class="eventor-footer-link" title="Event Coordination & Operations">
-            <span style="color: #cbd5e1; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.4px;">Event Coordination</span><br>
-            <span style="color: #38bdf8; font-weight: 700;">{{ site_config.email_coordination|default:'coordination@knovaexpo.com' }}</span>
-          </a>
-
-          <a href="mailto:{{ site_config.email_outreach|default:'outreach@knovaexpo.com' }}?subject=Institutional%20Outreach%20Inquiry" class="eventor-footer-link" title="Schools & Delegations Outreach">
-            <span style="color: #cbd5e1; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.4px;">Institutional Outreach</span><br>
-            <span style="color: #38bdf8; font-weight: 700;">{{ site_config.email_outreach|default:'outreach@knovaexpo.com' }}</span>
-          </a>
-
-          <div style="margin-top: 4px; padding-top: 6px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; gap: 5px;">
+          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; gap: 8px;">
             <a href="{% url 'privacy_policy' %}" class="eventor-footer-link">Privacy Policy</a>
             <a href="{% url 'terms_conditions' %}" class="eventor-footer-link">Terms &amp; Conditions</a>
           </div>
