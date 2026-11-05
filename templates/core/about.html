@@ -1485,16 +1485,15 @@
     {% if site_config.show_about_metrics %}
     <!-- 2. KEY METRICS STRIP -->
     <section class="dash-panel-card" id="metrics">
-      <div class="section-kicker"><i class="ti ti-chart-dots"></i> Operational Benchmarks</div>
-      <h2 class="panel-title">{{ site_config.about_metrics_heading|default:"Scale & Proven Impact Across the Region" }}</h2>
-      <p style="font-size: 13.5px; color: #64748b; margin-top: -8px; margin-bottom: 20px;">{{ site_config.about_metrics_desc|default:"Verified data from our annual summits, university partnerships, and student placement audits." }}</p>
+      <h2 class="panel-title">{{ site_config.about_metrics_heading|default:"The KNOVA Reach" }}</h2>
+      <p style="font-size: 14px; color: #64748b; margin-top: -4px; margin-bottom: 24px; line-height: 1.6;">{{ site_config.about_metrics_desc|default:"A snapshot of the reach, participation and opportunities that make KNOVA a platform for the future." }}</p>
       <div class="metrics-grid-four">
         <div class="impact-stat-card c-green">
           <div class="impact-icon-sq"><i class="ti ti-users"></i></div>
           <div class="impact-info">
             <div class="num">{{ site_config.about_metric1_val|default:"10,000+" }}</div>
             <div class="title">{{ site_config.about_metric1_label|default:"Projected Visitors" }}</div>
-            <div class="sub">Students, parents, and delegates across GCC</div>
+            <div class="sub">Target attendance across three days.</div>
           </div>
         </div>
 
@@ -1503,7 +1502,7 @@
           <div class="impact-info">
             <div class="num">{{ site_config.about_metric2_val|default:"50+" }}</div>
             <div class="title">{{ site_config.about_metric2_label|default:"Universities" }}</div>
-            <div class="sub">Accredited global institutions &amp; admissions deans</div>
+            <div class="sub">Regional and global participation.</div>
           </div>
         </div>
 
@@ -1511,8 +1510,8 @@
           <div class="impact-icon-sq"><i class="ti ti-award"></i></div>
           <div class="impact-info">
             <div class="num">{{ site_config.about_metric4_val|default:"50+" }}</div>
-            <div class="title">{{ site_config.about_metric4_label|default:"Unlock Scholarships" }}</div>
-            <div class="sub">Merit grants, fee waivers &amp; funding opportunities</div>
+            <div class="title">{{ site_config.about_metric4_label|default:"Scholarship Opportunities" }}</div>
+            <div class="sub">Discover university-led scholarship opportunities based on merit and eligibility.</div>
           </div>
         </div>
       </div>
