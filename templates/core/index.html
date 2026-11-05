@@ -7704,9 +7704,13 @@
 
             <!-- Quick perk badges -->
             <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;">
-              <span style="background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 6px;">{{ site_config.event_perk1|default:"120+ Universities" }}</span>
-              <span style="background: #eff6ff; color: #0b4fc7; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 6px;">{{ site_config.event_perk2|default:"Spot Scholarships" }}</span>
-              <span style="background: #f0fdf4; color: #15803d; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 6px;">{{ site_config.event_perk3|default:"Fast-Track QR Pass" }}</span>
+              <span style="background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 6px;">{{ site_config.event_perk1|default:"50+ Universities" }}</span>
+              {% if site_config.event_perk2 %}
+              <span style="background: #eff6ff; color: #0b4fc7; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 6px;">{{ site_config.event_perk2 }}</span>
+              {% endif %}
+              {% if site_config.event_perk3 %}
+              <span style="background: #f0fdf4; color: #15803d; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 6px;">{{ site_config.event_perk3 }}</span>
+              {% endif %}
             </div>
           </div>
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 1px solid #f1f5f9; flex-wrap: wrap;">
@@ -7725,14 +7729,16 @@
       <div class="future-stops-card eventor-reveal-right reveal-delay-2">
         <div style="position: absolute; right: -30px; top: -30px; width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%); pointer-events: none;"></div>
         <div style="position: relative; z-index: 2;">
+          {% if site_config.tour_badge %}
           <span style="display: inline-flex; align-items: center; gap: 5px; background: rgba(56, 189, 248, 0.16); border: 1px solid rgba(56, 189, 248, 0.35); color: #38bdf8; font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.8px; text-transform: uppercase;">
-            <i class="ti ti-map-pins"></i> {{ site_config.tour_badge|default:"TOUR EXPANSION" }}
+            <i class="ti ti-map-pins"></i> {{ site_config.tour_badge }}
           </span>
-          <h4 style="font-size: 17px; font-weight: 800; color: #ffffff; margin: 10px 0 6px 0; letter-spacing: -0.3px;">
+          {% endif %}
+          <h4 style="font-size: 17px; font-weight: 800; color: #ffffff; margin: 0 0 6px 0; letter-spacing: -0.3px;">
             {{ site_config.tour_title|default:"More Cities Coming Soon" }}
           </h4>
           <p style="font-size: 11.5px; color: rgba(255,255,255,0.8); line-height: 1.45; margin: 0 0 14px 0;">
-            {{ site_config.tour_desc|default:"KNOVA is expanding across the GCC. Pre-register your city to receive early VIP ticket alerts:" }}
+            {{ site_config.tour_desc|default:"KNOVA is expanding across the GCC. Pre-register your city to receive early announcements and updates:" }}
           </p>
 
           <!-- Mini City List -->
@@ -7740,24 +7746,26 @@
             <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 7px 12px;">
               <div style="display: flex; align-items: center; gap: 7px;">
                 <i class="ti ti-building" style="color: #38bdf8; font-size: 14px;"></i>
-                <span style="font-size: 12px; font-weight: 700; color: #ffffff;">{{ site_config.tour_city1_name|default:"Dubai, UAE" }}</span>
+                <span style="font-size: 12px; font-weight: 700; color: #ffffff;">{{ site_config.tour_city1_name|default:"Doha, Qatar" }}</span>
               </div>
               <span style="font-size: 9.5px; font-weight: 700; background: rgba(56,189,248,0.2); color: #38bdf8; padding: 2px 7px; border-radius: 10px;">{{ site_config.tour_city1_status|default:"Announcing Soon" }}</span>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 7px 12px;">
               <div style="display: flex; align-items: center; gap: 7px;">
                 <i class="ti ti-building" style="color: #38bdf8; font-size: 14px;"></i>
-                <span style="font-size: 12px; font-weight: 700; color: #ffffff;">{{ site_config.tour_city2_name|default:"Doha, Qatar" }}</span>
+                <span style="font-size: 12px; font-weight: 700; color: #ffffff;">{{ site_config.tour_city2_name|default:"Al Khobar, Saudi Arabia" }}</span>
               </div>
-              <span style="font-size: 9.5px; font-weight: 700; background: rgba(255,255,255,0.15); color: #e2e8f0; padding: 2px 7px; border-radius: 10px;">{{ site_config.tour_city2_status|default:"Q1 2028" }}</span>
+              <span style="font-size: 9.5px; font-weight: 700; background: rgba(56,189,248,0.2); color: #38bdf8; padding: 2px 7px; border-radius: 10px;">{{ site_config.tour_city2_status|default:"Announcing Soon" }}</span>
             </div>
+            {% if site_config.tour_city3_name %}
             <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 7px 12px;">
               <div style="display: flex; align-items: center; gap: 7px;">
                 <i class="ti ti-building" style="color: #38bdf8; font-size: 14px;"></i>
-                <span style="font-size: 12px; font-weight: 700; color: #ffffff;">{{ site_config.tour_city3_name|default:"Riyadh, Saudi Arabia" }}</span>
+                <span style="font-size: 12px; font-weight: 700; color: #ffffff;">{{ site_config.tour_city3_name }}</span>
               </div>
-              <span style="font-size: 9.5px; font-weight: 700; background: rgba(255,255,255,0.15); color: #e2e8f0; padding: 2px 7px; border-radius: 10px;">{{ site_config.tour_city3_status|default:"Q2 2028" }}</span>
+              <span style="font-size: 9.5px; font-weight: 700; background: rgba(255,255,255,0.15); color: #e2e8f0; padding: 2px 7px; border-radius: 10px;">{{ site_config.tour_city3_status|default:"Announcing Soon" }}</span>
             </div>
+            {% endif %}
           </div>
         </div>
         <div style="position: relative; z-index: 2; padding-top: 6px;">
