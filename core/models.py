@@ -372,7 +372,7 @@ class SiteConfiguration(models.Model):
     show_about_hero = models.BooleanField(default=True, verbose_name="About: Hero Header & Intro")
     show_about_nav = models.BooleanField(default=True, verbose_name="About: Sticky Navigation Hub")
     show_about_overview = models.BooleanField(default=True, verbose_name="About: Executive Overview & Feature Pillars")
-    show_about_spotlight = models.BooleanField(default=True, verbose_name="About: Media Spotlight & Video Card")
+    show_about_spotlight = models.BooleanField(default=False, verbose_name="About: Media Spotlight & Video Card")
     show_about_metrics = models.BooleanField(default=True, verbose_name="About: Key Scale & Impact Metrics")
     show_about_mission = models.BooleanField(default=True, verbose_name="About: Mission & Foundational Pillars")
     show_about_values = models.BooleanField(default=True, verbose_name="About: Core Institutional Values")
