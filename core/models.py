@@ -603,7 +603,7 @@ class SiteConfiguration(models.Model):
     about_hero_btn2_text = models.CharField(max_length=100, default="Register for Expo", blank=True)
     about_hero_btn2_url = models.CharField(max_length=255, default="/register/", blank=True)
 
-    about_overview_heading = models.CharField(max_length=255, default="Connecting GCC Ambitions with World-Class Higher Education", blank=True)
+    about_overview_heading = models.CharField(max_length=255, default="Where Education Connects, Futures Take Shape.", blank=True)
     about_overview_desc = models.TextField(default="KNOVA was founded to eliminate informational gaps in international education. We bridge the Gulf region's brightest students directly with certified admissions deans, accredited university leaders, and verified scholarship allocations — all without intermediaries.", blank=True)
     about_overview_card1_title = models.CharField(max_length=200, default="Accredited Universities", blank=True)
     about_overview_card1_desc = models.TextField(default="Direct official admissions desks with global top-ranked universities.", blank=True)
