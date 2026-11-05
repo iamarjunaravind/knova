@@ -7526,41 +7526,20 @@
         z-index: 3;
       }
 
-      .event-view-toggles {
-        display: inline-flex;
-        background: rgba(15, 23, 42, 0.82);
-        backdrop-filter: blur(10px);
-        padding: 3px;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-      }
-
-      .view-toggle-btn {
-        background: transparent;
-        color: rgba(255, 255, 255, 0.78);
-        border: none;
-        font-size: 10.5px;
-        font-weight: 700;
-        padding: 4px 10px;
-        border-radius: 16px;
-        cursor: pointer;
+      .event-location-pill {
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        transition: all 0.22s ease;
-        font-family: inherit;
-      }
-
-      .view-toggle-btn:hover {
+        gap: 6px;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(10px);
+        padding: 5px 13px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
         color: #ffffff;
-        background: rgba(255, 255, 255, 0.12);
-      }
-
-      .view-toggle-btn.active {
-        background: #1768ff;
-        color: #ffffff;
-        box-shadow: 0 2px 8px rgba(23, 104, 255, 0.4);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
       }
 
       .event-map-shortcut-btn {
@@ -7640,11 +7619,8 @@
       <div class="featured-event-showcase eventor-reveal-left">
         <div class="event-showcase-img-wrap" id="featuredExpoImgWrap">
 
-          <!-- Layer 1: Bahrain Picture (First / Default Active) -->
+          <!-- Featured Event Image: Bahrain Skyline -->
           <img id="expoImgBahrain" class="expo-featured-img active" src="{% if site_config.featured_expo_image %}{{ site_config.featured_expo_image.url }}{% else %}{% static 'assets/bahrain_skyline.webp' %}{% endif %}" onerror="this.src='{% static 'assets/bahrain_skyline.jpg' %}'" alt="KNOVA Bahrain Expo Edition" width="600" height="340" loading="eager" decoding="async">
-
-          <!-- Layer 2: KNOVA Official Brand Logo Card -->
-          <img id="expoImgLogo" class="expo-featured-img" src="{% static 'assets/knova_brand_card.webp' %}" onerror="this.src='{% static 'assets/knova_brand_card.jpg' %}'" alt="KNOVA Official Brand" width="600" height="340" loading="lazy" decoding="async">
 
           <!-- Gradient Overlay -->
           <div class="event-img-gradient-overlay" aria-hidden="true"></div>
@@ -7659,16 +7635,11 @@
             </span>
           </div>
 
-          <!-- Bottom Interactive Switcher -->
+          <!-- Bottom Location Tag & Floorplan Shortcut -->
           <div class="event-img-switcher-controls">
-            <div class="event-view-toggles" role="tablist">
-              <button type="button" class="view-toggle-btn active" id="btnViewBahrain" onclick="switchExpoView('bahrain')" aria-label="Bahrain View">
-                <i class="ti ti-building-skyscraper"></i> Bahrain
-              </button>
-              <button type="button" class="view-toggle-btn" id="btnViewLogo" onclick="switchExpoView('logo')" aria-label="KNOVA Logo View">
-                <i class="ti ti-sparkles"></i> KNOVA Logo
-              </button>
-            </div>
+            <span class="event-location-pill">
+              <i class="ti ti-building-skyscraper" style="color: #38bdf8;"></i> Bahrain
+            </span>
             <a href="#map" class="event-map-shortcut-btn" title="View Venue Floorplan">
               <i class="ti ti-map-2"></i> Floorplan &rarr;
             </a>
@@ -7780,26 +7751,7 @@
     {% endwith %}
   </div>
 
-  <script>
-    function switchExpoView(view) {
-      var bahrainImg = document.getElementById('expoImgBahrain') || document.getElementById('expoImgHall');
-      var logoImg = document.getElementById('expoImgLogo') || document.getElementById('expoImgSkyline');
-      var btnBahrain = document.getElementById('btnViewBahrain') || document.getElementById('btnViewHall');
-      var btnLogo = document.getElementById('btnViewLogo') || document.getElementById('btnViewSkyline');
-      if (view === 'logo' || view === 'skyline') {
-        if (bahrainImg) bahrainImg.classList.remove('active');
-        if (logoImg) logoImg.classList.add('active');
-        if (btnBahrain) btnBahrain.classList.remove('active');
-        if (btnLogo) btnLogo.classList.add('active');
-      } else {
-        if (logoImg) logoImg.classList.remove('active');
-        if (bahrainImg) bahrainImg.classList.add('active');
-        if (btnLogo) btnLogo.classList.remove('active');
-        if (btnBahrain) btnBahrain.classList.add('active');
-      }
-    }
 
-  </script>
 
 </section>
 
