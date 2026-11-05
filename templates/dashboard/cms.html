@@ -4460,8 +4460,12 @@
             <input type="text" name="chatbot_name" class="form-control" value="{{ config.chatbot_name|default:'Mr. K - Your eBuddy' }}">
           </div>
           <div class="form-group">
-            <label class="form-label">Official WhatsApp Support Number (with country code)</label>
-            <input type="text" name="whatsapp_number" class="form-control" value="{{ config.whatsapp_number|default:'+971 50 123 4567' }}" placeholder="+971 50 123 4567">
+            <label class="form-label">WhatsApp Username / Handle</label>
+            <input type="text" name="chatbot_username" class="form-control" value="{{ config.chatbot_username|default:'@Mr.K_YourE_Buddy' }}" placeholder="@Mr.K_YourE_Buddy">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Official WhatsApp Number</label>
+            <input type="text" name="whatsapp_number" class="form-control" value="{{ config.whatsapp_number|default:'00973 -16171786' }}" placeholder="00973 -16171786">
           </div>
         </div>
 

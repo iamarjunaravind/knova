@@ -1921,7 +1921,7 @@ function handleEventorNewsletterSubmit(e) {
         </div>
         <div class="mrk-status-text">
           <span class="mrk-pulse-ring"></span>
-          <span>Online • KNOVA 2027 AI Advisor</span>
+          <span>Online • {{ site_config.chatbot_username|default:"@Mr.K_YourE_Buddy" }}</span>
         </div>
       </div>
     </div>
@@ -1946,7 +1946,7 @@ function handleEventorNewsletterSubmit(e) {
       <div class="mrk-lead-emoji">👋</div>
       <div>
         <h3 class="mrk-lead-title">Welcome to KNOVA 2027!</h3>
-        <p class="mrk-lead-desc">I'm <strong>{{ site_config.chatbot_name|default:"Mr. K - Your eBuddy" }}</strong>. Enter your name and email to start chatting with me.</p>
+        <p class="mrk-lead-desc">I'm <strong>{{ site_config.chatbot_name|default:"Mr. K - Your eBuddy" }}</strong> ({{ site_config.chatbot_username|default:"@Mr.K_YourE_Buddy" }}). Enter your name and email to start chatting with me.</p>
       </div>
     </div>
     <div class="mrk-input-group">
@@ -1987,7 +1987,7 @@ function handleEventorNewsletterSubmit(e) {
             <span class="mrk-pill-tag">AI Advisor</span>
           </div>
           <p class="mrk-bubble-text">
-            Hi there! 👋 I'm <strong>{{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}</strong> for KNOVA 2027.
+            Hi there! 👋 I'm <strong>{{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}</strong> ({{ site_config.chatbot_username|default:"@Mr.K_YourE_Buddy" }}) for KNOVA 2027.
           </p>
           <p class="mrk-bubble-text">
             Ask me anything about <strong>free entry tickets, participating universities, $5M+ scholarships, or booth booking</strong>. If I can't answer, you can instantly continue on WhatsApp with our human advisors!
@@ -2712,8 +2712,9 @@ function handleEventorNewsletterSubmit(e) {
 <script>
 // Mr. K - Your eBuddy Engine 2.0 (Intelligent NLP & WhatsApp Bridge)
 (function() {
-  const rawPhone = "{{ site_config.whatsapp_number|default:'+971 50 123 4567'|escapejs }}";
-  window.MRK_WA_PHONE = rawPhone.replace(/[^0-9]/g, '') || '971501234567';
+  const rawPhone = "{{ site_config.whatsapp_number|default:'00973 -16171786'|escapejs }}";
+  window.MRK_WA_PHONE = rawPhone.replace(/[^0-9]/g, '').replace(/^00/, '') || '97316171786';
+  window.MRK_WA_USERNAME = "{{ site_config.chatbot_username|default:'@Mr.K_YourE_Buddy'|escapejs }}";
 
   // Format current time
   function getFormattedTime() {
@@ -2759,7 +2760,7 @@ function handleEventorNewsletterSubmit(e) {
   }
 
   window.getMrKWhatsAppUrl = function(msg) {
-    const defaultText = "Hi Mr.K Support Team, I have an inquiry regarding KNOVA 2027.";
+    const defaultText = `Hi ${window.MRK_WA_USERNAME || 'Mr. K Support Team'}, I have an inquiry regarding KNOVA 2027.`;
     const text = msg ? encodeURIComponent(msg) : encodeURIComponent(defaultText);
     return `https://wa.me/${window.MRK_WA_PHONE}?text=${text}`;
   };

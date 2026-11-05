@@ -50,6 +50,17 @@
   <i data-feather="info" style="width: 20px; height: 20px; color: #0284c7; flex-shrink: 0; margin-top: 2px;"></i>
   <div style="font-size: 13px; color: #0369a1; line-height: 1.5;">
     <strong>How Mr. K Works:</strong> Questions with <code>Suggestion Chip</code> enabled appear as quick horizontal buttons above the chat input bar on all public pages. When a visitor types a question, Mr. K compares their query against your configured <strong>Trigger Keywords</strong> and answers instantly. If no match is found, Mr. K seamlessly connects the user to your official WhatsApp Advisor desk.
+    <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <span style="display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;">
+        <i data-feather="message-circle" style="width: 13px; height: 13px; color: #059669;"></i> WhatsApp: {{ site_config.whatsapp_number|default:"00973 -16171786" }}
+      </span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700;">
+        <i data-feather="at-sign" style="width: 13px; height: 13px; color: #2563eb;"></i> Handle: {{ site_config.chatbot_username|default:"@Mr.K_YourE_Buddy" }}
+      </span>
+      <a href="{% url 'dashboard_cms' %}" style="color: #0284c7; font-size: 12px; font-weight: 700; text-decoration: underline;">
+        Edit Number / Handle in CMS &rarr;
+      </a>
+    </div>
   </div>
 </div>
 
@@ -204,3 +215,4 @@
   </div>
 </div>
 {% endblock %}
+
