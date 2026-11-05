@@ -952,7 +952,7 @@ class SiteConfiguration(models.Model):
     # ==========================================
     faq_badge = models.CharField(max_length=100, default="GOT QUESTIONS? WE'VE GOT ANSWERS", blank=True)
     faq_heading_gradient = models.CharField(max_length=200, default="About KNOVA 2027", blank=True)
-    faq_desc = models.TextField(default="Everything you need to know about KNOVA 2027 ,  free attendee entry, meeting international university , applying for scholarships, and earning challenge rewards.", blank=True)
+    faq_desc = models.TextField(default="Everything you need to know about KNOVA 2027.", blank=True)
     faq_support_title = models.CharField(max_length=200, default="Need 1-on-1 Guidance?", blank=True)
     faq_support_desc = models.TextField(default="Have a unique question regarding international visa pathways, degree choices, or VIP keynote seats? Speak with our admissions desk.", blank=True)
     faq_support_btn1 = models.CharField(max_length=100, default="Register for Expo", blank=True)
