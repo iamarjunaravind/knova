@@ -127,7 +127,6 @@ def public_register(request):
                         'full_name': full_name,
                         'phone': phone,
                         'role': role,
-        'display_email': display_email,
                         'event_location': event_location,
                         'preferred_country': preferred_country,
                         'budget_range': budget_range,
