@@ -6109,16 +6109,108 @@
   .interactive-map-frame {
     background: #f8fafc !important;
     border: 1.5px solid #cbd5e1 !important;
-    border-radius: 14px !important;
-    padding: 8px !important;
+    border-radius: 16px !important;
+    padding: 0 !important;
     position: relative !important;
     overflow: hidden !important;
+    min-height: 270px !important;
+    box-shadow: 0 4px 14px rgba(10, 25, 54, 0.06) !important;
   }
 
+  .inline-map-viewport {
+    height: 270px !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    background: #fafcff !important;
+  }
+
+  .inline-map-viewport img,
   .interactive-map-frame img {
-    max-height: 180px !important;
+    max-height: 100% !important;
+    height: 100% !important;
     width: 100% !important;
     object-fit: contain !important;
+    padding: 42px 10px 46px !important;
+    box-sizing: border-box !important;
+  }
+
+  .map-top-control-bar {
+    top: 8px !important;
+    left: 8px !important;
+    right: 8px !important;
+    gap: 6px !important;
+  }
+
+  .map-control-pill {
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+  }
+
+  .map-pill-text {
+    display: none !important;
+  }
+
+  .map-fs-btn-text {
+    display: none !important;
+  }
+
+  .map-btn-group {
+    padding: 2px 4px !important;
+    gap: 2px !important;
+  }
+
+  .map-ctrl-btn,
+  .map-ctrl-fs-btn {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+  }
+
+  .map-bottom-hint {
+    display: none !important;
+  }
+
+  .map-bottom-floating-controls {
+    bottom: 8px !important;
+    left: 8px !important;
+    right: 8px !important;
+    justify-content: center !important;
+  }
+
+  .map-prominent-zoom-btn {
+    padding: 6px 14px !important;
+    font-size: 11px !important;
+    border-radius: 20px !important;
+  }
+
+  .map-sub-info-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    margin-top: 10px !important;
+    padding: 0 !important;
+  }
+
+  .map-sub-info-bar > span {
+    font-size: 11.5px !important;
+    color: #475569 !important;
+    text-align: center !important;
+  }
+
+  .map-sub-info-bar .fullscreen-toggle-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 9px 16px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    border-radius: 12px !important;
+    box-sizing: border-box !important;
   }
 
   /* Section 8: Programme & Seminars */
@@ -9050,14 +9142,14 @@
             <div class="map-top-control-bar">
               <div class="map-control-pill">
                 <i class="ti ti-zoom-in" style="color: #38bdf8; font-size: 13px;"></i>
-                <span>Zoom &amp; Pan Active</span>
+                <span class="map-pill-text">Zoom &amp; Pan Active</span>
                 <span id="inlineZoomBadge" style="background: rgba(56,189,248,0.25); color: #38bdf8; padding: 2px 7px; border-radius: 10px; font-size: 10.5px; font-weight: 800; margin-left: 4px;">100%</span>
               </div>
               <div class="map-btn-group">
                 <button type="button" class="map-ctrl-btn" onclick="zoomInlineMap(0.25)" title="Zoom In"><i class="ti ti-plus"></i></button>
                 <button type="button" class="map-ctrl-btn" onclick="zoomInlineMap(-0.25)" title="Zoom Out"><i class="ti ti-minus"></i></button>
                 <button type="button" class="map-ctrl-btn" onclick="resetInlineMap()" title="Reset Zoom"><i class="ti ti-rotate-2"></i></button>
-                <button type="button" class="map-ctrl-fs-btn" onclick="openLiveFloorModal()" title="Open Fullscreen View"><i class="ti ti-arrows-maximize"></i> Fullscreen View</button>
+                <button type="button" class="map-ctrl-fs-btn" onclick="openLiveFloorModal()" title="Open Fullscreen View"><i class="ti ti-arrows-maximize"></i><span class="map-fs-btn-text"> Fullscreen View</span></button>
               </div>
             </div>
 
@@ -9067,7 +9159,7 @@
             </div>
 
             <!-- Bottom Floating Prominent Zoom & Pan Button + Hint -->
-            <div style="position: absolute; bottom: 12px; left: 12px; right: 12px; z-index: 10; display: flex; justify-content: space-between; align-items: center; pointer-events: none; flex-wrap: wrap; gap: 8px;">
+            <div class="map-bottom-floating-controls" style="position: absolute; bottom: 12px; left: 12px; right: 12px; z-index: 10; display: flex; justify-content: space-between; align-items: center; pointer-events: none; flex-wrap: wrap; gap: 8px;">
               <div class="map-bottom-hint" style="position: static;">
                 <i class="ti ti-hand-grab" style="color: #38bdf8;"></i> Drag to Pan &bull; Scroll to Zoom
               </div>
@@ -9078,7 +9170,7 @@
           </div>
 
           <!-- Sub-bar below preview: Retaining Fullscreen View Option -->
-          <div style="margin-top: 10px; font-size: 12px; color: #64748b; display: flex; align-items: center; justify-content: space-between; padding: 0 4px;">
+          <div class="map-sub-info-bar" style="margin-top: 10px; font-size: 12px; color: #64748b; display: flex; align-items: center; justify-content: space-between; padding: 0 4px;">
             <span><i class="ti ti-building" style="color: #1768ff;"></i> Main Exhibition Hall (Single Hall Venue)</span>
             <button type="button" class="fullscreen-toggle-btn" onclick="openLiveFloorModal()" title="View full layout in fullscreen">
               <i class="ti ti-arrows-maximize"></i> Fullscreen View
