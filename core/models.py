@@ -279,6 +279,26 @@ class ChatLead(models.Model):
         return f"{self.name} - {self.email}"
 
 
+class ChatbotFAQ(models.Model):
+    question = models.CharField(max_length=255, help_text="Full question or query title (e.g. 'How do I get a free ticket?')")
+    chip_label = models.CharField(max_length=100, blank=True, help_text="Short label for suggestion chip carousel (e.g. '🎟️ Free Pass')")
+    keywords = models.TextField(help_text="Comma-separated keywords for NLP matching (e.g. 'ticket, entry, free, pass, price, cost')")
+    answer = models.TextField(help_text="Bot response text (supports HTML tags like <p>, <strong>, <a href=...>)")
+    order = models.IntegerField(default=0, help_text="Display order (lower numbers appear first)")
+    is_chip = models.BooleanField(default=True, help_text="Show as a quick suggestion chip button")
+    is_active = models.BooleanField(default=True, help_text="Enable or disable this Q&A")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "Chatbot Q&A"
+        verbose_name_plural = "Chatbot Q&As"
+
+    def __str__(self):
+        return self.chip_label or self.question
+
+
 class SiteConfiguration(models.Model):
     # SEO & Branding
     meta_title = models.CharField(max_length=255, default="KNOVA — Future Begins Here")

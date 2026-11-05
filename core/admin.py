@@ -4,7 +4,8 @@ from .models import (
     EventLocation, Exhibitor, Sponsor, Speaker, ProgrammeSession, Registration,
     University, UniversityProfile, CourseCategory, Course, Scholarship,
     StudentProfile, ParentProfile, UniversityStaff, SiteConfiguration, CustomSection, FloorActivityZone,
-    StudentChallengePassport, ExpoBooth, BoothInteraction, SeminarStaff, SeminarAttendance
+    StudentChallengePassport, ExpoBooth, BoothInteraction, SeminarStaff, SeminarAttendance,
+    ChatbotFAQ, ChatLead
 )
 
 
@@ -234,3 +235,19 @@ class CustomSectionAdmin(admin.ModelAdmin):
     list_editable = ('order', 'is_active', 'placement')
     list_filter = ('is_active', 'placement')
     search_fields = ('name', 'title', 'subtitle', 'content_html')
+
+
+@admin.register(ChatbotFAQ)
+class ChatbotFAQAdmin(admin.ModelAdmin):
+    list_display = ('question', 'chip_label', 'order', 'is_chip', 'is_active', 'updated_at')
+    list_editable = ('order', 'is_chip', 'is_active')
+    list_filter = ('is_active', 'is_chip')
+    search_fields = ('question', 'chip_label', 'keywords', 'answer')
+    ordering = ('order', 'id')
+
+
+@admin.register(ChatLead)
+class ChatLeadAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'captured_at')
+    search_fields = ('name', 'email')
+    ordering = ('-captured_at',)

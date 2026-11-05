@@ -132,6 +132,12 @@ urlpatterns = [
     path('countries/<int:pk>/edit/', dashboard_views.country_update, name='country_update'),
     path('countries/<int:pk>/delete/', dashboard_views.country_delete, name='country_delete'),
     path('countries/<int:pk>/toggle/', dashboard_views.country_toggle_status, name='country_toggle_status'),
+    # Mr. K Chatbot Q&A Management
+    path('chatbot/questions/', dashboard_views.dashboard_chatbot_faq, name='dashboard_chatbot_faq'),
+    path('chatbot/questions/new/', dashboard_views.chatbot_faq_create, name='chatbot_faq_create'),
+    path('chatbot/questions/<int:pk>/edit/', dashboard_views.chatbot_faq_update, name='chatbot_faq_update'),
+    path('chatbot/questions/<int:pk>/delete/', dashboard_views.chatbot_faq_delete, name='chatbot_faq_delete'),
+    path('chatbot/questions/<int:pk>/toggle/', dashboard_views.chatbot_faq_toggle_active, name='chatbot_faq_toggle_active'),
     path('cms/', dashboard_views.dashboard_cms, name='dashboard_cms'),
     path('seo/', dashboard_views.dashboard_seo, name='dashboard_seo'),
     path('settings/', dashboard_views.dashboard_settings, name='dashboard_settings'),

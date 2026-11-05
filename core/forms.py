@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import EventLocation, Exhibitor, Sponsor, Speaker, ProgrammeSession, Registration
+from .models import EventLocation, Exhibitor, Sponsor, Speaker, ProgrammeSession, Registration, ChatbotFAQ
 
 
 class EventLocationForm(forms.ModelForm):
@@ -219,3 +219,41 @@ class UniversityForm(forms.ModelForm):
             self.fields['location_state_country'].initial = 'International'
             self.fields['university_type'].initial = 'Higher Education Institution'
             self.fields['established_year'].initial = 2000
+
+
+class ChatbotFAQForm(forms.ModelForm):
+    class Meta:
+        model = ChatbotFAQ
+        fields = ['question', 'chip_label', 'keywords', 'answer', 'order', 'is_chip', 'is_active']
+        widgets = {
+            'question': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': "e.g. How do I get a free ticket?"
+            }),
+            'chip_label': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': "e.g. 🎟️ Free Pass (short label for quick suggestion chip)"
+            }),
+            'keywords': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': "e.g. ticket, entry, free, pass, price, cost, fee (comma-separated)"
+            }),
+            'answer': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 6,
+                'placeholder': "Bot answer. Basic HTML allowed, e.g. <p class='mrk-bubble-text'>...</p><a href='/register/' class='mrk-action-link'>Get Free Pass</a>"
+            }),
+            'order': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': "0"
+            }),
+            'is_chip': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+                'style': 'width: 18px; height: 18px; cursor: pointer;'
+            }),
+            'is_active': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+                'style': 'width: 18px; height: 18px; cursor: pointer;'
+            }),
+        }

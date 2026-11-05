@@ -2013,27 +2013,35 @@ function handleEventorNewsletterSubmit(e) {
     <!-- Quick Suggestion Topic Chips (Horizontal Scrollable Carousel) -->
     <div class="mrk-chips-wrapper">
       <div class="mrk-chips-scroll">
-        <button type="button" class="mrk-chip" onclick="handleMrkChip('🎟️ How do I get a free ticket?')">
-          🎟️ Free Pass
-        </button>
-        <button type="button" class="mrk-chip" onclick="handleMrkChip('📍 When and where is the event?')">
-          📍 Dates &amp; Venues
-        </button>
-        <button type="button" class="mrk-chip" onclick="handleMrkChip('🎓 Which universities are participating?')">
-          🎓 Universities
-        </button>
-        <button type="button" class="mrk-chip" onclick="handleMrkChip('💰 How do I apply for scholarships?')">
-          💰 Scholarships
-        </button>
-        <button type="button" class="mrk-chip" onclick="handleMrkChip('🏛️ How can universities exhibit?')">
-          🏛️ For Exhibitors
-        </button>
-        <button type="button" class="mrk-chip" onclick="handleMrkChip('📄 What documents should I bring?')">
-          📄 Documents to Bring
-        </button>
-        <button type="button" class="mrk-chip" onclick="handleMrkChip('🎮 How does the KNOVA Challenge work?')">
-          🎮 Challenge Rewards
-        </button>
+        {% for faq in chatbot_faqs %}
+          {% if faq.is_chip and faq.chip_label %}
+          <button type="button" class="mrk-chip" onclick="handleMrkChip('{{ faq.question|escapejs }}')">
+            {{ faq.chip_label }}
+          </button>
+          {% endif %}
+        {% empty %}
+          <button type="button" class="mrk-chip" onclick="handleMrkChip('🎟️ How do I get a free ticket?')">
+            🎟️ Free Pass
+          </button>
+          <button type="button" class="mrk-chip" onclick="handleMrkChip('📍 When and where is the event?')">
+            📍 Dates &amp; Venues
+          </button>
+          <button type="button" class="mrk-chip" onclick="handleMrkChip('🎓 Which universities are participating?')">
+            🎓 Universities
+          </button>
+          <button type="button" class="mrk-chip" onclick="handleMrkChip('💰 How do I apply for scholarships?')">
+            💰 Scholarships
+          </button>
+          <button type="button" class="mrk-chip" onclick="handleMrkChip('🏛️ How can universities exhibit?')">
+            🏛️ For Exhibitors
+          </button>
+          <button type="button" class="mrk-chip" onclick="handleMrkChip('📄 What documents should I bring?')">
+            📄 Documents to Bring
+          </button>
+          <button type="button" class="mrk-chip" onclick="handleMrkChip('🎮 How does the KNOVA Challenge work?')">
+            🎮 Challenge Rewards
+          </button>
+        {% endfor %}
         <!-- WhatsApp Option Inside Chat Suggestions -->
         <button type="button" class="mrk-chip mrk-chip-wa" onclick="openWhatsAppChat('Hi Mr.K Support Team, I would like to speak directly with an admissions advisor.')">
           <i class="ti ti-brand-whatsapp"></i> 💬 WhatsApp Advisor
@@ -2945,80 +2953,20 @@ function handleEventorNewsletterSubmit(e) {
       const qLower = query.toLowerCase();
       let answerHtml = "";
 
-      // 1. Tickets & Free Entry
-      if (qLower.includes("ticket") || qLower.includes("entry") || qLower.includes("free") || qLower.includes("pass") || qLower.includes("price") || qLower.includes("cost") || qLower.includes("fee")) {
-        answerHtml = `
-          <p class="mrk-bubble-text"><strong>Admission to KNOVA 2027 is 100% free</strong> for students, parents, and educators!</p>
-          <p class="mrk-bubble-text">Register online to instantly receive your smart QR digital pass with fast-track entry to all exhibition halls, auditoriums, and counseling booths.</p>
-          <a href="/register/" class="mrk-action-link"><i class="ti ti-ticket"></i> Get Free Pass Now →</a>
-        `;
-      }
-      // 2. Dates, Cities, Venues & Timings
-      else if (qLower.includes("when") || qLower.includes("where") || qLower.includes("date") || qLower.includes("location") || qLower.includes("venue") || qLower.includes("city") || qLower.includes("time") || qLower.includes("hour") || qLower.includes("riyadh") || qLower.includes("dubai") || qLower.includes("doha")) {
-        answerHtml = `
-          <p class="mrk-bubble-text">KNOVA 2027 is hosted across premier GCC exhibition centers from <strong>10:00 AM to 7:00 PM daily</strong>:</p>
-          <p class="mrk-bubble-text">
-            📍 <strong>Dubai:</strong> Dubai World Trade Centre (DWTC), Sheikh Zayed Road<br>
-            📍 <strong>Riyadh:</strong> Riyadh International Convention &amp; Exhibition Center
-          </p>
-          <a href="/events/" class="mrk-action-link"><i class="ti ti-calendar"></i> View Full Timetable &amp; Venues →</a>
-        `;
-      }
-      // 3. Universities & Spot Admissions
-      else if (qLower.includes("universit") || qLower.includes("college") || qLower.includes("institution") || qLower.includes("spot") || qLower.includes("admiss") || qLower.includes("study abroad") || qLower.includes("uk") || qLower.includes("usa") || qLower.includes("canada") || qLower.includes("australia") || qLower.includes("course") || qLower.includes("major")) {
-        answerHtml = `
-          <p class="mrk-bubble-text">Over <strong>60+ top world-ranked universities</strong> from the UK, USA, Canada, Australia, Europe, and the Middle East are participating.</p>
-          <p class="mrk-bubble-text">Bring your academic transcripts to receive direct on-spot profile assessments, conditional acceptance letters, and exclusive application fee waivers!</p>
-          <a href="/universities/" class="mrk-action-link"><i class="ti ti-building-bank"></i> Browse Universities Catalog →</a>
-        `;
-      }
-      // 4. Scholarships, Grants & Exam
-      else if (qLower.includes("scholarship") || qLower.includes("grant") || qLower.includes("financial") || qLower.includes("fund") || qLower.includes("exam") || qLower.includes("cbt") || qLower.includes("waiver")) {
-        answerHtml = `
-          <p class="mrk-bubble-text">Over <strong>$5,000,000+ in merit scholarships &amp; tuition grants</strong> are awarded at KNOVA 2027!</p>
-          <p class="mrk-bubble-text">You can also sit for the online scholarship aptitude exam directly on our CBT Exam Portal to earn awards from 15% up to 100% full-ride funding.</p>
-          <a href="/scholarships/" class="mrk-action-link"><i class="ti ti-award"></i> View Scholarships →</a>
-          <a href="/exam/portal/" class="mrk-action-link"><i class="ti ti-device-laptop"></i> Online CBT Exam Portal →</a>
-        `;
-      }
-      // 5. Exhibitors & Booth Booking
-      else if (qLower.includes("exhibit") || qLower.includes("booth") || qLower.includes("sponsor") || qLower.includes("partner") || qLower.includes("stall")) {
-        answerHtml = `
-          <p class="mrk-bubble-text">Higher education institutions and corporate sponsors can exhibit at KNOVA 2027 to meet <strong>25,000+ targeted students and families</strong>.</p>
-          <p class="mrk-bubble-text">Packages include branded shell schemes, custom fascia, high-speed Wi-Fi, keynote auditorium sessions, and our smart QR digital lead scanner app.</p>
-          <a href="/#faq" class="mrk-action-link"><i class="ti ti-building-store"></i> Exhibitor FAQs &amp; ROI →</a>
-          <a href="mailto:exhibitors@knovaexpo.com" class="mrk-action-link"><i class="ti ti-mail"></i> Contact Partnerships Desk →</a>
-        `;
-      }
-      // 6. Documents to bring
-      else if (qLower.includes("document") || qLower.includes("bring") || qLower.includes("transcript") || qLower.includes("ielts") || qLower.includes("toefl") || qLower.includes("cv") || qLower.includes("resume") || qLower.includes("grade")) {
-        answerHtml = `
-          <p class="mrk-bubble-text">To maximize your on-spot evaluation opportunities, please bring:</p>
-          <p class="mrk-bubble-text">
-            ✔️ Academic transcripts or predicted grades (physical or digital copy)<br>
-            ✔️ Valid Passport or National ID<br>
-            ✔️ CV / Resume and portfolio (for postgraduate / creative arts)<br>
-            ✔️ IELTS / TOEFL / SAT scores (if available, not mandatory)
-          </p>
-        `;
-      }
-      // 7. KNOVA Challenge Gamification
-      else if (qLower.includes("challenge") || qLower.includes("passport") || qLower.includes("game") || qLower.includes("point") || qLower.includes("reward") || qLower.includes("prize") || qLower.includes("xp")) {
-        answerHtml = `
-          <p class="mrk-bubble-text">The <strong>KNOVA Challenge</strong> is an interactive digital attendee passport!</p>
-          <p class="mrk-bubble-text">Scan QR codes at university booths, participate in workshops, and complete fun challenges to earn XP points redeemable for official KNOVA swag, tech prizes, and voucher tiers.</p>
-          <a href="/dashboard/challenge/" class="mrk-action-link"><i class="ti ti-gift"></i> Open Challenge Passport →</a>
-        `;
-      }
-      // 8. Parents & Family Attendance
-      else if (qLower.includes("parent") || qLower.includes("family") || qLower.includes("accompany") || qLower.includes("father") || qLower.includes("mother") || qLower.includes("guardian")) {
-        answerHtml = `
-          <p class="mrk-bubble-text"><strong>Parents are warmly welcomed and encouraged to attend!</strong></p>
-          <p class="mrk-bubble-text">Dedicated Family Lounges, financial planning clinics, visa guidance sessions, and 1-on-1 counselor meetings are available throughout the convention halls.</p>
-        `;
-      }
-      // 9. WhatsApp / Human Advisor request
-      else if (qLower.includes("whatsapp") || qLower.includes("human") || qLower.includes("advisor") || qLower.includes("person") || qLower.includes("agent") || qLower.includes("call") || qLower.includes("phone") || qLower.includes("contact") || qLower.includes("help") || qLower.includes("support")) {
+      // Dynamic Database FAQs loaded from Admin Dashboard
+      const dynamicFaqs = [
+        {% for faq in chatbot_faqs %}
+        {
+          id: {{ faq.id }},
+          question: "{{ faq.question|escapejs }}",
+          keywords: "{{ faq.keywords|lower|escapejs }}".split(",").map(function(k){ return k.trim().toLowerCase(); }).filter(Boolean),
+          answerHtml: `{{ faq.answer|safe }}`
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ];
+
+      // Check for WhatsApp / human advisor request
+      if (qLower.includes("whatsapp") || qLower.includes("human") || qLower.includes("advisor") || qLower.includes("person") || qLower.includes("agent") || qLower.includes("call") || qLower.includes("phone") || qLower.includes("contact") || qLower.includes("help") || qLower.includes("support")) {
         const waUrl = window.getMrKWhatsAppUrl("Hi Mr.K Admissions Team, I would like to speak directly with a human advisor regarding KNOVA 2027.");
         answerHtml = `
           <div class="mrk-wa-action-card">
@@ -3033,7 +2981,38 @@ function handleEventorNewsletterSubmit(e) {
             </a>
           </div>
         `;
-      }
+      } else {
+        // Match against dynamic database FAQs
+        let bestMatch = null;
+        let highestScore = 0;
+
+        for (let i = 0; i < dynamicFaqs.length; i++) {
+          const item = dynamicFaqs[i];
+          let score = 0;
+          
+          // Exact or partial question match
+          const itemQLower = item.question.toLowerCase();
+          if (qLower === itemQLower || qLower.includes(itemQLower) || itemQLower.includes(qLower)) {
+            score += 10;
+          }
+
+          // Keyword matches
+          for (let k = 0; k < item.keywords.length; k++) {
+            const kw = item.keywords[k];
+            if (kw && qLower.includes(kw)) {
+              score += 2;
+            }
+          }
+
+          if (score > highestScore) {
+            highestScore = score;
+            bestMatch = item;
+          }
+        }
+
+        if (bestMatch && highestScore > 0) {
+          answerHtml = bestMatch.answerHtml;
+        }
       // 10. Fallback: Chatbot doesn't have the answer -> WhatsApp Bridge!
       else {
         const waUrl = window.getMrKWhatsAppUrl(`Hi Mr.K Support Team, I asked: "${query}". Could you please help me with this?`);

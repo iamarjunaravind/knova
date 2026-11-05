@@ -1,0 +1,44 @@
+{% extends base_template|default:'dashboard/base.html' %}
+{% load rbac_tags %}
+
+{% block title %}Delete Chatbot Question | KNOVA Dashboard{% endblock %}
+{% block nav_chatbot %}active{% endblock %}
+{% block page_title %}Delete Chatbot Question{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 40px auto;">
+  <div style="background: #ffffff; border: 1px solid #fecaca; border-radius: 16px; padding: 28px 32px; box-shadow: 0 4px 16px rgba(239, 68, 68, 0.08);">
+    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+      <div style="width: 48px; height: 48px; border-radius: 12px; background: #fef2f2; border: 1px solid #fee2e2; display: flex; align-items: center; justify-content: center; color: #dc2626;">
+        <i data-feather="alert-triangle" style="width: 24px; height: 24px;"></i>
+      </div>
+      <div>
+        <h2 style="margin: 0; font-size: 19px; font-weight: 800; color: #0f172a;">Confirm Deletion</h2>
+        <div style="font-size: 13px; color: #64748b; margin-top: 2px;">This action cannot be undone.</div>
+      </div>
+    </div>
+
+    <p style="font-size: 14px; color: #334155; line-height: 1.5; margin-bottom: 16px;">
+      Are you sure you want to permanently delete the following chatbot question?
+    </p>
+
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 24px;">
+      <div style="font-weight: 750; font-size: 14px; color: #0f172a; margin-bottom: 4px;">{{ faq.question }}</div>
+      {% if faq.chip_label %}
+      <div style="font-size: 12px; color: #2563eb; font-weight: 600; margin-bottom: 4px;">Chip: {{ faq.chip_label }}</div>
+      {% endif %}
+      <div style="font-size: 12px; color: #64748b;">Keywords: {{ faq.keywords }}</div>
+    </div>
+
+    <form method="POST" action="" style="display: flex; justify-content: flex-end; gap: 10px;">
+      {% csrf_token %}
+      <a href="{% url 'dashboard_chatbot_faq' %}" style="padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #64748b; background: #f1f5f9; border: 1px solid #cbd5e1; text-decoration: none;">
+        Cancel
+      </a>
+      <button type="submit" style="padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 750; color: #ffffff; background: #dc2626; border: none; cursor: pointer; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);">
+        Yes, Delete Question
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

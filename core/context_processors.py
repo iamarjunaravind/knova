@@ -1,8 +1,9 @@
-from .models import SiteConfiguration
+from .models import SiteConfiguration, ChatbotFAQ
 
 def site_config(request):
     return {
-        'site_config': SiteConfiguration.get_solo()
+        'site_config': SiteConfiguration.get_solo(),
+        'chatbot_faqs': ChatbotFAQ.objects.filter(is_active=True).order_by('order', 'id'),
     }
 
 def base_template(request):

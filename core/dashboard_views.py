@@ -6072,3 +6072,172 @@ def dashboard_notification_mark_all_read(request):
         'success': True,
         'unread_count': 0
     })
+
+
+# ==============================================================================
+# MR. K CHATBOT Q&A KNOWLEDGE BASE MANAGEMENT
+# ==============================================================================
+
+@login_required(login_url='/portal/login/')
+def dashboard_chatbot_faq(request):
+    """
+    List and manage Mr. K Chatbot Questions & Answers, Suggestion Chips, and Trigger Keywords.
+    """
+    from .models import ChatbotFAQ
+    from django.db.models import Q
+
+    # Admin verification
+    is_admin = request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') == 'admin'
+    if not is_admin:
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required")
+
+    q = request.GET.get('q', '').strip()
+    status_filter = request.GET.get('status', '')
+    chip_filter = request.GET.get('is_chip', '')
+
+    faqs = ChatbotFAQ.objects.all()
+
+    if q:
+        faqs = faqs.filter(
+            Q(question__icontains=q) |
+            Q(chip_label__icontains=q) |
+            Q(keywords__icontains=q) |
+            Q(answer__icontains=q)
+        )
+
+    if status_filter == 'active':
+        faqs = faqs.filter(is_active=True)
+    elif status_filter == 'inactive':
+        faqs = faqs.filter(is_active=False)
+
+    if chip_filter == 'yes':
+        faqs = faqs.filter(is_chip=True)
+    elif chip_filter == 'no':
+        faqs = faqs.filter(is_chip=False)
+
+    faqs = faqs.order_by('order', 'id')
+
+    total_count = ChatbotFAQ.objects.count()
+    active_count = ChatbotFAQ.objects.filter(is_active=True).count()
+    chips_count = ChatbotFAQ.objects.filter(is_chip=True, is_active=True).count()
+
+    context = {
+        'faqs': faqs,
+        'search_query': q,
+        'status_filter': status_filter,
+        'chip_filter': chip_filter,
+        'total_count': total_count,
+        'active_count': active_count,
+        'chips_count': chips_count,
+    }
+    return render(request, 'dashboard/chatbot_faq.html', context)
+
+
+@login_required(login_url='/portal/login/')
+def chatbot_faq_create(request):
+    """
+    Create a new Chatbot Q&A entry.
+    """
+    from .forms import ChatbotFAQForm
+    from django.contrib import messages
+
+    is_admin = request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') == 'admin'
+    if not is_admin:
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required")
+
+    if request.method == 'POST':
+        form = ChatbotFAQForm(request.POST)
+        if form.is_valid():
+            faq = form.save()
+            messages.success(request, f'Chatbot question "{faq.question}" added successfully.')
+            return redirect('dashboard_chatbot_faq')
+    else:
+        form = ChatbotFAQForm()
+
+    return render(request, 'dashboard/chatbot_faq_form.html', {
+        'form': form,
+        'is_edit': False,
+    })
+
+
+@login_required(login_url='/portal/login/')
+def chatbot_faq_update(request, pk):
+    """
+    Update an existing Chatbot Q&A entry.
+    """
+    from .models import ChatbotFAQ
+    from .forms import ChatbotFAQForm
+    from django.shortcuts import get_object_or_404
+    from django.contrib import messages
+
+    is_admin = request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') == 'admin'
+    if not is_admin:
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required")
+
+    faq = get_object_or_404(ChatbotFAQ, pk=pk)
+
+    if request.method == 'POST':
+        form = ChatbotFAQForm(request.POST, instance=faq)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Chatbot question "{faq.question}" updated successfully.')
+            return redirect('dashboard_chatbot_faq')
+    else:
+        form = ChatbotFAQForm(instance=faq)
+
+    return render(request, 'dashboard/chatbot_faq_form.html', {
+        'form': form,
+        'faq': faq,
+        'is_edit': True,
+    })
+
+
+@login_required(login_url='/portal/login/')
+def chatbot_faq_delete(request, pk):
+    """
+    Delete a Chatbot Q&A entry.
+    """
+    from .models import ChatbotFAQ
+    from django.shortcuts import get_object_or_404
+    from django.contrib import messages
+
+    is_admin = request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') == 'admin'
+    if not is_admin:
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required")
+
+    faq = get_object_or_404(ChatbotFAQ, pk=pk)
+
+    if request.method == 'POST':
+        title = faq.question
+        faq.delete()
+        messages.success(request, f'Chatbot question "{title}" has been deleted.')
+        return redirect('dashboard_chatbot_faq')
+
+    return render(request, 'dashboard/chatbot_faq_confirm_delete.html', {'faq': faq})
+
+
+@login_required(login_url='/portal/login/')
+def chatbot_faq_toggle_active(request, pk):
+    """
+    Toggle is_active status of a Chatbot Q&A entry.
+    """
+    from .models import ChatbotFAQ
+    from django.shortcuts import get_object_or_404
+    from django.contrib import messages
+
+    is_admin = request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') == 'admin'
+    if not is_admin:
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required")
+
+    faq = get_object_or_404(ChatbotFAQ, pk=pk)
+    faq.is_active = not faq.is_active
+    faq.save(update_fields=['is_active'])
+
+    status_str = "activated" if faq.is_active else "deactivated"
+    messages.success(request, f'Chatbot question "{faq.question}" has been {status_str}.')
+    return redirect('dashboard_chatbot_faq')
