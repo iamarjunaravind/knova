@@ -7639,10 +7639,10 @@
         <div class="event-showcase-img-wrap" id="featuredExpoImgWrap">
 
           <!-- Layer 1: Grand Exhibition Pavilion -->
-          <img id="expoImgHall" class="expo-featured-img active" src="{% static 'assets/dubai.webp' %}?v=3" onerror="this.src='{% static 'assets/dubai_expo_grand.jpg' %}'" alt="Grand Expo Pavilion" width="600" height="340" loading="lazy" decoding="async">
+          <img id="expoImgHall" class="expo-featured-img active" src="{% static 'assets/bahrain_edition.webp' %}" onerror="this.src='{% static 'assets/bahrain_edition.jpg' %}'" alt="KNOVA Bahrain Grand Exhibition Hall" width="600" height="340" loading="eager" decoding="async">
 
           <!-- Layer 2: Twilight Venue & Skyline -->
-          <img id="expoImgSkyline" class="expo-featured-img" src="{% if site_config.featured_expo_image %}{{ site_config.featured_expo_image.url }}{% else %}{% static 'assets/dubai_venue_exterior.jpg' %}?v=1{% endif %}" alt="Featured Expo Skyline" width="600" height="340" loading="lazy" decoding="async">
+          <img id="expoImgSkyline" class="expo-featured-img" src="{% if site_config.featured_expo_image %}{{ site_config.featured_expo_image.url }}{% else %}{% static 'assets/bahrain_skyline.webp' %}{% endif %}" onerror="this.src='{% static 'assets/bahrain_skyline.jpg' %}'" alt="Featured Expo Skyline" width="600" height="340" loading="lazy" decoding="async">
 
           <!-- Gradient Overlay -->
           <div class="event-img-gradient-overlay" aria-hidden="true"></div>
@@ -7653,7 +7653,7 @@
               <span class="badge-pulse-dot"></span> {{ site_config.event_card_badge|default:"CONFIRMED EVENT" }}
             </span>
             <span class="event-badge-countdown">
-              <i class="ti ti-sparkles"></i> {{ site_config.event_card_summit|default:"2027 SUMMIT" }}
+              <i class="ti ti-sparkles"></i> {{ site_config.event_card_summit|default:"2027 EDUCATION EXPO" }}
             </span>
           </div>
 
