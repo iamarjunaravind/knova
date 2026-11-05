@@ -637,9 +637,9 @@ class SiteConfiguration(models.Model):
     about_metric4_val = models.CharField(max_length=50, default="$50M+", blank=True)
     about_metric4_label = models.CharField(max_length=100, default="Scholarships Facilitated", blank=True)
 
-    about_mission_heading = models.CharField(max_length=255, default="Our Mission and Foundational Pillars", blank=True)
-    about_mission_title = models.CharField(max_length=200, default="Mission Statement", blank=True)
-    about_mission_desc = models.TextField(default="To democratize access to world-class higher education for students across the Middle East by delivering transparent, direct admissions opportunities, verified funding pathways, and impartial career intelligence.", blank=True)
+    about_mission_heading = models.CharField(max_length=255, default="Our Mission & Principles", blank=True)
+    about_mission_title = models.CharField(max_length=200, default="Connecting Education. Creating Possibilities", blank=True)
+    about_mission_desc = models.TextField(default="KNOVA was born from a simple yet powerful belief, education thrives when right people, institutions and opportunities come together.\n\nWhat began as an idea has evolved into a growing education platform designed to bring together universities, academic institutions, educators, students and families across local, regional and international landscapes.\n\nGoing beyond traditional exhibitions, KNOVA creates meaningful connections through physical experiences, digital platforms and ongoing institutional engagement. We aim to make education more accessible, knowledge more discoverable and opportunities more connected.\n\nBecause the future of education isn't shaped by institutions alone, but by the connections we build between them.", blank=True)
     about_vision_title = models.CharField(max_length=200, default="Institutional Vision", blank=True)
     about_vision_desc = models.TextField(default="A borderless knowledge society where every ambitious student in the GCC has direct access to accredited international degrees aligned with future economic and technological demands.", blank=True)
     about_pillar1_title = models.CharField(max_length=200, default="1. Democratize Access", blank=True)

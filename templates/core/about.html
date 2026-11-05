@@ -1372,7 +1372,7 @@
       <div class="hub-tabs-list">
         {% if site_config.show_about_overview %}<a href="#overview" class="hub-tab active"><i class="ti ti-layout-dashboard"></i> Overview</a>{% endif %}
         {% if site_config.show_about_metrics %}<a href="#metrics" class="hub-tab"><i class="ti ti-chart-bar"></i> Key Metrics</a>{% endif %}
-        {% if site_config.show_about_mission %}<a href="#mission" class="hub-tab"><i class="ti ti-target-arrow"></i> Mission &amp; Pillars</a>{% endif %}
+        {% if site_config.show_about_mission %}<a href="#mission" class="hub-tab"><i class="ti ti-target-arrow"></i> Mission &amp; Principles</a>{% endif %}
         {% if site_config.show_about_values %}<a href="#values" class="hub-tab"><i class="ti ti-shield-heart"></i> Core Values</a>{% endif %}
         {% if site_config.show_about_journey %}<a href="#organiser" class="hub-tab"><i class="ti ti-building-community"></i> The Organiser</a>{% endif %}
       </div>
@@ -1496,25 +1496,32 @@
     {% endif %}
 
     {% if site_config.show_about_mission %}
-    <!-- 3. MISSION PILLARS & FOUNDING STORY -->
+    <!-- 3. MISSION & PRINCIPLES -->
     <section class="dash-panel-card" id="mission">
       <div class="section-kicker"><i class="ti ti-target"></i> Purpose &amp; Execution</div>
-      <h2 class="panel-title">{{ site_config.about_mission_heading|default:"Our Mission and Foundational Pillars" }}</h2>
+      <h2 class="panel-title">{{ site_config.about_mission_heading|default:"Our Mission & Principles" }}</h2>
       <div class="mission-story-grid">
         <div class="story-narrative-box">
           <div>
-            <h3 style="font-size: 15px; font-weight: 800; color: var(--knova-navy); margin: 0 0 8px 0;">
-              {{ site_config.about_mission_title|default:"Mission Statement" }}
+            <h3 style="font-size: 17px; font-weight: 800; color: var(--knova-navy); margin: 0 0 12px 0; letter-spacing: -0.3px;">
+              {{ site_config.about_mission_title|default:"Connecting Education. Creating Possibilities" }}
             </h3>
-            <p>
-              {{ site_config.about_mission_desc|default:"To democratize access to world-class higher education for students across the Middle East by delivering transparent, direct admissions opportunities, verified funding pathways, and impartial career intelligence." }}
-            </p>
+            <div class="narrative-paragraphs">
+              {% if site_config.about_mission_desc %}
+                {{ site_config.about_mission_desc|linebreaks }}
+              {% else %}
+                <p>KNOVA was born from a simple yet powerful belief, education thrives when right people, institutions and opportunities come together.</p>
+                <p>What began as an idea has evolved into a growing education platform designed to bring together universities, academic institutions, educators, students and families across local, regional and international landscapes.</p>
+                <p>Going beyond traditional exhibitions, KNOVA creates meaningful connections through physical experiences, digital platforms and ongoing institutional engagement. We aim to make education more accessible, knowledge more discoverable and opportunities more connected.</p>
+                <p>Because the future of education isn't shaped by institutions alone, but by the connections we build between them.</p>
+              {% endif %}
+            </div>
+            {% if site_config.about_vision_title %}
             <h3 style="font-size: 15px; font-weight: 800; color: var(--knova-navy); margin: 16px 0 8px 0;">
-              {{ site_config.about_vision_title|default:"Institutional Vision" }}
+              {{ site_config.about_vision_title }}
             </h3>
-            <p>
-              {{ site_config.about_vision_desc|default:"A borderless knowledge society where every ambitious student in the GCC has direct access to accredited international degrees aligned with future economic and technological demands." }}
-            </p>
+            <p>{{ site_config.about_vision_desc }}</p>
+            {% endif %}
           </div>
           <div class="story-tags-row">
             <span class="story-tag"><i class="ti ti-check"></i> Non-Broker Direct Access</span>
