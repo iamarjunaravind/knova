@@ -1108,11 +1108,13 @@
   }
 
   .vision-title-mini {
-    font-size: 19px;
+    font-size: 21px;
     font-weight: 800;
     color: #ffffff;
-    margin: 0 0 4px 0;
-    line-height: 1.25;
+    margin: 0;
+    line-height: 1.3;
+    font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: -0.2px;
   }
 
   .vision-desc-mini {
@@ -1685,11 +1687,10 @@
     <!-- 6. COMPACT VISION & ACTION BANNER -->
     <div class="vision-banner-compact" id="vision">
       <div class="vision-compact-left">
-        <div class="vision-kicker-mini"><i class="ti ti-sparkles"></i> Future Begins Here</div>
-        <h3 class="vision-title-mini">{{ site_config.about_cta_title|default:"Ready to Discover Your Global Degree Pathway?" }}</h3>
-        <p class="vision-desc-mini">
-          {{ site_config.about_cta_desc|default:"Connect directly with accredited university admissions directors at the upcoming KNOVA Higher Education Summit. Explore verified scholarships and secure immediate academic evaluation." }}
-        </p>
+        <h3 class="vision-title-mini">{{ site_config.about_cta_title|default:"Every Journey Begins with a Possibility." }}</h3>
+        {% if site_config.about_cta_desc %}
+        <p class="vision-desc-mini">{{ site_config.about_cta_desc }}</p>
+        {% endif %}
       </div>
       <div class="vision-actions-group">
         <a href="{{ site_config.about_cta_btn1_url|default:'/register/' }}" class="btn-vision-primary">

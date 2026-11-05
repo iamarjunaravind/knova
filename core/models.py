@@ -675,8 +675,8 @@ class SiteConfiguration(models.Model):
     about_step4_title = models.CharField(max_length=200, default="The Premier Higher Ed Summit", blank=True)
     about_step4_desc = models.TextField(default="Connecting global universities, aspiring delegates, and verified scholarship aid pools across the GCC.", blank=True)
 
-    about_cta_title = models.CharField(max_length=255, default="Ready to Discover Your Global Degree Pathway?", blank=True)
-    about_cta_desc = models.TextField(default="Register for the upcoming KNOVA Summit in your city. Receive fast-track badge entry, 1-on-1 dean appointments, and access to $50M+ in international university scholarships.", blank=True)
+    about_cta_title = models.CharField(max_length=255, default="Every Journey Begins with a Possibility.", blank=True)
+    about_cta_desc = models.TextField(default="", blank=True)
     about_cta_btn1_text = models.CharField(max_length=100, default="Claim Free Entrance Pass", blank=True)
     about_cta_btn1_url = models.CharField(max_length=255, default="/register/", blank=True)
     about_cta_btn2_text = models.CharField(max_length=100, default="Explore 800+ Courses", blank=True)
