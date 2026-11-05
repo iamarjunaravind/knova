@@ -7795,10 +7795,10 @@
   <div class="container">
     <div class="participate-main-grid" style="width: 100%;">
 
-      <!-- How to Participate (Full Width) -->
-      <div class="how-to-participate-card eventor-reveal" style="display: flex; flex-direction: column; justify-content: center; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 24px; padding: 42px 48px; box-shadow: 0 6px 24px rgba(10, 25, 54, 0.04); width: 100%;">
+      <!-- How to Participate (Full Width Process Roadmap) -->
+      <div class="how-to-participate-card eventor-reveal" style="display: flex; flex-direction: column; justify-content: center; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 26px; padding: 42px 48px; box-shadow: 0 10px 30px rgba(10, 25, 54, 0.04); width: 100%;">
 
-        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 24px;">
+        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 28px;">
           <div class="section-kicker-dash" style="margin-bottom: 8px;">
             <div class="dash" style="background: #1768ff;"></div>
             <span style="font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 800; color: #1768ff; letter-spacing: 2px; text-transform: uppercase;">{{ site_config.how_kicker|default:"SIMPLE 4-STEP JOURNEY" }}</span>
@@ -7809,87 +7809,134 @@
           </p>
         </div>
 
-        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;" class="steps-flow-row eventor-stagger-parent">
+        <div style="display: flex; align-items: stretch; justify-content: space-between; gap: 14px;" class="steps-flow-row eventor-stagger-parent">
 
           <!-- Step 1 (Blue) -->
-          <div class="participate-step-item" style="text-align: center; flex: 1;">
+          <div class="participate-step-item" style="text-align: center; flex: 1; background: #f8fafc; border: 1.5px solid #edf2f7; border-radius: 18px; padding: 24px 16px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; transition: all 0.25s ease;">
             <div class="step-icon-wrap" style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #1768ff 0%, #0284c7 100%); color: #ffffff; font-size: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; box-shadow: 0 6px 18px rgba(23,104,255,0.32);">
               <i class="ti ti-user-plus"></i>
             </div>
-            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #1768ff; background: #eff6ff; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px;">{{ site_config.how_step1_badge|default:"STEP 01" }}</div>
-            <h4 class="step-title" style="font-size: 14px; font-weight: 800; color: #0a1936; margin: 0 0 5px 0;">{{ site_config.how_step1_title|default:"Register for Expo" }}</h4>
+            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #1768ff; background: #eff6ff; border: 1px solid rgba(23,104,255,0.18); padding: 3px 10px; border-radius: 12px; margin-bottom: 10px;">{{ site_config.how_step1_badge|default:"STEP 01" }}</div>
+            <h4 class="step-title" style="font-size: 15px; font-weight: 800; color: #0a1936; margin: 0 0 6px 0;">{{ site_config.how_step1_title|default:"Register for Expo" }}</h4>
             <p class="step-desc-p" style="font-size: 12px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step1_desc|default:"Create your student ID" }}</p>
           </div>
-          <div class="step-arrow" style="color: #cbd5e1; font-size: 18px; margin-top: 16px;"><i class="ti ti-chevron-right"></i></div>
+          <div class="step-arrow" style="color: #94a3b8; font-size: 18px; margin: auto 0; padding: 0 2px; flex-shrink: 0;"><i class="ti ti-arrow-narrow-right"></i></div>
 
           <!-- Step 2 (Indigo) -->
-          <div class="participate-step-item" style="text-align: center; flex: 1;">
+          <div class="participate-step-item" style="text-align: center; flex: 1; background: #f8fafc; border: 1.5px solid #edf2f7; border-radius: 18px; padding: 24px 16px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; transition: all 0.25s ease;">
             <div class="step-icon-wrap" style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: #ffffff; font-size: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; box-shadow: 0 6px 18px rgba(99,102,241,0.32);">
               <i class="ti ti-qrcode"></i>
             </div>
-            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #6366f1; background: #eef2ff; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px;">{{ site_config.how_step2_badge|default:"STEP 02" }}</div>
-            <h4 class="step-title" style="font-size: 14px; font-weight: 800; color: #0a1936; margin: 0 0 5px 0;">{{ site_config.how_step2_title|default:"Get Digital Pass" }}</h4>
+            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #6366f1; background: #eef2ff; border: 1px solid rgba(99,102,241,0.18); padding: 3px 10px; border-radius: 12px; margin-bottom: 10px;">{{ site_config.how_step2_badge|default:"STEP 02" }}</div>
+            <h4 class="step-title" style="font-size: 15px; font-weight: 800; color: #0a1936; margin: 0 0 6px 0;">{{ site_config.how_step2_title|default:"Get Digital Pass" }}</h4>
             <p class="step-desc-p" style="font-size: 12px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step2_desc|default:"Scan booths &amp; keynotes" }}</p>
           </div>
-          <div class="step-arrow" style="color: #cbd5e1; font-size: 18px; margin-top: 16px;"><i class="ti ti-chevron-right"></i></div>
+          <div class="step-arrow" style="color: #94a3b8; font-size: 18px; margin: auto 0; padding: 0 2px; flex-shrink: 0;"><i class="ti ti-arrow-narrow-right"></i></div>
 
           <!-- Step 3 (Violet) -->
-          <div class="participate-step-item" style="text-align: center; flex: 1;">
+          <div class="participate-step-item" style="text-align: center; flex: 1; background: #f8fafc; border: 1.5px solid #edf2f7; border-radius: 18px; padding: 24px 16px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; transition: all 0.25s ease;">
             <div class="step-icon-wrap" style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: #ffffff; font-size: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; box-shadow: 0 6px 18px rgba(139,92,246,0.32);">
               <i class="ti ti-calendar-event"></i>
             </div>
-            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #7c3aed; background: #f5f3ff; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px;">{{ site_config.how_step3_badge|default:"STEP 03" }}</div>
-            <h4 class="step-title" style="font-size: 14px; font-weight: 800; color: #0a1936; margin: 0 0 5px 0;">{{ site_config.how_step3_title|default:"Plan Your Agenda" }}</h4>
+            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #7c3aed; background: #f5f3ff; border: 1px solid rgba(139,92,246,0.18); padding: 3px 10px; border-radius: 12px; margin-bottom: 10px;">{{ site_config.how_step3_badge|default:"STEP 03" }}</div>
+            <h4 class="step-title" style="font-size: 15px; font-weight: 800; color: #0a1936; margin: 0 0 6px 0;">{{ site_config.how_step3_title|default:"Plan Your Agenda" }}</h4>
             <p class="step-desc-p" style="font-size: 12px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step3_desc|default:"Shortlist seminars & talks" }}</p>
           </div>
-          <div class="step-arrow" style="color: #cbd5e1; font-size: 18px; margin-top: 16px;"><i class="ti ti-chevron-right"></i></div>
+          <div class="step-arrow" style="color: #94a3b8; font-size: 18px; margin: auto 0; padding: 0 2px; flex-shrink: 0;"><i class="ti ti-arrow-narrow-right"></i></div>
 
           <!-- Step 4 (Emerald) -->
-          <div class="participate-step-item" style="text-align: center; flex: 1;">
+          <div class="participate-step-item" style="text-align: center; flex: 1; background: #f8fafc; border: 1.5px solid #edf2f7; border-radius: 18px; padding: 24px 16px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; transition: all 0.25s ease;">
             <div class="step-icon-wrap" style="width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-size: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; box-shadow: 0 6px 18px rgba(16,185,129,0.32);">
               <i class="ti ti-building-bank"></i>
             </div>
-            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #059669; background: #ecfdf5; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px;">{{ site_config.how_step4_badge|default:"STEP 04" }}</div>
-            <h4 class="step-title" style="font-size: 14px; font-weight: 800; color: #0a1936; margin: 0 0 5px 0;">{{ site_config.how_step4_title|default:"Meet Universities" }}</h4>
+            <div class="step-badge" style="display: inline-block; font-size: 10.5px; font-weight: 800; color: #059669; background: #ecfdf5; border: 1px solid rgba(16,185,129,0.18); padding: 3px 10px; border-radius: 12px; margin-bottom: 10px;">{{ site_config.how_step4_badge|default:"STEP 04" }}</div>
+            <h4 class="step-title" style="font-size: 15px; font-weight: 800; color: #0a1936; margin: 0 0 6px 0;">{{ site_config.how_step4_title|default:"Meet Universities" }}</h4>
             <p class="step-desc-p" style="font-size: 12px; color: #64748b; line-height: 1.45; margin: 0;">{{ site_config.how_step4_desc|default:"Secure offers & funding" }}</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 4 Stats Bar Underneath: Projected Visitors, Schools to Reach, Registration Target, Digital Campaign Reach (Exact Mockup Specs) -->
-    <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 26px 28px; margin-top: 36px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; box-shadow: 0 8px 24px -4px rgba(10, 25, 54, 0.06);" class="participate-stats-bar eventor-reveal reveal-delay-3">
+    <!-- Expo Impact & Scale Projections Banner (High-Contrast Midnight Ribbon) -->
+    <div style="background: linear-gradient(135deg, #061633 0%, #092659 55%, #0f3d8a 100%); border: 1px solid rgba(56, 189, 248, 0.28); border-radius: 24px; padding: 34px 32px 30px; margin-top: 36px; box-shadow: 0 16px 36px -6px rgba(7, 25, 59, 0.35); position: relative; overflow: hidden;" class="participate-stats-bar eventor-reveal reveal-delay-3">
       
-      <!-- 1. Projected Visitors -->
-      <div style="text-align: center; border-right: 1px solid #eef2f6; padding: 0 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; color: #1e293b; line-height: 1.25; text-align: center; margin-bottom: 6px; min-height: 38px; display: flex; align-items: center; justify-content: center;">{{ site_config.participate_stat_1_title|default:"Projected Visitors" }}</div>
-        <div style="width: 44px; height: 1.5px; background: #cbd5e1; margin: 0 auto 10px auto; border-radius: 2px;"></div>
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: clamp(28px, 2.5vw, 38px); font-weight: 900; color: #4c1d95; line-height: 1.1; margin-bottom: 6px; letter-spacing: -0.5px; text-align: center;">{{ site_config.participate_stat_1_number|default:"10000" }}</div>
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: 12px; color: #64748b; font-weight: 500; line-height: 1.35; text-align: center;">{{ site_config.participate_stat_1_desc|default:"Target attendance across three days" }}</div>
+      <!-- Subtle Decorative Radial Glows -->
+      <div style="position: absolute; right: -40px; top: -40px; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 70%); pointer-events: none;"></div>
+      <div style="position: absolute; left: -30px; bottom: -30px; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, rgba(23, 104, 255, 0.22) 0%, transparent 70%); pointer-events: none;"></div>
+
+      <!-- Small Top Scale Label -->
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 22px; position: relative; z-index: 2;">
+        <span style="display: inline-flex; align-items: center; gap: 6px; background: rgba(56, 189, 248, 0.14); border: 1px solid rgba(56, 189, 248, 0.32); color: #38bdf8; font-size: 10.5px; font-weight: 800; padding: 4px 14px; border-radius: 20px; letter-spacing: 1.2px; text-transform: uppercase;">
+          <i class="ti ti-chart-bar"></i> EXPO IMPACT &amp; SCALE PROJECTIONS
+        </span>
       </div>
 
-      <!-- 2. Schools to Reach -->
-      <div style="text-align: center; border-right: 1px solid #eef2f6; padding: 0 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; color: #1e293b; line-height: 1.25; text-align: center; margin-bottom: 6px; min-height: 38px; display: flex; align-items: center; justify-content: center;">{{ site_config.participate_stat_2_title|default:"Schools to Reach" }}</div>
-        <div style="width: 44px; height: 1.5px; background: #cbd5e1; margin: 0 auto 10px auto; border-radius: 2px;"></div>
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: clamp(28px, 2.5vw, 38px); font-weight: 900; color: #4c1d95; line-height: 1.1; margin-bottom: 6px; letter-spacing: -0.5px; text-align: center;">{{ site_config.participate_stat_2_number|default:"100+" }}</div>
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: 12px; color: #64748b; font-weight: 500; line-height: 1.35; text-align: center;">{{ site_config.participate_stat_2_desc|default:"Targeted school outreach" }}</div>
-      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; position: relative; z-index: 2;">
+        
+        <!-- 1. Projected Visitors -->
+        <div style="text-align: center; border-right: 1px solid rgba(255, 255, 255, 0.12); padding: 0 14px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+          <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(56, 189, 248, 0.14); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 12px auto;">
+            <i class="ti ti-users"></i>
+          </div>
+          <div style="font-family: 'Poppins', sans-serif; font-size: clamp(28px, 2.7vw, 38px); font-weight: 900; color: #ffffff; line-height: 1.1; margin-bottom: 6px; letter-spacing: -0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.25);">
+            {{ site_config.participate_stat_1_number|default:"10,000+" }}
+          </div>
+          <div style="font-family: 'Poppins', sans-serif; font-size: 12.5px; font-weight: 800; color: #7dd3fc; line-height: 1.25; text-align: center; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.6px;">
+            {{ site_config.participate_stat_1_title|default:"Projected Visitors" }}
+          </div>
+          <div style="font-size: 11.5px; color: rgba(255, 255, 255, 0.72); font-weight: 500; line-height: 1.35; text-align: center;">
+            {{ site_config.participate_stat_1_desc|default:"Target attendance across three days" }}
+          </div>
+        </div>
 
-      <!-- 3. Registration Target -->
-      <div style="text-align: center; border-right: 1px solid #eef2f6; padding: 0 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; color: #1e293b; line-height: 1.25; text-align: center; margin-bottom: 6px; min-height: 38px; display: flex; align-items: center; justify-content: center;">{{ site_config.participate_stat_3_title|default:"Registration Target" }}</div>
-        <div style="width: 44px; height: 1.5px; background: #cbd5e1; margin: 0 auto 10px auto; border-radius: 2px;"></div>
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: clamp(28px, 2.5vw, 38px); font-weight: 900; color: #4c1d95; line-height: 1.1; margin-bottom: 6px; letter-spacing: -0.5px; text-align: center;">{{ site_config.participate_stat_3_number|default:"5,000" }}</div>
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: 12px; color: #64748b; font-weight: 500; line-height: 1.35; text-align: center;">{{ site_config.participate_stat_3_desc|default:"Advance visitor registrations" }}</div>
-      </div>
+        <!-- 2. Schools to Reach -->
+        <div style="text-align: center; border-right: 1px solid rgba(255, 255, 255, 0.12); padding: 0 14px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+          <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(96, 165, 250, 0.14); border: 1px solid rgba(96, 165, 250, 0.3); color: #60a5fa; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 12px auto;">
+            <i class="ti ti-school"></i>
+          </div>
+          <div style="font-family: 'Poppins', sans-serif; font-size: clamp(28px, 2.7vw, 38px); font-weight: 900; color: #ffffff; line-height: 1.1; margin-bottom: 6px; letter-spacing: -0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.25);">
+            {{ site_config.participate_stat_2_number|default:"100+" }}
+          </div>
+          <div style="font-family: 'Poppins', sans-serif; font-size: 12.5px; font-weight: 800; color: #93c5fd; line-height: 1.25; text-align: center; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.6px;">
+            {{ site_config.participate_stat_2_title|default:"Schools to Reach" }}
+          </div>
+          <div style="font-size: 11.5px; color: rgba(255, 255, 255, 0.72); font-weight: 500; line-height: 1.35; text-align: center;">
+            {{ site_config.participate_stat_2_desc|default:"Targeted school outreach" }}
+          </div>
+        </div>
 
-      <!-- 4. Digital Campaign Reach -->
-      <div style="text-align: center; padding: 0 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; color: #1e293b; line-height: 1.25; text-align: center; margin-bottom: 6px; min-height: 38px; display: flex; align-items: center; justify-content: center;">{{ site_config.participate_stat_4_title|default:"Digital Campaign Reach" }}</div>
-        <div style="width: 44px; height: 1.5px; background: #cbd5e1; margin: 0 auto 10px auto; border-radius: 2px;"></div>
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: clamp(28px, 2.5vw, 38px); font-weight: 900; color: #4c1d95; line-height: 1.1; margin-bottom: 6px; letter-spacing: -0.5px; text-align: center;">{{ site_config.participate_stat_4_number|default:"250,000+" }}</div>
-        <div style="font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif; font-size: 12px; color: #64748b; font-weight: 500; line-height: 1.35; text-align: center;">{{ site_config.participate_stat_4_desc|default:"Planned cumulative exposure" }}</div>
+        <!-- 3. Registration Target -->
+        <div style="text-align: center; border-right: 1px solid rgba(255, 255, 255, 0.12); padding: 0 14px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+          <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(167, 139, 250, 0.14); border: 1px solid rgba(167, 139, 250, 0.3); color: #c4b5fd; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 12px auto;">
+            <i class="ti ti-id"></i>
+          </div>
+          <div style="font-family: 'Poppins', sans-serif; font-size: clamp(28px, 2.7vw, 38px); font-weight: 900; color: #ffffff; line-height: 1.1; margin-bottom: 6px; letter-spacing: -0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.25);">
+            {{ site_config.participate_stat_3_number|default:"5,000" }}
+          </div>
+          <div style="font-family: 'Poppins', sans-serif; font-size: 12.5px; font-weight: 800; color: #c4b5fd; line-height: 1.25; text-align: center; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.6px;">
+            {{ site_config.participate_stat_3_title|default:"Registration Target" }}
+          </div>
+          <div style="font-size: 11.5px; color: rgba(255, 255, 255, 0.72); font-weight: 500; line-height: 1.35; text-align: center;">
+            {{ site_config.participate_stat_3_desc|default:"Advance visitor registrations" }}
+          </div>
+        </div>
+
+        <!-- 4. Digital Campaign Reach -->
+        <div style="text-align: center; padding: 0 14px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+          <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(52, 211, 153, 0.14); border: 1px solid rgba(52, 211, 153, 0.3); color: #34d399; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 12px auto;">
+            <i class="ti ti-world"></i>
+          </div>
+          <div style="font-family: 'Poppins', sans-serif; font-size: clamp(28px, 2.7vw, 38px); font-weight: 900; color: #ffffff; line-height: 1.1; margin-bottom: 6px; letter-spacing: -0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.25);">
+            {{ site_config.participate_stat_4_number|default:"250,000+" }}
+          </div>
+          <div style="font-family: 'Poppins', sans-serif; font-size: 12.5px; font-weight: 800; color: #6ee7b7; line-height: 1.25; text-align: center; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.6px;">
+            {{ site_config.participate_stat_4_title|default:"Digital Campaign Reach" }}
+          </div>
+          <div style="font-size: 11.5px; color: rgba(255, 255, 255, 0.72); font-weight: 500; line-height: 1.35; text-align: center;">
+            {{ site_config.participate_stat_4_desc|default:"Planned cumulative exposure" }}
+          </div>
+        </div>
+
       </div>
 
     </div>
