@@ -8785,168 +8785,14 @@
 
 {% if site_config.show_map_section %}
 
-<section class="section-navigate-expo" id="map" style="padding: 90px 0; background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 40%, #f8fafc 100%); scroll-margin-top: 100px; position: relative; overflow: hidden;">
+<section class="section-navigate-expo" id="map" style="padding: 85px 0; background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 40%, #f8fafc 100%); scroll-margin-top: 100px; position: relative; overflow: hidden;">
 
-  <!-- Decorative Dot Matrix Accents (Left-Right Sway Animation) -->
+  <!-- Decorative Dot Matrix Accents -->
   <div class="dot-matrix-pattern theme-blue" style="top: 35px; right: max(20px, calc((100vw - 1240px) / 2)); width: 110px; height: 110px;" aria-hidden="true"></div>
   <div class="dot-matrix-pattern anim-reverse theme-indigo" style="bottom: 30px; left: max(20px, calc((100vw - 1240px) / 2)); width: 95px; height: 95px;" aria-hidden="true"></div>
   <div class="container">
 
     <style>
-      @keyframes mapLivePulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.3); opacity: 0.6; }
-        100% { transform: scale(1); opacity: 1; }
-      }
-
-      @keyframes hotspotPulseRing {
-        0% { transform: scale(0.8); opacity: 0.85; }
-        100% { transform: scale(2.2); opacity: 0; }
-      }
-
-      .map-hotspot-pin {
-        position: absolute;
-        width: 24px;
-        height: 24px;
-        transform: translate(-50%, -50%);
-        cursor: pointer;
-        z-index: 10;
-        transition: transform 0.2s ease;
-      }
-
-      .map-hotspot-pin .hotspot-pulse {
-        position: absolute;
-        inset: -5px;
-        border-radius: 50%;
-        animation: hotspotPulseRing 2s cubic-bezier(0.2, 0, 0, 1) infinite;
-        opacity: 0.7;
-        pointer-events: none;
-      }
-
-      .map-hotspot-pin .hotspot-core {
-        position: relative;
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        border: 2px solid #ffffff;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .map-hotspot-pin:hover .hotspot-core,
-      .map-hotspot-pin.active-pin .hotspot-core {
-        transform: scale(1.3);
-        box-shadow: 0 0 14px currentColor;
-      }
-
-      .map-hotspot-pin .hotspot-tooltip {
-        position: absolute;
-        bottom: calc(100% + 8px);
-        left: 50%;
-        transform: translateX(-50%) translateY(4px);
-        background: #0a1936;
-        color: #ffffff;
-        padding: 5px 11px;
-        border-radius: 8px;
-        font-size: 11px;
-        font-weight: 700;
-        white-space: nowrap;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-        opacity: 0;
-        pointer-events: none;
-        transition: all 0.2s ease;
-        z-index: 20;
-      }
-
-      .map-hotspot-pin .hotspot-tooltip::after {
-        content: '';
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        border: 5px solid transparent;
-        border-top-color: #0a1936;
-      }
-
-      .map-hotspot-pin:hover .hotspot-tooltip {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-      }
-
-      .interactive-map-frame {
-        position: relative;
-        background: #f8fafc;
-        border: 1.5px solid #cbd5e1;
-        border-radius: 18px;
-        overflow: hidden;
-        padding: 14px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.25s ease;
-      }
-
-      .interactive-map-frame:hover,
-      .interactive-map-frame:focus,
-      .interactive-map-frame:active {
-        border-color: #cbd5e1 !important;
-        box-shadow: 0 10px 28px rgba(23,104,255,0.08) !important;
-        outline: none !important;
-      }
-
-      .interactive-map-frame img {
-        width: 100%;
-        height: auto;
-        max-height: 310px;
-        object-fit: contain;
-        display: block;
-        margin: 0 auto;
-        transition: transform 0.35s ease;
-      }
-
-      .interactive-map-frame:hover img {
-        transform: scale(1.015);
-      }
-
-      .live-zone-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 14px;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.22s ease;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        margin-bottom: 7px;
-      }
-
-      .live-zone-row:hover {
-        background: #eff6ff !important;
-        border-color: #cbd5e1 !important;
-        transform: translateX(4px);
-      }
-
-      .live-zone-row.active-zone {
-        background: #eff6ff !important;
-        border-color: transparent !important;
-        transform: translateX(4px);
-        box-shadow: 0 4px 14px rgba(23, 104, 255, 0.08);
-        outline: none !important;
-      }
-
-      @keyframes zoneFadeIn {
-        from { opacity: 0; transform: translateY(-4px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      .zone-animated {
-        animation: zoneFadeIn 0.22s ease-out forwards;
-      }
-
       .live-floor-modal-overlay {
         position: fixed;
         inset: 0;
@@ -8960,15 +8806,13 @@
         padding: 20px;
         box-sizing: border-box;
       }
-
       .live-floor-modal-overlay.open {
         display: flex;
       }
-
       .live-floor-modal-card {
         background: #ffffff;
         border-radius: 20px;
-        max-width: 980px;
+        max-width: 1020px;
         width: 100%;
         max-height: 90vh;
         display: flex;
@@ -8978,186 +8822,211 @@
         position: relative;
         animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       }
-
       @keyframes modalPopIn {
         from { opacity: 0; transform: scale(0.95); }
         to { opacity: 1; transform: scale(1); }
       }
-
+      .interactive-map-frame {
+        position: relative;
+        background: #ffffff;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 18px;
+        overflow: hidden;
+        padding: 14px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 16px rgba(10, 25, 54, 0.04);
+      }
+      .interactive-map-frame:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 10px 28px rgba(23,104,255,0.08);
+      }
+      .interactive-map-frame img {
+        width: 100%;
+        height: auto;
+        max-height: 380px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+        transition: transform 0.35s ease;
+      }
+      .interactive-map-frame:hover img {
+        transform: scale(1.015);
+      }
+      .zone-spec-chip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 12px;
+        border-radius: 10px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease;
+      }
+      .zone-spec-chip:hover {
+        border-color: #cbd5e1;
+        background: #f8fafc;
+        transform: translateY(-1px);
+      }
+      .cta-exp-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      }
+      .cta-exp-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      }
     </style>
 
-    <div class="map-feature-container eventor-reveal-scale" style="background: #ffffff; border: none; border-radius: 26px; padding: 42px 45px; box-shadow: 0 16px 40px -10px rgba(23, 104, 255, 0.08), 0 4px 16px rgba(10, 25, 54, 0.04); position: relative; overflow: hidden;">
+    <div class="map-feature-container eventor-reveal-scale" style="background: #ffffff; border: none; border-radius: 26px; padding: 40px 42px; box-shadow: 0 16px 40px -10px rgba(23, 104, 255, 0.08), 0 4px 16px rgba(10, 25, 54, 0.04); position: relative; overflow: hidden;">
 
       <!-- Top Header Row -->
-      <div class="map-card-header" style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 32px; flex-wrap: wrap;">
+      <div class="map-card-header" style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: 28px; flex-wrap: wrap;">
 
-        <!-- Left: Badge, Title & Description -->
-        <div style="max-width: 620px;">
-          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-            <span style="display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; font-size: 10.5px; font-weight: 800; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.8px; text-transform: uppercase;">
-              <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981; display: inline-block; box-shadow: 0 0 8px #10b981; animation: mapLivePulse 2s infinite;"></span>
-              LIVE FLOORPLAN &bull; MAIN EXHIBITION HALL
-            </span>
-            <span style="font-size: 11px; color: #64748b; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
-              <i class="ti ti-activity" style="color: #10b981;"></i> {% if total_exhibitors %}{{ total_exhibitors }} Booths Active{% else %}Interactive Venue Directory{% endif %}
-            </span>
-          </div>
+        <!-- Left: Clean Title & Description -->
+        <div style="max-width: 660px;">
           <h2 style="font-size: clamp(23px, 2.3vw, 30px); font-weight: 900; color: #0a1936; line-height: 1.2; margin: 0 0 8px 0; letter-spacing: -0.6px;">
-            {{ site_config.map_heading|default:"Navigate the Expo" }} <span style="background: linear-gradient(135deg, #1768ff 0%, #0284c7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Live &amp; Interactive</span>
+            Exhibition Layout &amp; <span style="background: linear-gradient(135deg, #1768ff 0%, #0284c7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Floor Plan</span>
           </h2>
           <p style="font-size: 13.5px; color: #64748b; line-height: 1.5; margin: 0;">
-            <span class="desktop-only">{{ site_config.map_subtitle|default:"Real-time interactive venue directory. Locate 120+ university booths, keynote stages, and testing arenas live across the Main Exhibition Hall." }}</span>
-            <span class="mobile-only">{{ site_config.map_subtitle|default:"Explore our interactive floor map to find universities, booths, and key areas easily." }}</span>
+            A clean exhibition layout preview floor plan with area zoom. Explore the Main Exhibition Hall setup, booth dimensions, and visitor zones.
           </p>
         </div>
 
-        <!-- Right: Actions & Live Badges -->
-        <div class="map-header-actions" style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
-          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-            <button type="button" onclick="openLiveFloorModal()" aria-label="Open live floor plan modal" style="display: inline-flex; align-items: center; gap: 7px; background: linear-gradient(135deg, #1768ff 0%, #0284c7 100%); color: #ffffff; padding: 10px 22px; border-radius: 25px; font-size: 12.5px; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(23,104,255,0.35); transition: transform 0.2s, box-shadow 0.2s;">
-              <i class="ti ti-maximize" style="font-size: 14px;"></i> <span>Open Live Map &rarr;</span>
-            </button>
-            <a href="{{ site_config.map_pdf_url|default:'/static/assets/KNOVA_2027_FLOORPLAN.pdf' }}" target="_blank" download class="desktop-only" style="display: inline-flex; align-items: center; gap: 6px; background: #ffffff; border: 1.5px solid #cbd5e1; color: #334155; padding: 9px 16px; border-radius: 25px; font-size: 12px; font-weight: 700; text-decoration: none; box-shadow: 0 2px 6px rgba(0,0,0,0.03); transition: all 0.2s;">
-              <i class="ti ti-file-download" style="color: #ef4444; font-size: 15px;"></i> PDF Map
-            </a>
-            <a href="{% url 'public_expo_map' %}" class="desktop-only" style="display: inline-flex; align-items: center; gap: 5px; background: #f8fafc; border: 1.5px solid #cbd5e1; color: #0b4fc7; padding: 9px 16px; border-radius: 25px; font-size: 12px; font-weight: 700; text-decoration: none; transition: all 0.2s;">
-              <i class="ti ti-list-details"></i> Directory &rarr;
-            </a>
-          </div>
-          <div style="margin-top: 2px; font-size: 11px; color: #64748b; display: flex; align-items: center; gap: 5px;">
-            <i class="ti ti-hand-click" style="color: #1768ff;"></i> Click any zone or pin to focus live radar
-          </div>
+        <!-- Right: Expand / Area Zoom Action -->
+        <div class="map-header-actions" style="display: flex; align-items: center; gap: 10px;">
+          <button type="button" onclick="openLiveFloorModal()" aria-label="Expand layout preview floor plan" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #1768ff 0%, #0284c7 100%); color: #ffffff; padding: 11px 24px; border-radius: 25px; font-size: 13px; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(23,104,255,0.28); transition: transform 0.2s, box-shadow 0.2s;">
+            <i class="ti ti-maximize" style="font-size: 15px;"></i> <span>Expand Layout Preview &rarr;</span>
+          </button>
         </div>
       </div>
 
-      <!-- 2-Column Interactive Main Grid -->
-      <div class="map-interactive-grid" style="display: grid; grid-template-columns: 1.35fr 1fr; gap: 26px; align-items: start;">
+      <!-- 2-Column Main Layout Grid -->
+      <div class="map-interactive-grid" style="display: grid; grid-template-columns: 1.35fr 1fr; gap: 28px; align-items: start;">
 
-        <!-- Left: Enhanced Interactive Live Floor Plan Graphic with Hotspots -->
+        <!-- Left: Clean Exhibition Layout Preview Floor Plan Frame -->
         <div>
-          <div class="interactive-map-frame" onclick="openLiveFloorModal()" title="Click to view full interactive floorplan">
-
-            <!-- Floating top radar indicator -->
-            <div style="position: absolute; top: 12px; left: 12px; z-index: 15; background: rgba(10, 25, 54, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #ffffff; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #38bdf8; display: inline-block; box-shadow: 0 0 6px #38bdf8;"></span>
-              Active Radar View
-            </div>
-            <img src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.webp' %}{% endif %}" alt="KNOVA Expo Floor Plan" width="800" height="566" loading="lazy" decoding="async">
-
-            <!-- Hotspot Pin 1: University Pavilions -->
-            <div class="map-hotspot-pin active-pin" id="pinZone1" style="top: 38%; left: 52%;" onclick="event.stopPropagation(); selectLiveZone(1);" title="University Discovery Pavilions">
-              <span class="hotspot-pulse" style="background: #1768ff;"></span>
-              <span class="hotspot-core" style="background: #1768ff;"><i class="ti ti-school"></i></span>
-              <span class="hotspot-tooltip">University Discovery Pavilions &bull; Booths 01–60</span>
-            </div>
-
-            <!-- Hotspot Pin 2: Counselling Hub -->
-            <div class="map-hotspot-pin" id="pinZone2" style="top: 48%; left: 36%;" onclick="event.stopPropagation(); selectLiveZone(2);" title="Counselling Hub">
-              <span class="hotspot-pulse" style="background: #0284c7;"></span>
-              <span class="hotspot-core" style="background: #0284c7;"><i class="ti ti-messages"></i></span>
-              <span class="hotspot-tooltip">Counselling Hub &bull; Desks C1–C10</span>
-            </div>
-
-            <!-- Hotspot Pin 3: Aptitude Lab -->
-            <div class="map-hotspot-pin" id="pinZone3" style="top: 58%; left: 74%;" onclick="event.stopPropagation(); selectLiveZone(3);" title="Aptitude Lab">
-              <span class="hotspot-pulse" style="background: #7c3aed;"></span>
-              <span class="hotspot-core" style="background: #7c3aed;"><i class="ti ti-award"></i></span>
-              <span class="hotspot-tooltip">Aptitude Lab &bull; Hall 2</span>
-            </div>
-
-            <!-- Hotspot Pin 4: Technology Arena -->
-            <div class="map-hotspot-pin" id="pinZone4" style="top: 24%; left: 34%;" onclick="event.stopPropagation(); selectLiveZone(4);" title="Technology Arena">
-              <span class="hotspot-pulse" style="background: #0d9488;"></span>
-              <span class="hotspot-core" style="background: #0d9488;"><i class="ti ti-cpu"></i></span>
-              <span class="hotspot-tooltip">Technology Arena &bull; Future Hall</span>
-            </div>
-
-            <!-- Hotspot Pin 5: Game & Puzzle Arena -->
-            <div class="map-hotspot-pin" id="pinZone5" style="top: 68%; left: 52%;" onclick="event.stopPropagation(); selectLiveZone(5);" title="Game & Puzzle Arena">
-              <span class="hotspot-pulse" style="background: #ea580c;"></span>
-              <span class="hotspot-core" style="background: #ea580c;"><i class="ti ti-puzzle"></i></span>
-              <span class="hotspot-tooltip">Game &amp; Puzzle Arena &bull; Zone G</span>
-            </div>
-
-            <!-- Hotspot Pin 6: KNOVA Reward Desk -->
-            <div class="map-hotspot-pin" id="pinZone6" style="top: 76%; left: 22%;" onclick="event.stopPropagation(); selectLiveZone(6);" title="KNOVA Reward Desk">
-              <span class="hotspot-pulse" style="background: #e11d48;"></span>
-              <span class="hotspot-core" style="background: #e11d48;"><i class="ti ti-gift"></i></span>
-              <span class="hotspot-tooltip">KNOVA Reward Desk &bull; Main Concourse</span>
-            </div>
-
-            <!-- Click to expand pill -->
-            <div style="position: absolute; bottom: 12px; right: 12px; z-index: 15; background: rgba(10, 25, 54, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #ffffff; padding: 5px 12px; border-radius: 20px; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
-              <i class="ti ti-maximize" style="font-size: 12px; color: #38bdf8;"></i> Expand Full Map
+          <div class="interactive-map-frame" onclick="openLiveFloorModal()" title="Click to open layout preview with area zoom">
+            <img src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.webp' %}{% endif %}" alt="KNOVA Exhibition Floor Plan" width="800" height="566" loading="lazy" decoding="async">
+            
+            <!-- Bottom Floating Area Zoom Badge -->
+            <div style="position: absolute; bottom: 12px; right: 12px; z-index: 5; background: rgba(10, 25, 54, 0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #ffffff; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(0,0,0,0.25);">
+              <i class="ti ti-zoom-in"></i> Click to Zoom &amp; Pan
             </div>
           </div>
-
-          <!-- Live Zone Quick Info Banner (Updates reactively on pin or zone click) -->
-          <div id="liveZoneDetailBanner" style="margin-top: 10px; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 11px 16px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; transition: all 0.25s ease;">
-            <div style="display: flex; align-items: center; gap: 9px;">
-              <span id="bannerZoneDot" style="width: 9px; height: 9px; border-radius: 50%; background: #1768ff; display: inline-block; box-shadow: 0 0 8px #1768ff;"></span>
-              <span id="bannerZoneTitle" style="font-weight: 800; color: #0a1936; font-size: 12.5px;">University Discovery Pavilions</span>
-              <span id="bannerZoneHall" style="color: #64748b; font-weight: 600; font-size: 11px;">&bull; Booths 01–60</span>
-            </div>
-            <button type="button" onclick="openLiveFloorModal()" aria-label="Open live floor plan modal" style="background: none; border: none; color: #0b4fc7; font-weight: 800; font-size: 11.5px; cursor: pointer; padding: 0; display: inline-flex; align-items: center; gap: 4px;">
-              Inspect Zone in Full Map &rarr;
-            </button>
+          <div style="margin-top: 8px; font-size: 11.5px; color: #64748b; display: flex; align-items: center; justify-content: space-between; padding: 0 4px;">
+            <span><i class="ti ti-building"></i> Main Exhibition Hall (Single Hall Venue)</span>
+            <span style="font-weight: 600; color: #1768ff; cursor: pointer;" onclick="openLiveFloorModal()"><i class="ti ti-arrows-maximize"></i> Fullscreen View</span>
           </div>
         </div>
 
-        <!-- Right: Live Dynamic Zones List (Spacious, No Truncation!) -->
-        <div>
-          <div style="font-size: 11.5px; font-weight: 800; color: #475569; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-            <span>Active Venue Zones</span>
-            <span style="font-size: 10px; color: #047857; font-weight: 800; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 7px; border-radius: 10px;"><i class="ti ti-point-filled"></i> 6 Live Zones</span>
-          </div>
-          <div style="display: flex; flex-direction: column;" id="liveZonesList">
-            {% if floor_zones %}
-              {% for zone in floor_zones %}
-              <div class="live-zone-row {% if forloop.first %}active-zone{% endif %}{% if forloop.counter > 6 %} extra-zone{% endif %}" id="zoneRow{{ forloop.counter }}"
-                   {% if forloop.counter > 6 %}style="display: none;"{% endif %}
-                   onclick="selectLiveZone({{ forloop.counter }}, '{{ zone.name|escapejs }}', '{{ zone.hall_location|escapejs }}', '{{ zone.color_accent|default:'#1768ff' }}')"
-                   onmouseenter="highlightLivePin('pinZone{{ forloop.counter }}')"
-                   title="{{ zone.tagline|default:zone.description }}">
-                <div style="display: flex; align-items: center; gap: 9px; min-width: 0; flex: 1;">
-                  <span style="width: 10px; height: 10px; border-radius: 50%; background: {{ zone.color_accent|default:'#1768ff' }}; flex-shrink: 0; box-shadow: 0 0 6px {{ zone.color_accent|default:'#1768ff' }};"></span>
-                  <span style="font-size: 12.5px; font-weight: 750; color: #0a1936;">{{ zone.name }}</span>
+        <!-- Right: Five Key Exhibition Zones & Experience Cards -->
+        <div style="display: flex; flex-direction: column; gap: 18px;">
+
+          <!-- Five Key Exhibition Zones -->
+          <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 18px 20px;">
+            <div style="font-size: 11px; font-weight: 800; color: #475569; letter-spacing: 0.9px; text-transform: uppercase; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+              <span>Key Exhibition Zones</span>
+              <span style="font-size: 10px; color: #64748b; font-weight: 700; background: #ffffff; border: 1px solid #cbd5e1; padding: 2px 8px; border-radius: 10px;">Booth Specs</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 7px;">
+              
+              <!-- 1. Shell Scheme (Red) -->
+              <div class="zone-spec-chip">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="width: 12px; height: 12px; border-radius: 3px; background: #ef4444; flex-shrink: 0; box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);"></span>
+                  <span style="font-size: 13px; font-weight: 750; color: #0a1936;">Shell Scheme (Red)</span>
                 </div>
-                <span style="font-size: 10px; color: #64748b; font-weight: 700; background: #ffffff; padding: 3px 8px; border-radius: 6px; border: 1px solid #cbd5e1; flex-shrink: 0;">{{ zone.hall_location|default:'Hall 1' }}</span>
+                <span style="font-size: 11px; color: #475569; font-weight: 700; background: #fef2f2; border: 1px solid #fecaca; padding: 2px 8px; border-radius: 6px;">250 &times; 250 cm</span>
               </div>
-              {% endfor %}
-            {% else %}
 
-              <!-- Fallback active zones -->
-              <div class="live-zone-row active-zone" id="zoneRow1" onclick="selectLiveZone(1, 'University Pavilions', 'Booths 01–60', '#1768ff')">
-                <div style="display: flex; align-items: center; gap: 9px; min-width: 0; flex: 1;">
-                  <span style="width: 10px; height: 10px; border-radius: 50%; background: #1768ff; flex-shrink: 0; box-shadow: 0 0 6px #1768ff;"></span>
-                  <span style="font-size: 12.5px; font-weight: 750; color: #0a1936;">University Pavilions</span>
+              <!-- 2. 3x3 Booth (Green) -->
+              <div class="zone-spec-chip">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="width: 12px; height: 12px; border-radius: 3px; background: #16a34a; flex-shrink: 0; box-shadow: 0 0 6px rgba(22, 163, 74, 0.4);"></span>
+                  <span style="font-size: 13px; font-weight: 750; color: #0a1936;">3&times;3 Booth in Green</span>
                 </div>
-                <span style="font-size: 10px; color: #64748b; font-weight: 700; background: #ffffff; padding: 3px 8px; border-radius: 6px; border: 1px solid #cbd5e1;">Booths 01–60</span>
+                <span style="font-size: 11px; color: #166534; font-weight: 700; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 6px;">300 &times; 300 cm</span>
               </div>
-            {% endif %}
 
+              <!-- 3. 6x3 Booth (Blue) -->
+              <div class="zone-spec-chip">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="width: 12px; height: 12px; border-radius: 3px; background: #2563eb; flex-shrink: 0; box-shadow: 0 0 6px rgba(37, 99, 235, 0.4);"></span>
+                  <span style="font-size: 13px; font-weight: 750; color: #0a1936;">6&times;3 Booth in Blue</span>
+                </div>
+                <span style="font-size: 11px; color: #1e40af; font-weight: 700; background: #eff6ff; border: 1px solid #bfdbfe; padding: 2px 8px; border-radius: 6px;">600 &times; 300 cm</span>
+              </div>
+
+              <!-- 4. 6x4 Booth (Light Brown) -->
+              <div class="zone-spec-chip">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="width: 12px; height: 12px; border-radius: 3px; background: #b45309; flex-shrink: 0; box-shadow: 0 0 6px rgba(180, 83, 9, 0.4);"></span>
+                  <span style="font-size: 13px; font-weight: 750; color: #0a1936;">6&times;4 Booth in Light Brown</span>
+                </div>
+                <span style="font-size: 11px; color: #92400e; font-weight: 700; background: #fffbeb; border: 1px solid #fde68a; padding: 2px 8px; border-radius: 6px;">400 &times; 600 cm</span>
+              </div>
+
+              <!-- 5. 4x2 Sponsorship Booth -->
+              <div class="zone-spec-chip">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="width: 12px; height: 12px; border-radius: 3px; background: #ca8a04; flex-shrink: 0; box-shadow: 0 0 6px rgba(202, 138, 4, 0.4);"></span>
+                  <span style="font-size: 13px; font-weight: 750; color: #0a1936;">4&times;2 Sponsorship Booth</span>
+                </div>
+                <span style="font-size: 11px; color: #854d0e; font-weight: 700; background: #fefce8; border: 1px solid #fef08a; padding: 2px 8px; border-radius: 6px;">Pre-Function Area</span>
+              </div>
+
+              <!-- 6. Stage Area (Seminar Area) -->
+              <div class="zone-spec-chip">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="width: 12px; height: 12px; border-radius: 3px; background: #c026d3; flex-shrink: 0; box-shadow: 0 0 6px rgba(192, 38, 211, 0.4);"></span>
+                  <span style="font-size: 13px; font-weight: 750; color: #0a1936;">Stage Area (Seminar Area)</span>
+                </div>
+                <span style="font-size: 11px; color: #86198f; font-weight: 700; background: #fdf4ff; border: 1px solid #f5d0fe; padding: 2px 8px; border-radius: 6px;">95 Seats Capacity</span>
+              </div>
+
+            </div>
           </div>
 
-          {% if floor_zones|length > 6 %}
-          <!-- More Venue Zones Toggle -->
-          <div class="zones-more-wrap" id="zonesMoreWrap" style="text-align: left; margin-top: 6px; margin-bottom: 2px; padding-left: 2px;">
-            <span id="btnZonesViewMore" onclick="toggleZonesViewMore()" style="cursor: pointer; display: inline-block; font-family: 'Poppins', sans-serif; font-size: 13.5px; font-weight: 700; color: #1768ff; user-select: none; transition: color 0.2s ease;" onmouseover="this.style.color='#0a1936'; this.style.textDecoration='underline';" onmouseout="this.style.color='#1768ff'; this.style.textDecoration='none';">More</span>
-          </div>
-          {% endif %}
-
-          <div style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 11.5px; color: #64748b; font-weight: 600;"><i class="ti ti-map"></i> Level 1 &amp; 2 Layout</span>
-            <a href="{% url 'public_expo_map' %}" style="font-size: 12px; color: #0b4fc7; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-              Full Booth Directory &rarr;
+          <!-- Visitors Experience Card -->
+          <div class="cta-exp-card" style="background: linear-gradient(135deg, #f0f7ff 0%, #e0effe 100%); border: 1.5px solid #bfdbfe; border-radius: 18px; padding: 18px 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <a href="/register/" style="font-size: 15px; font-weight: 850; color: #0369a1; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                <span>Visitors Experience</span> <span style="font-size: 16px;">&rarr;</span>
+              </a>
+              <span style="font-size: 10.5px; font-weight: 800; background: #ffffff; color: #0284c7; padding: 2px 9px; border-radius: 12px; border: 1px solid #bae6fd;">Free Visitor Pass</span>
+            </div>
+            <p style="font-size: 12.5px; color: #334155; line-height: 1.55; margin: 0 0 10px 0;">
+              Explore the KNOVA exhibition, meet leading universities, discover exciting programmes and find the opportunities that shape your future.
+            </p>
+            <a href="/register/" style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 800; color: #0284c7; text-decoration: none;">
+              Register as Visitor &rarr;
             </a>
           </div>
+
+          <!-- Become an Exhibitor Card -->
+          <div class="cta-exp-card" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1.5px solid #e2e8f0; border-radius: 18px; padding: 18px 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <a href="/exhibitors/" style="font-size: 15px; font-weight: 850; color: #0f172a; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                <span>Become an Exhibitor</span> <span style="font-size: 16px;">&rarr;</span>
+              </a>
+              <span style="font-size: 10.5px; font-weight: 800; background: #ffffff; color: #475569; padding: 2px 9px; border-radius: 12px; border: 1px solid #cbd5e1;">Exhibitor Booths</span>
+            </div>
+            <p style="font-size: 12.5px; color: #475569; line-height: 1.55; margin: 0 0 10px 0;">
+              Bring your institution closer to tomorrow's learners.
+            </p>
+            <a href="/exhibitors/" style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 800; color: #1768ff; text-decoration: none;">
+              Exhibitor Enquiries &rarr;
+            </a>
+          </div>
+
         </div>
+
       </div>
     </div>
 
-    <!-- Live Full-Screen Floorplan Modal -->
+    <!-- Live Full-Screen Floorplan Modal with Area Zoom -->
     <div id="liveFloorModal" class="live-floor-modal-overlay" onclick="if(event.target===this) closeLiveFloorModal();">
       <div class="live-floor-modal-card">
 
@@ -9168,58 +9037,49 @@
               <i class="ti ti-map-2"></i>
             </div>
             <div>
-              <h4 style="font-size: 17px; font-weight: 800; color: #0a1936; margin: 0 0 2px 0;">KNOVA 2027 Interactive Floorplan</h4>
-              <p style="font-size: 12px; color: #64748b; margin: 0;">Main Exhibition Halls &bull; High Resolution Venue Layout</p>
+              <h4 style="font-size: 17px; font-weight: 800; color: #0a1936; margin: 0 0 2px 0;">KNOVA 2027 Exhibition Layout Preview</h4>
+              <p style="font-size: 12px; color: #64748b; margin: 0;">Main Exhibition Hall &bull; Clean High-Resolution Venue Layout with Area Zoom</p>
             </div>
           </div>
           <div style="display: flex; align-items: center; gap: 10px;">
-            <a href="{% url 'public_expo_map' %}" style="background: #1768ff; color: #ffffff; font-size: 12px; font-weight: 700; padding: 7px 16px; border-radius: 20px; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
-              Full Directory Page &rarr;
-            </a>
-            <button type="button" onclick="closeLiveFloorModal()" aria-label="Close floor plan modal" style="width: 34px; height: 34px; border-radius: 50%; border: 1px solid #e2e8f0; background: #f8fafc; color: #475569; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; transition: all 0.2s;">
+            <button type="button" onclick="closeLiveFloorModal()" aria-label="Close layout modal" style="width: 34px; height: 34px; border-radius: 50%; border: 1px solid #e2e8f0; background: #f8fafc; color: #475569; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; transition: all 0.2s;">
               <i class="ti ti-x"></i>
             </button>
           </div>
         </div>
 
-        <!-- Modal Toolbar -->
+        <!-- Modal Toolbar for Area Zoom -->
         <div style="padding: 10px 24px; background: #f8fafc; border-bottom: 1px solid #eef2f6; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
           <div style="display: flex; gap: 6px; align-items: center;">
-            <button type="button" onclick="zoomFloorMap(0.2)" aria-label="Zoom in floor map" style="padding: 5px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; font-size: 12px; font-weight: 700; cursor: pointer;"><i class="ti ti-zoom-in"></i> Zoom In</button>
-            <button type="button" onclick="zoomFloorMap(-0.2)" aria-label="Zoom out floor map" style="padding: 5px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; font-size: 12px; font-weight: 700; cursor: pointer;"><i class="ti ti-zoom-out"></i> Zoom Out</button>
-            <button type="button" onclick="resetFloorMap()" aria-label="Reset floor map zoom" style="padding: 5px 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; font-size: 12px; font-weight: 700; cursor: pointer;">Reset</button>
+            <button type="button" onclick="zoomFloorMap(0.25)" aria-label="Zoom in" style="padding: 6px 14px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><i class="ti ti-zoom-in"></i> Zoom In</button>
+            <button type="button" onclick="zoomFloorMap(-0.25)" aria-label="Zoom out" style="padding: 6px 14px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><i class="ti ti-zoom-out"></i> Zoom Out</button>
+            <button type="button" onclick="resetFloorMap()" aria-label="Reset zoom" style="padding: 6px 14px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; font-size: 12px; font-weight: 700; cursor: pointer;">Reset</button>
           </div>
 
-          <!-- Zone Quick Switchers inside Modal -->
+          <!-- Quick Area Focus Buttons -->
           <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-            <span style="font-size: 11px; font-weight: 700; color: #64748b;">Jump to Zone:</span>
-            <button type="button" onclick="focusModalZone('Pavilions', 1.25, 0, -20)" style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; border: 1px solid #bfdbfe; background: #eff6ff; color: #0b4fc7; cursor: pointer;">Pavilions</button>
-            <button type="button" onclick="focusModalZone('Counselling', 1.35, 80, -10)" style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; border: 1px solid #bae6fd; background: #f0f9ff; color: #0284c7; cursor: pointer;">Counselling</button>
-            <button type="button" onclick="focusModalZone('Aptitude', 1.35, -120, -50)" style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; border: 1px solid #ddd6fe; background: #f5f3ff; color: #7c3aed; cursor: pointer;">Aptitude Lab</button>
-            <button type="button" onclick="focusModalZone('Technology', 1.35, 90, 80)" style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; border: 1px solid #99f6e4; background: #f0fdfa; color: #0d9488; cursor: pointer;">Tech Arena</button>
+            <span style="font-size: 11px; font-weight: 700; color: #64748b;">Area Focus:</span>
+            <button type="button" onclick="focusModalZone(1.4, 0, -30)" style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; border: 1px solid #fecaca; background: #fef2f2; color: #b91c1c; cursor: pointer;">Shell Scheme</button>
+            <button type="button" onclick="focusModalZone(1.45, 50, 0)" style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; border: 1px solid #bbf7d0; background: #f0fdf4; color: #15803d; cursor: pointer;">3&times;3 Booths</button>
+            <button type="button" onclick="focusModalZone(1.45, -60, 0)" style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; border: 1px solid #bfdbfe; background: #eff6ff; color: #1d4ed8; cursor: pointer;">6&times;3 Booths</button>
+            <button type="button" onclick="focusModalZone(1.5, -160, 0)" style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; border: 1px solid #f5d0fe; background: #fdf4ff; color: #a21caf; cursor: pointer;">Stage Area</button>
           </div>
         </div>
 
-        <!-- Modal Viewer Body -->
-        <div style="flex: 1; overflow: auto; background: #f1f5f9; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 420px; cursor: grab;" id="modalMapViewport">
-          <img id="modalFloorMapImg" src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.webp' %}{% endif %}" alt="Floorplan Map" width="1000" height="707" loading="lazy" decoding="async" style="max-width: 100%; height: auto; transition: transform 0.25s ease; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        <!-- Modal Viewer Body with Drag / Pan Support -->
+        <div style="flex: 1; overflow: hidden; background: #f1f5f9; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: 480px; position: relative; cursor: grab;" id="modalMapViewport">
+          <img id="modalFloorMapImg" src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.webp' %}{% endif %}" alt="KNOVA Floorplan Layout" width="1000" height="707" loading="lazy" decoding="async" style="max-width: 100%; height: auto; transition: transform 0.2s ease; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); user-select: none;">
         </div>
       </div>
     </div>
 
-    <!-- Script for Live Floor Map Actions -->
+    <!-- Script for Area Zoom & Modal -->
     <script>
       let currentMapZoom = 1;
       let modalPanX = 0;
       let modalPanY = 0;
-      const zoneData = {
-        1: { name: 'University Discovery Pavilions', hall: 'Booths 01–60', color: '#1768ff', pin: 'pinZone1' },
-        2: { name: 'Counselling Hub', hall: 'Central Pavilion · Desks C1–C10', color: '#0284c7', pin: 'pinZone2' },
-        3: { name: 'Aptitude Lab', hall: 'Hall 2 · Assessment Stations 1–8', color: '#7c3aed', pin: 'pinZone3' },
-        4: { name: 'Technology Arena', hall: 'Future Hall · Tech Stage T1', color: '#0d9488', pin: 'pinZone4' },
-        5: { name: 'Game & Puzzle Arena', hall: 'Zone G · Interactive Arcade', color: '#ea580c', pin: 'pinZone5' },
-        6: { name: 'KNOVA Reward Desk', hall: 'Main Concourse · Exit Zone', color: '#e11d48', pin: 'pinZone6' }
-      };
+      let isDragging = false;
+      let startX, startY;
 
       function openLiveFloorModal() {
         document.getElementById('liveFloorModal').classList.add('open');
@@ -9232,7 +9092,7 @@
       }
 
       function zoomFloorMap(delta) {
-        currentMapZoom = Math.min(2.5, Math.max(0.7, currentMapZoom + delta));
+        currentMapZoom = Math.min(3.0, Math.max(0.8, currentMapZoom + delta));
         updateModalMapTransform();
       }
 
@@ -9243,8 +9103,8 @@
         updateModalMapTransform();
       }
 
-      function focusModalZone(zoneKey, zoom, panX, panY) {
-        currentMapZoom = zoom || 1.3;
+      function focusModalZone(zoom, panX, panY) {
+        currentMapZoom = zoom || 1.4;
         modalPanX = panX || 0;
         modalPanY = panY || 0;
         updateModalMapTransform();
@@ -9255,67 +9115,38 @@
         if (img) {
           img.style.transform = `scale(${currentMapZoom}) translate(${modalPanX}px, ${modalPanY}px)`;
         }
-
       }
 
-      function highlightLivePin(pinId) {
-        document.querySelectorAll('.map-hotspot-pin').forEach(p => p.classList.remove('active-pin'));
-        const pin = document.getElementById(pinId);
-        if (pin) {
-          pin.classList.add('active-pin');
-        }
+      // Drag / Pan functionality inside modal
+      const viewport = document.getElementById('modalMapViewport');
+      if (viewport) {
+        viewport.addEventListener('mousedown', function(e) {
+          isDragging = true;
+          startX = e.clientX - modalPanX;
+          startY = e.clientY - modalPanY;
+          viewport.style.cursor = 'grabbing';
+        });
 
-      }
+        window.addEventListener('mousemove', function(e) {
+          if (!isDragging) return;
+          modalPanX = e.clientX - startX;
+          modalPanY = e.clientY - startY;
+          updateModalMapTransform();
+        });
 
-      let zonesExpanded = false;
-      function toggleZonesViewMore() {
-        zonesExpanded = !zonesExpanded;
-        const extraRows = document.querySelectorAll('#liveZonesList .extra-zone');
-        const btn = document.getElementById('btnZonesViewMore');
-        extraRows.forEach(function(row) {
-          if (zonesExpanded) {
-            row.style.display = 'flex';
-            row.classList.add('zone-animated');
-          } else {
-            row.style.display = 'none';
-            row.classList.remove('zone-animated');
+        window.addEventListener('mouseup', function() {
+          if (isDragging) {
+            isDragging = false;
+            viewport.style.cursor = 'grab';
           }
         });
-        if (btn) {
-          btn.textContent = zonesExpanded ? 'Less' : 'More';
-        }
-      }
 
-      function selectLiveZone(index, customName, customHall, customColor) {
-        const zone = zoneData[index] || {
-          name: customName || 'Active Zone',
-          hall: customHall || 'Main Floor',
-          color: customColor || '#1768ff',
-          pin: 'pinZone' + index
-        };
-
-        // 1. Highlight pin
-        highlightLivePin(zone.pin);
-        // 2. Highlight row
-        document.querySelectorAll('.live-zone-row').forEach(r => r.classList.remove('active-zone'));
-        const row = document.getElementById('zoneRow' + index);
-        if (row) {
-          if (row.classList.contains('extra-zone') && !zonesExpanded) {
-            toggleZonesViewMore();
-          }
-          row.classList.add('active-zone');
-        }
-        // 3. Update quick info banner
-        const dot = document.getElementById('bannerZoneDot');
-        const title = document.getElementById('bannerZoneTitle');
-        const hall = document.getElementById('bannerZoneHall');
-        if (dot) {
-          dot.style.background = zone.color;
-          dot.style.boxShadow = `0 0 6px ${zone.color}`;
-        }
-
-        if (title) title.innerText = zone.name;
-        if (hall) hall.innerText = '• ' + zone.hall;
+        // Mouse wheel zoom
+        viewport.addEventListener('wheel', function(e) {
+          e.preventDefault();
+          const delta = e.deltaY < 0 ? 0.15 : -0.15;
+          zoomFloorMap(delta);
+        }, { passive: false });
       }
 
       document.addEventListener('keydown', function(e) {
