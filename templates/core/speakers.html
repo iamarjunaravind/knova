@@ -827,10 +827,13 @@
                 <i class="ti ti-microphone"></i> Call for Speakers
             </div>
             <h3 style="font-size: 21px; font-weight: 800; color: #ffffff; margin: 0 0 6px 0;">{{ site_config.speakers_cta_title|default:"Interested in Speaking at KNOVA 2027?" }}</h3>
-            <p style="font-size: 13.5px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.5;">{{ site_config.speakers_cta_desc|default:"Share your expertise with thousands of aspiring students, educators, and global university deans." }}</p>
+            <p style="font-size: 13.5px; color: rgba(255,255,255,0.85); margin: 0 0 10px 0; line-height: 1.5;">{{ site_config.speakers_cta_desc|default:"Share your expertise with thousands of aspiring students, educators, and global university deans." }}</p>
+            <div style="display: inline-flex; align-items: center; gap: 7px; background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 8px; font-size: 12.5px; color: #ffffff;">
+                <i class="ti ti-mail" style="color: #38bdf8;"></i> Speaker Connections: <a href="mailto:{{ site_config.email_speakers|default:'connect@knovaexpo.com' }}?subject=Speaker%20Connection%20-%20KNOVA%202027" style="color: #38bdf8; font-weight: 700; text-decoration: underline; margin-left: 4px;">{{ site_config.email_speakers|default:'connect@knovaexpo.com' }}</a>
+            </div>
         </div>
-        <a href="{{ site_config.speakers_cta_btn_url|default:'/register/?role=speaker' }}" style="background: #ffffff; color: #091e42; font-weight: 800; font-size: 13.5px; padding: 12px 24px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-            {{ site_config.speakers_cta_btn_text|default:"Apply as Keynote Speaker" }} <i class="ti ti-arrow-right"></i>
+        <a href="mailto:{{ site_config.email_speakers|default:'connect@knovaexpo.com' }}?subject=Speaker%20Connection%20-%20KNOVA%202027" style="background: #ffffff; color: #091e42; font-weight: 800; font-size: 13.5px; padding: 12px 24px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+            Connect with Speakers Team <i class="ti ti-arrow-right"></i>
         </a>
     </div>
 </div>

@@ -801,7 +801,7 @@ class SiteConfiguration(models.Model):
     speakers_cta_title = models.CharField(max_length=200, default="Interested in Speaking at KNOVA 2027?", blank=True)
     speakers_cta_desc = models.TextField(default="Share your expertise with thousands of aspiring students, educators, and global university deans.", blank=True)
     speakers_cta_btn_text = models.CharField(max_length=100, default="Apply as Keynote Speaker", blank=True)
-    speakers_cta_btn_url = models.CharField(max_length=255, default="/register/?role=speaker", blank=True)
+    speakers_cta_btn_url = models.CharField(max_length=255, default="mailto:connect@knovaexpo.com?subject=Speaker%20Connection%20-%20KNOVA%202027", blank=True)
 
     # Programme Page Content
     programme_badge = models.CharField(max_length=100, default="OFFICIAL EXPO ITINERARY", blank=True)
@@ -977,7 +977,7 @@ class SiteConfiguration(models.Model):
     faq_6_a = models.TextField(default="The expo is hosted at the Riyadh Exhibition & Convention Center and Dubai World Trade Centre from 10:00 AM to 7:00 PM daily.", blank=True)
 
     faq_exh_1_q = models.CharField(max_length=255, default="How can universities and institutions register to exhibit at KNOVA 2027?", blank=True)
-    faq_exh_1_a = models.TextField(default="Institutions can register by submitting an official Exhibitor Booking Application via our portal or by contacting our Partnership Desk at exhibitors@knovaexpo.com. Once approved, you gain access to the dedicated Exhibitor Portal to configure booth shell schemes, register staff badges, and book keynote auditorium slots.", blank=True)
+    faq_exh_1_a = models.TextField(default="Institutions can register by submitting an official Exhibitor Booking Application via our portal or by contacting our Partnership Desk at partners@knovaexpo.com. Once approved, you gain access to the dedicated Exhibitor Portal to configure booth shell schemes, register staff badges, and book keynote auditorium slots.", blank=True)
 
     faq_exh_2_q = models.CharField(max_length=255, default="What are the key benefits and ROI of exhibiting at KNOVA 2027?", blank=True)
     faq_exh_2_a = models.TextField(default="Exhibiting provides direct face-to-face access to over 25,000+ pre-screened students, parents, and high school counselors across Riyadh, Dubai, and Doha. Institutions achieve direct enrollments through on-spot credential assessments, award institutional scholarships, expand brand presence across GCC media, and collect high-intent student leads.", blank=True)
@@ -996,7 +996,11 @@ class SiteConfiguration(models.Model):
     # ==========================================
     footer_tagline = models.TextField(default="KNOVA connects universities, academic institutions, students and families through engaging education experiences, meaningful institutional connections and digital opportunities across local, regional and international landscapes.", blank=True)
     footer_copyright = models.CharField(max_length=255, default="© 2027 KNOVA International Higher Education Summit. All rights reserved.", blank=True)
-    footer_contact_email = models.EmailField(default="contact@knovaexpo.com", blank=True)
+    footer_contact_email = models.EmailField(default="connect@knovaexpo.com", blank=True)
+    email_partners = models.EmailField(default="partners@knovaexpo.com", blank=True, verbose_name="Exhibitors & Sponsors Email")
+    email_speakers = models.EmailField(default="connect@knovaexpo.com", blank=True, verbose_name="Speakers & Keynotes Email")
+    email_coordination = models.EmailField(default="coordination@knovaexpo.com", blank=True, verbose_name="Event Coordination Email")
+    email_outreach = models.EmailField(default="outreach@knovaexpo.com", blank=True, verbose_name="Institutional Outreach Email")
     footer_contact_phone = models.CharField(max_length=100, default="+966 11 000 0000 / +971 4 000 0000", blank=True)
     chatbot_name = models.CharField(max_length=100, default="Mr. K - Your eBuddy", blank=True, verbose_name="Chat Assistant Name")
     chatbot_username = models.CharField(max_length=100, default="@Mr.K_YourE_Buddy", blank=True, verbose_name="WhatsApp / Chatbot Username")

@@ -4443,8 +4443,28 @@ Connect with leading universities, explore scholarships and discover the possibi
         <div class="cms-card-body">
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Official Contact Email</label>
-            <input type="email" name="footer_contact_email" class="form-control" value="{{ config.footer_contact_email }}">
+            <label class="form-label">Exhibitors &amp; Sponsors Email</label>
+            <input type="email" name="email_partners" class="form-control" value="{{ config.email_partners|default:'partners@knovaexpo.com' }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Speakers &amp; Keynotes Email (Speaker Routing)</label>
+            <input type="email" name="email_speakers" class="form-control" value="{{ config.email_speakers|default:'connect@knovaexpo.com' }}">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Event Coordination &amp; Operations Email</label>
+            <input type="email" name="email_coordination" class="form-control" value="{{ config.email_coordination|default:'coordination@knovaexpo.com' }}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Institutional Outreach Email</label>
+            <input type="email" name="email_outreach" class="form-control" value="{{ config.email_outreach|default:'outreach@knovaexpo.com' }}">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">General Contact Email</label>
+            <input type="email" name="footer_contact_email" class="form-control" value="{{ config.footer_contact_email|default:'connect@knovaexpo.com' }}">
           </div>
           <div class="form-group">
             <label class="form-label">Contact Phone / Support Hotline</label>

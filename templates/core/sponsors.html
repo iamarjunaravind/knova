@@ -947,8 +947,8 @@
                 <button type="button" class="btn-apply-filters" id="sponsorSearchBtn" onclick="filterSponsorsLive(document.getElementById('sponsorSearchInput').value)">
                     <i class="ti ti-search"></i> Search
                 </button>
-                <a href="{% url 'portal_register_exhibitor' %}" class="btn-map-companion" style="text-decoration: none;">
-                    <i class="ti ti-plus"></i> Partner With Us
+                <a href="mailto:{{ site_config.email_partners|default:'partners@knovaexpo.com' }}?subject=Partnership%20Inquiry%20-%20KNOVA%202027" class="btn-map-companion" style="text-decoration: none;">
+                    <i class="ti ti-mail"></i> Partner With Us
                 </a>
             </div>
 
@@ -1262,8 +1262,11 @@
         <div class="sp-cta-text">
             <h3>Elevate Your Brand Across 10,000+ GCC Students &amp; Families</h3>
             <p>Connect with high-net-worth parents, ambitious scholars, and 150+ international university delegations.</p>
+            <div style="margin-top: 8px; font-size: 12.5px; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 6px;">
+                <i class="ti ti-mail" style="color: #fbbf24;"></i> Exhibitors &amp; Sponsors Desk: <a href="mailto:{{ site_config.email_partners|default:'partners@knovaexpo.com' }}?subject=Sponsorship%20Inquiry%20-%20KNOVA%202027" style="color: #ffffff; font-weight: 700; text-decoration: underline;">{{ site_config.email_partners|default:'partners@knovaexpo.com' }}</a>
+            </div>
         </div>
-        <a href="{% url 'portal_register_exhibitor' %}" class="btn-cta-gold">
+        <a href="mailto:{{ site_config.email_partners|default:'partners@knovaexpo.com' }}?subject=Sponsorship%20Inquiry%20-%20KNOVA%202027" class="btn-cta-gold">
             Become a Sponsor &rarr;
         </a>
     </div>
