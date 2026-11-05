@@ -477,24 +477,26 @@
             </p>
 
             <div class="reg-feature-list">
+                <div class="reg-experience-header" style="font-size: 13px; font-weight: 850; color: #0a1936; letter-spacing: 0.6px; text-transform: uppercase; margin: 4px 0 6px 0; display: flex; align-items: center; gap: 6px;">
+                    <i class="ti ti-sparkles" style="color: #1768ff; font-size: 15px;"></i> Your KNOVA Experience
+                </div>
                 <div class="reg-feature-item">
                     <div class="feature-icon-circle">
                         <i class="ti ti-building-bank"></i>
                     </div>
                     <div class="feature-text">
-                        <h4>Top Global Universities</h4>
-                        <p>Meet official representatives and admissions officers in person.</p>
+                        <h4 style="margin: 0 0 2px 0; font-size: 13.5px; font-weight: 800; color: #0f172a;">Meet Leading Universities</h4>
+                        <p style="margin: 0; font-size: 12px; color: #475569; line-height: 1.4;">Meet leading universities and admissions experts.</p>
                     </div>
                 </div>
-{% endif %}
 
                 <div class="reg-feature-item">
                     <div class="feature-icon-circle green">
                         <i class="ti ti-award"></i>
                     </div>
                     <div class="feature-text">
-                        <h4>$2.5M+ Scholarship Awards</h4>
-                        <p>Unlock merit grants, fee waivers, and exclusive financial aid.</p>
+                        <h4 style="margin: 0 0 2px 0; font-size: 13.5px; font-weight: 800; color: #0f172a;">Scholarships &amp; Financial Aid</h4>
+                        <p style="margin: 0; font-size: 12px; color: #475569; line-height: 1.4;">Explore scholarships and financial aid opportunities.</p>
                     </div>
                 </div>
 
@@ -503,8 +505,8 @@
                         <i class="ti ti-qrcode"></i>
                     </div>
                     <div class="feature-text">
-                        <h4>Instant QR Digital Pass</h4>
-                        <p>100% Free admission badge with instant express gate access.</p>
+                        <h4 style="margin: 0 0 2px 0; font-size: 13.5px; font-weight: 800; color: #0f172a;">Personalised Digital Pass</h4>
+                        <p style="margin: 0; font-size: 12px; color: #475569; line-height: 1.4;">Receive your personalised digital Expo Pass.</p>
                     </div>
                 </div>
             </div>
@@ -513,6 +515,7 @@
                 <img src="{% if site_config.register_hero_image %}{{ site_config.register_hero_image.url }}{% else %}{% static 'assets/reg_hero_cityscape.jpg' %}{% endif %}" loading="lazy" decoding="async" alt="Student overlooking global education destination">
             </div>
         </div>
+        {% endif %}
 
         <!-- Right Registration Card -->
         <div class="portal-reg-card">
