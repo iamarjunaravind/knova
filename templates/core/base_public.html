@@ -1745,7 +1745,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Become a Speaker</span>
 
-          <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Become a Sponsor</span>
+          <a href="mailto:{{ site_config.email_partners|default:'partners@knovaexpo.com' }}?subject=Sponsorship%20Inquiry%20-%20KNOVA%202027" class="eventor-footer-link">Become a Sponsor</a>
 
         </div>
 
@@ -1758,6 +1758,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h4 class="eventor-footer-col-title">Connect</h4>
 
         <div class="eventor-footer-links-list">
+
+          <a href="mailto:{{ site_config.footer_contact_email|default:'connect@knovaexpo.com' }}?subject=Contact%20KNOVA%202027" class="eventor-footer-link" title="Contact Us">
+            <span style="color: #cbd5e1; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.4px;">Contact Us</span><br>
+            <span style="color: #38bdf8; font-weight: 700;">{{ site_config.footer_contact_email|default:'connect@knovaexpo.com' }}</span>
+          </a>
 
           <a href="mailto:{{ site_config.email_partners|default:'partners@knovaexpo.com' }}?subject=Exhibitor%20%26%20Sponsorship%20Inquiry" class="eventor-footer-link" title="Exhibitor & Sponsorship Partnerships">
             <span style="color: #cbd5e1; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.4px;">Exhibitors &amp; Sponsors</span><br>
