@@ -1708,63 +1708,65 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       </div>
 
-      <!-- Column 2: About -->
+      <!-- Column 2: Explore -->
 
       <div class="eventor-footer-nav-col">
 
-        <h4 class="eventor-footer-col-title">About</h4>
+        <h4 class="eventor-footer-col-title">Explore</h4>
 
         <div class="eventor-footer-links-list">
 
-          <a href="{% url 'public_about' %}" class="eventor-footer-link">Conference</a>
+          <a href="{% url 'public_about' %}" class="eventor-footer-link">About KNOVA</a>
 
-          <a href="{% url 'index' %}#programme" class="eventor-footer-link">Schedule</a>
+          <a href="{% url 'public_events' %}" class="eventor-footer-link">Events & Experiences</a>
 
-          <a href="{% url 'public_register' %}" class="eventor-footer-link">Buy Tickets</a>
+          <a href="{% url 'public_speakers' %}" class="eventor-footer-link">Speakers</a>
 
-          <a href="{% url 'public_sponsors' %}" class="eventor-footer-link">Sponsoring</a>
+          <a href="{% url 'public_exhibitors' %}" class="eventor-footer-link">Participating Institutions</a>
 
-          <a href="{% url 'portal_login' %}" class="eventor-footer-link">Volunteer</a>
+          <a href="{% url 'courses_list' %}" class="eventor-footer-link">Education Opportunities</a>
 
         </div>
 
       </div>
 
-      <!-- Column 3: Enterprise -->
+      <!-- Column 3: Participate -->
 
       <div class="eventor-footer-nav-col">
 
-        <h4 class="eventor-footer-col-title">Enterprise</h4>
+        <h4 class="eventor-footer-col-title">Participate</h4>
 
         <div class="eventor-footer-links-list">
 
-          <a href="{% url 'public_about' %}" class="eventor-footer-link">Committees</a>
+          <a href="{% url 'public_register' %}" class="eventor-footer-link">Register as a Student</a>
 
-          <a href="{% url 'public_speakers' %}" class="eventor-footer-link">Advisory Boards</a>
+          <a href="{% url 'public_exhibitors' %}" class="eventor-footer-link">Institutional Participation</a>
 
-          <a href="{% url 'public_exhibitors' %}" class="eventor-footer-link">Apply to Speak</a>
+          <a href="{% url 'public_speakers' %}" class="eventor-footer-link">Become a Speaker</a>
 
-          <a href="{% url 'public_register' %}" class="eventor-footer-link">Register</a>
+          <a href="{% url 'public_sponsors' %}" class="eventor-footer-link">Become a Sponsor</a>
 
         </div>
 
       </div>
 
-      <!-- Column 4: Contact -->
+      <!-- Column 4: Connect -->
 
       <div class="eventor-footer-nav-col">
 
-        <h4 class="eventor-footer-col-title">Contact</h4>
+        <h4 class="eventor-footer-col-title">Connect</h4>
 
         <div class="eventor-footer-links-list">
-
-          <a href="{% url 'index' %}#faq" class="eventor-footer-link">Help Desk</a>
 
           <a href="{% url 'index' %}#contact" class="eventor-footer-link">Contact Us</a>
 
-          <a href="{% url 'courses_list' %}" class="eventor-footer-link">Documentation</a>
+          <a href="{% url 'index' %}#faq" class="eventor-footer-link">Help & Support</a>
 
-          <a href="javascript:void(0)" onclick="openEventorNewsletterModal()" class="eventor-footer-link">Newsletter</a>
+          <a href="{% url 'public_sponsors' %}" class="eventor-footer-link">Partnerships & Sponsorships</a>
+
+          <a href="{% url 'privacy_policy' %}" class="eventor-footer-link">Privacy Policy</a>
+
+          <a href="{% url 'terms_conditions' %}" class="eventor-footer-link">Terms & Conditions</a>
 
         </div>
 
