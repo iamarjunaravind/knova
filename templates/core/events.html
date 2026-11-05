@@ -1202,7 +1202,7 @@
                     <input 
                         type="text" 
                         id="eventSearchInput" 
-                        placeholder="{{ site_config.events_search_placeholder|default:'Search expos by city or venue (e.g. Bahrain, Dubai, Riyadh, Doha)...' }}" 
+                        placeholder="{{ site_config.events_search_placeholder|default:'Search expos by city or venue (e.g. Bahrain, Doha, Al Khobar)...' }}" 
                         oninput="filterEventsLive(this.value)"
                         autocomplete="off"
                         spellcheck="false"
@@ -1240,14 +1240,11 @@
                     <button type="button" class="city-chip-btn" onclick="filterCity('bahrain', this)">
                         Bahrain
                     </button>
-                    <button type="button" class="city-chip-btn" onclick="filterCity('dubai', this)">
-                        Dubai
-                    </button>
-                    <button type="button" class="city-chip-btn" onclick="filterCity('riyadh', this)">
-                        Riyadh
-                    </button>
                     <button type="button" class="city-chip-btn" onclick="filterCity('doha', this)">
                         Doha
+                    </button>
+                    <button type="button" class="city-chip-btn" onclick="filterCity('khobar', this)">
+                        Al Khobar
                     </button>
                 </div>
 
@@ -1505,13 +1502,10 @@
 
         if (!input || !box || !list) return;
 
-        var popularCities = [
-            { title: 'Bahrain', subtitle: 'Exhibition World Bahrain • Main Flagship Expo', query_val: 'Bahrain' },
-            { title: 'Dubai', subtitle: 'Dubai World Trade Centre (DWTC) • UAE Stop', query_val: 'Dubai' },
-            { title: 'Riyadh', subtitle: 'Riyadh International Convention Center • KSA Stop', query_val: 'Riyadh' },
-            { title: 'Doha', subtitle: 'Doha Exhibition & Convention Center • Qatar Stop', query_val: 'Doha' },
-            { title: 'Kuwait City', subtitle: 'Kuwait International Fairgrounds • Kuwait Stop', query_val: 'Kuwait' },
-            { title: 'Muscat', subtitle: 'Oman Convention & Exhibition Centre • Oman Stop', query_val: 'Muscat' }
+                var popularCities = [
+            { title: 'Bahrain', subtitle: 'Crowne Plaza by IHG Bahrain · Main Flagship Expo', query_val: 'Bahrain' },
+            { title: 'Doha', subtitle: 'Qatar National Convention Centre (QNCC) · Qatar Stop', query_val: 'Doha' },
+            { title: 'Al Khobar', subtitle: 'Dhahran Expo (Al Khobar) · Saudi Arabia Stop', query_val: 'Al Khobar' }
         ];
 
         function renderSuggestions(query) {

@@ -366,10 +366,11 @@ def public_events(request):
 
     # City image mapping
     city_images = {
-        'bahrain': 'assets/bahrain_promo.webp',
-        'dubai': 'assets/dubai.webp',
-        'riyadh': 'assets/riyadh.webp',
+        'bahrain': 'assets/bahrain_skyline.webp',
         'doha': 'assets/doha.webp',
+        'doha, qatar': 'assets/doha.webp',
+        'al khobar': 'assets/bahrain_skyline.webp',
+        'al khobar, saudi arabia': 'assets/bahrain_skyline.webp',
     }
 
     for ev in events:
