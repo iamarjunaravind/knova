@@ -853,55 +853,100 @@
     border-radius: 6px;
   }
 
-  .pillars-list-box {
+  /* THE KNOVA EDGE CARD */
+  .knova-edge-card {
+    background: #ffffff;
+    border: 1px solid #edf2f7;
+    border-radius: 14px;
+    padding: 24px 26px 28px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    justify-content: space-between;
+    box-shadow: 0 4px 16px rgba(11, 26, 51, 0.03);
   }
 
-  .pillar-row-card {
-    background: #f4f6fb;
-    border: none !important;
-    border-radius: 12px;
-    padding: 14px 16px;
+  .edge-heading {
+    font-size: 22px;
+    font-weight: 900;
+    color: #332769;
+    letter-spacing: 0.5px;
+    margin: 0;
+    text-transform: uppercase;
+    font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .edge-heading-bar {
+    width: 64px;
+    height: 4px;
+    background: #1e293b;
+    border-radius: 2px;
+    margin: 8px 0 24px 0;
+  }
+
+  .edge-items-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px 18px;
+  }
+
+  .edge-item {
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    transition: all 0.2s ease;
+    align-items: center;
+    gap: 14px;
+    transition: transform 0.2s ease;
   }
 
-  .pillar-row-card:hover {
-    background: #eaf0f9;
-    border: none !important;
+  .edge-item:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(23, 104, 255, 0.06);
   }
 
-  .pillar-icon-box {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: rgba(23, 104, 255, 0.1);
-    color: var(--knova-blue);
+  .edge-badge-box {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
   }
 
-  .pillar-details h4 {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--knova-navy);
-    margin: 0 0 3px 0;
+  .edge-badge-img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(156, 190, 116, 0.25));
   }
 
-  .pillar-details p {
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--knova-text-body);
+  .edge-item-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .edge-item-title {
+    font-size: 17px;
+    font-weight: 800;
+    color: #332769;
+    margin: 0 0 2px 0;
+    line-height: 1.25;
+    letter-spacing: -0.2px;
+    font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .edge-item-sub {
+    font-size: 13px;
+    color: #334155;
+    line-height: 1.35;
     margin: 0;
+    font-weight: 450;
+  }
+
+  @media (max-width: 640px) {
+    .edge-items-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .knova-edge-card {
+      padding: 18px 16px;
+    }
   }
 
   /* --------------------------------------------------------
@@ -1525,28 +1570,61 @@
           </div>
         </div>
 
-        <div class="pillars-list-box">
-          <div class="pillar-row-card">
-            <div class="pillar-icon-box"><i class="ti ti-door-enter"></i></div>
-            <div class="pillar-details">
-              <h4>{{ site_config.about_pillar1_title|default:"1. Democratize Access" }}</h4>
-              <p>{{ site_config.about_pillar1_desc|default:"Removing geographic and bureaucratic barriers by bringing authorized university representatives directly to Gulf students." }}</p>
-            </div>
+        <div class="knova-edge-card">
+          <div class="edge-heading-row">
+            <h3 class="edge-heading">THE KNOVA EDGE</h3>
+            <div class="edge-heading-bar"></div>
           </div>
 
-          <div class="pillar-row-card">
-            <div class="pillar-icon-box"><i class="ti ti-bulb"></i></div>
-            <div class="pillar-details">
-              <h4>{{ site_config.about_pillar2_title|default:"2. Empower with Clarity" }}</h4>
-              <p>{{ site_config.about_pillar2_desc|default:"Providing independent, verified insights into degree curricula, post-study work regulations, and high-value scholarship criteria." }}</p>
+          <div class="edge-items-grid">
+            <div class="edge-item">
+              <div class="edge-badge-box">
+                <img src="{% static 'assets/about/edge_badge_1.webp' %}" alt="1" class="edge-badge-img" loading="eager">
+              </div>
+              <div class="edge-item-content">
+                <h4 class="edge-item-title">Knowledge</h4>
+                <p class="edge-item-sub">Present Your Programmes</p>
+              </div>
             </div>
-          </div>
 
-          <div class="pillar-row-card">
-            <div class="pillar-icon-box"><i class="ti ti-network"></i></div>
-            <div class="pillar-details">
-              <h4>{{ site_config.about_pillar3_title|default:"3. Foster Global Networks" }}</h4>
-              <p>{{ site_config.about_pillar3_desc|default:"Cultivating enduring institutional partnerships between GCC educational authorities, high schools, and premier world universities." }}</p>
+            <div class="edge-item">
+              <div class="edge-badge-box">
+                <img src="{% static 'assets/about/edge_badge_2.webp' %}" alt="2" class="edge-badge-img" loading="eager">
+              </div>
+              <div class="edge-item-content">
+                <h4 class="edge-item-title">Networking</h4>
+                <p class="edge-item-sub">Connect with Students &amp; Parents</p>
+              </div>
+            </div>
+
+            <div class="edge-item">
+              <div class="edge-badge-box">
+                <img src="{% static 'assets/about/edge_badge_3.webp' %}" alt="3" class="edge-badge-img" loading="eager">
+              </div>
+              <div class="edge-item-content">
+                <h4 class="edge-item-title">Outreach</h4>
+                <p class="edge-item-sub">Reach Prospective Learners</p>
+              </div>
+            </div>
+
+            <div class="edge-item">
+              <div class="edge-badge-box">
+                <img src="{% static 'assets/about/edge_badge_4.webp' %}" alt="4" class="edge-badge-img" loading="eager">
+              </div>
+              <div class="edge-item-content">
+                <h4 class="edge-item-title">Visibility</h4>
+                <p class="edge-item-sub">Enhance Your Institutional Profile</p>
+              </div>
+            </div>
+
+            <div class="edge-item">
+              <div class="edge-badge-box">
+                <img src="{% static 'assets/about/edge_badge_5.webp' %}" alt="5" class="edge-badge-img" loading="eager">
+              </div>
+              <div class="edge-item-content">
+                <h4 class="edge-item-title">Alliances</h4>
+                <p class="edge-item-sub">Build Valuable Partnerships and Collaboration</p>
+              </div>
             </div>
           </div>
         </div>
