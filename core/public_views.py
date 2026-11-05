@@ -13,6 +13,8 @@ import base64
 import io
 import qrcode
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth import login, authenticate
 from django.urls import reverse
 from .models import Registration, EventLocation, University, Exhibitor, StudentProfile, ParentProfile
 
@@ -153,42 +155,45 @@ def public_register(request):
                     reg.preferred_program = preferred_program
                     reg.save()
 
-                # Create user account if password is provided
+                # Create user account
                 password = request.POST.get('password')
-                if password:
-                    from django.contrib.auth.models import User
+                from django.contrib.auth.models import User
+                user = User.objects.filter(email__iexact=email).first()
+                if not user:
+                    effective_pwd = password or 'exhibitor123' if role == 'Exhibitor' else password
+                    if effective_pwd:
+                        user = User.objects.create_user(username=email, email=email, password=effective_pwd, first_name=full_name)
+                elif password:
+                    user.set_password(password)
+                    user.save()
 
-                    if not User.objects.filter(username=email).exists():
-                        user = User.objects.create_user(username=email, email=email, password=password, first_name=full_name)
-                        if role == 'Student':
-                            StudentProfile.objects.create(user=user, mobile=phone)
-                        elif role == 'Parent':
-                            ParentProfile.objects.create(user=user, mobile=phone)
-                        elif role == 'Exhibitor':
-                            company = request.POST.get('company_name', full_name)
-                            from django.utils.text import slugify
-                            from .models import University, UniversityStaff
-                            # Get or create the University entry by company name
-                            uni_slug = slugify(company)
-                            # Ensure slug uniqueness
-                            base_slug = uni_slug
-                            counter = 1
-                            while University.objects.filter(slug=uni_slug).exists():
-                                uni_slug = f'{base_slug}-{counter}'
-                                counter += 1
-                            uni, _ = University.objects.get_or_create(
-                                name=company,
-                                defaults={'slug': uni_slug, 'is_approved': False}
-                            )
-                            UniversityStaff.objects.get_or_create(
-                                user=user,
-                                defaults={'university': uni, 'role': 'Representative'}
-                            )
-                            # Also keep an Exhibitor record for backward compatibility
-                            Exhibitor.objects.get_or_create(
-                                user=user,
-                                defaults={'company_name': company, 'event_location': event_location}
-                            )
+                if user:
+                    if role == 'Student':
+                        StudentProfile.objects.get_or_create(user=user, defaults={'mobile': phone})
+                    elif role == 'Parent':
+                        ParentProfile.objects.get_or_create(user=user, defaults={'mobile': phone})
+                    elif role == 'Exhibitor':
+                        company = request.POST.get('company_name') or full_name
+                        from django.utils.text import slugify
+                        from .models import University, UniversityStaff
+                        uni_slug = slugify(company)
+                        base_slug = uni_slug
+                        counter = 1
+                        while University.objects.filter(slug=uni_slug).exists():
+                            uni_slug = f'{base_slug}-{counter}'
+                            counter += 1
+                        uni, _ = University.objects.get_or_create(
+                            name=company,
+                            defaults={'slug': uni_slug, 'is_approved': False}
+                        )
+                        UniversityStaff.objects.get_or_create(
+                            user=user,
+                            defaults={'university': uni, 'role': 'Representative'}
+                        )
+                        Exhibitor.objects.get_or_create(
+                            user=user,
+                            defaults={'company_name': company, 'event_location': event_location}
+                        )
 
                 if created:
                     # Save interested exhibitors
@@ -221,6 +226,12 @@ def public_register(request):
                         fail_silently=True,
                     )
 
+                if role == 'Exhibitor':
+                    if user:
+                        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                    messages.success(request, f"Welcome to your Exhibitor Hub! Complete your university profile, add degree courses, and setup scholarships.")
+                    return redirect('dashboard_index')
+
                 return redirect(reverse('register_success', args=[reg.pk]))
             except EventLocation.DoesNotExist:
                 pass
@@ -236,6 +247,14 @@ def public_register(request):
 def register_success(request, pk):
     from django.contrib.auth.models import User
     reg = get_object_or_404(Registration, pk=pk)
+
+    if reg.role == 'Exhibitor':
+        if not request.user.is_authenticated:
+            u = User.objects.filter(email__iexact=reg.email).first()
+            if u:
+                login(request, u, backend='django.contrib.auth.backends.ModelBackend')
+        messages.success(request, f"Welcome to your Exhibitor Hub! Please complete your university profile, add degree courses, and setup scholarships.")
+        return redirect('dashboard_index')
 
     connect_candidates = []
     connect_role = None

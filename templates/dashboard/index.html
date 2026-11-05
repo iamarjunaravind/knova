@@ -1427,12 +1427,87 @@ window.addEventListener('click', function(e) {
   }
 </style>
 <!-- TOP INSTITUTIONAL COMMAND BANNER -->
-<div class="glass-card stat-card" style="margin-bottom: 22px; padding: 22px 26px; border-left: 4px solid #1768ff; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border-radius: 16px; box-shadow: 0 4px 16px rgba(10,25,54,0.04);">
+<div class="glass-card stat-card" style="margin-bottom: 20px; padding: 22px 26px; border-left: 4px solid #1768ff; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border-radius: 16px; box-shadow: 0 4px 16px rgba(10,25,54,0.04);">
   <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
     <span style="background:#eff6ff; color:#1768ff; font-size:11px; font-weight:750; padding:3px 10px; border-radius:20px; text-transform:uppercase; border:1px solid #bfdbfe;">Institutional Hub</span>
-    <h3 style="margin:0; color:#0a1936; font-size:22px; font-weight:800; letter-spacing:-0.3px;">Welcome, {{ profile.company_name }}!</h3>
+    <h3 style="margin:0; color:#0a1936; font-size:22px; font-weight:800; letter-spacing:-0.3px;">Welcome, {{ university.name|default:profile.company_name|default:request.user.get_full_name|default:"Exhibitor" }}!</h3>
   </div>
-  <p style="color:#64748b; font-size:13.5px; margin:0;">Exhibitor Portal{% if event %} &bull; <strong>{{ event.name }}</strong>{% endif %}. Manage academic courses, edit public profile, scan attendees, and review student applications.</p>
+  <p style="color:#64748b; font-size:13.5px; margin:0;">Exhibitor Portal{% if event %} &bull; <strong>{{ event.name }}</strong>{% endif %}. Complete your institutional profile, add degree courses, and setup scholarships for expo visitors.</p>
+</div>
+
+<!-- EXHIBITOR SETUP & PROFILE COMPLETION CHECKLIST -->
+<div class="glass-card" style="margin-bottom: 24px; padding: 20px 24px; border-radius: 16px; background: #ffffff; border: 1.5px solid #e0e7ff; box-shadow: 0 4px 18px rgba(23,104,255,0.06);">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 16px;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="background: #e0e7ff; color: #4338ca; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 6px; text-transform: uppercase;">Exhibitor Setup Checklist</span>
+        <h4 style="margin: 0; color: #0f172a; font-size: 16px; font-weight: 800;">Complete Institutional Setup</h4>
+      </div>
+      <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">Ensure prospective students see your complete university profile, active degree courses, and scholarship opportunities.</p>
+    </div>
+    {% if university and university.slug %}
+    <a href="{% url 'university_detail' university.slug %}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; font-size: 12.5px; font-weight: 700; padding: 8px 14px; border-radius: 8px; text-decoration: none;">
+      <i data-feather="external-link" style="width: 14px; height: 14px; color: #1768ff;"></i> View Live University Page
+    </a>
+    {% endif %}
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
+    <!-- Step 1: University Details & Profile -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 11px; font-weight: 800; color: #3b82f6; text-transform: uppercase; display: flex; align-items: center; gap: 5px;">
+            <i data-feather="edit-3" style="width: 14px; height: 14px;"></i> Step 1: Profile Details
+          </span>
+          {% if university.profile.short_description %}
+            <span style="font-size: 10.5px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 2px 7px; border-radius: 10px;">Configured</span>
+          {% else %}
+            <span style="font-size: 10.5px; font-weight: 700; background: #fef3c7; color: #b45309; padding: 2px 7px; border-radius: 10px;">Action Needed</span>
+          {% endif %}
+        </div>
+        <h5 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 750; color: #0f172a;">University Details</h5>
+        <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.4;">Add campus facilities, location, admission info, logo, and cover image.</p>
+      </div>
+      <a href="{% url 'university_staff_edit' %}" class="btn" style="margin-top: 12px; background: #1768ff; color: #fff; font-size: 12px; font-weight: 700; padding: 8px 12px; border-radius: 7px; text-decoration: none; text-align: center; display: block;">
+        Edit University Profile &rarr;
+      </a>
+    </div>
+
+    <!-- Step 2: Add Courses & Degrees -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 11px; font-weight: 800; color: #8b5cf6; text-transform: uppercase; display: flex; align-items: center; gap: 5px;">
+            <i data-feather="book-open" style="width: 14px; height: 14px;"></i> Step 2: Academic Programs
+          </span>
+          <span style="font-size: 10.5px; font-weight: 700; background: #f3e8ff; color: #7e22ce; padding: 2px 7px; border-radius: 10px;">{{ courses|length }} Active</span>
+        </div>
+        <h5 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 750; color: #0f172a;">Courses & Degrees</h5>
+        <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.4;">Publish Bachelor's, Master's, and Diploma programs with tuition fees.</p>
+      </div>
+      <button onclick="document.getElementById('addCourseModalIndex').style.display='flex'" style="margin-top: 12px; background: #8b5cf6; color: #fff; font-size: 12px; font-weight: 700; padding: 8px 12px; border-radius: 7px; border: none; cursor: pointer; text-align: center; display: block; width: 100%;">
+        + Add Academic Course
+      </button>
+    </div>
+
+    <!-- Step 3: Add Scholarships -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 11px; font-weight: 800; color: #f59e0b; text-transform: uppercase; display: flex; align-items: center; gap: 5px;">
+            <i data-feather="award" style="width: 14px; height: 14px;"></i> Step 3: Financial Aid
+          </span>
+          <span style="font-size: 10.5px; font-weight: 700; background: #fef3c7; color: #b45309; padding: 2px 7px; border-radius: 10px;">{{ scholarships|length }} Active</span>
+        </div>
+        <h5 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 750; color: #0f172a;">Scholarships & Grants</h5>
+        <p style="margin: 0; font-size: 12px; color: #64748b; line-height: 1.4;">Attract top applicants by listing merit discounts and scholarship grants.</p>
+      </div>
+      <button onclick="document.getElementById('addScholarshipModalIndex').style.display='flex'" style="margin-top: 12px; background: #f59e0b; color: #fff; font-size: 12px; font-weight: 700; padding: 8px 12px; border-radius: 7px; border: none; cursor: pointer; text-align: center; display: block; width: 100%;">
+        + Add Scholarship Grant
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- 4 KPI CARDS IN A ROW -->
