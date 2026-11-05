@@ -716,7 +716,7 @@
 
     .featured-specs-row {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
         background: #f8fafc;
         border: 1px solid #e2e8f0;
@@ -1131,7 +1131,7 @@
                         <i class="ti ti-calendar-event"></i> {{ site_config.events_hero_badge|default:"GLOBAL TOUR" }}
                     </span>
                     <span class="dash-crumb-sep">/</span>
-                    <span class="dash-crumb-text">Expos &amp; Summits</span>
+                    <span class="dash-crumb-text">Expos &amp; Educational Events</span>
                 </div>
                 <h1 class="events-dash-title">
                     {{ site_config.events_page_title|safe|default:"Global Education Expos <span class='gradient-text'>&amp; Seminars</span>" }}
@@ -1272,7 +1272,7 @@
             <div class="featured-card-media">
                 <img src="{% static featured_event.image_asset %}" onerror="this.src='{% static 'assets/bahrain_promo.webp' %}'" alt="{{ featured_event.name }}" loading="lazy" decoding="async">
                 <span class="featured-badge-overlay">
-                    <i class="ti ti-flame"></i> {{ site_config.events_featured_badge|default:"Flagship Expo" }}
+                    <i class="ti ti-flame"></i> {{ site_config.events_featured_badge|default:"Regional &amp; Global Education Expo" }}
                 </span>
                 <span class="featured-city-overlay">
                     <i class="ti ti-map-pin"></i> {{ featured_event.city }}, GCC
@@ -1281,10 +1281,7 @@
 
             <div class="featured-card-content">
                 <div>
-                    <div class="featured-header-row">
-                        <span class="featured-kicker-pill">
-                            <i class="ti ti-sparkles"></i> {{ site_config.events_featured_kicker|default:"2026/27 Tour Opener" }}
-                        </span>
+                    <div class="featured-header-row" style="margin-bottom: 6px;">
                         <span style="font-size: 11px; font-weight: 700; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 7px; border-radius: 4px;">
                             <i class="ti ti-ticket"></i> Free Entry
                         </span>
@@ -1310,10 +1307,7 @@
                             <span class="f-spec-lbl"><i class="ti ti-clock"></i> Timings</span>
                             <span class="f-spec-val">{{ featured_event.timings|default:"10 AM – 7 PM" }}</span>
                         </div>
-                        <div class="f-spec">
-                            <span class="f-spec-lbl"><i class="ti ti-users"></i> Attendees</span>
-                            <span class="f-spec-val">Students &amp; Parents</span>
-                        </div>
+                        
                     </div>
 
                     <div class="featured-actions-row">
@@ -1350,14 +1344,19 @@
             <div class="tour-card-banner">
                 <img src="{% static event.image_asset %}" onerror="this.src='{% static 'assets/dubai.webp' %}'" alt="{{ event.name }}" loading="lazy">
                 <span class="tour-city-pill"><i class="ti ti-map-pin"></i> {{ event.city }}</span>
+                {% if 'bahrain' in event.city|lower %}
                 <span class="tour-status-pill">Confirmed</span>
+                {% else %}
+                <span class="tour-status-pill" style="background: rgba(15, 23, 42, 0.78); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35);"><i class="ti ti-clock"></i> Soon</span>
+                {% endif %}
             </div>
 
             <!-- Body -->
             <div class="tour-card-body">
                 <h3 class="tour-card-title" title="{{ event.name }}">{{ event.name }}</h3>
 
-                <!-- 2x2 Specs -->
+                <!-- Specs -->
+                {% if 'bahrain' in event.city|lower %}
                 <div class="tour-specs-matrix">
                     <div class="t-spec">
                         <span class="t-spec-lbl"><i class="ti ti-calendar"></i> Date</span>
@@ -1365,18 +1364,24 @@
                     </div>
                     <div class="t-spec">
                         <span class="t-spec-lbl"><i class="ti ti-clock"></i> Timings</span>
-                        <span class="t-spec-val">{{ event.timings|default:"10 AM – 7 PM" }}</span>
+                        <span class="t-spec-val">{{ event.timings|default:"03:30 PM - 10:00 PM" }}</span>
                     </div>
                     <div class="t-spec" style="grid-column: 1 / -1;">
                         <span class="t-spec-lbl"><i class="ti ti-building"></i> Venue</span>
                         <span class="t-spec-val" title="{{ event.venue }}">{{ event.venue }}</span>
                     </div>
                 </div>
-
                 <!-- Standardized Status Strip -->
                 <div class="card-status-strip">
                     <i class="ti ti-sparkles"></i> 50+ Unis &bull; Free Pass
                 </div>
+                {% else %}
+                <div class="tour-specs-matrix" style="display: flex; align-items: center; justify-content: center; min-height: 82px; padding: 12px 0;">
+                    <span style="display: inline-flex; align-items: center; gap: 7px; background: rgba(23, 104, 255, 0.08); border: 1px solid rgba(23, 104, 255, 0.22); color: #1768ff; font-size: 13px; font-weight: 800; padding: 8px 20px; border-radius: 20px; letter-spacing: 0.3px;">
+                        <i class="ti ti-clock"></i> Announcing Soon
+                    </span>
+                </div>
+                {% endif %}
 
                 <!-- Actions -->
                 <div class="tour-card-actions">
