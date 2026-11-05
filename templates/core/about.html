@@ -1418,7 +1418,7 @@
         {% if site_config.show_about_overview %}<a href="#overview" class="hub-tab active"><i class="ti ti-layout-dashboard"></i> Overview</a>{% endif %}
         {% if site_config.show_about_metrics %}<a href="#metrics" class="hub-tab"><i class="ti ti-chart-bar"></i> Key Metrics</a>{% endif %}
         {% if site_config.show_about_mission %}<a href="#mission" class="hub-tab"><i class="ti ti-target-arrow"></i> Mission &amp; Principles</a>{% endif %}
-        {% if site_config.show_about_values %}<a href="#values" class="hub-tab"><i class="ti ti-shield-heart"></i> Core Values</a>{% endif %}
+        {% if site_config.show_about_values %}<a href="#values" class="hub-tab"><i class="ti ti-sparkles"></i> Beyond the Expo</a>{% endif %}
         {% if site_config.show_about_journey %}<a href="#organiser" class="hub-tab"><i class="ti ti-building-community"></i> The Organiser</a>{% endif %}
       </div>
       <div class="hub-action-box">
@@ -1632,10 +1632,9 @@
     {% endif %}
 
     {% if site_config.show_about_values %}
-    <!-- 4. CORE VALUES -->
+    <!-- 4. OPPORTUNITIES BEYOND THE EXPO -->
     <section class="dash-panel-card" id="values">
-      <div class="section-kicker"><i class="ti ti-heart-handshake"></i> Guiding Principles</div>
-      <h2 class="panel-title">{{ site_config.about_values_heading|default:"Institutional Values That Define Our Work" }}</h2>
+      <h2 class="panel-title">{{ site_config.about_values_heading|default:"Opportunities That Go Beyond the Expo" }}</h2>
       <p style="font-size: 13.5px; color: #64748b; margin-top: -8px; margin-bottom: 20px;">{{ site_config.about_values_desc|default:"The operational and ethical standards that guide every expo, university partnership, and student consultation." }}</p>
       <div class="values-grid-compact">
         <div class="val-card-dash v-blue">

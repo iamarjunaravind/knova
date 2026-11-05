@@ -649,7 +649,7 @@ class SiteConfiguration(models.Model):
     about_pillar3_title = models.CharField(max_length=200, default="3. Foster Global Networks", blank=True)
     about_pillar3_desc = models.TextField(default="Cultivating enduring institutional partnerships between GCC educational authorities, high schools, and premier global universities.", blank=True)
 
-    about_values_heading = models.CharField(max_length=255, default="Institutional Values That Define Our Work", blank=True)
+    about_values_heading = models.CharField(max_length=255, default="Opportunities That Go Beyond the Expo", blank=True)
     about_values_desc = models.TextField(default="The operational and ethical standards that guide every expo, university partnership, and student consultation.", blank=True)
     about_val1_title = models.CharField(max_length=200, default="Student First", blank=True)
     about_val1_desc = models.TextField(default="Every guidance session, panel, and scholarship matching algorithm puts student long-term potential at the center.", blank=True)
