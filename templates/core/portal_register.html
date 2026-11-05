@@ -248,7 +248,10 @@
     margin-bottom: 11px;
   }
   .reg-input-group label {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
     font-weight: 700;
     margin-bottom: 4px;
     font-size: 12px;
@@ -279,6 +282,25 @@
     color: #0f172a;
     font-family: inherit;
   }
+  .input-icon-wrap select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    padding-left: 38px !important;
+    padding-right: 32px !important;
+    background-color: #ffffff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 11px center !important;
+    background-size: 12px 12px !important;
+    cursor: pointer;
+  }
+  .input-icon-wrap select::-ms-expand {
+    display: none !important;
+  }
+  .input-icon-wrap input[type="password"] {
+    padding-right: 40px !important;
+  }
   .input-icon-wrap input:focus, .input-icon-wrap select:focus {
     outline: none;
     border-color: #0f172a;
@@ -290,10 +312,18 @@
   }
   .toggle-pwd-btn {
     position: absolute;
-    right: 12px;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #64748b;
     cursor: pointer;
     font-size: 16px;
+    z-index: 3;
     transition: color 0.2s;
   }
   .toggle-pwd-btn:hover {
@@ -471,10 +501,10 @@
                 </div>
 
                 <div class="reg-input-group" style="margin-bottom: 14px;">
-                    <label>Password (Min 8 Characters) *</label>
+                    <label>Password <span style="color: #ef4444;">*</span></label>
                     <div class="input-icon-wrap">
                         <i class="ti ti-lock input-icon"></i>
-                        <input type="password" id="genericPassword" name="password" required minlength="8" autocomplete="new-password" placeholder="Create your secure password">
+                        <input type="password" id="genericPassword" name="password" required minlength="8" autocomplete="new-password" placeholder="At least 12 characters">
                         <i class="ti ti-eye toggle-pwd-btn" id="toggleGenericPwd" onclick="toggleGenericPassword()"></i>
                     </div>
                 </div>

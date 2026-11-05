@@ -260,6 +260,9 @@
     color: #0f172a;
     font-family: inherit;
   }
+  .input-icon-wrap input[type="password"] {
+    padding-right: 40px !important;
+  }
   .input-icon-wrap input:focus {
     outline: none;
     border-color: #0f172a;
@@ -271,10 +274,18 @@
   }
   .toggle-pwd-btn {
     position: absolute;
-    right: 12px;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #64748b;
     cursor: pointer;
     font-size: 16px;
+    z-index: 3;
     transition: color 0.2s;
   }
   .toggle-pwd-btn:hover {
@@ -519,7 +530,7 @@
                 </div>
 
                 <div class="login-input-group" style="margin-bottom: 15px;">
-                    <label>Password *</label>
+                    <label>Password <span style="color: #ef4444;">*</span></label>
                     <div class="input-icon-wrap">
                         <i class="ti ti-lock input-icon"></i>
                         <input type="password" id="loginPassword" name="password" required autocomplete="current-password" placeholder="Enter your password">
