@@ -1384,7 +1384,7 @@
                 <!-- Actions -->
                 <div class="tour-card-actions">
                     <a href="{% if request.user.is_authenticated %}{% url 'my_expo' %}{% else %}{% url 'public_register' %}{% endif %}" class="btn-tour-primary">
-                        <i class="ti ti-ticket"></i> {{ site_config.events_card_btn_register|default:"Get Free Pass" }}
+                        <i class="ti ti-ticket"></i> {{ site_config.events_card_btn_register|default:"Register for Expo" }}
                     </a>
                     <a href="{% url 'public_expo_map' %}" class="btn-tour-secondary" title="View floor layout">
                         <i class="ti ti-map"></i> {{ site_config.events_card_btn_map|default:"Floor Plan" }}
