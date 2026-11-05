@@ -280,32 +280,36 @@
   .hub-tab {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: #475569;
+    gap: 7px;
+    padding: 7px 14px;
+    border-radius: 9px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #334155;
     text-decoration: none;
     transition: all 0.2s ease;
+    font-family: 'Poppins', 'Plus Jakarta Sans', sans-serif;
   }
 
   .hub-tab i {
-    font-size: 14px;
+    font-size: 16px;
     color: #64748b;
   }
 
   .hub-tab:hover {
-    color: var(--knova-blue);
-    background: #eff6ff;
+    color: #1768ff;
+    background: #edf4ff;
+  }
+  .hub-tab:hover i {
+    color: #1768ff;
   }
 
   .hub-tab.active {
-    background: rgba(23, 104, 255, 0.1);
-    color: var(--knova-blue);
+    background: #edf4ff;
+    color: #1768ff;
   }
   .hub-tab.active i {
-    color: var(--knova-blue);
+    color: #1768ff;
   }
 
   .hub-action-box {
@@ -1390,11 +1394,11 @@
   <div class="about-container">
     <div class="about-hub-bar">
       <div class="hub-tabs-list">
-        {% if site_config.show_about_overview %}<a href="#overview" class="hub-tab active"><i class="ti ti-layout-dashboard"></i> Overview</a>{% endif %}
+        {% if site_config.show_about_overview %}<a href="#overview" class="hub-tab active"><i class="ti ti-layout-grid"></i> Overview</a>{% endif %}
         {% if site_config.show_about_metrics %}<a href="#metrics" class="hub-tab"><i class="ti ti-chart-bar"></i> Key Metrics</a>{% endif %}
-        {% if site_config.show_about_mission %}<a href="#mission" class="hub-tab"><i class="ti ti-target-arrow"></i> Mission &amp; Principles</a>{% endif %}
-        {% if site_config.show_about_values %}<a href="#values" class="hub-tab"><i class="ti ti-sparkles"></i> Beyond the Expo</a>{% endif %}
-        {% if site_config.show_about_journey %}<a href="#organiser" class="hub-tab"><i class="ti ti-building-community"></i> The Organiser</a>{% endif %}
+        {% if site_config.show_about_mission %}<a href="#mission" class="hub-tab"><i class="ti ti-target"></i> Mission &amp; Pillars</a>{% endif %}
+        {% if site_config.show_about_values %}<a href="#values" class="hub-tab"><i class="ti ti-shield-heart"></i> Core Values</a>{% endif %}
+        {% if site_config.show_about_journey %}<a href="#journey" class="hub-tab"><i class="ti ti-route"></i> Growth Journey</a>{% endif %}
       </div>
       <div class="hub-action-box">
         <a href="{{ site_config.about_hero_btn2_url|default:'/register/' }}" class="hub-action-btn">
