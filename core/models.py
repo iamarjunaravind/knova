@@ -248,11 +248,10 @@ class Registration(models.Model):
     registration_id = models.CharField(max_length=50, unique=True, blank=True, null=True, db_index=True)
 
     def save(self, *args, **kwargs):
-        is_new = self.pk is None
+        if not self.registration_id:
+            from .utils import generate_unique_attendee_id
+            self.registration_id = generate_unique_attendee_id(self.role)
         super().save(*args, **kwargs)
-        if is_new and not self.registration_id:
-            self.registration_id = f"KNV-2027-{self.pk:06d}"
-            Registration.objects.filter(pk=self.pk).update(registration_id=self.registration_id)
 
     def __str__(self):
         return f"{self.full_name} ({self.role})"
@@ -1132,9 +1131,16 @@ class StudentProfile(models.Model):
         return bool(self.mobile and self.country_of_residence and (self.current_education or self.school_college))
 
     def save(self, *args, **kwargs):
-        import uuid
         if not self.qr_identifier:
-            self.qr_identifier = str(uuid.uuid4())
+            from .models import Registration
+            reg = None
+            if self.user and self.user.email:
+                reg = Registration.objects.filter(email__iexact=self.user.email).first()
+            if reg and reg.registration_id and reg.registration_id.startswith('KNOVA-ST-'):
+                self.qr_identifier = reg.registration_id
+            else:
+                from .utils import generate_unique_attendee_id
+                self.qr_identifier = generate_unique_attendee_id('Student')
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -1191,9 +1197,16 @@ class ParentProfile(models.Model):
     qr_identifier = models.CharField(max_length=100, unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        import uuid
         if not self.qr_identifier:
-            self.qr_identifier = str(uuid.uuid4())
+            from .models import Registration
+            reg = None
+            if self.user and self.user.email:
+                reg = Registration.objects.filter(email__iexact=self.user.email).first()
+            if reg and reg.registration_id and reg.registration_id.startswith('KNOVA-PA-'):
+                self.qr_identifier = reg.registration_id
+            else:
+                from .utils import generate_unique_attendee_id
+                self.qr_identifier = generate_unique_attendee_id('Parent')
         super().save(*args, **kwargs)
 
     def __str__(self):

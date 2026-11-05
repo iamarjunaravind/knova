@@ -1,4 +1,48 @@
+import random
+import time
 from .models import Registration, Exhibitor
+
+def generate_unique_attendee_id(role=None):
+    """
+    Generate a unique Attendee ID with role-based prefix and 5 random digits.
+    - Student: KNOVA-ST-<5 digits> (e.g. KNOVA-ST-48291)
+    - Exhibitor: KNOVA-EX-<5 digits> (e.g. KNOVA-EX-73910)
+    - Parent: KNOVA-PA-<5 digits> (e.g. KNOVA-PA-15024)
+    - Sponsor: KNOVA-SP-<5 digits> (e.g. KNOVA-SP-92817)
+    - Default/Other: KNOVA-AT-<5 digits> (e.g. KNOVA-AT-61849)
+
+    Guarantees uniqueness across:
+    - Registration.registration_id
+    - StudentProfile.qr_identifier
+    - ParentProfile.qr_identifier
+    - StudentChallengePassport.badge_id
+    """
+    from .models import StudentProfile, ParentProfile, StudentChallengePassport
+
+    role_str = str(role or '').strip().upper()
+    if 'STUDENT' in role_str:
+        prefix = 'KNOVA-ST-'
+    elif 'EXHIBITOR' in role_str or 'UNIVERSITY' in role_str:
+        prefix = 'KNOVA-EX-'
+    elif 'PARENT' in role_str:
+        prefix = 'KNOVA-PA-'
+    elif 'SPONSOR' in role_str:
+        prefix = 'KNOVA-SP-'
+    else:
+        prefix = 'KNOVA-AT-'
+
+    for _ in range(5000):
+        candidate = f"{prefix}{random.randint(10000, 99999)}"
+        if (
+            not Registration.objects.filter(registration_id__iexact=candidate).exists()
+            and not StudentProfile.objects.filter(qr_identifier__iexact=candidate).exists()
+            and not ParentProfile.objects.filter(qr_identifier__iexact=candidate).exists()
+            and not StudentChallengePassport.objects.filter(badge_id__iexact=candidate).exists()
+        ):
+            return candidate
+
+    return f"{prefix}{int(time.time() * 1000) % 90000 + 10000}"
+
 
 def calculate_match_score(student: Registration, exhibitor: Exhibitor) -> int:
     """

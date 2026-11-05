@@ -281,7 +281,7 @@
 
     <div class="id-card-role">{{ registration.role|default:"VISITOR"|upper }}</div>
     <div class="id-card-student-id">
-      <span class="id-label">{% if registration.role|upper == 'STUDENT' %}STUDENT ID:{% else %}ATTENDEE ID:{% endif %}</span>
+      <span class="id-label">{% if registration.role|lower == 'student' %}STUDENT ID:{% elif registration.role|lower == 'exhibitor' %}EXHIBITOR ID:{% elif registration.role|lower == 'parent' %}PARENT ID:{% elif registration.role|lower == 'sponsor' %}SPONSOR ID:{% else %}ATTENDEE ID:{% endif %}</span>
       <strong class="id-val">{{ student_id|default:badge_id|default:registration.registration_id|default:registration.id }}</strong>
     </div>
   </div>
@@ -300,7 +300,13 @@
 <div class="id-badge-actions">
   <button onclick="window.print()" class="btn-print">Print / Save Badge (PDF)</button>
   <a href="/my-expo/" class="btn-link">Open My Expo Hub</a>
+  {% if registration.role|lower == 'student' %}
   <a href="/challenge/" class="btn-link" style="color: #059669; border-color: #a7f3d0; background: #ecfdf5;">Open Challenge Passport</a>
+  {% elif registration.role|lower == 'exhibitor' %}
+  <a href="/dashboard/" class="btn-link" style="color: #2563eb; border-color: #93c5fd; background: #eff6ff;">Open Exhibitor Dashboard</a>
+  {% elif registration.role|lower == 'parent' %}
+  <a href="/dashboard/" class="btn-link" style="color: #7c3aed; border-color: #ddd6fe; background: #f5f3ff;">Open Parent Command Center</a>
+  {% endif %}
 </div>
 
 </body>

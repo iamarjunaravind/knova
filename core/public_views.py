@@ -44,40 +44,48 @@ def _validate_password_strength(password):
     return None
 
 
-def _is_email_registered(email):
+def _normalize_phone_digits(phone):
+    if not phone:
+        return ""
+    return ''.join(c for c in str(phone) if c.isdigit())
+
+
+def _is_email_registered(email, exclude_user=None):
     if not email:
         return False
     from django.contrib.auth.models import User
+    from django.db.models import Q
     clean_email = email.strip().lower()
-    return (
-        User.objects.filter(email__iexact=clean_email).exists()
-        or User.objects.filter(username__iexact=clean_email).exists()
-        or Registration.objects.filter(email__iexact=clean_email).exists()
-    )
+    user_qs = User.objects.filter(Q(email__iexact=clean_email) | Q(username__iexact=clean_email))
+    reg_qs = Registration.objects.filter(email__iexact=clean_email)
+    if exclude_user:
+        user_qs = user_qs.exclude(pk=exclude_user.pk)
+        if exclude_user.email:
+            reg_qs = reg_qs.exclude(email__iexact=exclude_user.email)
+    return user_qs.exists() or reg_qs.exists()
 
 
-def _is_phone_registered(phone):
+def _is_phone_registered(phone, exclude_user=None):
     if not phone:
         return False
-    clean_phone = phone.strip()
-    digits = ''.join(c for c in clean_phone if c.isdigit())
-    if not digits:
+    from django.db.models import Q
+    clean_phone = str(phone).strip()
+    digits = _normalize_phone_digits(clean_phone)
+    if len(digits) < 7:
         return False
-    if (
-        Registration.objects.filter(phone=clean_phone).exists()
-        or StudentProfile.objects.filter(mobile=clean_phone).exists()
-        or ParentProfile.objects.filter(mobile=clean_phone).exists()
-    ):
-        return True
-    if len(digits) >= 8:
-        last_digits = digits[-8:]
-        if (
-            Registration.objects.filter(phone__endswith=last_digits).exists()
-            or StudentProfile.objects.filter(mobile__endswith=last_digits).exists()
-            or ParentProfile.objects.filter(mobile__endswith=last_digits).exists()
-        ):
-            return True
-    return False
+    suffix = digits[-8:] if len(digits) >= 8 else digits
+
+    reg_qs = Registration.objects.filter(Q(phone=clean_phone) | Q(phone__endswith=suffix))
+    stu_qs = StudentProfile.objects.filter(Q(mobile=clean_phone) | Q(mobile__endswith=suffix))
+    par_qs = ParentProfile.objects.filter(Q(mobile=clean_phone) | Q(mobile__endswith=suffix))
+
+    if exclude_user:
+        if exclude_user.email:
+            reg_qs = reg_qs.exclude(email__iexact=exclude_user.email)
+        stu_qs = stu_qs.exclude(user=exclude_user)
+        par_qs = par_qs.exclude(user=exclude_user)
+
+    return reg_qs.exists() or stu_qs.exists() or par_qs.exists()
 
 
 def public_register(request):
@@ -301,9 +309,14 @@ def connect_family(request, reg_pk):
 
 def digital_badge(request, pk):
     reg = get_object_or_404(Registration, pk=pk)
+    valid_prefixes = ('KNOVA-ST-', 'KNOVA-EX-', 'KNOVA-PA-', 'KNOVA-SP-', 'KNOVA-AT-')
+    if not reg.registration_id or not any(reg.registration_id.startswith(p) for p in valid_prefixes):
+        from .utils import generate_unique_attendee_id
+        reg.registration_id = generate_unique_attendee_id(reg.role)
+        Registration.objects.filter(pk=reg.pk).update(registration_id=reg.registration_id)
 
     # Generate QR Code
-    qr_data = reg.registration_id or f"KNOVA-REG-{reg.pk}-{reg.full_name}"
+    qr_data = reg.registration_id
     qr = qrcode.make(qr_data)
 
     buffer = io.BytesIO()
@@ -312,7 +325,7 @@ def digital_badge(request, pk):
 
     # Gamification Passport
     visit_count = reg.booth_visits.count()
-    student_id = reg.registration_id or f"KNOVA-REG-{reg.pk:04d}"
+    student_id = reg.registration_id
 
     context = {
         'registration': reg,
@@ -1119,10 +1132,65 @@ def portal_login(request):
     if request.method == 'POST':
         u = (request.POST.get('username') or '').strip()
         p = request.POST.get('password') or ''
-        if '@' in u:
-            matching_user = User.objects.filter(email__iexact=u).first()
-            if matching_user:
-                u = matching_user.username
+
+        # 1. Attendee / Student / Exhibitor ID lookup (e.g. KNOVA-ST-12345, KNOVA-EX-12345)
+        u_upper = u.upper()
+        if u_upper.startswith('KNOVA-') or u_upper.startswith('KNV-') or u_upper.startswith('PAR-'):
+            reg = Registration.objects.filter(registration_id__iexact=u).first()
+            user_match = None
+            if reg and reg.email:
+                user_match = User.objects.filter(email__iexact=reg.email).first()
+            if not user_match:
+                sp = StudentProfile.objects.filter(qr_identifier__iexact=u).select_related('user').first()
+                if sp and sp.user:
+                    user_match = sp.user
+                else:
+                    pp = ParentProfile.objects.filter(qr_identifier__iexact=u).select_related('user').first()
+                    if pp and pp.user:
+                        user_match = pp.user
+            if user_match:
+                u = user_match.username
+
+        # 2. Email lookup: enforce strict single user match
+        elif '@' in u:
+            clean_email = u.lower()
+            matching_users = list(User.objects.filter(email__iexact=clean_email))
+            if len(matching_users) > 1:
+                return render(request, 'core/portal_login.html', {
+                    'error': 'Multiple accounts share this email address. Please log in using your specific username or Attendee ID.',
+                    'username': u,
+                    'next': next_url
+                })
+            elif len(matching_users) == 1:
+                u = matching_users[0].username
+
+        # 3. Phone number lookup: enforce strict single person match
+        else:
+            digits = ''.join(c for c in u if c.isdigit())
+            if len(digits) >= 7 and not any(c.isalpha() for c in u):
+                suffix = digits[-8:] if len(digits) >= 8 else digits
+                phone_users = []
+                for sp in StudentProfile.objects.filter(Q(mobile=u) | Q(mobile__endswith=suffix)).select_related('user'):
+                    if sp.user and sp.user not in phone_users:
+                        phone_users.append(sp.user)
+                for pp in ParentProfile.objects.filter(Q(mobile=u) | Q(mobile__endswith=suffix)).select_related('user'):
+                    if pp.user and pp.user not in phone_users:
+                        phone_users.append(pp.user)
+                for rg in Registration.objects.filter(Q(phone=u) | Q(phone__endswith=suffix)):
+                    if rg.email:
+                        rg_u = User.objects.filter(email__iexact=rg.email).first()
+                        if rg_u and rg_u not in phone_users:
+                            phone_users.append(rg_u)
+
+                if len(phone_users) > 1:
+                    return render(request, 'core/portal_login.html', {
+                        'error': 'Cannot log in using phone number: multiple accounts are registered with this phone number. Please use your unique email or Attendee ID.',
+                        'username': u,
+                        'next': next_url
+                    })
+                elif len(phone_users) == 1:
+                    u = phone_users[0].username
+
         user = authenticate(request, username=u, password=p)
         if user is None:
             # Fallback for standard test passwords so both username123, password123, and test passwords work
@@ -1874,7 +1942,8 @@ def get_or_create_challenge_passport(request):
         if reg:
             passport = StudentChallengePassport.objects.filter(registration=reg).first()
             if not passport:
-                badge = reg.registration_id or f"KNOVA-REG-{reg.pk}"
+                from .utils import generate_unique_attendee_id
+                badge = reg.registration_id if (reg.registration_id and reg.registration_id.startswith('KNOVA-ST-')) else generate_unique_attendee_id('Student')
                 passport = StudentChallengePassport.objects.create(
                     registration=reg,
                     badge_id=badge,
@@ -1925,7 +1994,8 @@ def get_or_create_challenge_passport(request):
             return passport
 
     # Create new passport for attendee
-    random_badge = f"KNOVA-{uuid.uuid4().hex[:6].upper()}"
+    from .utils import generate_unique_attendee_id
+    random_badge = generate_unique_attendee_id('Student')
     passport = StudentChallengePassport.objects.create(
         badge_id=random_badge,
         student_name="Student Attendee",

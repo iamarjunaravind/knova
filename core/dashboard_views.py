@@ -2003,8 +2003,8 @@ def dashboard_student_profile(request):
 
             return redirect('dashboard_student_profile')
         if not profile.qr_identifier:
-            import uuid
-            profile.qr_identifier = 'PAR-' + str(uuid.uuid4())[:8].upper()
+            from .utils import generate_unique_attendee_id
+            profile.qr_identifier = generate_unique_attendee_id('Parent')
             profile.save(update_fields=['qr_identifier'])
         img = qrcode.make(profile.qr_identifier)
         buf = io.BytesIO()
