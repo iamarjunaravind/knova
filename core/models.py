@@ -844,8 +844,8 @@ class SiteConfiguration(models.Model):
     challenge_cta_text = models.CharField(max_length=255, default="Complete all missions to unlock the Grand Prize Draw & Official ID Badge!", blank=True)
 
     # Register Page Content
-    register_showcase_title = models.CharField(max_length=255, default="Unlock Your Global Education Future at KNOVA 2027", blank=True)
-    register_showcase_subtitle = models.TextField(default="Connect directly with international university admissions, apply for verified scholarships, and participate in masterclasses.", blank=True)
+    register_showcase_title = models.CharField(max_length=255, default='Reserve Your<br><span class="reg-highlight">Expo Pass</span>', blank=True)
+    register_showcase_subtitle = models.TextField(default="Where aspirations meet opportunities.\nConnect with leading universities, explore scholarships and discover the possibilities that shape your future.", blank=True)
     register_form_title = models.CharField(max_length=255, default="Register for Free Expo Pass", blank=True)
     register_form_subtitle = models.TextField(default="Instant digital badge with QR check-in sent to your email.", blank=True)
 

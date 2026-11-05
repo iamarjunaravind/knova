@@ -460,11 +460,20 @@
                 <span class="kicker-line"></span>
             </div>
             <h1 class="reg-showcase-title">
-                Reserve your free<br>
-                <span class="reg-highlight">Expo Pass</span>
+                {% if site_config.register_showcase_title %}
+                    {{ site_config.register_showcase_title|safe }}
+                {% else %}
+                    Reserve Your<br>
+                    <span class="reg-highlight">Expo Pass</span>
+                {% endif %}
             </h1>
             <p class="reg-showcase-sub">
-                Connect directly with admissions deans from top global universities &amp; receive instant AI-matched digital badge access.
+                {% if site_config.register_showcase_subtitle %}
+                    {{ site_config.register_showcase_subtitle|linebreaksbr }}
+                {% else %}
+                    Where aspirations meet opportunities.<br>
+                    Connect with leading universities, explore scholarships and discover the possibilities that shape your future.
+                {% endif %}
             </p>
 
             <div class="reg-feature-list">
