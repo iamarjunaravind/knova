@@ -716,7 +716,7 @@ class SiteConfiguration(models.Model):
     events_btn_myexpo_text = models.CharField(max_length=100, default="My Expo Pass", blank=True)
 
     events_featured_kicker = models.CharField(max_length=100, default="", blank=True)
-    events_featured_badge = models.CharField(max_length=100, default="REGIONAL & GLOBAL EDUCATION EXPO", blank=True)
+    events_featured_badge = models.CharField(max_length=100, default="CONFIRMED 2027", blank=True)
     events_featured_desc = models.TextField(default="", blank=True)
     events_featured_btn1_text = models.CharField(max_length=100, default="Register for Expo", blank=True)
     events_featured_btn2_text = models.CharField(max_length=100, default="View Floor Map", blank=True)
