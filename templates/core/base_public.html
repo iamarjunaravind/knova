@@ -424,6 +424,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5)) !important;
   }
 
+    /* Hide floating header & chatbot when full-screen floorplan modal is active */
+  body.floor-modal-active .header,
+  body.floor-modal-active .header.floating-nav-scrolled,
+  body.floor-modal-active .mrk-chat-trigger,
+  body.floor-modal-active #mrkChatWidget {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
   /* Desktop View (>= 821px): Floating Capsule Glassy Navbar - Fixed & Consistent at all scroll positions */
 
   @media (min-width: 821px) {

@@ -8726,18 +8726,35 @@
   <div class="container">
 
     <style>
+      body.floor-modal-active .header,
+      body.floor-modal-active #header,
+      body.floor-modal-active .header.floating-nav-scrolled,
+      body.floor-modal-active .mrk-chat-trigger,
+      body.floor-modal-active #mrkChatWidget {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
       .live-floor-modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(6, 16, 34, 0.88);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        z-index: 99999;
+        position: fixed !important;
+        inset: 0 !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: rgba(6, 16, 34, 0.92) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        z-index: 2147483647 !important;
         display: none;
         align-items: center;
         justify-content: center;
-        padding: 16px;
-        box-sizing: border-box;
+        padding: 24px 16px !important;
+        box-sizing: border-box !important;
       }
       .live-floor-modal-overlay.open {
         display: flex !important;
@@ -8747,13 +8764,14 @@
         border-radius: 20px;
         max-width: 96vw;
         width: 1400px;
-        height: 92vh;
-        max-height: 94vh;
+        height: calc(100vh - 48px);
+        max-height: calc(100vh - 48px);
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+        box-shadow: 0 25px 60px rgba(0,0,0,0.55);
         position: relative;
+        z-index: 2147483647;
         animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       }
       @keyframes modalPopIn {
@@ -9304,9 +9322,13 @@
         if (e && e.stopPropagation) e.stopPropagation();
         const modal = document.getElementById('liveFloorModal');
         if (modal) {
+          if (modal.parentNode !== document.body) {
+            document.body.appendChild(modal);
+          }
           modal.classList.add('open');
           modal.style.display = 'flex';
         }
+        document.body.classList.add('floor-modal-active');
         document.body.style.overflow = 'hidden';
       };
 
@@ -9317,8 +9339,15 @@
           modal.classList.remove('open');
           modal.style.display = 'none';
         }
+        document.body.classList.remove('floor-modal-active');
         document.body.style.overflow = '';
       };
+
+      window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' || e.keyCode === 27) {
+          window.closeLiveFloorModal();
+        }
+      });
 
       window.toggleModalBrowserFullscreen = function(e) {
         if (e && e.stopPropagation) e.stopPropagation();
