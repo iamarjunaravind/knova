@@ -1341,11 +1341,7 @@
             <div class="tour-card-banner">
                 <img src="{% static event.image_asset %}" onerror="this.src='{% static 'assets/dubai.webp' %}'" alt="{{ event.name }}" loading="lazy">
                 <span class="tour-city-pill"><i class="ti ti-map-pin"></i> {{ event.city }}</span>
-                {% if 'bahrain' in event.city|lower %}
                 <span class="tour-status-pill">Confirmed</span>
-                {% else %}
-                <span class="tour-status-pill" style="background: rgba(15, 23, 42, 0.78); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35);"><i class="ti ti-clock"></i> Soon</span>
-                {% endif %}
             </div>
 
             <!-- Body -->
