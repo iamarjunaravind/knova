@@ -934,7 +934,7 @@
           <div class="toggle-item-card" id="card-show_events_featured">
             <div class="toggle-info">
               <h4>2. Featured Flagship Expo Showcase <span class="toggle-status-pill {% if config.show_events_featured %}status-visible{% else %}status-hidden{% endif %}" id="pill-show_events_featured">{% if config.show_events_featured %}Visible{% else %}Hidden{% endif %}</span></h4>
-              <p>Prominent featured event card with date, venue, calendar button, and free pass CTA.</p>
+              <p>Prominent featured event card with date, venue, calendar button, and registration CTA.</p>
             </div>
             <label class="switch">
               <input type="checkbox" name="show_events_featured" id="chk-show_events_featured" {% if config.show_events_featured %}checked{% endif %} onchange="ajaxToggle('show_events_featured')">
@@ -2304,7 +2304,7 @@
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-locations', event)" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
           <div>
             <h3 class="cms-card-title"><i data-feather="map-pin" style="color:#0284c7;"></i> Event Locations &amp; Tour Expansion Section</h3>
-            <p class="cms-card-subtitle">Configure the 2-column showcase on the homepage: featured summit card (dates, venue, perks) and right-column tour expansion cities.</p>
+            <p class="cms-card-subtitle">Configure the 2-column showcase on the homepage: featured expo card (dates, venue, perks) and right-column tour expansion cities.</p>
           </div>
           <div style="display:flex; align-items:center; gap:10px;">
             <a href="/dashboard/events/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#0284c7; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#eff6ff; border:1px solid #bfdbfe; padding:6px 14px; border-radius:8px;">
@@ -2365,11 +2365,11 @@
         <!-- 2 Column Split Grid -->
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:18px; margin-bottom:16px;">
           
-          <!-- LEFT CARD: FEATURED SUMMIT CARD -->
+          <!-- LEFT CARD: FEATURED EXPO CARD -->
           <div style="background:#ffffff; border:1.5px solid #bfdbfe; border-radius:12px; padding:18px; box-shadow:0 2px 10px rgba(2,132,199,0.06);">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; border-bottom:1px solid #e0f2fe; padding-bottom:8px;">
               <strong style="color:#0369a1; font-size:13px; font-weight:850; display:flex; align-items:center; gap:6px;">
-                <i data-feather="award" style="width:16px; height:16px;"></i> LEFT CARD: FEATURED EXPO SUMMIT
+                <i data-feather="award" style="width:16px; height:16px;"></i> LEFT CARD: FEATURED EXPO CARD
               </strong>
               <span style="font-size:10px; font-weight:800; background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:10px;">SHOWCASE</span>
             </div>
@@ -2380,8 +2380,8 @@
                 <input type="text" name="event_card_badge" class="form-control" value="{{ config.event_card_badge }}" placeholder="CONFIRMED EVENT">
               </div>
               <div class="form-group">
-                <label class="form-label">Top Right Summit Pill</label>
-                <input type="text" name="event_card_summit" class="form-control" value="{{ config.event_card_summit }}" placeholder="2027 SUMMIT">
+                <label class="form-label">Top Right Badge Pill</label>
+                <input type="text" name="event_card_summit" class="form-control" value="{{ config.event_card_summit }}" placeholder="2027 CONFIRMED">
               </div>
             </div>
 
@@ -2392,12 +2392,12 @@
               </div>
               <div class="form-group">
                 <label class="form-label">Entry Badge Pill</label>
-                <input type="text" name="event_card_entry" class="form-control" value="{{ config.event_card_entry }}" placeholder="Free Entry">
+                <input type="text" name="event_card_entry" class="form-control" value="{{ config.event_card_entry }}" placeholder="Admission Badge (Leave blank if none)">
               </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label">Event Heading / Summit Title</label>
+              <label class="form-label">Event Heading / Expo Title</label>
               <input type="text" name="event_card_title" class="form-control" value="{{ config.event_card_title }}" placeholder="KNOVA 2027 , BAHRAIN EDITION" style="font-weight:700;">
             </div>
 
@@ -2827,7 +2827,7 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Button 1 Label</label>
-              <input type="text" name="faq_support_btn1" class="form-control" value="{{ config.faq_support_btn1 }}" placeholder="Get Free Pass">
+              <input type="text" name="faq_support_btn1" class="form-control" value="{{ config.faq_support_btn1 }}" placeholder="Register for Expo">
             </div>
             <div class="form-group">
               <label class="form-label">Button 2 Label</label>
@@ -3068,7 +3068,7 @@
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-about-spotlight', event)">
             <div>
               <h3 class="cms-card-title"><i data-feather="video" style="color:#0ea5e9;"></i> Overview Media Spotlight &amp; Video Card</h3>
-              <p class="cms-card-subtitle">Expo media card image, 2-minute overview video modal, summit year badge, and 3 live stat pills</p>
+              <p class="cms-card-subtitle">Expo media card image, 2-minute overview video modal, year badge, and 3 live stat pills</p>
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
               <span class="cms-card-toggle-pill">
@@ -3121,7 +3121,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Media Caption (Header Line)</label>
-                <input type="text" name="about_spotlight_caption_top" class="form-control" value="{{ config.about_spotlight_caption_top }}" placeholder="KNOVA Higher Education Summit">
+                <input type="text" name="about_spotlight_caption_top" class="form-control" value="{{ config.about_spotlight_caption_top }}" placeholder="KNOVA Regional & Global Education Expo">
               </div>
               <div class="form-group">
                 <label class="form-label">Media Caption (Sub-Line / Intake Year)</label>
@@ -3487,6 +3487,16 @@
               <input type="text" name="events_btn_myexpo_text" class="form-control" value="{{ config.events_btn_myexpo_text }}">
             </div>
           </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Hero KPI Metric Number</label>
+              <input type="text" name="events_hero_title" class="form-control" value="{{ config.events_hero_title }}" placeholder="3">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hero KPI Metric Label</label>
+              <input type="text" name="events_hero_subtitle" class="form-control" value="{{ config.events_hero_subtitle }}" placeholder="Flagship Expos in 2027">
+            </div>
+          </div>
         </div>
         </div>
 
@@ -3495,7 +3505,7 @@
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-events-featured', event)">
           <div>
             <h3 class="cms-card-title"><i data-feather="award" style="color:#f59e0b;"></i> Featured Flagship Expo Showcase Card</h3>
-            <p class="cms-card-subtitle">Top featured summit card with dates, venue badge, perks, and CTA button</p>
+            <p class="cms-card-subtitle">Top featured expo card with dates, venue badge, perks, and CTA button</p>
           </div>
           <div style="display:flex; align-items:center; gap:10px;">
             <span class="cms-card-toggle-pill">
@@ -3950,7 +3960,7 @@
             </div>
             <div class="form-group">
               <label class="form-label">CTA Description</label>
-              <textarea name="programme_cta_desc" class="form-control" rows="2">{{ config.programme_cta_desc|default:'Seats for VIP keynote sessions are limited. Secure your free pass today to receive real-time schedule alerts.' }}</textarea>
+              <textarea name="programme_cta_desc" class="form-control" rows="2">{{ config.programme_cta_desc|default:'Seats for VIP keynote sessions are limited. Register today to receive real-time schedule alerts.' }}</textarea>
             </div>
           </div>
         </div>

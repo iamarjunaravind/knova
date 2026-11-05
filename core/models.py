@@ -642,7 +642,7 @@ class SiteConfiguration(models.Model):
     about_spotlight_badge = models.CharField(max_length=100, default="Expo In-Session", blank=True)
     about_spotlight_video_url = models.CharField(max_length=255, default="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ", blank=True, help_text="YouTube embed or video URL for overview modal")
     about_spotlight_caption_top = models.CharField(max_length=150, default="KNOVA Regional & Global Education Expo", blank=True)
-    about_spotlight_caption_sub = models.CharField(max_length=100, default="2026/27 Intake", blank=True)
+    about_spotlight_caption_sub = models.CharField(max_length=100, default="2027 Intake", blank=True)
     about_spotlight_stat1 = models.CharField(max_length=100, default="98.4% Match Rate", blank=True)
     about_spotlight_stat2 = models.CharField(max_length=100, default="Global Attendees", blank=True)
     about_spotlight_stat3 = models.CharField(max_length=100, default="Direct Offers", blank=True)
@@ -806,7 +806,7 @@ class SiteConfiguration(models.Model):
     # Programme Page Content
     programme_badge = models.CharField(max_length=100, default="OFFICIAL EXPO ITINERARY", blank=True)
     programme_cta_title = models.CharField(max_length=200, default="Don't Miss Any Exclusive Masterclass", blank=True)
-    programme_cta_desc = models.TextField(default="Seats for VIP keynote sessions are limited. Secure your free pass today to receive real-time schedule alerts.", blank=True)
+    programme_cta_desc = models.TextField(default="Seats for VIP keynote sessions are limited. Register today to receive real-time schedule alerts.", blank=True)
     programme_cta_btn_text = models.CharField(max_length=100, default="Register for Expo", blank=True)
 
     # Sponsors Page Content
@@ -863,7 +863,7 @@ class SiteConfiguration(models.Model):
     # WHY KNOVA CHECKLIST & 4 FEATURE CARDS
     # ==========================================
     why_check1 = models.CharField(max_length=255, default="Direct evaluations & fee waivers", blank=True)
-    why_check2 = models.CharField(max_length=255, default="Free entry for students & families", blank=True)
+    why_check2 = models.CharField(max_length=255, default="Personalized guidance for students & families", blank=True)
     why_check3 = models.CharField(max_length=255, default="Official Digital Certificate of Participation", blank=True)
     why_btn_text = models.CharField(max_length=100, default="Learn More About KNOVA →", blank=True)
 

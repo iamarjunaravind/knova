@@ -1129,7 +1129,7 @@
                 <h1 class="events-dash-title">
                     {{ site_config.events_page_title|safe|default:"Regional &amp; Global Education Expo" }}
                     <span class="dash-live-badge">
-                        2027
+                        {{ site_config.events_hero_badge|default:"2027" }}
                     </span>
                 </h1>
                 <p class="dash-subtitle-text">
@@ -1144,8 +1144,8 @@
                         <i class="ti ti-calendar-check"></i>
                     </div>
                     <div class="kpi-details">
-                        <div class="kpi-stat-number">3</div>
-                        <div class="kpi-stat-title">Flagship Expos in 2027</div>
+                        <div class="kpi-stat-number">{{ site_config.events_hero_title|default:"3" }}</div>
+                        <div class="kpi-stat-title">{{ site_config.events_hero_subtitle|default:"Flagship Expos in 2027" }}</div>
                     </div>
                 </div>
             </div>
@@ -1245,6 +1245,7 @@
                 <div>
 
                     <h2 class="featured-h2-title" style="margin-bottom: 12px;">{{ featured_event.name }}</h2>
+                    {% if site_config.events_featured_desc %}<p class="featured-desc">{{ site_config.events_featured_desc }}</p>{% endif %}
                 </div>
 
                 <div>
