@@ -566,7 +566,7 @@ class SiteConfiguration(models.Model):
     event_card_badge = models.CharField(max_length=100, default="CONFIRMED EVENT", blank=True)
     event_card_summit = models.CharField(max_length=100, default="2027 EDUCATION EXPO", blank=True)
     event_card_kicker = models.CharField(max_length=200, default="Regional and Global Education Expo", blank=True)
-    event_card_entry = models.CharField(max_length=100, default="Free Entry", blank=True)
+    event_card_entry = models.CharField(max_length=100, default="", blank=True)
     event_card_title = models.CharField(max_length=255, default="KNOVA 2027 , BAHRAIN EDITION", blank=True)
     event_card_dates = models.CharField(max_length=150, default="March 25 – 27, 2027", blank=True)
     event_card_venue = models.CharField(max_length=255, default="Crowne Plaza by IHG Bahrain, Bahrain", blank=True)
