@@ -704,8 +704,8 @@ class SiteConfiguration(models.Model):
     about_cta_btn2_url = models.CharField(max_length=255, default="/courses/", blank=True)
 
     # Events Page
-    events_page_title = models.CharField(max_length=255, default="Global Education Expos & Seminars")
-    events_page_subtitle = models.CharField(max_length=255, default="Explore upcoming multi-city education exhibitions across the United Arab Emirates and Saudi Arabia.")
+    events_page_title = models.CharField(max_length=255, default="Regional & Global Education Expo")
+    events_page_subtitle = models.CharField(max_length=255, default="Discover leading universities, explore academic opportunities, connect with education experts and take the next step towards your future.")
     events_page_notice = models.CharField(max_length=255, default="Free admission for registered attendees. Present digital QR badge at the registration gate.", blank=True)
 
     events_hero_badge = models.CharField(max_length=200, default="REGIONAL & GLOBAL EDUCATION EXPO TOUR", blank=True)

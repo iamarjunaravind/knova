@@ -1124,66 +1124,28 @@
 <section class="events-hero">
     <div class="container">
         <div class="dashboard-header-inner">
-            <!-- Left: Breadcrumb & Title -->
+            <!-- Left: Title & Subtitle -->
             <div class="dash-title-block">
-                <div class="dash-breadcrumb-bar">
-                    <span class="dash-badge-pill">
-                        <i class="ti ti-calendar-event"></i> {{ site_config.events_hero_badge|default:"GLOBAL TOUR" }}
-                    </span>
-                    <span class="dash-crumb-sep">/</span>
-                    <span class="dash-crumb-text">Expos &amp; Educational Events</span>
-                </div>
                 <h1 class="events-dash-title">
-                    {{ site_config.events_page_title|safe|default:"Global Education Expos <span class='gradient-text'>&amp; Seminars</span>" }}
+                    {{ site_config.events_page_title|safe|default:"Regional &amp; Global Education Expo" }}
                     <span class="dash-live-badge">
-                        <span class="dash-live-dot"></span> LIVE 2026/27 TOUR
+                        2027
                     </span>
                 </h1>
                 <p class="dash-subtitle-text">
-                    {{ site_config.events_page_subtitle|default:"Meet face-to-face with visiting university deans, secure direct admissions, and explore verified scholarships across GCC cities." }}
-                
+                    {{ site_config.events_page_subtitle|default:"Discover leading universities, explore academic opportunities, connect with education experts and take the next step towards your future." }}
                 </p>
             </div>
 
-            <!-- Right: 4 KPI Cards -->
+            <!-- Right: 1 KPI Card -->
             <div class="dash-kpi-row">
                 <div class="dash-kpi-card kpi-expos">
                     <div class="kpi-icon-wrap">
                         <i class="ti ti-calendar-check"></i>
                     </div>
                     <div class="kpi-details">
-                        <div class="kpi-stat-number">{{ events|length|default:"4" }}<span>+</span></div>
-                        <div class="kpi-stat-title">Flagship Expos</div>
-                    </div>
-                </div>
-
-                <div class="dash-kpi-card kpi-unis">
-                    <div class="kpi-icon-wrap">
-                        <i class="ti ti-building-bank"></i>
-                    </div>
-                    <div class="kpi-details">
-                        <div class="kpi-stat-number">{{ uni_count|default:0 }}</div>
-                        <div class="kpi-stat-title">Visiting Unis</div>
-                    </div>
-                </div>
-
-                <div class="dash-kpi-card kpi-scholarships">
-                    <div class="kpi-icon-wrap">
-                        <i class="ti ti-award"></i>
-                    </div>
-                    <div class="kpi-details">
-                        <div class="kpi-stat-number">{{ scholarship_count|default:0 }}</div>
-                        <div class="kpi-stat-title">Scholarships</div>
-                    </div>
-                </div>
-
-                <div class="dash-kpi-card kpi-entry">
-                    <div class="kpi-icon-wrap">
-                        <i class="ti ti-ticket"></i>
-                    </div>
-                    <div class="kpi-details">
-                        <div class="kpi-stat-number">100%</div>
-                        <div class="kpi-stat-title">Free Passes</div>
+                        <div class="kpi-stat-number">3</div>
+                        <div class="kpi-stat-title">Flagship Expos in 2027</div>
                     </div>
                 </div>
             </div>
