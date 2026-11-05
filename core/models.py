@@ -717,7 +717,7 @@ class SiteConfiguration(models.Model):
 
     events_featured_kicker = models.CharField(max_length=100, default="", blank=True)
     events_featured_badge = models.CharField(max_length=100, default="REGIONAL & GLOBAL EDUCATION EXPO", blank=True)
-    events_featured_desc = models.TextField(default="The Gulf's primary regional and global education expo. Over 50+ leading global universities convene for direct admissions guidance, merit scholarships, and dean-led masterclasses.", blank=True)
+    events_featured_desc = models.TextField(default="", blank=True)
     events_featured_btn1_text = models.CharField(max_length=100, default="Register for Expo", blank=True)
     events_featured_btn2_text = models.CharField(max_length=100, default="View Floor Map", blank=True)
     events_featured_btn3_text = models.CharField(max_length=100, default="Add to Google Calendar", blank=True)
