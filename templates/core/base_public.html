@@ -1724,76 +1724,93 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </p>
 
         <div class="eventor-footer-social-row">
-          {% if site_config.social_facebook_url %}<a href="{{ site_config.social_facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook" class="eventor-footer-social-btn"><i class="ti ti-brand-facebook"></i></a>{% endif %}
-          {% if site_config.social_linkedin_url %}<a href="{{ site_config.social_linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn" class="eventor-footer-social-btn"><i class="ti ti-brand-linkedin"></i></a>{% endif %}
-          {% if site_config.social_twitter_url %}<a href="{{ site_config.social_twitter_url }}" target="_blank" rel="noopener" aria-label="Twitter / X" class="eventor-footer-social-btn"><i class="ti ti-brand-x"></i></a>{% endif %}
-          {% if site_config.social_instagram_url %}<a href="{{ site_config.social_instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram" class="eventor-footer-social-btn"><i class="ti ti-brand-instagram"></i></a>{% endif %}
-          {% if site_config.social_youtube_url %}<a href="{{ site_config.social_youtube_url }}" target="_blank" rel="noopener" aria-label="YouTube" class="eventor-footer-social-btn"><i class="ti ti-brand-youtube"></i></a>{% endif %}
+          {% if site_config.social_facebook_url %}<a href="{{ site_config.social_facebook_url }}" target="_blank" rel="noopener" aria-label="{{ site_config.social_facebook_title|default:'Facebook' }}" title="{{ site_config.social_facebook_title|default:'Facebook' }}" class="eventor-footer-social-btn"><i class="ti ti-brand-facebook"></i></a>{% endif %}
+          {% if site_config.social_linkedin_url %}<a href="{{ site_config.social_linkedin_url }}" target="_blank" rel="noopener" aria-label="{{ site_config.social_linkedin_title|default:'LinkedIn' }}" title="{{ site_config.social_linkedin_title|default:'LinkedIn' }}" class="eventor-footer-social-btn"><i class="ti ti-brand-linkedin"></i></a>{% endif %}
+          {% if site_config.social_twitter_url %}<a href="{{ site_config.social_twitter_url }}" target="_blank" rel="noopener" aria-label="{{ site_config.social_twitter_title|default:'Twitter / X' }}" title="{{ site_config.social_twitter_title|default:'Twitter / X' }}" class="eventor-footer-social-btn"><i class="ti ti-brand-x"></i></a>{% endif %}
+          {% if site_config.social_instagram_url %}<a href="{{ site_config.social_instagram_url }}" target="_blank" rel="noopener" aria-label="{{ site_config.social_instagram_title|default:'Instagram' }}" title="{{ site_config.social_instagram_title|default:'Instagram' }}" class="eventor-footer-social-btn"><i class="ti ti-brand-instagram"></i></a>{% endif %}
+          {% if site_config.social_youtube_url %}<a href="{{ site_config.social_youtube_url }}" target="_blank" rel="noopener" aria-label="{{ site_config.social_youtube_title|default:'YouTube' }}" title="{{ site_config.social_youtube_title|default:'YouTube' }}" class="eventor-footer-social-btn"><i class="ti ti-brand-youtube"></i></a>{% endif %}
         </div>
 
       </div>
 
-      <!-- Column 2: Explore -->
+      <!-- Column 2: Navigation Links -->
 
       <div class="eventor-footer-nav-col">
 
-        <h4 class="eventor-footer-col-title">Explore</h4>
+        <h4 class="eventor-footer-col-title">{{ site_config.footer_col2_title|default:"Explore" }}</h4>
 
         <div class="eventor-footer-links-list">
-
-          <a href="{% url 'public_about' %}" class="eventor-footer-link">About KNOVA</a>
-
-          <a href="{% url 'public_events' %}" class="eventor-footer-link">Events & Experiences</a>
-
-          <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Speakers</span>
-
-          <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Participating Institutions</span>
-
-          <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Education Opportunities</span>
-
+          {% for item in site_config.get_footer_col2_links %}
+            {% if item.url %}
+              <a href="{{ item.url }}" class="eventor-footer-link">{{ item.text }}</a>
+            {% else %}
+              <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">{{ item.text }}</span>
+            {% endif %}
+          {% empty %}
+            <a href="{% url 'public_about' %}" class="eventor-footer-link">About KNOVA</a>
+            <a href="{% url 'public_events' %}" class="eventor-footer-link">Events &amp; Experiences</a>
+            <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Speakers</span>
+            <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Participating Institutions</span>
+            <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Education Opportunities</span>
+          {% endfor %}
         </div>
 
       </div>
 
-      <!-- Column 3: Participate -->
+      <!-- Column 3: Navigation Links -->
 
       <div class="eventor-footer-nav-col">
 
-        <h4 class="eventor-footer-col-title">Participate</h4>
+        <h4 class="eventor-footer-col-title">{{ site_config.footer_col3_title|default:"Participate" }}</h4>
 
         <div class="eventor-footer-links-list">
-
-          <a href="{% url 'public_register' %}" class="eventor-footer-link">Register for Expo</a>
-
-          <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Institutional Participation</span>
-
-          <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Become a Speaker</span>
-
-          <a href="mailto:{{ site_config.email_partners|default:'partners@knovaexpo.com' }}?subject=Sponsorship%20Inquiry%20-%20KNOVA%202027" class="eventor-footer-link">Become a Sponsor</a>
-
+          {% for item in site_config.get_footer_col3_links %}
+            {% if item.url %}
+              <a href="{{ item.url }}" class="eventor-footer-link">{{ item.text }}</a>
+            {% else %}
+              <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">{{ item.text }}</span>
+            {% endif %}
+          {% empty %}
+            <a href="{% url 'public_register' %}" class="eventor-footer-link">Register for Expo</a>
+            <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Institutional Participation</span>
+            <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">Become a Speaker</span>
+            <a href="mailto:{{ site_config.email_partners|default:'partners@knovaexpo.com' }}?subject=Sponsorship%20Inquiry%20-%20KNOVA%202027" class="eventor-footer-link">Become a Sponsor</a>
+          {% endfor %}
         </div>
 
       </div>
 
-      <!-- Column 4: Connect -->
+      <!-- Column 4: Connect & Legal -->
 
       <div class="eventor-footer-nav-col">
 
-        <h4 class="eventor-footer-col-title">Connect</h4>
+        <h4 class="eventor-footer-col-title">{{ site_config.footer_col4_title|default:"Connect" }}</h4>
 
         <div class="eventor-footer-links-list">
-
-          <a href="mailto:{{ site_config.footer_contact_email|default:'connect@knovaexpo.com' }}?subject=Contact%20KNOVA%202027" class="eventor-footer-link">Contact Us</a>
-
-          <a href="mailto:{{ site_config.email_coordination|default:'coordination@knovaexpo.com' }}?subject=Event%20Coordination%20Inquiry" class="eventor-footer-link">Event Coordination</a>
-
-          <a href="mailto:{{ site_config.email_outreach|default:'outreach@knovaexpo.com' }}?subject=Institutional%20Outreach%20Inquiry" class="eventor-footer-link">Institutional Outreach</a>
+          {% for item in site_config.get_footer_col4_links %}
+            {% if item.url %}
+              <a href="{{ item.url }}" class="eventor-footer-link">{{ item.text }}</a>
+            {% else %}
+              <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">{{ item.text }}</span>
+            {% endif %}
+          {% empty %}
+            <a href="mailto:{{ site_config.footer_contact_email|default:'connect@knovaexpo.com' }}?subject=Contact%20KNOVA%202027" class="eventor-footer-link">Contact Us</a>
+            <a href="mailto:{{ site_config.email_coordination|default:'coordination@knovaexpo.com' }}?subject=Event%20Coordination%20Inquiry" class="eventor-footer-link">Event Coordination</a>
+            <a href="mailto:{{ site_config.email_outreach|default:'outreach@knovaexpo.com' }}?subject=Institutional%20Outreach%20Inquiry" class="eventor-footer-link">Institutional Outreach</a>
+          {% endfor %}
 
           <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; gap: 8px;">
-            <a href="{% url 'privacy_policy' %}" class="eventor-footer-link">Privacy Policy</a>
-            <a href="{% url 'terms_conditions' %}" class="eventor-footer-link">Terms &amp; Conditions</a>
+            {% for item in site_config.get_footer_legal_links %}
+              {% if item.url %}
+                <a href="{{ item.url }}" class="eventor-footer-link">{{ item.text }}</a>
+              {% else %}
+                <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">{{ item.text }}</span>
+              {% endif %}
+            {% empty %}
+              <a href="{% url 'privacy_policy' %}" class="eventor-footer-link">Privacy Policy</a>
+              <a href="{% url 'terms_conditions' %}" class="eventor-footer-link">Terms &amp; Conditions</a>
+            {% endfor %}
           </div>
-
         </div>
 
       </div>

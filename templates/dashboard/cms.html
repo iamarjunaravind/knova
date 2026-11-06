@@ -5162,9 +5162,12 @@ Connect with leading universities, explore scholarships and discover the possibi
           </label>
           <select id="footerSectionDropdown" class="cms-section-select" onchange="filterTabSection('cmsTabContent-footer', 'footerSectionDropdown', this.value)">
             <option value="all">⚡ View All Sections (Dropdown Accordion)</option>
-            <option value="sec-footer-tagline">📝 1. Footer Tagline & Copyright</option>
-            <option value="sec-footer-contact">📞 2. Contact & Venue Details</option>
-            <option value="sec-footer-social">🌐 3. Social Media Profile Links</option>
+            <option value="sec-footer-tagline">📝 1. Footer Tagline &amp; Copyright</option>
+            <option value="sec-footer-nav-col2">🧭 2. Column 2: {{ config.footer_col2_title|default:"Explore" }} (Title &amp; Links)</option>
+            <option value="sec-footer-nav-col3">🎟️ 3. Column 3: {{ config.footer_col3_title|default:"Participate" }} (Title &amp; Links)</option>
+            <option value="sec-footer-nav-col4">📬 4. Column 4: {{ config.footer_col4_title|default:"Connect" }} &amp; Legal (Title &amp; Links)</option>
+            <option value="sec-footer-contact">📞 5. Contact &amp; Venue Details</option>
+            <option value="sec-footer-social">🌐 6. Social Media Profile Links &amp; Titles</option>
           </select>
         </div>
         <div class="cms-filter-actions">
@@ -5177,6 +5180,7 @@ Connect with leading universities, explore scholarships and discover the possibi
         </div>
       </div>
 
+      <!-- 1. Footer Tagline & Copyright -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-tagline">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-tagline', event)">
           <div>
@@ -5191,17 +5195,396 @@ Connect with leading universities, explore scholarships and discover the possibi
           </div>
         </div>
         <div class="cms-card-body">
-        <div class="form-group">
-          <label class="form-label">Footer Brand Tagline</label>
-          <textarea name="footer_tagline" class="form-control">{{ config.footer_tagline }}</textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Copyright Notice Text</label>
-          <input type="text" name="footer_copyright" class="form-control" value="{{ config.footer_copyright }}">
+          <div class="form-group">
+            <label class="form-label">Footer Brand Tagline</label>
+            <textarea name="footer_tagline" class="form-control" rows="3">{{ config.footer_tagline }}</textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Copyright Notice Text</label>
+            <input type="text" name="footer_copyright" class="form-control" value="{{ config.footer_copyright }}">
+          </div>
         </div>
       </div>
-        </div>
 
+      <!-- 2. Column 2 Navigation: Title & Links -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-nav-col2">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-nav-col2', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="compass" style="color:#0ea5e9;"></i> Column 2 Navigation: {{ config.footer_col2_title|default:"Explore" }}</h3>
+            <p class="cms-card-subtitle">Customize the column header title, link labels, and destination URLs</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-group" style="margin-bottom: 20px; background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 14px 16px;">
+            <label class="form-label" style="font-weight: 800; font-size: 13px; color: #1e3a8a;">Column 2 Header / Section Title</label>
+            <input type="text" name="footer_col2_title" class="form-control" value="{{ config.footer_col2_title|default:'Explore' }}" placeholder="e.g. Explore" style="font-weight: 700; font-size: 14px; background: #fff;">
+            <span style="font-size: 11.5px; color: #3b82f6; margin-top: 4px; display: block;">Displayed at the top of the 2nd footer column.</span>
+          </div>
+
+          <h4 style="font-size: 13px; font-weight: 800; color: #334155; margin: 0 0 12px 0;">Column 2 Links &amp; Titles:</h4>
+          <p style="font-size: 12px; color: #64748b; margin: 0 0 16px 0;">Leave Destination URL blank for inert/informational text items. Clear Link Title to remove that link.</p>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Col 2 Link 1 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #1</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col2_link1_text" class="form-control" value="{{ config.footer_col2_link1_text }}" placeholder="e.g. About KNOVA">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL</label>
+                  <input type="text" name="footer_col2_link1_url" class="form-control" value="{{ config.footer_col2_link1_url }}" placeholder="e.g. /about/">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 2 Link 2 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #2</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col2_link2_text" class="form-control" value="{{ config.footer_col2_link2_text }}" placeholder="e.g. Events & Experiences">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL</label>
+                  <input type="text" name="footer_col2_link2_url" class="form-control" value="{{ config.footer_col2_link2_url }}" placeholder="e.g. /events/">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 2 Link 3 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #3</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col2_link3_text" class="form-control" value="{{ config.footer_col2_link3_text }}" placeholder="e.g. Speakers">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL (Optional)</label>
+                  <input type="text" name="footer_col2_link3_url" class="form-control" value="{{ config.footer_col2_link3_url }}" placeholder="e.g. /speakers/ (or leave blank)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 2 Link 4 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #4</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col2_link4_text" class="form-control" value="{{ config.footer_col2_link4_text }}" placeholder="e.g. Participating Institutions">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL (Optional)</label>
+                  <input type="text" name="footer_col2_link4_url" class="form-control" value="{{ config.footer_col2_link4_url }}" placeholder="e.g. /exhibitors/ (or leave blank)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 2 Link 5 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #5</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col2_link5_text" class="form-control" value="{{ config.footer_col2_link5_text }}" placeholder="e.g. Education Opportunities">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL (Optional)</label>
+                  <input type="text" name="footer_col2_link5_url" class="form-control" value="{{ config.footer_col2_link5_url }}" placeholder="e.g. /courses/ (or leave blank)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 2 Link 6 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #6 (ADDITIONAL)</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col2_link6_text" class="form-control" value="{{ config.footer_col2_link6_text }}" placeholder="Optional additional link">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL</label>
+                  <input type="text" name="footer_col2_link6_url" class="form-control" value="{{ config.footer_col2_link6_url }}" placeholder="e.g. /scholarships/">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Column 3 Navigation: Title & Links -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-nav-col3">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-nav-col3', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="check-square" style="color:#6366f1;"></i> Column 3 Navigation: {{ config.footer_col3_title|default:"Participate" }}</h3>
+            <p class="cms-card-subtitle">Customize the column header title, link labels, and destination URLs</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-group" style="margin-bottom: 20px; background: #f5f3ff; border: 1.5px solid #ddd6fe; border-radius: 10px; padding: 14px 16px;">
+            <label class="form-label" style="font-weight: 800; font-size: 13px; color: #5b21b6;">Column 3 Header / Section Title</label>
+            <input type="text" name="footer_col3_title" class="form-control" value="{{ config.footer_col3_title|default:'Participate' }}" placeholder="e.g. Participate" style="font-weight: 700; font-size: 14px; background: #fff;">
+            <span style="font-size: 11.5px; color: #7c3aed; margin-top: 4px; display: block;">Displayed at the top of the 3rd footer column.</span>
+          </div>
+
+          <h4 style="font-size: 13px; font-weight: 800; color: #334155; margin: 0 0 12px 0;">Column 3 Links &amp; Titles:</h4>
+          <p style="font-size: 12px; color: #64748b; margin: 0 0 16px 0;">Leave Destination URL blank for inert/informational text items. Clear Link Title to remove that link.</p>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Col 3 Link 1 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #1</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col3_link1_text" class="form-control" value="{{ config.footer_col3_link1_text }}" placeholder="e.g. Register for Expo">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL</label>
+                  <input type="text" name="footer_col3_link1_url" class="form-control" value="{{ config.footer_col3_link1_url }}" placeholder="e.g. /register/">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 3 Link 2 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #2</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col3_link2_text" class="form-control" value="{{ config.footer_col3_link2_text }}" placeholder="e.g. Institutional Participation">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL (Optional)</label>
+                  <input type="text" name="footer_col3_link2_url" class="form-control" value="{{ config.footer_col3_link2_url }}" placeholder="e.g. /exhibitors/ (or leave blank)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 3 Link 3 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #3</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col3_link3_text" class="form-control" value="{{ config.footer_col3_link3_text }}" placeholder="e.g. Become a Speaker">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL (Optional)</label>
+                  <input type="text" name="footer_col3_link3_url" class="form-control" value="{{ config.footer_col3_link3_url }}" placeholder="e.g. /speakers/ (or leave blank)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 3 Link 4 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #4</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col3_link4_text" class="form-control" value="{{ config.footer_col3_link4_text }}" placeholder="e.g. Become a Sponsor">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL</label>
+                  <input type="text" name="footer_col3_link4_url" class="form-control" value="{{ config.footer_col3_link4_url }}" placeholder="e.g. mailto:partners@knovaexpo.com">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 3 Link 5 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #5 (ADDITIONAL)</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col3_link5_text" class="form-control" value="{{ config.footer_col3_link5_text }}" placeholder="Optional additional link">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL</label>
+                  <input type="text" name="footer_col3_link5_url" class="form-control" value="{{ config.footer_col3_link5_url }}" placeholder="e.g. /challenge/">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 3 Link 6 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #6 (ADDITIONAL)</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col3_link6_text" class="form-control" value="{{ config.footer_col3_link6_text }}" placeholder="Optional additional link">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL</label>
+                  <input type="text" name="footer_col3_link6_url" class="form-control" value="{{ config.footer_col3_link6_url }}" placeholder="e.g. /events/">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Column 4: Connect & Legal -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-nav-col4">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-nav-col4', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="mail" style="color:#0ea5e9;"></i> Column 4: {{ config.footer_col4_title|default:"Connect" }} &amp; Legal Compliance</h3>
+            <p class="cms-card-subtitle">Customize the connect column title, routing links, and legal/privacy policy URLs</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-group" style="margin-bottom: 20px; background: #ecfdf5; border: 1.5px solid #a7f3d0; border-radius: 10px; padding: 14px 16px;">
+            <label class="form-label" style="font-weight: 800; font-size: 13px; color: #065f46;">Column 4 Header / Section Title</label>
+            <input type="text" name="footer_col4_title" class="form-control" value="{{ config.footer_col4_title|default:'Connect' }}" placeholder="e.g. Connect" style="font-weight: 700; font-size: 14px; background: #fff;">
+            <span style="font-size: 11.5px; color: #059669; margin-top: 4px; display: block;">Displayed at the top of the 4th footer column.</span>
+          </div>
+
+          <h4 style="font-size: 13px; font-weight: 800; color: #334155; margin: 0 0 12px 0;">Primary Connect Links:</h4>
+
+          <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 22px;">
+            <!-- Col 4 Link 1 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">CONNECT LINK #1</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col4_link1_text" class="form-control" value="{{ config.footer_col4_link1_text }}" placeholder="e.g. Contact Us">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL</label>
+                  <input type="text" name="footer_col4_link1_url" class="form-control" value="{{ config.footer_col4_link1_url }}" placeholder="e.g. mailto:connect@knovaexpo.com">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 4 Link 2 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">CONNECT LINK #2</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col4_link2_text" class="form-control" value="{{ config.footer_col4_link2_text }}" placeholder="e.g. Event Coordination">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL</label>
+                  <input type="text" name="footer_col4_link2_url" class="form-control" value="{{ config.footer_col4_link2_url }}" placeholder="e.g. mailto:coordination@knovaexpo.com">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 4 Link 3 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">CONNECT LINK #3</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col4_link3_text" class="form-control" value="{{ config.footer_col4_link3_text }}" placeholder="e.g. Institutional Outreach">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL</label>
+                  <input type="text" name="footer_col4_link3_url" class="form-control" value="{{ config.footer_col4_link3_url }}" placeholder="e.g. mailto:outreach@knovaexpo.com">
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 4 Link 4 -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">CONNECT LINK #4 (OPTIONAL)</div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Link Title / Label</label>
+                  <input type="text" name="footer_col4_link4_text" class="form-control" value="{{ config.footer_col4_link4_text }}" placeholder="Optional connect link">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Destination URL</label>
+                  <input type="text" name="footer_col4_link4_url" class="form-control" value="{{ config.footer_col4_link4_url }}" placeholder="e.g. /contact/">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Legal & Compliance Links Sub-Section -->
+          <div style="border-top: 2px dashed #e2e8f0; padding-top: 18px;">
+            <h4 style="font-size: 13px; font-weight: 800; color: #334155; margin: 0 0 4px 0; display:flex; align-items:center; gap:6px;">
+              <i data-feather="shield" style="width:14px; height:14px; color:#10b981;"></i> Legal &amp; Policy Sub-Links:
+            </h4>
+            <p style="font-size: 12px; color: #64748b; margin: 0 0 14px 0;">These links appear in the bottom partition of the Connect column.</p>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <!-- Legal Link 1 -->
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+                <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LEGAL LINK #1</div>
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Link Title / Label</label>
+                    <input type="text" name="footer_legal_link1_text" class="form-control" value="{{ config.footer_legal_link1_text }}" placeholder="e.g. Privacy Policy">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Destination URL</label>
+                    <input type="text" name="footer_legal_link1_url" class="form-control" value="{{ config.footer_legal_link1_url }}" placeholder="e.g. /privacy-policy/">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Legal Link 2 -->
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+                <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LEGAL LINK #2</div>
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Link Title / Label</label>
+                    <input type="text" name="footer_legal_link2_text" class="form-control" value="{{ config.footer_legal_link2_text }}" placeholder="e.g. Terms & Conditions">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Destination URL</label>
+                    <input type="text" name="footer_legal_link2_url" class="form-control" value="{{ config.footer_legal_link2_url }}" placeholder="e.g. /terms-conditions/">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Legal Link 3 -->
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+                <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LEGAL LINK #3 (OPTIONAL)</div>
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Link Title / Label</label>
+                    <input type="text" name="footer_legal_link3_text" class="form-control" value="{{ config.footer_legal_link3_text }}" placeholder="e.g. Cookie Settings">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Destination URL</label>
+                    <input type="text" name="footer_legal_link3_url" class="form-control" value="{{ config.footer_legal_link3_url }}" placeholder="e.g. /cookies/">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Contact & Venue Details -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-contact">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-contact', event)">
           <div>
@@ -5216,78 +5599,79 @@ Connect with leading universities, explore scholarships and discover the possibi
           </div>
         </div>
         <div class="cms-card-body">
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Exhibitors &amp; Sponsors Email</label>
-            <input type="email" name="email_partners" class="form-control" value="{{ config.email_partners|default:'partners@knovaexpo.com' }}">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Exhibitors &amp; Sponsors Email</label>
+              <input type="email" name="email_partners" class="form-control" value="{{ config.email_partners|default:'partners@knovaexpo.com' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Speakers &amp; Keynotes Email (Speaker Routing)</label>
+              <input type="email" name="email_speakers" class="form-control" value="{{ config.email_speakers|default:'connect@knovaexpo.com' }}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Event Coordination &amp; Operations Email</label>
+              <input type="email" name="email_coordination" class="form-control" value="{{ config.email_coordination|default:'coordination@knovaexpo.com' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Institutional Outreach Email</label>
+              <input type="email" name="email_outreach" class="form-control" value="{{ config.email_outreach|default:'outreach@knovaexpo.com' }}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">General Contact Email</label>
+              <input type="email" name="footer_contact_email" class="form-control" value="{{ config.footer_contact_email|default:'connect@knovaexpo.com' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Phone / Support Hotline</label>
+              <input type="text" name="footer_contact_phone" class="form-control" value="{{ config.footer_contact_phone }}">
+            </div>
           </div>
           <div class="form-group">
-            <label class="form-label">Speakers &amp; Keynotes Email (Speaker Routing)</label>
-            <input type="email" name="email_speakers" class="form-control" value="{{ config.email_speakers|default:'connect@knovaexpo.com' }}">
+            <label class="form-label">Official Physical Venue Address</label>
+            <input type="text" name="footer_address" class="form-control" value="{{ config.footer_address }}">
           </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Event Coordination &amp; Operations Email</label>
-            <input type="email" name="email_coordination" class="form-control" value="{{ config.email_coordination|default:'coordination@knovaexpo.com' }}">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Chatbot Assistant Name</label>
+              <input type="text" name="chatbot_name" class="form-control" value="{{ config.chatbot_name|default:'Mr. K - Your eBuddy' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp Username / Handle</label>
+              <input type="text" name="chatbot_username" class="form-control" value="{{ config.chatbot_username|default:'@Mr.K_YourE_Buddy' }}" placeholder="@Mr.K_YourE_Buddy">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Official WhatsApp Number</label>
+              <input type="text" name="whatsapp_number" class="form-control" value="{{ config.whatsapp_number|default:'00973 -16171786' }}" placeholder="00973 -16171786">
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Institutional Outreach Email</label>
-            <input type="email" name="email_outreach" class="form-control" value="{{ config.email_outreach|default:'outreach@knovaexpo.com' }}">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">General Contact Email</label>
-            <input type="email" name="footer_contact_email" class="form-control" value="{{ config.footer_contact_email|default:'connect@knovaexpo.com' }}">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Contact Phone / Support Hotline</label>
-            <input type="text" name="footer_contact_phone" class="form-control" value="{{ config.footer_contact_phone }}">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Official Physical Venue Address</label>
-          <input type="text" name="footer_address" class="form-control" value="{{ config.footer_address }}">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Chatbot Assistant Name</label>
-            <input type="text" name="chatbot_name" class="form-control" value="{{ config.chatbot_name|default:'Mr. K - Your eBuddy' }}">
-          </div>
-          <div class="form-group">
-            <label class="form-label">WhatsApp Username / Handle</label>
-            <input type="text" name="chatbot_username" class="form-control" value="{{ config.chatbot_username|default:'@Mr.K_YourE_Buddy' }}" placeholder="@Mr.K_YourE_Buddy">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Official WhatsApp Number</label>
-            <input type="text" name="whatsapp_number" class="form-control" value="{{ config.whatsapp_number|default:'00973 -16171786' }}" placeholder="00973 -16171786">
-          </div>
-        </div>
 
-        <!-- Chatbot Q&A Knowledge Base Direct Link -->
-        <div style="margin-top: 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 38px; height: 38px; border-radius: 8px; background: #1768ff; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <i data-feather="help-circle" style="width: 20px; height: 20px;"></i>
+          <!-- Chatbot Q&A Knowledge Base Direct Link -->
+          <div style="margin-top: 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 38px; height: 38px; border-radius: 8px; background: #1768ff; color: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <i data-feather="help-circle" style="width: 20px; height: 20px;"></i>
+              </div>
+              <div>
+                <div style="font-size: 13.5px; font-weight: 750; color: #1e3a8a;">Mr. K Chatbot Questions &amp; Suggestion Chips</div>
+                <div style="font-size: 12px; color: #3b82f6;">Edit bot questions, answers, trigger keywords, and quick chips carousel</div>
+              </div>
             </div>
-            <div>
-              <div style="font-size: 13.5px; font-weight: 750; color: #1e3a8a;">Mr. K Chatbot Questions &amp; Suggestion Chips</div>
-              <div style="font-size: 12px; color: #3b82f6;">Edit bot questions, answers, trigger keywords, and quick chips carousel</div>
-            </div>
+            <a href="{% url 'dashboard_chatbot_faq' %}" style="background: #1768ff; color: #ffffff; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 750; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(23,104,255,0.25);">
+              <i data-feather="edit-3" style="width: 13px; height: 13px;"></i> Manage Questions &amp; Answers &rarr;
+            </a>
           </div>
-          <a href="{% url 'dashboard_chatbot_faq' %}" style="background: #1768ff; color: #ffffff; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 750; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(23,104,255,0.25);">
-            <i data-feather="edit-3" style="width: 13px; height: 13px;"></i> Manage Questions &amp; Answers &rarr;
-          </a>
         </div>
       </div>
-        </div>
 
+      <!-- 6. Social Media Profile Links & Titles -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-social">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-social', event)">
           <div>
-            <h3 class="cms-card-title"><i data-feather="share-2" style="color:#6366f1;"></i> Social Media Profile Links</h3>
-            <p class="cms-card-subtitle">Social media profile URLs (Facebook, Instagram, LinkedIn, Twitter/X, YouTube)</p>
+            <h3 class="cms-card-title"><i data-feather="share-2" style="color:#6366f1;"></i> Social Media Profile Links &amp; Titles</h3>
+            <p class="cms-card-subtitle">Customize titles and profile destination URLs for all official social networks</p>
           </div>
           <div style="display:flex; align-items:center; gap:10px;">
             <span class="cms-card-toggle-pill">
@@ -5297,32 +5681,96 @@ Connect with leading universities, explore scholarships and discover the possibi
           </div>
         </div>
         <div class="cms-card-body">
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Facebook URL</label>
-            <input type="url" name="social_facebook_url" class="form-control" value="{{ config.social_facebook_url }}">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Twitter / X URL</label>
-            <input type="url" name="social_twitter_url" class="form-control" value="{{ config.social_twitter_url }}">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">LinkedIn URL</label>
-            <input type="url" name="social_linkedin_url" class="form-control" value="{{ config.social_linkedin_url }}">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Instagram URL</label>
-            <input type="url" name="social_instagram_url" class="form-control" value="{{ config.social_instagram_url }}">
-          </div>
-          <div class="form-group">
-            <label class="form-label">YouTube URL</label>
-            <input type="url" name="social_youtube_url" class="form-control" value="{{ config.social_youtube_url }}">
+          <p style="font-size: 12px; color: #64748b; margin: 0 0 16px 0;">Leave Profile URL empty to hide that network button from the footer.</p>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Facebook -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #1877f2; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
+                <i data-feather="facebook" style="width:14px; height:14px;"></i> FACEBOOK
+              </div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Platform Label / Tooltip</label>
+                  <input type="text" name="social_facebook_title" class="form-control" value="{{ config.social_facebook_title|default:'Facebook' }}" placeholder="Facebook">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Profile URL</label>
+                  <input type="url" name="social_facebook_url" class="form-control" value="{{ config.social_facebook_url }}" placeholder="https://facebook.com/knovaexpo">
+                </div>
+              </div>
+            </div>
+
+            <!-- Twitter / X -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
+                <i data-feather="twitter" style="width:14px; height:14px;"></i> TWITTER / X
+              </div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Platform Label / Tooltip</label>
+                  <input type="text" name="social_twitter_title" class="form-control" value="{{ config.social_twitter_title|default:'Twitter / X' }}" placeholder="Twitter / X">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Profile URL</label>
+                  <input type="url" name="social_twitter_url" class="form-control" value="{{ config.social_twitter_url }}" placeholder="https://x.com/knovaexpo">
+                </div>
+              </div>
+            </div>
+
+            <!-- LinkedIn -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #0a66c2; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
+                <i data-feather="linkedin" style="width:14px; height:14px;"></i> LINKEDIN
+              </div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Platform Label / Tooltip</label>
+                  <input type="text" name="social_linkedin_title" class="form-control" value="{{ config.social_linkedin_title|default:'LinkedIn' }}" placeholder="LinkedIn">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Profile URL</label>
+                  <input type="url" name="social_linkedin_url" class="form-control" value="{{ config.social_linkedin_url }}" placeholder="https://linkedin.com/company/knovaexpo">
+                </div>
+              </div>
+            </div>
+
+            <!-- Instagram -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #e1306c; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
+                <i data-feather="instagram" style="width:14px; height:14px;"></i> INSTAGRAM
+              </div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Platform Label / Tooltip</label>
+                  <input type="text" name="social_instagram_title" class="form-control" value="{{ config.social_instagram_title|default:'Instagram' }}" placeholder="Instagram">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Profile URL</label>
+                  <input type="url" name="social_instagram_url" class="form-control" value="{{ config.social_instagram_url }}" placeholder="https://instagram.com/knovaexpo">
+                </div>
+              </div>
+            </div>
+
+            <!-- YouTube -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11.5px; font-weight: 750; color: #ff0000; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
+                <i data-feather="video" style="width:14px; height:14px;"></i> YOUTUBE
+              </div>
+              <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Platform Label / Tooltip</label>
+                  <input type="text" name="social_youtube_title" class="form-control" value="{{ config.social_youtube_title|default:'YouTube' }}" placeholder="YouTube">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Profile URL</label>
+                  <input type="url" name="social_youtube_url" class="form-control" value="{{ config.social_youtube_url }}" placeholder="https://youtube.com/@knovaexpo">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-        </div>
     </div>
 
     <!-- ========================================== -->

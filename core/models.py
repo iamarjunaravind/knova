@@ -1053,11 +1053,72 @@ class SiteConfiguration(models.Model):
     chatbot_username = models.CharField(max_length=100, default="@Mr.K_YourE_Buddy", blank=True, verbose_name="WhatsApp / Chatbot Username")
     whatsapp_number = models.CharField(max_length=50, default="00973 -16171786", blank=True, verbose_name="WhatsApp Support Number")
     footer_address = models.CharField(max_length=255, default="Riyadh Exhibition & Convention Center | Dubai World Trade Centre", blank=True)
+    # Social Profile Titles & Links
+    social_facebook_title = models.CharField(max_length=100, default="Facebook", blank=True, verbose_name="Facebook Label")
     social_facebook_url = models.URLField(default="https://facebook.com", blank=True)
+    social_twitter_title = models.CharField(max_length=100, default="Twitter / X", blank=True, verbose_name="Twitter Label")
     social_twitter_url = models.URLField(default="https://x.com", blank=True)
+    social_linkedin_title = models.CharField(max_length=100, default="LinkedIn", blank=True, verbose_name="LinkedIn Label")
     social_linkedin_url = models.URLField(default="https://linkedin.com", blank=True)
+    social_instagram_title = models.CharField(max_length=100, default="Instagram", blank=True, verbose_name="Instagram Label")
     social_instagram_url = models.URLField(default="https://instagram.com", blank=True)
+    social_youtube_title = models.CharField(max_length=100, default="YouTube", blank=True, verbose_name="YouTube Label")
     social_youtube_url = models.URLField(default="https://youtube.com", blank=True)
+
+    # ==========================================
+    # FOOTER NAVIGATION COLUMNS & EDITABLE LINKS
+    # ==========================================
+    # Column 2 (Explore)
+    footer_col2_title = models.CharField(max_length=120, default="Explore", blank=True, verbose_name="Footer Col 2 Title")
+    footer_col2_link1_text = models.CharField(max_length=150, default="About KNOVA", blank=True, verbose_name="Col 2 Link 1 Title")
+    footer_col2_link1_url = models.CharField(max_length=255, default="/about/", blank=True, verbose_name="Col 2 Link 1 URL")
+    footer_col2_link2_text = models.CharField(max_length=150, default="Events & Experiences", blank=True, verbose_name="Col 2 Link 2 Title")
+    footer_col2_link2_url = models.CharField(max_length=255, default="/events/", blank=True, verbose_name="Col 2 Link 2 URL")
+    footer_col2_link3_text = models.CharField(max_length=150, default="Speakers", blank=True, verbose_name="Col 2 Link 3 Title")
+    footer_col2_link3_url = models.CharField(max_length=255, default="", blank=True, verbose_name="Col 2 Link 3 URL")
+    footer_col2_link4_text = models.CharField(max_length=150, default="Participating Institutions", blank=True, verbose_name="Col 2 Link 4 Title")
+    footer_col2_link4_url = models.CharField(max_length=255, default="", blank=True, verbose_name="Col 2 Link 4 URL")
+    footer_col2_link5_text = models.CharField(max_length=150, default="Education Opportunities", blank=True, verbose_name="Col 2 Link 5 Title")
+    footer_col2_link5_url = models.CharField(max_length=255, default="", blank=True, verbose_name="Col 2 Link 5 URL")
+    footer_col2_link6_text = models.CharField(max_length=150, default="", blank=True, verbose_name="Col 2 Link 6 Title")
+    footer_col2_link6_url = models.CharField(max_length=255, default="", blank=True, verbose_name="Col 2 Link 6 URL")
+
+    # Column 3 (Participate)
+    footer_col3_title = models.CharField(max_length=120, default="Participate", blank=True, verbose_name="Footer Col 3 Title")
+    footer_col3_link1_text = models.CharField(max_length=150, default="Register for Expo", blank=True, verbose_name="Col 3 Link 1 Title")
+    footer_col3_link1_url = models.CharField(max_length=255, default="/register/", blank=True, verbose_name="Col 3 Link 1 URL")
+    footer_col3_link2_text = models.CharField(max_length=150, default="Institutional Participation", blank=True, verbose_name="Col 3 Link 2 Title")
+    footer_col3_link2_url = models.CharField(max_length=255, default="", blank=True, verbose_name="Col 3 Link 2 URL")
+    footer_col3_link3_text = models.CharField(max_length=150, default="Become a Speaker", blank=True, verbose_name="Col 3 Link 3 Title")
+    footer_col3_link3_url = models.CharField(max_length=255, default="", blank=True, verbose_name="Col 3 Link 3 URL")
+    footer_col3_link4_text = models.CharField(max_length=150, default="Become a Sponsor", blank=True, verbose_name="Col 3 Link 4 Title")
+    footer_col3_link4_url = models.CharField(max_length=255, default="mailto:partners@knovaexpo.com?subject=Sponsorship%20Inquiry%20-%20KNOVA%202027", blank=True, verbose_name="Col 3 Link 4 URL")
+    footer_col3_link5_text = models.CharField(max_length=150, default="", blank=True, verbose_name="Col 3 Link 5 Title")
+    footer_col3_link5_url = models.CharField(max_length=255, default="", blank=True, verbose_name="Col 3 Link 5 URL")
+    footer_col3_link6_text = models.CharField(max_length=150, default="", blank=True, verbose_name="Col 2 Link 6 Title")
+    footer_col3_link6_url = models.CharField(max_length=255, default="", blank=True, verbose_name="Col 3 Link 6 URL")
+
+    # Column 4 (Connect)
+    footer_col4_title = models.CharField(max_length=120, default="Connect", blank=True, verbose_name="Footer Col 4 Title")
+    footer_col4_link1_text = models.CharField(max_length=150, default="Contact Us", blank=True, verbose_name="Col 4 Link 1 Title")
+    footer_col4_link1_url = models.CharField(max_length=255, default="mailto:connect@knovaexpo.com?subject=Contact%20KNOVA%202027", blank=True, verbose_name="Col 4 Link 1 URL")
+    footer_col4_link2_text = models.CharField(max_length=150, default="Event Coordination", blank=True, verbose_name="Col 4 Link 2 Title")
+    footer_col4_link2_url = models.CharField(max_length=255, default="mailto:coordination@knovaexpo.com?subject=Event%20Coordination%20Inquiry", blank=True, verbose_name="Col 4 Link 2 URL")
+    footer_col4_link3_text = models.CharField(max_length=150, default="Institutional Outreach", blank=True, verbose_name="Col 4 Link 3 Title")
+    footer_col4_link3_url = models.CharField(max_length=255, default="mailto:outreach@knovaexpo.com?subject=Institutional%20Outreach%20Inquiry", blank=True, verbose_name="Col 4 Link 3 URL")
+    footer_col4_link4_text = models.CharField(max_length=150, default="", blank=True, verbose_name="Col 4 Link 4 Title")
+    footer_col4_link4_url = models.CharField(max_length=255, default="", blank=True, verbose_name="Col 4 Link 4 URL")
+    footer_col4_link5_text = models.CharField(max_length=150, default="", blank=True, verbose_name="Col 4 Link 5 Title")
+    footer_col4_link5_url = models.CharField(max_length=255, default="", blank=True, verbose_name="Col 4 Link 5 URL")
+
+    # Column 4 Legal Sub-Links
+    footer_legal_title = models.CharField(max_length=120, default="Legal & Compliance", blank=True, verbose_name="Footer Legal Title")
+    footer_legal_link1_text = models.CharField(max_length=150, default="Privacy Policy", blank=True, verbose_name="Legal Link 1 Title")
+    footer_legal_link1_url = models.CharField(max_length=255, default="/privacy-policy/", blank=True, verbose_name="Legal Link 1 URL")
+    footer_legal_link2_text = models.CharField(max_length=150, default="Terms & Conditions", blank=True, verbose_name="Legal Link 2 Title")
+    footer_legal_link2_url = models.CharField(max_length=255, default="/terms-conditions/", blank=True, verbose_name="Legal Link 2 URL")
+    footer_legal_link3_text = models.CharField(max_length=150, default="", blank=True, verbose_name="Legal Link 3 Title")
+    footer_legal_link3_url = models.CharField(max_length=255, default="", blank=True, verbose_name="Legal Link 3 URL")
 
     # Sponsors Marquee Section Heading & Subtitle
     sponsors_marquee_heading = models.CharField(max_length=255, default="Backed by World-Leading Education Giants", blank=True)
@@ -1080,6 +1141,42 @@ class SiteConfiguration(models.Model):
     def get_solo(cls):
         obj, created = cls.objects.get_or_create(id=1)
         return obj
+
+    def get_footer_col2_links(self):
+        links = []
+        for i in range(1, 7):
+            t = (getattr(self, f"footer_col2_link{i}_text", None) or "").strip()
+            u = (getattr(self, f"footer_col2_link{i}_url", None) or "").strip()
+            if t:
+                links.append({"text": t, "url": u})
+        return links
+
+    def get_footer_col3_links(self):
+        links = []
+        for i in range(1, 7):
+            t = (getattr(self, f"footer_col3_link{i}_text", None) or "").strip()
+            u = (getattr(self, f"footer_col3_link{i}_url", None) or "").strip()
+            if t:
+                links.append({"text": t, "url": u})
+        return links
+
+    def get_footer_col4_links(self):
+        links = []
+        for i in range(1, 6):
+            t = (getattr(self, f"footer_col4_link{i}_text", None) or "").strip()
+            u = (getattr(self, f"footer_col4_link{i}_url", None) or "").strip()
+            if t:
+                links.append({"text": t, "url": u})
+        return links
+
+    def get_footer_legal_links(self):
+        links = []
+        for i in range(1, 4):
+            t = (getattr(self, f"footer_legal_link{i}_text", None) or "").strip()
+            u = (getattr(self, f"footer_legal_link{i}_url", None) or "").strip()
+            if t:
+                links.append({"text": t, "url": u})
+        return links
 
 
 # =========================================================
