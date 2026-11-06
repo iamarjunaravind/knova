@@ -32,6 +32,10 @@ DEBUG = os.environ.get('DEBUG', '1') == '1'
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(' ')
 
 CSRF_TRUSTED_ORIGINS = [
+    'https://knovaexpo.com',
+    'https://www.knovaexpo.com',
+    'http://knovaexpo.com',
+    'http://www.knovaexpo.com',
     'https://netixa.in',
     'https://www.netixa.in',
     'https://netixa.tech',
