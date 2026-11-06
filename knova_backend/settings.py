@@ -38,6 +38,8 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.netixa.in',
     'http://187.77.188.25',
     'http://187.77.188.25:8000',
+    'http://187.52.124.11',
+    'http://187.52.124.11:8000',
     'http://127.0.0.1:8000',
     'http://localhost:8000',
 ]
