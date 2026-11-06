@@ -1589,7 +1589,7 @@
 
             <span>{{ university.name }}</span>
 
-            <span class="uni-partner-pill"><span class="uni-partner-dot"></span> Verified Partner</span>
+            <span class="uni-partner-pill"><span class="uni-partner-dot"></span> {{ site_config.uni_detail_partner_badge|default:"Verified Partner" }}</span>
 
         </div>
 
@@ -1742,7 +1742,7 @@
 
                     <span class="uni-kpi-val">{{ courses.count }} Available</span>
 
-                    <span class="uni-kpi-label">Degree Programs</span>
+                    <span class="uni-kpi-label">{{ site_config.uni_detail_kpi1_label|default:"Degree Programs" }}</span>
 
                 </div>
 
@@ -1756,7 +1756,7 @@
 
                     <span class="uni-kpi-val">{{ scholarships.count }} Active</span>
 
-                    <span class="uni-kpi-label">Scholarships & Aid</span>
+                    <span class="uni-kpi-label">{{ site_config.uni_detail_kpi2_label|default:"Scholarships & Aid" }}</span>
 
                 </div>
 
@@ -1768,9 +1768,9 @@
 
                 <div class="uni-kpi-text">
 
-                    <span class="uni-kpi-val">UG &bull; PG &bull; PhD</span>
+                    <span class="uni-kpi-val">{{ site_config.uni_detail_kpi3_val|default:"UG • PG • PhD" }}</span>
 
-                    <span class="uni-kpi-label">Study Levels</span>
+                    <span class="uni-kpi-label">{{ site_config.uni_detail_kpi3_label|default:"Study Levels" }}</span>
 
                 </div>
 
@@ -1782,9 +1782,9 @@
 
                 <div class="uni-kpi-text">
 
-                    <span class="uni-kpi-val">Open for 2026/27</span>
+                    <span class="uni-kpi-val">{{ site_config.uni_detail_kpi4_val|default:"Open for 2026/27" }}</span>
 
-                    <span class="uni-kpi-label">Intake Status</span>
+                    <span class="uni-kpi-label">{{ site_config.uni_detail_kpi4_label|default:"Intake Status" }}</span>
 
                 </div>
 
@@ -1860,9 +1860,9 @@
 
                             <div class="highlight-icon"><i class="ti ti-world"></i></div>
 
-                            <span class="highlight-title">Global Standing</span>
+                            <span class="highlight-title">{{ site_config.uni_detail_hl1_title|default:"Global Standing" }}</span>
 
-                            <span class="highlight-sub">Internationally accredited degree credentials</span>
+                            <span class="highlight-sub">{{ site_config.uni_detail_hl1_desc|default:"Internationally accredited degree credentials" }}</span>
 
                         </div>
 
@@ -1870,9 +1870,9 @@
 
                             <div class="highlight-icon"><i class="ti ti-users"></i></div>
 
-                            <span class="highlight-title">Expert Faculty</span>
+                            <span class="highlight-title">{{ site_config.uni_detail_hl2_title|default:"Expert Faculty" }}</span>
 
-                            <span class="highlight-sub">Learn directly from leading scholars & researchers</span>
+                            <span class="highlight-sub">{{ site_config.uni_detail_hl2_desc|default:"Learn directly from leading scholars & researchers" }}</span>
 
                         </div>
 
@@ -1880,9 +1880,9 @@
 
                             <div class="highlight-icon"><i class="ti ti-briefcase"></i></div>
 
-                            <span class="highlight-title">Career Placement</span>
+                            <span class="highlight-title">{{ site_config.uni_detail_hl3_title|default:"Career Placement" }}</span>
 
-                            <span class="highlight-sub">Dedicated global internship & employment network</span>
+                            <span class="highlight-sub">{{ site_config.uni_detail_hl3_desc|default:"Dedicated global internship & employment network" }}</span>
 
                         </div>
 
@@ -1890,9 +1890,9 @@
 
                             <div class="highlight-icon"><i class="ti ti-shield-check"></i></div>
 
-                            <span class="highlight-title">Student Support</span>
+                            <span class="highlight-title">{{ site_config.uni_detail_hl4_title|default:"Student Support" }}</span>
 
-                            <span class="highlight-sub">Comprehensive visa, housing & academic advisory</span>
+                            <span class="highlight-sub">{{ site_config.uni_detail_hl4_desc|default:"Comprehensive visa, housing & academic advisory" }}</span>
 
                         </div>
 
@@ -2251,9 +2251,9 @@
 
                         <div class="facility-showcase-info">
 
-                            <h4>Smart Libraries & Archives</h4>
+                            <h4>{{ site_config.uni_detail_fac1_title|default:"Smart Libraries & Archives" }}</h4>
 
-                            <p>24/7 digital resource access, private study pods, and collaborative innovation zones.</p>
+                            <p>{{ site_config.uni_detail_fac1_desc|default:"24/7 digital resource access, private study pods, and collaborative innovation zones." }}</p>
 
                         </div>
 
@@ -2265,9 +2265,9 @@
 
                         <div class="facility-showcase-info">
 
-                            <h4>Advanced Research Labs</h4>
+                            <h4>{{ site_config.uni_detail_fac2_title|default:"Advanced Research Labs" }}</h4>
 
-                            <p>Industry-standard technology suites, computing clusters, and specialized workshops.</p>
+                            <p>{{ site_config.uni_detail_fac2_desc|default:"Industry-standard technology suites, computing clusters, and specialized workshops." }}</p>
 
                         </div>
 
@@ -2279,9 +2279,9 @@
 
                         <div class="facility-showcase-info">
 
-                            <h4>Student Housing & Halls</h4>
+                            <h4>{{ site_config.uni_detail_fac3_title|default:"Student Housing & Halls" }}</h4>
 
-                            <p>Safe, comfortable residences with dining options, high-speed WiFi, and 24/7 security.</p>
+                            <p>{{ site_config.uni_detail_fac3_desc|default:"Safe, comfortable residences with dining options, high-speed WiFi, and 24/7 security." }}</p>
 
                         </div>
 
@@ -2293,9 +2293,9 @@
 
                         <div class="facility-showcase-info">
 
-                            <h4>Athletics & Recreation</h4>
+                            <h4>{{ site_config.uni_detail_fac4_title|default:"Athletics & Recreation" }}</h4>
 
-                            <p>Multi-sport complexes, fitness gyms, swimming facilities, and dynamic cultural clubs.</p>
+                            <p>{{ site_config.uni_detail_fac4_desc|default:"Multi-sport complexes, fitness gyms, swimming facilities, and dynamic cultural clubs." }}</p>
 
                         </div>
 
@@ -2327,9 +2327,9 @@
 
                         <div class="step-number-circle">1</div>
 
-                        <h4>Choose & Inquire</h4>
+                        <h4>{{ site_config.uni_detail_step1_title|default:"Choose & Inquire" }}</h4>
 
-                        <p>Select your desired degree program and review specific academic prerequisites.</p>
+                        <p>{{ site_config.uni_detail_step1_desc|default:"Select your desired degree program and review specific academic prerequisites." }}</p>
 
                     </div>
 
@@ -2337,9 +2337,9 @@
 
                         <div class="step-number-circle">2</div>
 
-                        <h4>Counseling & Review</h4>
+                        <h4>{{ site_config.uni_detail_step2_title|default:"Counseling & Review" }}</h4>
 
-                        <p>Meet 1-on-1 with an authorized advisor to evaluate transcripts and scholarship chances.</p>
+                        <p>{{ site_config.uni_detail_step2_desc|default:"Meet 1-on-1 with an authorized advisor to evaluate transcripts and scholarship chances." }}</p>
 
                     </div>
 
@@ -2347,9 +2347,9 @@
 
                         <div class="step-number-circle">3</div>
 
-                        <h4>Direct Submission</h4>
+                        <h4>{{ site_config.uni_detail_step3_title|default:"Direct Submission" }}</h4>
 
-                        <p>Receive fast-track offer letters, accommodation booking, and visa assistance.</p>
+                        <p>{{ site_config.uni_detail_step3_desc|default:"Receive fast-track offer letters, accommodation booking, and visa assistance." }}</p>
 
                     </div>
 
@@ -2375,9 +2375,9 @@
 
                         <div>
 
-                            <h3 class="counseling-card-title">Enquire & Get Call Back</h3>
+                            <h3 class="counseling-card-title">{{ site_config.uni_detail_callback_title|default:"Enquire & Get Call Back" }}</h3>
 
-                            <span class="counseling-card-sub">&bull; Direct Admissions Callback</span>
+                            <span class="counseling-card-sub">{{ site_config.uni_detail_callback_sub|default:"&bull; Direct Admissions Callback" }}</span>
 
                         </div>
 
@@ -2385,23 +2385,23 @@
 
                     <p style="font-size: 12px; color: #bfdbfe; margin: 0 0 12px 0; line-height: 1.45;">
 
-                        Have questions about admissions, fees, or courses? Request a fast call back from our advisory team representing {{ university.name }}.
+                        {{ site_config.uni_detail_callback_desc|default:"Have questions about admissions, fees, or courses? Request a fast call back from our advisory team representing "|safe }}{{ university.name }}.
 
                     </p>
 
                     <ul class="counseling-benefits">
 
-                        <li><i class="ti ti-check"></i> Direct call back from authorized advisors</li>
+                        <li><i class="ti ti-check"></i> {{ site_config.uni_detail_callback_perk1|default:"Direct call back from authorized advisors" }}</li>
 
-                        <li><i class="ti ti-check"></i> Instant fee structure & scholarship guidance</li>
+                        <li><i class="ti ti-check"></i> {{ site_config.uni_detail_callback_perk2|default:"Instant fee structure & scholarship guidance" }}</li>
 
-                        <li><i class="ti ti-check"></i> 1-on-1 personalized response</li>
+                        <li><i class="ti ti-check"></i> {{ site_config.uni_detail_callback_perk3|default:"1-on-1 personalized response" }}</li>
 
                     </ul>
 
                     <button type="button" class="btn-book-session" onclick="openCounselingModal('{{ university.name|escapejs }}', '')">
 
-                        <i class="ti ti-phone-outgoing" style="color: #1768ff;"></i> Request Call Back
+                        <i class="ti ti-phone-outgoing" style="color: #1768ff;"></i> {{ site_config.uni_detail_callback_btn|default:"Request Call Back" }}
 
                     </button>
 

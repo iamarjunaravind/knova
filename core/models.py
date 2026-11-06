@@ -783,6 +783,54 @@ class SiteConfiguration(models.Model):
     exhibitors_kpi4_label = models.CharField(max_length=100, default="Spot Evaluation Support", blank=True)
     exhibitors_search_placeholder = models.CharField(max_length=255, default="Search by university name, country, city, or keyword...", blank=True)
 
+    # ==========================================
+    # UNIVERSITY DETAIL PUBLIC PAGE (/university/<slug>/)
+    # ==========================================
+    uni_detail_partner_badge = models.CharField(max_length=100, default="Verified Partner", blank=True)
+    uni_detail_kpi1_label = models.CharField(max_length=100, default="Degree Programs", blank=True)
+    uni_detail_kpi2_label = models.CharField(max_length=100, default="Scholarships & Aid", blank=True)
+    uni_detail_kpi3_val = models.CharField(max_length=100, default="UG • PG • PhD", blank=True)
+    uni_detail_kpi3_label = models.CharField(max_length=100, default="Study Levels", blank=True)
+    uni_detail_kpi4_val = models.CharField(max_length=100, default="Open for 2026/27", blank=True)
+    uni_detail_kpi4_label = models.CharField(max_length=100, default="Intake Status", blank=True)
+
+    # 4 Highlights
+    uni_detail_hl1_title = models.CharField(max_length=150, default="Global Standing", blank=True)
+    uni_detail_hl1_desc = models.CharField(max_length=255, default="Internationally accredited degree credentials", blank=True)
+    uni_detail_hl2_title = models.CharField(max_length=150, default="Expert Faculty", blank=True)
+    uni_detail_hl2_desc = models.CharField(max_length=255, default="Learn directly from leading scholars & researchers", blank=True)
+    uni_detail_hl3_title = models.CharField(max_length=150, default="Career Placement", blank=True)
+    uni_detail_hl3_desc = models.CharField(max_length=255, default="Dedicated global internship & employment network", blank=True)
+    uni_detail_hl4_title = models.CharField(max_length=150, default="Student Support", blank=True)
+    uni_detail_hl4_desc = models.CharField(max_length=255, default="Comprehensive visa, housing & academic advisory", blank=True)
+
+    # 4 Campus Facilities
+    uni_detail_fac1_title = models.CharField(max_length=150, default="Smart Libraries & Archives", blank=True)
+    uni_detail_fac1_desc = models.CharField(max_length=255, default="24/7 digital resource access, private study pods, and collaborative innovation zones.", blank=True)
+    uni_detail_fac2_title = models.CharField(max_length=150, default="Advanced Research Labs", blank=True)
+    uni_detail_fac2_desc = models.CharField(max_length=255, default="Industry-standard technology suites, computing clusters, and specialized workshops.", blank=True)
+    uni_detail_fac3_title = models.CharField(max_length=150, default="Student Housing & Halls", blank=True)
+    uni_detail_fac3_desc = models.CharField(max_length=255, default="Safe, comfortable residences with dining options, high-speed WiFi, and 24/7 security.", blank=True)
+    uni_detail_fac4_title = models.CharField(max_length=150, default="Athletics & Recreation", blank=True)
+    uni_detail_fac4_desc = models.CharField(max_length=255, default="Multi-sport complexes, fitness gyms, swimming facilities, and dynamic cultural clubs.", blank=True)
+
+    # 3 Admissions Steps
+    uni_detail_step1_title = models.CharField(max_length=150, default="Choose & Inquire", blank=True)
+    uni_detail_step1_desc = models.CharField(max_length=255, default="Select your desired degree program and review specific academic prerequisites.", blank=True)
+    uni_detail_step2_title = models.CharField(max_length=150, default="Counseling & Review", blank=True)
+    uni_detail_step2_desc = models.CharField(max_length=255, default="Meet 1-on-1 with an authorized advisor to evaluate transcripts and scholarship chances.", blank=True)
+    uni_detail_step3_title = models.CharField(max_length=150, default="Direct Submission", blank=True)
+    uni_detail_step3_desc = models.CharField(max_length=255, default="Receive fast-track offer letters, accommodation booking, and visa assistance.", blank=True)
+
+    # Sidebar Callback Card
+    uni_detail_callback_title = models.CharField(max_length=150, default="Enquire & Get Call Back", blank=True)
+    uni_detail_callback_sub = models.CharField(max_length=150, default="• Direct Admissions Callback", blank=True)
+    uni_detail_callback_desc = models.TextField(default="Have questions about admissions, fees, or courses? Request a fast call back from our advisory team.", blank=True)
+    uni_detail_callback_btn = models.CharField(max_length=100, default="Request Call Back", blank=True)
+    uni_detail_callback_perk1 = models.CharField(max_length=200, default="Direct call back from authorized advisors", blank=True)
+    uni_detail_callback_perk2 = models.CharField(max_length=200, default="Instant fee structure & scholarship guidance", blank=True)
+    uni_detail_callback_perk3 = models.CharField(max_length=200, default="1-on-1 personalized response", blank=True)
+
     # Scholarships Page Content
     scholarships_badge = models.CharField(max_length=100, default="MERIT & NEED-BASED FINANCIAL AID", blank=True)
     scholarships_kpi1_val = models.CharField(max_length=50, default="$2.5M+", blank=True)

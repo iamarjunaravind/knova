@@ -1916,15 +1916,24 @@
             <i data-feather="layers" style="width:17px; height:17px; color:#2563eb;"></i> Jump to Section:
           </label>
           <select id="homepageSectionDropdown" class="cms-section-select" onchange="filterHomepageSection(this.value)">
-            <option value="all">📂 View All Sections (Dropdown Accordion)</option>
+            <option value="all">📂 View All Homepage Sections (Dropdown Accordion)</option>
             <option value="sec-hero">⭐ 1. Hero Section &amp; Headlines</option>
-            <option value="sec-stats">📊 2. Quick Stats Bar (4 Metrics)</option>
+            <option value="sec-stats">📊 2. Quick Stats Bar (4 Impact Metrics)</option>
             <option value="sec-why">✅ 3. Why KNOVA Section &amp; 4 Feature Cards</option>
             <option value="sec-locations">📍 4. Event Locations &amp; Tour Expansion</option>
             <option value="sec-roadmap">🔄 5. How It Works (Roadmap &amp; 4 Steps)</option>
-            <option value="sec-headings">🔤 6. Section Headings &amp; Subtitles</option>
-            <option value="sec-experience">🎬 7. Experience Expo &amp; Student Testimonials</option>
-            <option value="sec-faq">❓ 8. FAQ Items &amp; Guidance Box</option>
+            <option value="sec-home-exhibitors">🎓 6. Featured Exhibitors &amp; Universities Directory</option>
+            <option value="sec-home-courses">📖 7. Academic Courses &amp; Degree Programs</option>
+            <option value="sec-home-scholarships">💰 8. Scholarships &amp; Financial Aid Grants</option>
+            <option value="sec-home-speakers">🎤 9. Keynote Speakers &amp; Academic Leaders</option>
+            <option value="sec-home-programme">🗓️ 10. Programme Schedule &amp; Masterclasses</option>
+            <option value="sec-home-sponsors">👑 11. Sponsors &amp; Industry Partners Showcase</option>
+            <option value="sec-home-map">🗺️ 12. Interactive Floor Map Preview &amp; Blueprint</option>
+            <option value="sec-home-challenge">⚡ 13. KNOVA Challenge Gamified Quest</option>
+            <option value="sec-home-register">🎟️ 14. Registration Passes &amp; Tickets CTA</option>
+            <option value="sec-headings">🔤 15. Master Section Headings &amp; Subtitles</option>
+            <option value="sec-experience">🎬 16. Experience Expo &amp; Student Testimonials</option>
+            <option value="sec-faq">❓ 17. FAQ Items &amp; Guidance Box</option>
           </select>
         </div>
         <div class="cms-filter-actions">
@@ -2620,6 +2629,565 @@
           </div>
         </div>
 
+        </div>
+      </div>
+
+
+      <!-- 6. Featured Exhibitors & Universities Homepage Section -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-exhibitors">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-exhibitors', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="briefcase" style="color:#6366f1;"></i> Featured Exhibitors &amp; Universities Section</h3>
+            <p class="cms-card-subtitle">Controls the homepage Featured Exhibitors carousel (#exhibitors) and public directory (/exhibitors/)</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <a href="/dashboard/exhibitors/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#6366f1; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#eef2ff; border:1px solid #c7d2fe; padding:6px 12px; border-radius:8px;">
+              <i data-feather="users" style="width:13px; height:13px;"></i> Manage Exhibitors &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Section Heading</label>
+              <input type="text" name="exhibitors_heading" class="form-control" value="{{ config.exhibitors_heading|default:'Featured Exhibitors' }}" placeholder="Featured Exhibitors">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section Subtitle</label>
+              <input type="text" name="exhibitors_subtitle" class="form-control" value="{{ config.exhibitors_subtitle|default:'Meet admissions deans, explore merit scholarships, and discover top-ranked undergraduate & postgraduate pathways.' }}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kicker Badge Label</label>
+              <input type="text" name="exhibitors_badge" class="form-control" value="{{ config.exhibitors_badge|default:'GLOBAL EDUCATION DIRECTORY' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Search Input Placeholder</label>
+              <input type="text" name="exhibitors_search_placeholder" class="form-control" value="{{ config.exhibitors_search_placeholder|default:'Search by university name, country, city, or keyword...' }}">
+            </div>
+          </div>
+          <div style="margin-top:14px;">
+            <label class="form-label" style="font-weight:700; margin-bottom:10px;">4 Header KPI Stat Cards</label>
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 1 Value &amp; Label</label>
+                <input type="text" name="exhibitors_kpi1_val" class="form-control mb-1" value="{{ config.exhibitors_kpi1_val|default:'50+' }}">
+                <input type="text" name="exhibitors_kpi1_label" class="form-control" value="{{ config.exhibitors_kpi1_label|default:'Global Universities' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 2 Value &amp; Label</label>
+                <input type="text" name="exhibitors_kpi2_val" class="form-control mb-1" value="{{ config.exhibitors_kpi2_val|default:'12+' }}">
+                <input type="text" name="exhibitors_kpi2_label" class="form-control" value="{{ config.exhibitors_kpi2_label|default:'Countries Represented' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 3 Value &amp; Label</label>
+                <input type="text" name="exhibitors_kpi3_val" class="form-control mb-1" value="{{ config.exhibitors_kpi3_val|default:'1,000+' }}">
+                <input type="text" name="exhibitors_kpi3_label" class="form-control" value="{{ config.exhibitors_kpi3_label|default:'Accredited Programs' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 4 Value &amp; Label</label>
+                <input type="text" name="exhibitors_kpi4_val" class="form-control mb-1" value="{{ config.exhibitors_kpi4_val|default:'100%' }}">
+                <input type="text" name="exhibitors_kpi4_label" class="form-control" value="{{ config.exhibitors_kpi4_label|default:'Spot Evaluation Support' }}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Academic Courses Directory Section -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-courses">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-courses', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="book-open" style="color:#0ea5e9;"></i> Academic Courses &amp; Degree Programs Section</h3>
+            <p class="cms-card-subtitle">Controls the courses showcase, search filters, and degree directory page (/courses/)</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <a href="/dashboard/courses/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#0ea5e9; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#f0f9ff; border:1px solid #bae6fd; padding:6px 12px; border-radius:8px;">
+              <i data-feather="book" style="width:13px; height:13px;"></i> Manage Courses &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kicker Badge Label</label>
+              <input type="text" name="courses_badge" class="form-control" value="{{ config.courses_badge|default:'GLOBAL DEGREE FINDER' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Search Input Placeholder</label>
+              <input type="text" name="courses_search_placeholder" class="form-control" value="{{ config.courses_search_placeholder|default:'Search courses by title, discipline, degree level...' }}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Page / Section Title</label>
+              <input type="text" name="courses_page_title" class="form-control" value="{{ config.courses_page_title|default:'Academic Programs & Degrees' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Page / Section Subtitle</label>
+              <input type="text" name="courses_page_subtitle" class="form-control" value="{{ config.courses_page_subtitle|default:'Filter hundreds of verified bachelor’s, master’s, and doctoral programs across world universities.' }}">
+            </div>
+          </div>
+          <div style="margin-top:14px;">
+            <label class="form-label" style="font-weight:700; margin-bottom:10px;">4 Header KPI Stat Cards</label>
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 1 Value &amp; Label</label>
+                <input type="text" name="courses_kpi1_val" class="form-control mb-1" value="{{ config.courses_kpi1_val|default:'1,200+' }}">
+                <input type="text" name="courses_kpi1_label" class="form-control" value="{{ config.courses_kpi1_label|default:'Programs Indexed' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 2 Value &amp; Label</label>
+                <input type="text" name="courses_kpi2_val" class="form-control mb-1" value="{{ config.courses_kpi2_val|default:'45+' }}">
+                <input type="text" name="courses_kpi2_label" class="form-control" value="{{ config.courses_kpi2_label|default:'Specializations' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 3 Value &amp; Label</label>
+                <input type="text" name="courses_kpi3_val" class="form-control mb-1" value="{{ config.courses_kpi3_val|default:'15+' }}">
+                <input type="text" name="courses_kpi3_label" class="form-control" value="{{ config.courses_kpi3_label|default:'Study Destinations' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 4 Value &amp; Label</label>
+                <input type="text" name="courses_kpi4_val" class="form-control mb-1" value="{{ config.courses_kpi4_val|default:'100%' }}">
+                <input type="text" name="courses_kpi4_label" class="form-control" value="{{ config.courses_kpi4_label|default:'Direct University Apply' }}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. Scholarships & Financial Grants Section -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-scholarships">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-scholarships', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="award" style="color:#10b981;"></i> Scholarships &amp; Financial Grants Section</h3>
+            <p class="cms-card-subtitle">Controls the homepage Scholarships &amp; Aid showcase (#scholarships) and public directory (/scholarships/)</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <a href="/dashboard/scholarships/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#10b981; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; border:1px solid #a7f3d0; padding:6px 12px; border-radius:8px;">
+              <i data-feather="gift" style="width:13px; height:13px;"></i> Manage Scholarships &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Section Heading</label>
+              <input type="text" name="scholarships_heading" class="form-control" value="{{ config.scholarships_heading|default:'Scholarships & Financial Aid' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section Subtitle</label>
+              <input type="text" name="scholarships_subtitle" class="form-control" value="{{ config.scholarships_subtitle|default:'Apply for exclusive tuition waivers, international merit grants, and financial support pools.' }}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kicker Badge Label</label>
+              <input type="text" name="scholarships_badge" class="form-control" value="{{ config.scholarships_badge|default:'MERIT & NEED-BASED FINANCIAL AID' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Search Input Placeholder</label>
+              <input type="text" name="scholarships_search_placeholder" class="form-control" value="{{ config.scholarships_search_placeholder|default:'Search scholarships by title, university, field...' }}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Page Title</label>
+              <input type="text" name="scholarships_page_title" class="form-control" value="{{ config.scholarships_page_title|default:'Global Scholarships & Grants' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Page Subtitle</label>
+              <input type="text" name="scholarships_page_subtitle" class="form-control" value="{{ config.scholarships_page_subtitle|default:'Explore merit-based, need-based, and institutional financial aid grants available for 2026/2027.' }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Intro / Eligibility Note</label>
+            <textarea name="scholarships_page_intro" class="form-control" style="min-height:55px;">{{ config.scholarships_page_intro }}</textarea>
+          </div>
+          <div style="margin-top:14px;">
+            <label class="form-label" style="font-weight:700; margin-bottom:10px;">4 Header KPI Stat Cards</label>
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 1 Value &amp; Label</label>
+                <input type="text" name="scholarships_kpi1_val" class="form-control mb-1" value="{{ config.scholarships_kpi1_val|default:'$2.5M+' }}">
+                <input type="text" name="scholarships_kpi1_label" class="form-control" value="{{ config.scholarships_kpi1_label|default:'Total Grant Pool' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 2 Value &amp; Label</label>
+                <input type="text" name="scholarships_kpi2_val" class="form-control mb-1" value="{{ config.scholarships_kpi2_val|default:'25+' }}">
+                <input type="text" name="scholarships_kpi2_label" class="form-control" value="{{ config.scholarships_kpi2_label|default:'Partner Grants' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 3 Value &amp; Label</label>
+                <input type="text" name="scholarships_kpi3_val" class="form-control mb-1" value="{{ config.scholarships_kpi3_val|default:'Up to 100%' }}">
+                <input type="text" name="scholarships_kpi3_label" class="form-control" value="{{ config.scholarships_kpi3_label|default:'Tuition Coverage' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 4 Value &amp; Label</label>
+                <input type="text" name="scholarships_kpi4_val" class="form-control mb-1" value="{{ config.scholarships_kpi4_val|default:'48 Hrs' }}">
+                <input type="text" name="scholarships_kpi4_label" class="form-control" value="{{ config.scholarships_kpi4_label|default:'Spot Decision Track' }}">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. Keynote Speakers & Experts Section -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-speakers">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-speakers', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="mic" style="color:#f59e0b;"></i> Keynote Speakers &amp; Academic Leaders Section</h3>
+            <p class="cms-card-subtitle">Controls the homepage Speakers showcase (#speakers), Call for Speakers banner, and directory (/speakers/)</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <a href="/dashboard/speakers/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#f59e0b; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#fffbeb; border:1px solid #fde68a; padding:6px 12px; border-radius:8px;">
+              <i data-feather="mic" style="width:13px; height:13px;"></i> Manage Speakers &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Section Heading</label>
+              <input type="text" name="speakers_heading" class="form-control" value="{{ config.speakers_heading|default:'Keynote Speakers & Experts' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section Subtitle</label>
+              <input type="text" name="speakers_subtitle" class="form-control" value="{{ config.speakers_subtitle|default:'Hear from global education innovators, university chancellors, and career strategists.' }}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kicker Badge Label</label>
+              <input type="text" name="speakers_badge" class="form-control" value="{{ config.speakers_badge|default:'GLOBAL THOUGHT LEADERS & MENTORS' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Page Title (/speakers/)</label>
+              <input type="text" name="speakers_page_title" class="form-control" value="{{ config.speakers_page_title|default:'Distinguished Keynotes & Academic Leaders' }}">
+            </div>
+          </div>
+          <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:14px; margin-top:14px;">
+            <strong style="color:#b45309; font-size:12.5px; display:block; margin-bottom:10px;">CALL FOR KEYNOTE SPEAKERS CTA BANNER</strong>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Banner Heading</label>
+                <input type="text" name="speakers_cta_title" class="form-control" value="{{ config.speakers_cta_title|default:'Interested in Speaking at KNOVA 2027?' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Button Label &amp; Link</label>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                  <input type="text" name="speakers_cta_btn_text" class="form-control" value="{{ config.speakers_cta_btn_text|default:'Apply as Keynote Speaker' }}">
+                  <input type="text" name="speakers_cta_btn_url" class="form-control" value="{{ config.speakers_cta_btn_url|default:'mailto:connect@knovaexpo.com?subject=Speaker%20Connection' }}">
+                </div>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Banner Description</label>
+              <textarea name="speakers_cta_desc" class="form-control" style="min-height:50px;">{{ config.speakers_cta_desc|default:'Share your expertise with thousands of aspiring students, educators, and global university deans.' }}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. Programme Schedule & Masterclasses Section -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-programme">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-programme', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="calendar" style="color:#ec4899;"></i> Programme Schedule &amp; Masterclasses Section</h3>
+            <p class="cms-card-subtitle">Controls the homepage Programme timetable (#programme) and full schedule (/programme/)</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <a href="/dashboard/programme/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#ec4899; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#fdf2f8; border:1px solid #fbcfe8; padding:6px 12px; border-radius:8px;">
+              <i data-feather="calendar" style="width:13px; height:13px;"></i> Manage Sessions &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Section Heading</label>
+              <input type="text" name="programme_heading" class="form-control" value="{{ config.programme_heading|default:'Expo Programme & Schedule' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section Subtitle</label>
+              <input type="text" name="programme_subtitle" class="form-control" value="{{ config.programme_subtitle|default:'Three days of high-impact keynotes, university masterclasses, and admissions workshops.' }}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kicker Badge Label</label>
+              <input type="text" name="programme_badge" class="form-control" value="{{ config.programme_badge|default:'OFFICIAL EXPO ITINERARY' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Page Title (/programme/)</label>
+              <input type="text" name="programme_page_title" class="form-control" value="{{ config.programme_page_title|default:'Expo Programme & Masterclass Schedule' }}">
+            </div>
+          </div>
+          <div style="background:#fdf2f8; border:1px solid #fbcfe8; border-radius:10px; padding:14px; margin-top:14px;">
+            <strong style="color:#9d174d; font-size:12.5px; display:block; margin-bottom:10px;">EXCLUSIVE MASTERCLASSES ALERT CTA BANNER</strong>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Banner Heading</label>
+                <input type="text" name="programme_cta_title" class="form-control" value="{{ config.programme_cta_title|default:'Don’t Miss Any Exclusive Masterclass' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Button Label</label>
+                <input type="text" name="programme_cta_btn_text" class="form-control" value="{{ config.programme_cta_btn_text|default:'Register for Expo' }}">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Banner Description</label>
+              <textarea name="programme_cta_desc" class="form-control" style="min-height:50px;">{{ config.programme_cta_desc|default:'Seats for VIP keynote sessions are limited. Register today to receive real-time schedule alerts.' }}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11. Sponsors & Industry Partners Section -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-sponsors">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-sponsors', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="crown" style="color:#eab308;"></i> Sponsors &amp; Industry Partners Showcase</h3>
+            <p class="cms-card-subtitle">Controls the homepage Sponsors marquee (#sponsors-marquee), impact KPIs, and directory (/sponsors/)</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <a href="/dashboard/sponsors/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#ca8a04; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#fefce8; border:1px solid #fef08a; padding:6px 12px; border-radius:8px;">
+              <i data-feather="award" style="width:13px; height:13px;"></i> Manage Sponsors &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Marquee Main Title</label>
+              <input type="text" name="sponsors_marquee_heading" class="form-control" value="{{ config.sponsors_marquee_heading|default:'Backed by World-Leading Education Giants' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Marquee Subtitle</label>
+              <input type="text" name="sponsors_marquee_subtitle" class="form-control" value="{{ config.sponsors_marquee_subtitle|default:'Collaborating with premier education funds, testing authorities and international partners.' }}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kicker Badge Label</label>
+              <input type="text" name="sponsors_badge" class="form-control" value="{{ config.sponsors_badge|default:'GLOBAL INDUSTRY & EDUCATION LEADERS' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Page Title (/sponsors/)</label>
+              <input type="text" name="sponsors_page_title" class="form-control" value="{{ config.sponsors_page_title|default:'Official Sponsors & Visionary Partners' }}">
+            </div>
+          </div>
+          <div style="margin-top:14px;">
+            <label class="form-label" style="font-weight:700; margin-bottom:10px;">4 Header KPI Stat Cards</label>
+            <div class="form-row-4">
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 1 Value &amp; Label</label>
+                <input type="text" name="sponsors_kpi1_val" class="form-control mb-1" value="{{ config.sponsors_kpi1_val|default:'30+' }}">
+                <input type="text" name="sponsors_kpi1_label" class="form-control" value="{{ config.sponsors_kpi1_label|default:'Corporate & Govt Partners' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 2 Value &amp; Label</label>
+                <input type="text" name="sponsors_kpi2_val" class="form-control mb-1" value="{{ config.sponsors_kpi2_val|default:'15k+' }}">
+                <input type="text" name="sponsors_kpi2_label" class="form-control" value="{{ config.sponsors_kpi2_label|default:'Target Attendees' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 3 Value &amp; Label</label>
+                <input type="text" name="sponsors_kpi3_val" class="form-control mb-1" value="{{ config.sponsors_kpi3_val|default:'50+' }}">
+                <input type="text" name="sponsors_kpi3_label" class="form-control" value="{{ config.sponsors_kpi3_label|default:'Media Outlets' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size:11px;">KPI 4 Value &amp; Label</label>
+                <input type="text" name="sponsors_kpi4_val" class="form-control mb-1" value="{{ config.sponsors_kpi4_val|default:'100%' }}">
+                <input type="text" name="sponsors_kpi4_label" class="form-control" value="{{ config.sponsors_kpi4_label|default:'GCC & Regional Visibility' }}">
+              </div>
+            </div>
+          </div>
+          <div style="background:#fefce8; border:1px solid #fef08a; border-radius:10px; padding:14px; margin-top:14px;">
+            <strong style="color:#854d0e; font-size:12.5px; display:block; margin-bottom:10px;">PARTNER WITH KNOVA 2027 CTA BANNER</strong>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Banner Heading</label>
+                <input type="text" name="sponsors_cta_title" class="form-control" value="{{ config.sponsors_cta_title|default:'Partner with KNOVA 2027' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Button Label</label>
+                <input type="text" name="sponsors_cta_btn_text" class="form-control" value="{{ config.sponsors_cta_btn_text|default:'Download Partnership Deck' }}">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Banner Description</label>
+              <textarea name="sponsors_cta_desc" class="form-control" style="min-height:50px;">{{ config.sponsors_cta_desc|default:'Position your brand in front of top students, universities, government bodies, and international education agencies.' }}</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12. Interactive Floor Map Preview Section -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-map">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-map', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="map" style="color:#14b8a6;"></i> Interactive Floor Map Preview Section</h3>
+            <p class="cms-card-subtitle">Controls the homepage Floor Map preview (#map) and full interactive map (/map/)</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <a href="/map/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#0d9488; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#f0fdfa; border:1px solid #ccfbf1; padding:6px 12px; border-radius:8px;">
+              <i data-feather="external-link" style="width:13px; height:13px;"></i> View Floor Map &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Section Heading</label>
+              <input type="text" name="map_heading" class="form-control" value="{{ config.map_heading|default:'Interactive Expo Floor Map & Hall Directory' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section Subtitle</label>
+              <input type="text" name="map_subtitle" class="form-control" value="{{ config.map_subtitle|default:'Locate university booths, keynote stages, counseling hubs, and sponsor pavilions across the Main Exhibition Hall.' }}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kicker Badge Label</label>
+              <input type="text" name="map_badge" class="form-control" value="{{ config.map_badge|default:'LIVE EXPO HALL BLUEPRINT' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Search Input Placeholder</label>
+              <input type="text" name="map_search_placeholder" class="form-control" value="{{ config.map_search_placeholder|default:'Search booths by university, hall, or stall number...' }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Downloadable Floorplan PDF Asset Path / URL</label>
+            <input type="text" name="map_pdf_url" class="form-control" value="{{ config.map_pdf_url|default:'/static/assets/KNOVA_2027_FLOORPLAN.pdf' }}">
+          </div>
+        </div>
+      </div>
+
+      <!-- 13. KNOVA Challenge Gamified Quest Section -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-challenge">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-challenge', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="zap" style="color:#8b5cf6;"></i> KNOVA Challenge Gamified Quest Section</h3>
+            <p class="cms-card-subtitle">Controls the interactive quest callout, gamified missions, and attendee passport (/challenge/)</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <a href="/challenge/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#8b5cf6; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#f5f3ff; border:1px solid #ddd6fe; padding:6px 12px; border-radius:8px;">
+              <i data-feather="target" style="width:13px; height:13px;"></i> View Challenge &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kicker Badge Label</label>
+              <input type="text" name="challenge_badge" class="form-control" value="{{ config.challenge_badge|default:'INTERACTIVE GAMIFIED EXPO QUEST' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Grand Prize Draw Banner Text</label>
+              <input type="text" name="challenge_cta_text" class="form-control" value="{{ config.challenge_cta_text|default:'Complete all missions to unlock the Grand Prize Draw & Official ID Badge!' }}">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Quest Title</label>
+              <input type="text" name="challenge_page_title" class="form-control" value="{{ config.challenge_page_title|default:'KNOVA Challenge Passport' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Quest Subtitle</label>
+              <input type="text" name="challenge_page_subtitle" class="form-control" value="{{ config.challenge_page_subtitle|default:'Scan QR codes at exhibitor booths, complete interactive quests, and win official merchandise and grants.' }}">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14. Registration Passes & Tickets CTA Section -->
+      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-register">
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-register', event)">
+          <div>
+            <h3 class="cms-card-title"><i data-feather="user-plus" style="color:#059669;"></i> Registration Passes &amp; Tickets CTA Section</h3>
+            <p class="cms-card-subtitle">Controls the homepage bottom Registration CTA (#register) and registration portal (/register/)</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <a href="/dashboard/registrations/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#059669; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; border:1px solid #a7f3d0; padding:6px 12px; border-radius:8px;">
+              <i data-feather="users" style="width:13px; height:13px;"></i> View Attendees &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Final CTA Section Heading</label>
+              <input type="text" name="cta_heading" class="form-control" value="{{ config.cta_heading|default:'Ready to Shape Your Future?' }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Final CTA Section Subtitle</label>
+              <input type="text" name="cta_subtitle" class="form-control" value="{{ config.cta_subtitle|default:'Register free today and receive your fast-track digital QR badge directly to your email.' }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">CTA Button Label</label>
+            <input type="text" name="cta_btn_text" class="form-control" value="{{ config.cta_btn_text|default:'Register for Expo' }}">
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; margin-top:14px;">
+            <strong style="color:#334155; font-size:12.5px; display:block; margin-bottom:10px;">PUBLIC REGISTRATION FORM LABELS (/register/)</strong>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Showcase Headline (HTML allowed)</label>
+                <input type="text" name="register_showcase_title" class="form-control" value="{{ config.register_showcase_title|default:'Reserve Your<br><span class="reg-highlight">Expo Pass</span>' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Registration Form Title</label>
+                <input type="text" name="register_form_title" class="form-control" value="{{ config.register_form_title|default:'Register for Free Expo Pass' }}">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Showcase Subtitle</label>
+                <textarea name="register_showcase_subtitle" class="form-control" style="min-height:55px;">{{ config.register_showcase_subtitle }}</textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Registration Form Subtitle</label>
+                <textarea name="register_form_subtitle" class="form-control" style="min-height:55px;">{{ config.register_form_subtitle }}</textarea>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -3648,9 +4216,10 @@
             <i data-feather="layers" style="width:17px; height:17px; color:#2563eb;"></i> Jump to Page / Module:
           </label>
           <select id="servicesSectionDropdown" class="cms-section-select" onchange="filterTabSection('cmsTabContent-services', 'servicesSectionDropdown', this.value)">
-            <option value="all">⚡ View All Sections (Dropdown Accordion)</option>
-            <option value="sec-services-exhibitors">🎓 1. Exhibitors & Universities Directory (/exhibitors/)</option>
-            <option value="sec-services-scholarships">💰 2. Scholarships & Grants Aid (/scholarships/)</option>
+            <option value="all">⚡ View All Public Pages &amp; Modules (Dropdown Accordion)</option>
+            <option value="sec-services-exhibitors">🎓 1. Exhibitors &amp; Universities Directory (/exhibitors/)</option>
+            <option value="sec-services-unidetail">🏛️ 2. University Public Detail Page (/university/&lt;slug&gt;/)</option>
+            <option value="sec-services-scholarships">💰 3. Scholarships &amp; Grants Aid (/scholarships/)</option>
             <option value="sec-services-speakers">🎤 3. Keynote Speakers & Experts (/speakers/)</option>
             <option value="sec-services-programme">🗓️ 4. Programme Schedule & Masterclasses (/programme/)</option>
             <option value="sec-services-sponsors">👑 5. Sponsors & Industry Partners (/sponsors/)</option>
@@ -3675,6 +4244,7 @@
       <!-- Sub-Tabs Navigation for Public Service Pages -->
       <div class="cms-subtabs-bar">
         <button type="button" class="cms-subtab-btn active" data-subtab="exhibitors" onclick="switchServiceSubTab('exhibitors', this)"><i data-feather="briefcase" style="width:14px; height:14px;"></i> Exhibitors &amp; Unis</button>
+        <button type="button" class="cms-subtab-btn" data-subtab="unidetail" onclick="switchServiceSubTab('unidetail', this)"><i data-feather="book-open" style="width:14px; height:14px;"></i> University Detail (/university/&lt;slug&gt;/)</button>
         <button type="button" class="cms-subtab-btn" data-subtab="scholarships" onclick="switchServiceSubTab('scholarships', this)"><i data-feather="award" style="width:14px; height:14px;"></i> Scholarships</button>
         <button type="button" class="cms-subtab-btn" data-subtab="speakers" onclick="switchServiceSubTab('speakers', this)"><i data-feather="mic" style="width:14px; height:14px;"></i> Speakers</button>
         <button type="button" class="cms-subtab-btn" data-subtab="programme" onclick="switchServiceSubTab('programme', this)"><i data-feather="calendar" style="width:14px; height:14px;"></i> Programme</button>
@@ -3759,6 +4329,201 @@
             </div>
           </div>
         </div>
+        </div>
+      </div>
+
+
+      <!-- 2. UNIVERSITY DETAIL PUBLIC PAGE (/university/<slug>/) -->
+      <div id="subtab-unidetail" class="service-subtab-content" style="display:none;">
+        <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-unidetail">
+          <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-unidetail', event)">
+            <div>
+              <h3 class="cms-card-title"><i data-feather="book-open" style="color:#2563eb;"></i> University Public Detail Page Editor (/university/&lt;slug&gt;/)</h3>
+              <p class="cms-card-subtitle">Configure header badges, KPI labels, campus facilities, 3-step admissions guide, and callback enquiry card</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="cms-card-toggle-pill">
+                <span class="cms-toggle-text">Expand</span>
+                <i data-feather="chevron-down"></i>
+              </span>
+            </div>
+          </div>
+          <div class="cms-card-body">
+            <!-- Action Bar -->
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:16px;">
+              <a href="/university/kannur-university/" target="_blank" class="btn btn-sm btn-outline-primary" style="display:inline-flex; align-items:center; gap:5px;">
+                <i data-feather="external-link" style="width:13px; height:13px;"></i> View Sample University Page
+              </a>
+              <a href="/dashboard/universities/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:5px;">
+                <i data-feather="grid" style="width:13px; height:13px;"></i> Manage All Universities
+              </a>
+              <a href="/dashboard/universities/new/" target="_blank" class="btn btn-sm btn-outline-success" style="display:inline-flex; align-items:center; gap:5px;">
+                <i data-feather="plus-circle" style="width:13px; height:13px;"></i> Add New University
+              </a>
+            </div>
+
+            <!-- Header Badge & KPI Labels -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:16px;">
+              <h4 style="font-size:12.5px; font-weight:800; color:#0f172a; margin:0 0 12px 0; text-transform:uppercase; letter-spacing:0.5px;">Header Verification Badge &amp; 4 KPI Strip Labels</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Top Breadcrumb Partner Pill Text</label>
+                  <input type="text" name="uni_detail_partner_badge" class="form-control" value="{{ config.uni_detail_partner_badge|default:'Verified Partner' }}">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">KPI 1 Label (Degree Programs)</label>
+                  <input type="text" name="uni_detail_kpi1_label" class="form-control" value="{{ config.uni_detail_kpi1_label|default:'Degree Programs' }}">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">KPI 2 Label (Scholarships &amp; Aid)</label>
+                  <input type="text" name="uni_detail_kpi2_label" class="form-control" value="{{ config.uni_detail_kpi2_label|default:'Scholarships & Aid' }}">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">KPI 3 Value &amp; Label (Study Levels)</label>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                    <input type="text" name="uni_detail_kpi3_val" class="form-control" value="{{ config.uni_detail_kpi3_val|default:'UG • PG • PhD' }}">
+                    <input type="text" name="uni_detail_kpi3_label" class="form-control" value="{{ config.uni_detail_kpi3_label|default:'Study Levels' }}">
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">KPI 4 Value &amp; Label (Intake Status)</label>
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                    <input type="text" name="uni_detail_kpi4_val" class="form-control" value="{{ config.uni_detail_kpi4_val|default:'Open for 2026/27' }}">
+                    <input type="text" name="uni_detail_kpi4_label" class="form-control" value="{{ config.uni_detail_kpi4_label|default:'Intake Status' }}">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Institutional Highlights -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:16px;">
+              <h4 style="font-size:12.5px; font-weight:800; color:#0f172a; margin:0 0 12px 0; text-transform:uppercase; letter-spacing:0.5px;">4 Overview Section Highlights (Under Institutional Overview)</h4>
+              <div class="form-row-4">
+                <!-- Highlight 1 -->
+                <div class="form-group">
+                  <label class="form-label" style="font-size:11px;">Highlight 1 (Global Standing)</label>
+                  <input type="text" name="uni_detail_hl1_title" class="form-control mb-1" value="{{ config.uni_detail_hl1_title|default:'Global Standing' }}">
+                  <textarea name="uni_detail_hl1_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_hl1_desc|default:'Internationally accredited degree credentials' }}</textarea>
+                </div>
+                <!-- Highlight 2 -->
+                <div class="form-group">
+                  <label class="form-label" style="font-size:11px;">Highlight 2 (Expert Faculty)</label>
+                  <input type="text" name="uni_detail_hl2_title" class="form-control mb-1" value="{{ config.uni_detail_hl2_title|default:'Expert Faculty' }}">
+                  <textarea name="uni_detail_hl2_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_hl2_desc|default:'Learn directly from leading scholars & researchers' }}</textarea>
+                </div>
+                <!-- Highlight 3 -->
+                <div class="form-group">
+                  <label class="form-label" style="font-size:11px;">Highlight 3 (Career Placement)</label>
+                  <input type="text" name="uni_detail_hl3_title" class="form-control mb-1" value="{{ config.uni_detail_hl3_title|default:'Career Placement' }}">
+                  <textarea name="uni_detail_hl3_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_hl3_desc|default:'Dedicated global internship & employment network' }}</textarea>
+                </div>
+                <!-- Highlight 4 -->
+                <div class="form-group">
+                  <label class="form-label" style="font-size:11px;">Highlight 4 (Student Support)</label>
+                  <input type="text" name="uni_detail_hl4_title" class="form-control mb-1" value="{{ config.uni_detail_hl4_title|default:'Student Support' }}">
+                  <textarea name="uni_detail_hl4_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_hl4_desc|default:'Comprehensive visa, housing & academic advisory' }}</textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4 Campus Facilities -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:16px;">
+              <h4 style="font-size:12.5px; font-weight:800; color:#0f172a; margin:0 0 12px 0; text-transform:uppercase; letter-spacing:0.5px;">4 Campus Infrastructure &amp; Student Life Facilities</h4>
+              <div class="form-row-4">
+                <!-- Facility 1 -->
+                <div class="form-group">
+                  <label class="form-label" style="font-size:11px;">Facility 1 (Libraries)</label>
+                  <input type="text" name="uni_detail_fac1_title" class="form-control mb-1" value="{{ config.uni_detail_fac1_title|default:'Smart Libraries & Archives' }}">
+                  <textarea name="uni_detail_fac1_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_fac1_desc|default:'24/7 digital resource access, private study pods, and collaborative innovation zones.' }}</textarea>
+                </div>
+                <!-- Facility 2 -->
+                <div class="form-group">
+                  <label class="form-label" style="font-size:11px;">Facility 2 (Research Labs)</label>
+                  <input type="text" name="uni_detail_fac2_title" class="form-control mb-1" value="{{ config.uni_detail_fac2_title|default:'Advanced Research Labs' }}">
+                  <textarea name="uni_detail_fac2_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_fac2_desc|default:'Industry-standard technology suites, computing clusters, and specialized workshops.' }}</textarea>
+                </div>
+                <!-- Facility 3 -->
+                <div class="form-group">
+                  <label class="form-label" style="font-size:11px;">Facility 3 (Housing)</label>
+                  <input type="text" name="uni_detail_fac3_title" class="form-control mb-1" value="{{ config.uni_detail_fac3_title|default:'Student Housing & Halls' }}">
+                  <textarea name="uni_detail_fac3_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_fac3_desc|default:'Safe, comfortable residences with dining options, high-speed WiFi, and 24/7 security.' }}</textarea>
+                </div>
+                <!-- Facility 4 -->
+                <div class="form-group">
+                  <label class="form-label" style="font-size:11px;">Facility 4 (Athletics)</label>
+                  <input type="text" name="uni_detail_fac4_title" class="form-control mb-1" value="{{ config.uni_detail_fac4_title|default:'Athletics & Recreation' }}">
+                  <textarea name="uni_detail_fac4_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_fac4_desc|default:'Multi-sport complexes, fitness gyms, swimming facilities, and dynamic cultural clubs.' }}</textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3 Admissions Steps -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:16px;">
+              <h4 style="font-size:12.5px; font-weight:800; color:#0f172a; margin:0 0 12px 0; text-transform:uppercase; letter-spacing:0.5px;">3-Step Admissions Guide Cards</h4>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:12px;">
+                <!-- Step 1 -->
+                <div class="form-group">
+                  <label class="form-label" style="font-size:11px;">Step 1 Title &amp; Description</label>
+                  <input type="text" name="uni_detail_step1_title" class="form-control mb-1" value="{{ config.uni_detail_step1_title|default:'Choose & Inquire' }}">
+                  <textarea name="uni_detail_step1_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_step1_desc|default:'Select your desired degree program and review specific academic prerequisites.' }}</textarea>
+                </div>
+                <!-- Step 2 -->
+                <div class="form-group">
+                  <label class="form-label" style="font-size:11px;">Step 2 Title &amp; Description</label>
+                  <input type="text" name="uni_detail_step2_title" class="form-control mb-1" value="{{ config.uni_detail_step2_title|default:'Counseling & Review' }}">
+                  <textarea name="uni_detail_step2_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_step2_desc|default:'Meet 1-on-1 with an authorized advisor to evaluate transcripts and scholarship chances.' }}</textarea>
+                </div>
+                <!-- Step 3 -->
+                <div class="form-group">
+                  <label class="form-label" style="font-size:11px;">Step 3 Title &amp; Description</label>
+                  <input type="text" name="uni_detail_step3_title" class="form-control mb-1" value="{{ config.uni_detail_step3_title|default:'Direct Submission' }}">
+                  <textarea name="uni_detail_step3_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_step3_desc|default:'Receive fast-track offer letters, accommodation booking, and visa assistance.' }}</textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sidebar Callback Box -->
+            <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:16px;">
+              <h4 style="font-size:12.5px; font-weight:800; color:#1e3a8a; margin:0 0 12px 0; text-transform:uppercase; letter-spacing:0.5px;">Sticky Sidebar Enquire &amp; Call Back Box</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Box Title</label>
+                  <input type="text" name="uni_detail_callback_title" class="form-control" value="{{ config.uni_detail_callback_title|default:'Enquire & Get Call Back' }}">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Box Subtitle</label>
+                  <input type="text" name="uni_detail_callback_sub" class="form-control" value="{{ config.uni_detail_callback_sub|default:'• Direct Admissions Callback' }}">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Box Description</label>
+                  <textarea name="uni_detail_callback_desc" class="form-control" style="min-height:50px;">{{ config.uni_detail_callback_desc }}</textarea>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Action CTA Button Label</label>
+                  <input type="text" name="uni_detail_callback_btn" class="form-control" value="{{ config.uni_detail_callback_btn|default:'Request Call Back' }}">
+                </div>
+              </div>
+              <label class="form-label" style="margin-top:6px; font-weight:700;">3 Benefit Bullet Points:</label>
+              <div class="form-row">
+                <div class="form-group">
+                  <input type="text" name="uni_detail_callback_perk1" class="form-control" value="{{ config.uni_detail_callback_perk1|default:'Direct call back from authorized advisors' }}">
+                </div>
+                <div class="form-group">
+                  <input type="text" name="uni_detail_callback_perk2" class="form-control" value="{{ config.uni_detail_callback_perk2|default:'Instant fee structure & scholarship guidance' }}">
+                </div>
+                <div class="form-group">
+                  <input type="text" name="uni_detail_callback_perk3" class="form-control" value="{{ config.uni_detail_callback_perk3|default:'1-on-1 personalized response' }}">
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
 
@@ -4719,6 +5484,13 @@ Connect with leading universities, explore scholarships and discover the possibi
     var target = document.getElementById('subtab-' + subName);
     if (target) {
       target.style.display = 'block';
+      var card = target.querySelector('.cms-card-collapsible');
+      if (card) {
+        card.style.display = '';
+        card.classList.remove('is-collapsed');
+        var pill = card.querySelector('.cms-toggle-text');
+        if (pill) pill.textContent = 'Collapse';
+      }
     }
 
     if (clickedBtn && clickedBtn.classList) {
@@ -4732,6 +5504,20 @@ Connect with leading universities, explore scholarships and discover the possibi
       setTimeout(function() { feather.replace(); }, 15);
     }
   }
+
+  // Real-time synchronization between identical inputs across Homepage & Services tabs
+  document.addEventListener('input', function(e) {
+    if (e.target && e.target.name && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')) {
+      var matching = document.querySelectorAll('[name="' + e.target.name + '"]');
+      if (matching.length > 1) {
+        matching.forEach(function(el) {
+          if (el !== e.target && el.tagName === e.target.tagName) {
+            el.value = e.target.value;
+          }
+        });
+      }
+    }
+  });
 
   // Submit active CMS form
   function submitActiveCmsForm() {
@@ -4972,6 +5758,30 @@ Connect with leading universities, explore scholarships and discover the possibi
   function filterTabSection(tabId, selectId, val) {
     var container = document.getElementById(tabId);
     if (!container) return;
+
+    if (tabId === 'cmsTabContent-services' && val !== 'all') {
+      var subMap = {
+        'sec-services-exhibitors': 'exhibitors',
+        'sec-services-unidetail': 'unidetail',
+        'sec-services-scholarships': 'scholarships',
+        'sec-services-speakers': 'speakers',
+        'sec-services-programme': 'programme',
+        'sec-services-sponsors': 'sponsors',
+        'sec-services-map': 'map',
+        'sec-services-courses': 'courses',
+        'sec-services-challenge': 'challenge',
+        'sec-services-register': 'register',
+        'sec-services-legal': 'legal'
+      };
+      if (subMap[val]) {
+        switchServiceSubTab(subMap[val]);
+      }
+    } else if (tabId === 'cmsTabContent-services' && val === 'all') {
+      document.querySelectorAll('.service-subtab-content').forEach(function(el) {
+        el.style.display = 'block';
+      });
+    }
+
     var cards = container.querySelectorAll('.cms-card-collapsible');
     if (val === 'all') {
       cards.forEach(function(c) {
