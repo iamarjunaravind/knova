@@ -2134,14 +2134,15 @@ from django.dispatch import receiver
 
 
 @receiver(post_save, sender=University)
-
-
 def auto_create_university_card(sender, instance, created, **kwargs):
     """
     Whenever a University is added (via admin, dashboard, API or script),
     automatically create its university card (UniversityProfile), assign
     next hero banner card placement, mark as approved, and allocate a booth.
     """
+    if kwargs.get('raw', False):
+        return
+
     if created:
         from django.db.models import Max
 
@@ -2182,13 +2183,13 @@ def auto_create_university_card(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=ProgrammeSession)
-
-
 def auto_provision_seminar_coordinator(sender, instance, created, **kwargs):
     """
     Automatically provision a dedicated coordinator User account and SeminarStaff profile
     for each seminar session.
     """
+    if kwargs.get('raw', False):
+        return
     try:
         from django.contrib.auth.models import User
         from django.utils.text import slugify
