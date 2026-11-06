@@ -2166,9 +2166,6 @@ def auto_create_university_card(sender, instance, created, **kwargs):
             max_priority = University.objects.exclude(id=instance.id).aggregate(Max('hero_priority'))['hero_priority__max'] or 0
             updates['hero_priority'] = max_priority + 1
 
-        if not instance.is_approved:
-            updates['is_approved'] = True
-
         if updates:
             University.objects.filter(pk=instance.pk).update(**updates)
 

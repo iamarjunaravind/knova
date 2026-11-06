@@ -1575,6 +1575,25 @@
 
     <div class="container uni-hero-inner">
 
+        {% if is_preview_mode %}
+        <div class="uni-pending-banner" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1.5px solid #f59e0b; border-radius: 14px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.12);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: #fef3c7; color: #b45309; font-size: 20px;">
+                    <i class="ti ti-shield-lock"></i>
+                </span>
+                <div>
+                    <div style="font-weight: 700; color: #92400e; font-size: 0.95rem;">Private Preview — Pending Administrator Approval</div>
+                    <div style="color: #b45309; font-size: 0.84rem; margin-top: 2px;">This institution is currently hidden from public visitors and students until approved by an administrator in the dashboard.</div>
+                </div>
+            </div>
+            {% if request.user.is_superuser or request.user.is_staff %}
+            <a href="{% url 'toggle_verification' 'university' university.id %}" style="display: inline-flex; align-items: center; gap: 6px; background: #059669; color: #ffffff; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.84rem; text-decoration: none; white-space: nowrap; box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25);">
+                <i class="ti ti-check"></i> Approve & Publish Now
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+
         <!-- Top Context / Breadcrumb -->
 
         <div class="uni-breadcrumb-bar">
@@ -1589,7 +1608,11 @@
 
             <span>{{ university.name }}</span>
 
+            {% if university.is_approved or university.is_verified %}
             <span class="uni-partner-pill"><span class="uni-partner-dot"></span> {{ site_config.uni_detail_partner_badge|default:"Verified Partner" }}</span>
+            {% else %}
+            <span class="uni-partner-pill" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3);"><span class="uni-partner-dot" style="background: #f59e0b;"></span> Pending Verification</span>
+            {% endif %}
 
         </div>
 
@@ -1619,7 +1642,9 @@
 
                         {{ university.name }}
 
+                        {% if university.is_approved or university.is_verified %}
                         <i class="ti ti-circle-check-filled verified-icon" title="Verified Educational Partner"></i>
+                        {% endif %}
 
                     </h1>
 
@@ -2471,7 +2496,11 @@
 
                             <span class="fact-lbl"><i class="ti ti-award"></i> Verification</span>
 
+                            {% if university.is_approved or university.is_verified %}
                             <span class="fact-val" style="color: #059669;"><i class="ti ti-shield-check"></i> Verified Partner</span>
+                            {% else %}
+                            <span class="fact-val" style="color: #d97706;"><i class="ti ti-clock"></i> Verification Pending</span>
+                            {% endif %}
 
                         </div>
 

@@ -3432,9 +3432,11 @@ def toggle_verification(request, model_name, pk):
     if not (request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['admin', 'manager', 'editor']).exists()):
         return redirect('dashboard_index')
     if model_name == 'exhibitor':
+        from .models import University
         obj = get_object_or_404(Exhibitor, pk=pk)
         obj.is_verified = not obj.is_verified
         obj.save()
+        University.objects.filter(name__iexact=obj.company_name).update(is_approved=obj.is_verified)
     elif model_name == 'sponsor':
         obj = get_object_or_404(Sponsor, pk=pk)
         obj.is_verified = not obj.is_verified
@@ -3444,10 +3446,11 @@ def toggle_verification(request, model_name, pk):
         obj.is_verified = not obj.is_verified
         obj.save()
     elif model_name == 'university':
-        from .models import University
+        from .models import University, Exhibitor
         obj = get_object_or_404(University, pk=pk)
         obj.is_approved = not obj.is_approved
         obj.save()
+        Exhibitor.objects.filter(company_name__iexact=obj.name).update(is_verified=obj.is_approved)
         referer = request.META.get('HTTP_REFERER')
 
         return redirect(referer if referer else 'dashboard_universities')

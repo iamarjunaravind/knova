@@ -428,7 +428,7 @@ def public_exhibitors(request):
     from django.db.models import Case, When, F, Value, IntegerField, Count
 
     # Support Exhibitor model
-    exhibitor_records = list(Exhibitor.objects.all().select_related('event_location').order_by('company_name'))
+    exhibitor_records = list(Exhibitor.objects.filter(is_verified=True).select_related('event_location').order_by('company_name'))
     # Support University model
     uni_records = list(University.objects.filter(is_approved=True).select_related('profile').annotate(
         sort_priority=Case(
@@ -453,13 +453,14 @@ def public_exhibitors(request):
             pass
 
     # Distinct countries from both models
-    uni_countries = list(UniversityProfile.objects.exclude(location_state_country='').values_list('location_state_country', flat=True))
-    ex_countries = list(Exhibitor.objects.exclude(country='').values_list('country', flat=True))
+    uni_countries = list(UniversityProfile.objects.filter(university__is_approved=True).exclude(location_state_country='').values_list('location_state_country', flat=True))
+    ex_countries = list(Exhibitor.objects.filter(is_verified=True).exclude(country='').values_list('country', flat=True))
     all_countries = sorted(list(set(uni_countries + ex_countries)))
 
     total_unis = len(exhibitors)
-    total_scholarships = Scholarship.objects.count()
-    total_courses = Course.objects.count()
+    from django.db.models import Q
+    total_scholarships = Scholarship.objects.filter(Q(university__isnull=True) | Q(university__is_approved=True)).count()
+    total_courses = Course.objects.filter(is_active=True, status='Approved').filter(Q(university__isnull=True) | Q(university__is_approved=True)).count()
     total_countries = len(all_countries)
 
     return render(request, 'core/exhibitors.html', {
@@ -678,6 +679,35 @@ def university_detail(request, slug):
     if not university:
         university = get_object_or_404(University.objects.select_related('profile'), slug=slug_clean)
 
+    # Visibility & Admin Approval Check
+    is_approved = False
+    if isinstance(university, University):
+        is_approved = bool(university.is_approved)
+    elif isinstance(university, Exhibitor):
+        is_approved = bool(university.is_verified)
+
+    can_view_unapproved = False
+    if request.user.is_authenticated:
+        if request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['admin', 'manager', 'editor']).exists():
+            can_view_unapproved = True
+        elif hasattr(request.user, 'university_staff'):
+            if isinstance(university, University) and request.user.university_staff.university_id == university.id:
+                can_view_unapproved = True
+            elif hasattr(request.user.university_staff, 'university') and request.user.university_staff.university:
+                u_name = getattr(university, 'name', '') or getattr(university, 'company_name', '')
+                if request.user.university_staff.university.name.strip().lower() == u_name.strip().lower():
+                    can_view_unapproved = True
+        elif hasattr(request.user, 'exhibitor_profile'):
+            u_name = getattr(university, 'name', '') or getattr(university, 'company_name', '')
+            if request.user.exhibitor_profile.company_name.strip().lower() == u_name.strip().lower():
+                can_view_unapproved = True
+
+    if not is_approved and not can_view_unapproved:
+        from django.http import Http404
+        raise Http404("This institution is currently pending verification and approval by KNOVA administrators.")
+
+    is_preview_mode = (not is_approved and can_view_unapproved)
+
     # Fetch courses and scholarships
     courses = []
     scholarships = []
@@ -708,7 +738,8 @@ def university_detail(request, slug):
         'courses': courses,
         'scholarships': scholarships,
         'is_saved': is_saved,
-        'has_scholarship_exam': has_scholarship_exam
+        'has_scholarship_exam': has_scholarship_exam,
+        'is_preview_mode': is_preview_mode
     })
 
 
@@ -718,8 +749,10 @@ def courses_list(request):
     from django.core.cache import cache
     from django.db.models import Q
 
-    # Base query with optimized foreign keys
-    courses = Course.objects.filter(is_active=True, status='Approved').select_related(
+    # Base query with optimized foreign keys (only approved universities)
+    courses = Course.objects.filter(is_active=True, status='Approved').filter(
+        Q(university__isnull=True) | Q(university__is_approved=True)
+    ).select_related(
         'university', 'category', 'university__profile'
     )
 
@@ -792,10 +825,10 @@ def courses_list(request):
     hero_stats = cache.get(stats_cache_key)
     if not hero_stats:
         hero_stats = {
-            'total_courses': Course.objects.filter(is_active=True, status='Approved').count(),
-            'total_universities': University.objects.count(),
-            'total_scholarships': Scholarship.objects.count(),
-            'total_countries': UniversityProfile.objects.exclude(location_state_country='').values('location_state_country').distinct().count(),
+            'total_courses': Course.objects.filter(is_active=True, status='Approved').filter(Q(university__isnull=True) | Q(university__is_approved=True)).count(),
+            'total_universities': University.objects.filter(is_approved=True).count(),
+            'total_scholarships': Scholarship.objects.filter(Q(university__isnull=True) | Q(university__is_approved=True)).count(),
+            'total_countries': UniversityProfile.objects.filter(university__is_approved=True).exclude(location_state_country='').values('location_state_country').distinct().count(),
         }
         cache.set(stats_cache_key, hero_stats, 600)
 
@@ -816,7 +849,7 @@ def courses_list(request):
     # Categories and countries for filter dropdowns
     categories = CourseCategory.objects.all()
     all_countries = list(
-        UniversityProfile.objects.exclude(location_state_country='')
+        UniversityProfile.objects.filter(university__is_approved=True).exclude(location_state_country='')
         .values_list('location_state_country', flat=True)
         .distinct()
         .order_by('location_state_country')
@@ -1448,7 +1481,7 @@ def global_search(request):
             })
 
         # Match Universities offering scholarships
-        unis = University.objects.filter(scholarships__isnull=False).filter(name__icontains=query).distinct()[:3]
+        unis = University.objects.filter(is_approved=True, scholarships__isnull=False).filter(name__icontains=query).distinct()[:3]
         for u in unis:
             cnt = u.scholarships.count()
             results.append({
@@ -1476,7 +1509,7 @@ def global_search(request):
                     'url': f"{reverse('public_exhibitors')}?q={u.name}",
                     'icon': 'ti ti-building-bank'
                 })
-            for exh in Exhibitor.objects.all()[:4]:
+            for exh in Exhibitor.objects.filter(is_verified=True)[:4]:
                 popular.append({
                     'type': 'Exhibitor',
                     'title': exh.company_name,
@@ -1509,7 +1542,7 @@ def global_search(request):
                 'icon': 'ti ti-building-bank'
             })
 
-        exhibs = Exhibitor.objects.filter(Q(company_name__icontains=query) | Q(country__icontains=query))[:4]
+        exhibs = Exhibitor.objects.filter(is_verified=True).filter(Q(company_name__icontains=query) | Q(country__icontains=query))[:4]
         for ex in exhibs:
             results.append({
                 'type': 'Exhibitor',
@@ -1756,7 +1789,9 @@ def public_scholarships(request):
     import datetime
 
     config = SiteConfiguration.objects.first()
-    scholarships = Scholarship.objects.select_related('university', 'university__profile').all()
+    scholarships = Scholarship.objects.filter(
+        Q(university__isnull=True) | Q(university__is_approved=True)
+    ).select_related('university', 'university__profile')
 
     # Search keyword (multi-word, university, description, eligibility, field, coverage)
     q = request.GET.get('q', '').strip()
@@ -1863,8 +1898,8 @@ def public_scholarships(request):
     page_obj = paginator.get_page(page_number)
 
     # Options for dropdowns
-    all_countries = sorted(list(set(UniversityProfile.objects.exclude(location_state_country='').values_list('location_state_country', flat=True))))
-    all_universities = University.objects.filter(scholarships__isnull=False).distinct().order_by('name')
+    all_countries = sorted(list(set(UniversityProfile.objects.filter(university__is_approved=True).exclude(location_state_country='').values_list('location_state_country', flat=True))))
+    all_universities = University.objects.filter(is_approved=True, scholarships__isnull=False).distinct().order_by('name')
     all_fields = [
         'Computer Science & AI',
         'Engineering & Technology',
@@ -1893,13 +1928,15 @@ def public_scholarships(request):
     ]
 
     # Informative Hero Statistics
+    valid_schs = Scholarship.objects.filter(Q(university__isnull=True) | Q(university__is_approved=True))
+    total_schs = valid_schs.count()
     hero_stats = {
-        'total_scholarships': Scholarship.objects.count(),
-        'total_full': Scholarship.objects.filter(coverage_type='Full').count(),
-        'total_partial': Scholarship.objects.filter(coverage_type='Partial').count(),
-        'total_grant': Scholarship.objects.filter(coverage_type='Grant').count(),
-        'total_unis': University.objects.filter(scholarships__isnull=False).distinct().count(),
-        'funding_pool': '$0' if Scholarship.objects.count() == 0 else '$2.5M+',
+        'total_scholarships': total_schs,
+        'total_full': valid_schs.filter(coverage_type='Full').count(),
+        'total_partial': valid_schs.filter(coverage_type='Partial').count(),
+        'total_grant': valid_schs.filter(coverage_type='Grant').count(),
+        'total_unis': University.objects.filter(is_approved=True, scholarships__isnull=False).distinct().count(),
+        'funding_pool': '$0' if total_schs == 0 else '$2.5M+',
     }
 
     return render(request, 'core/scholarships.html', {

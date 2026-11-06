@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from .models import (
     CustomSection,
@@ -14,9 +14,9 @@ def index(request):
 
     # Collect countries from both UniversityProfile and Exhibitor
 
-    uni_countries = list(UniversityProfile.objects.exclude(location_state_country='').values_list('location_state_country', flat=True))
+    uni_countries = list(UniversityProfile.objects.filter(university__is_approved=True).exclude(location_state_country='').values_list('location_state_country', flat=True))
 
-    ex_countries = list(Exhibitor.objects.exclude(country='').values_list('country', flat=True))
+    ex_countries = list(Exhibitor.objects.filter(is_verified=True).exclude(country='').values_list('country', flat=True))
 
     countries = sorted(list(set(uni_countries + ex_countries)))
 
@@ -45,13 +45,13 @@ def index(request):
 
         hero_universities = list(hero_universities) + list(extra_unis)
 
-    hero_courses = Course.objects.filter(is_active=True).select_related('university', 'university__profile')[:6]
+    hero_courses = Course.objects.filter(is_active=True, status='Approved').filter(Q(university__isnull=True) | Q(university__is_approved=True)).select_related('university', 'university__profile')[:6]
 
     floor_zones = FloorActivityZone.objects.filter(is_active=True).order_by('order')
 
-    scholarship_universities = University.objects.filter(scholarships__isnull=False).distinct().order_by('name')[:60]
+    scholarship_universities = University.objects.filter(is_approved=True, scholarships__isnull=False).distinct().order_by('name')[:60]
 
-    featured_scholarships = Scholarship.objects.select_related('university', 'university__profile').order_by('-id')[:3]
+    featured_scholarships = Scholarship.objects.filter(Q(university__isnull=True) | Q(university__is_approved=True)).select_related('university', 'university__profile').order_by('-id')[:3]
 
     all_fields = [
         'Computer Science & AI',
@@ -89,10 +89,6 @@ def index(request):
 
     if not exhibitor_qs:
 
-        exhibitor_qs = list(Exhibitor.objects.all().select_related('event_location')[:12])
-
-    if not exhibitor_qs:
-
         exhibitor_qs = list(University.objects.filter(is_approved=True).select_related('profile')[:12])
 
     featured_exhibitors = exhibitor_qs
@@ -107,11 +103,11 @@ def index(request):
 
     # Dynamic counts strictly from database
 
-    total_exhibitors = Exhibitor.objects.count() + University.objects.filter(is_approved=True).count()
+    total_exhibitors = Exhibitor.objects.filter(is_verified=True).count() + University.objects.filter(is_approved=True).count()
 
-    total_courses = Course.objects.count()
+    total_courses = Course.objects.filter(is_active=True, status='Approved').filter(Q(university__isnull=True) | Q(university__is_approved=True)).count()
 
-    total_scholarships = Scholarship.objects.count()
+    total_scholarships = Scholarship.objects.filter(Q(university__isnull=True) | Q(university__is_approved=True)).count()
 
     total_speakers = Speaker.objects.count()
 
