@@ -577,7 +577,7 @@
           <div class="toggle-item-card" id="card-show_hero_disclaimer">
             <div class="toggle-info">
               <h4>Hero Video Disclaimer <span class="toggle-status-pill {% if config.show_hero_disclaimer %}status-visible{% else %}status-hidden{% endif %}" id="pill-show_hero_disclaimer">{% if config.show_hero_disclaimer %}Visible{% else %}Hidden{% endif %}</span></h4>
-              <p>Disclaimer pill on right bottom: "The video is for illustration purpose only. Not real, AI generated".</p>
+              <p>Disclaimer pill on right bottom: "For illustration only".</p>
             </div>
             <label class="switch">
               <input type="checkbox" name="show_hero_disclaimer" id="chk-show_hero_disclaimer" {% if config.show_hero_disclaimer %}checked{% endif %} onchange="ajaxToggle('show_hero_disclaimer')">
@@ -2028,7 +2028,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">Hero Video Disclaimer Text (Right Bottom)</label>
-          <input type="text" name="hero_video_disclaimer" class="form-control" value="{{ config.hero_video_disclaimer }}" placeholder="The video is for illustration purpose only. Not real, AI generated">
+          <input type="text" name="hero_video_disclaimer" class="form-control" value="{{ config.hero_video_disclaimer }}" placeholder="For illustration only">
           <small class="form-hint" style="color:#64748b; font-size:11px; margin-top:4px; display:block;">Pill displayed at the bottom right corner of the background video banner.</small>
         </div>
         <div class="form-row">
