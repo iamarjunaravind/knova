@@ -1401,6 +1401,13 @@
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
+      touch-action: pan-y !important;
+    }
+
+    .hero-ui-layer,
+    .hero-content,
+    .hero-master-card {
+      touch-action: pan-y !important;
     }
 
     .hero-wrapper::after {
@@ -2535,10 +2542,13 @@
 
   function handleDragStart(clientX, clientY, target) {
     if (!target) return false;
+    // Drag canvas is strictly for desktop view (> 820px); on mobile allow standard native scrolling
+    if (window.innerWidth <= 820) return false;
+
     // Check if dragging on a university card
     const isUniCard = target.closest('.desktop-pinned-card, .uni-card');
     // Don't drag if interacting with inputs, buttons, search bar, preview panel, hero CTA buttons, or center badge
-    if (!isUniCard && target.closest('input, button, select, .hero-search-bar, .preview-panel, .hero-knova-pill, .hero-cta-buttons')) {
+    if (!isUniCard && target.closest('input, button, select, .hero-search-bar, .preview-panel, .hero-knova-pill, .hero-cta-buttons, .quick-stat-card, .hero-quick-stats')) {
       return false;
     }
 
@@ -2586,6 +2596,7 @@
       handleDragStart(e.clientX, e.clientY, e.target);
     });
     heroWrapper.addEventListener('touchstart', (e) => {
+      if (window.innerWidth <= 820) return;
       if (e.touches && e.touches.length > 0) {
         handleDragStart(e.touches[0].clientX, e.touches[0].clientY, e.target);
       }
@@ -2600,6 +2611,7 @@
     handleDragEnd();
   });
   window.addEventListener('touchmove', (e) => {
+    if (window.innerWidth <= 820) return;
     if (isDragging && e.touches && e.touches.length > 0) {
       handleDragMove(e.touches[0].clientX, e.touches[0].clientY, 10, 10, e);
     }
