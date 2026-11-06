@@ -8868,9 +8868,9 @@
         bottom: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
-        background: rgba(6, 16, 34, 0.92) !important;
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
+        background: rgba(15, 23, 42, 0.45) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
         z-index: 2147483647 !important;
         display: none;
         align-items: center;
@@ -8891,7 +8891,8 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.55);
+        border: 1.5px solid #e2e8f0;
+        box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.25), 0 4px 16px rgba(15, 23, 42, 0.06);
         position: relative;
         z-index: 2147483647;
         animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -8931,7 +8932,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #fafcff;
+        background: #f8fafc;
+        background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+        background-size: 20px 20px;
       }
       .inline-map-viewport img {
         width: 100%;
@@ -8939,6 +8942,11 @@
         object-fit: contain;
         display: block;
         margin: 0 auto;
+        background: #ffffff;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
         transition: transform 0.15s ease-out;
@@ -8946,9 +8954,9 @@
       }
       .map-prominent-zoom-btn {
         pointer-events: auto;
-        background: #0a1936;
-        color: #ffffff;
-        border: 1.5px solid rgba(255, 255, 255, 0.25);
+        background: #ffffff;
+        color: #0f172a;
+        border: 1.5px solid #cbd5e1;
         padding: 8px 18px;
         border-radius: 25px;
         font-size: 12.5px;
@@ -8957,14 +8965,18 @@
         align-items: center;
         gap: 8px;
         cursor: pointer;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
         transition: all 0.2s ease;
       }
       .map-prominent-zoom-btn:hover {
         background: #1768ff;
-        border-color: #38bdf8;
+        color: #ffffff;
+        border-color: #1768ff;
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(23, 104, 255, 0.45);
+        box-shadow: 0 8px 25px rgba(23, 104, 255, 0.35);
+      }
+      .map-prominent-zoom-btn:hover i {
+        color: #ffffff !important;
       }
       .map-top-control-bar {
         position: absolute;
@@ -8980,10 +8992,10 @@
       }
       .map-control-pill {
         pointer-events: auto;
-        background: rgba(10, 25, 54, 0.9);
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
-        color: #ffffff;
+        color: #0f172a;
         padding: 5px 12px;
         border-radius: 20px;
         font-size: 11px;
@@ -8991,20 +9003,21 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
       }
       .map-btn-group {
         pointer-events: auto;
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        background: rgba(10, 25, 54, 0.88);
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
         padding: 3px 4px;
         border-radius: 24px;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-        border: 1px solid rgba(255,255,255,0.15);
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+        border: 1px solid #e2e8f0;
       }
       .map-ctrl-btn {
         width: 28px;
@@ -9012,7 +9025,7 @@
         border-radius: 50%;
         border: none;
         background: transparent;
-        color: #ffffff;
+        color: #475569;
         font-size: 13px;
         font-weight: 700;
         display: flex;
@@ -9022,8 +9035,8 @@
         transition: all 0.2s ease;
       }
       .map-ctrl-btn:hover {
-        background: rgba(255,255,255,0.2);
-        color: #38bdf8;
+        background: #f1f5f9;
+        color: #1768ff;
       }
       .map-ctrl-fs-btn {
         display: inline-flex;
@@ -9048,10 +9061,10 @@
         bottom: 12px;
         left: 12px;
         z-index: 10;
-        background: rgba(10, 25, 54, 0.85);
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
-        color: #ffffff;
+        color: #475569;
         padding: 5px 12px;
         border-radius: 20px;
         font-size: 10.5px;
@@ -9060,7 +9073,8 @@
         align-items: center;
         gap: 5px;
         pointer-events: none;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
       }
       .zone-spec-chip {
         display: flex;
@@ -9329,10 +9343,10 @@
           </div>
         </div>
 
-        <!-- Modal Viewer Body with High-Contrast Canvas, Drag / Pan & Wheel Zoom -->
-        <div style="flex: 1; overflow: hidden; background: #0a1936; padding: 24px; display: flex; align-items: center; justify-content: center; position: relative; cursor: grab;" id="modalMapViewport">
+        <!-- Modal Viewer Body with Clean Light Studio Canvas, Drag / Pan & Wheel Zoom -->
+        <div style="flex: 1; overflow: hidden; background: #f8fafc; background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px); background-size: 20px 20px; padding: 24px; display: flex; align-items: center; justify-content: center; position: relative; cursor: grab;" id="modalMapViewport">
           <div id="modalMapCanvas" style="transform-origin: center center; transition: transform 0.15s ease-out; display: inline-flex; align-items: center; justify-content: center;">
-            <img id="modalFloorMapImg" src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.svg' %}{% endif %}" onerror="this.onerror=null;this.src='{% static 'assets/expo_map.webp' %}';" alt="KNOVA Floorplan Layout" width="8420" height="5955" loading="eager" decoding="async" style="max-width: 90vw; max-height: calc(90vh - 170px); width: auto; height: auto; border-radius: 10px; box-shadow: 0 15px 45px rgba(0,0,0,0.4); user-select: none; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+            <img id="modalFloorMapImg" src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.svg' %}{% endif %}" onerror="this.onerror=null;this.src='{% static 'assets/expo_map.webp' %}';" alt="KNOVA Floorplan Layout" width="8420" height="5955" loading="eager" decoding="async" style="max-width: 90vw; max-height: calc(90vh - 170px); width: auto; height: auto; border-radius: 12px; background: #ffffff; padding: 16px; border: 1.5px solid #e2e8f0; box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04); user-select: none; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
           </div>
         </div>
       </div>
