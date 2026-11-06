@@ -10623,28 +10623,28 @@ if (document.readyState === 'loading') {
 
 {% if site_config.show_register_cta_section %}
 
-<section class="section-register-today" id="register" style="padding: clamp(65px, 7vw, 85px) 0 clamp(85px, 9vw, 115px) 0; background: #ffffff;">
+<section class="section-register-today" id="register" style="padding: clamp(32px, 3.5vw, 45px) 0 clamp(38px, 4.2vw, 52px) 0; background: #ffffff;">
   <div class="container">
-    <div style="background: linear-gradient(135deg, #071f4a 0%, #0d3885 45%, #1768ff 100%); border: 1.5px solid rgba(255, 255, 255, 0.18); border-radius: 28px; padding: 56px 60px; color: #ffffff; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(23,104,255,0.32); transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);" class="register-banner-box eventor-reveal-scale">
+    <div style="background: linear-gradient(135deg, #071f4a 0%, #0d3885 45%, #1768ff 100%); border: 1.5px solid rgba(255, 255, 255, 0.18); border-radius: 20px; padding: 30px 42px; color: #ffffff; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; box-shadow: 0 16px 40px rgba(23,104,255,0.28); transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);" class="register-banner-box eventor-reveal-scale">
 
       <!-- Graduate Silhouette Icon Background on Left -->
-      <div style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); opacity: 0.12; pointer-events: none; font-size: 180px; color: #ffffff; line-height: 1;">
+      <div style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); opacity: 0.10; pointer-events: none; font-size: 110px; color: #ffffff; line-height: 1;">
         <i class="ti ti-school"></i>
       </div>
 
       <!-- Center / Left Content -->
-      <div style="position: relative; z-index: 2; max-width: 520px;">
-        <span style="font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #38bdf8; display: block; margin-bottom: 12px;">BE PART OF A BRIGHTER TOMORROW</span>
-        <h2 style="font-family: 'Poppins', sans-serif; font-size: clamp(28px, 3.2vw, 40px); font-weight: 900; color: #ffffff; margin: 0 0 12px 0; letter-spacing: -0.8px; line-height: 1.15;">{{ site_config.cta_heading|default:"Register Today" }}</h2>
-        <p style="font-size: 14px; color: rgba(255,255,255,0.92); margin: 0; line-height: 1.65;">{{ site_config.cta_subtitle|default:"Take the next step towards your global education journey." }}</p>
+      <div style="position: relative; z-index: 2; max-width: 480px;">
+        <span style="font-family: 'Poppins', sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: #38bdf8; display: block; margin-bottom: 6px;">BE PART OF A BRIGHTER TOMORROW</span>
+        <h2 style="font-family: 'Poppins', sans-serif; font-size: clamp(22px, 2.2vw, 28px); font-weight: 900; color: #ffffff; margin: 0 0 6px 0; letter-spacing: -0.5px; line-height: 1.15;">{{ site_config.cta_heading|default:"Register Today" }}</h2>
+        <p style="font-size: 13px; color: rgba(255,255,255,0.92); margin: 0; line-height: 1.55;">{{ site_config.cta_subtitle|default:"Take the next step towards your global education journey." }}</p>
       </div>
 
       <!-- Right Buttons (Eventor Action Buttons) -->
-      <div style="display: flex; gap: 16px; position: relative; z-index: 2;" class="register-buttons-row">
-        <a href="{% url 'public_register' %}" style="font-family: 'Poppins', sans-serif; display: inline-flex; align-items: center; gap: 6px; background: #ffffff; color: #1768ff; padding: 14px 30px; border-radius: 35px; font-size: 13.5px; font-weight: 800; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.18); transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.25s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.18)';">
+      <div style="display: flex; gap: 12px; position: relative; z-index: 2;" class="register-buttons-row">
+        <a href="{% url 'public_register' %}" style="font-family: 'Poppins', sans-serif; display: inline-flex; align-items: center; gap: 6px; background: #ffffff; color: #1768ff; padding: 10px 22px; border-radius: 30px; font-size: 12.5px; font-weight: 800; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.18); transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.25s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 18px rgba(0,0,0,0.22)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.18)';">
           {{ site_config.cta_btn_text|default:"Register for Expo" }} &rarr;
         </a>
-        <a href="{% url 'public_about' %}" aria-label="Learn more about KNOVA Expo" style="font-family: 'Poppins', sans-serif; display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.45); color: #ffffff; padding: 14px 30px; border-radius: 35px; font-size: 13.5px; font-weight: 800; text-decoration: none; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), background 0.25s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.background='rgba(255,255,255,0.25)';" onmouseout="this.style.transform='translateY(0)'; this.style.background='rgba(255,255,255,0.12)';">
+        <a href="{% url 'public_about' %}" aria-label="Learn more about KNOVA Expo" style="font-family: 'Poppins', sans-serif; display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.45); color: #ffffff; padding: 10px 22px; border-radius: 30px; font-size: 12.5px; font-weight: 800; text-decoration: none; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1), background 0.25s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.background='rgba(255,255,255,0.22)';" onmouseout="this.style.transform='translateY(0)'; this.style.background='rgba(255,255,255,0.12)';">
           About KNOVA
         </a>
       </div>
