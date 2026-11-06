@@ -9404,26 +9404,17 @@
           </div>
         </div>
 
-        <!-- Modal Toolbar for High-Res Zoom & Area Focus -->
-        <div style="padding: 10px 24px; background: #f8fafc; border-bottom: 1px solid #eef2f6; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <!-- Modal Toolbar for High-Res Zoom -->
+        <div style="padding: 10px 24px; background: #f8fafc; border-bottom: 1px solid #eef2f6; display: flex; align-items: center; flex-wrap: wrap; gap: 12px;">
           
           <!-- Zoom Controls with Percentage -->
-          <div style="display: flex; gap: 6px; align-items: center;">
+          <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
             <button type="button" onclick="zoomFloorMap(0.35)" aria-label="Zoom in" style="padding: 7px 14px; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #fff; font-size: 12.5px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; color: #0f172a;"><i class="ti ti-zoom-in" style="font-size: 15px; color: #1768ff;"></i> Zoom In</button>
             <button type="button" onclick="zoomFloorMap(-0.35)" aria-label="Zoom out" style="padding: 7px 14px; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #fff; font-size: 12.5px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; color: #0f172a;"><i class="ti ti-zoom-out" style="font-size: 15px; color: #1768ff;"></i> Zoom Out</button>
             <span id="modalZoomPercentBadge" style="font-size: 11.5px; font-weight: 800; color: #0369a1; background: #e0f2fe; border: 1px solid #bae6fd; padding: 5px 11px; border-radius: 8px; min-width: 55px; text-align: center;">100%</span>
             <button type="button" onclick="resetFloorMap()" aria-label="Reset zoom" style="padding: 7px 14px; border-radius: 8px; border: 1.5px solid #cbd5e1; background: #fff; font-size: 12px; font-weight: 700; cursor: pointer; color: #475569;">Reset</button>
             <button type="button" onclick="setFloorMapZoom(1.8)" style="padding: 7px 12px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; font-size: 11.5px; font-weight: 700; cursor: pointer; color: #475569;">180%</button>
             <button type="button" onclick="setFloorMapZoom(2.5)" style="padding: 7px 12px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; font-size: 11.5px; font-weight: 700; cursor: pointer; color: #475569;">250%</button>
-          </div>
-
-          <!-- Quick Area Focus Buttons -->
-          <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-            <span style="font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 0.5px; text-transform: uppercase;">Jump to Zone:</span>
-            <button type="button" onclick="focusModalZone(1.8, 0, -45)" style="font-size: 11px; font-weight: 800; padding: 5px 11px; border-radius: 8px; border: 1px solid #fecaca; background: #fef2f2; color: #b91c1c; cursor: pointer;">Shell Scheme Booth</button>
-            <button type="button" onclick="focusModalZone(1.85, 75, 0)" style="font-size: 11px; font-weight: 800; padding: 5px 11px; border-radius: 8px; border: 1px solid #bbf7d0; background: #f0fdf4; color: #15803d; cursor: pointer;">Standard Booths</button>
-            <button type="button" onclick="focusModalZone(1.85, -80, 0)" style="font-size: 11px; font-weight: 800; padding: 5px 11px; border-radius: 8px; border: 1px solid #bfdbfe; background: #eff6ff; color: #1d4ed8; cursor: pointer;">Large Booths</button>
-            <button type="button" onclick="focusModalZone(2.0, -220, 0)" style="font-size: 11px; font-weight: 800; padding: 5px 11px; border-radius: 8px; border: 1px solid #f5d0fe; background: #fdf4ff; color: #a21caf; cursor: pointer;">Seminar &amp; Stage Area</button>
           </div>
         </div>
 
