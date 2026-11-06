@@ -11,7 +11,7 @@
   <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
     <div>
       <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Total Exhibitors</div>
-      <div style="font-size: 26px; font-weight: 850; color: #0f172a;">{{ total_count|default:exhibitors.count|default:"13" }}</div>
+      <div style="font-size: 26px; font-weight: 850; color: #0f172a;">{{ total_count|default:exhibitors.count|default:0 }}</div>
       <div style="font-size: 11.5px; color: #4f46e5; font-weight: 600; margin-top: 2px;">Registered Institutions</div>
     </div>
     <div style="width: 44px; height: 44px; border-radius: 12px; background: #eef2ff; color: #4f46e5; display: flex; align-items: center; justify-content: center; border: 1px solid #c7d2fe;">
@@ -278,7 +278,7 @@
   <!-- Table Footer Summary Strip -->
   <div style="padding: 12px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #64748b; font-weight: 600;">
     <div>
-      Showing <strong>{{ exhibitors|length }}</strong> of <strong>{{ total_count|default:exhibitors.count|default:"13" }}</strong> total exhibitors
+      Showing <strong>{{ exhibitors|length }}</strong> of <strong>{{ total_count|default:exhibitors.count|default:0 }}</strong> total exhibitors
     </div>
     <div style="font-size: 11.5px; color: #94a3b8;">
       KNOVA Global Higher Education Expo 2027
