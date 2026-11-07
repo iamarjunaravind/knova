@@ -5,6 +5,31 @@
 {% block page_title %}Exhibitors &amp; Booth Directory{% endblock %}
 
 {% block content %}
+<!-- Top Page Header Banner -->
+<div class="cms-header" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:0 4px 16px rgba(15,23,42,0.03); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+  <div>
+    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 4px 0; display:flex; align-items:center; gap:10px;">
+      <i data-feather="briefcase" style="color:#1768ff;"></i> Exhibitors &amp; Booth Directory
+    </h2>
+    <p style="font-size:13px; color:#64748b; margin:0; line-height:1.4;">
+      Floor space assignments, booth numbers, institutional directories, and verified exhibitors.
+    </p>
+  </div>
+  <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+    <!-- Export Buttons -->
+    <a href="{% url 'dashboard_export_generic' 'Exhibitor' %}?format=excel" class="btn btn-outline-secondary" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#ecfdf5; border:1px solid #a7f3d0; color:#059669;">
+      <i data-feather="file" style="width:14px; height:14px;"></i> Excel
+    </a>
+    <a href="{% url 'dashboard_export_generic' 'Exhibitor' %}?format=csv" class="btn btn-outline-secondary" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8;">
+      <i data-feather="file-text" style="width:14px; height:14px;"></i> CSV
+    </a>
+    <!-- Primary Add Button -->
+    <a href="{% url 'exhibitor_create' %}" style="background:#1768ff; border:1px solid #1768ff; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 16px; text-decoration:none; box-shadow: 0 2px 6px rgba(23, 104, 255, 0.25);">
+      <i data-feather="plus" style="width:14px; height:14px;"></i> Add New Exhibitor
+    </a>
+  </div>
+</div>
+
 <!-- KPI METRIC CARDS -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px;">
   <!-- Metric 1: Total Exhibitors -->
@@ -12,9 +37,9 @@
     <div>
       <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Total Exhibitors</div>
       <div style="font-size: 26px; font-weight: 850; color: #0f172a;">{{ total_count|default:exhibitors.count|default:0 }}</div>
-      <div style="font-size: 11.5px; color: #4f46e5; font-weight: 600; margin-top: 2px;">Registered Institutions</div>
+      <div style="font-size: 11.5px; color: #1768ff; font-weight: 600; margin-top: 2px;">Registered Institutions</div>
     </div>
-    <div style="width: 44px; height: 44px; border-radius: 12px; background: #eef2ff; color: #4f46e5; display: flex; align-items: center; justify-content: center; border: 1px solid #c7d2fe;">
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; color: #1768ff; display: flex; align-items: center; justify-content: center; border: 1px solid #bfdbfe;">
       <i data-feather="briefcase" style="width: 20px; height: 20px;"></i>
     </div>
   </div>
@@ -44,22 +69,22 @@
   </div>
 </div>
 
-<!-- FILTER & ACTION TOOLBAR (SINGLE LINE) -->
-<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+<!-- FILTER & SEARCH TOOLBAR -->
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
   
-  <form method="GET" action="{% url 'dashboard_exhibitors' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap;">
+  <form method="GET" action="{% url 'dashboard_exhibitors' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap; width: 100%;">
     <!-- Booth Quick Tabs -->
-    <div style="display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 8px; gap: 3px; margin-right: 4px;">
+    <div style="display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 8px; gap: 3px; margin-right: 6px; flex-shrink: 0;">
       <a href="{% url 'dashboard_exhibitors' %}?{% if is_verified %}is_verified={{ is_verified }}&{% endif %}{% if sort_by %}sort_by={{ sort_by }}&{% endif %}"
-         style="padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if not booth_filter %}background: #4f46e5; color: #ffffff; box-shadow: 0 1px 3px rgba(79,70,229,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
+         style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if not booth_filter %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
         All ({{ total_count|default:"13" }})
       </a>
       <a href="{% url 'dashboard_exhibitors' %}?booth=allocated{% if is_verified %}&is_verified={{ is_verified }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}"
-         style="padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if booth_filter == 'allocated' %}background: #10b981; color: #ffffff; box-shadow: 0 1px 3px rgba(16,185,129,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
+         style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if booth_filter == 'allocated' %}background: #10b981; color: #ffffff; box-shadow: 0 1px 3px rgba(16,185,129,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
         Allocated ({{ allocated_count|default:"13" }})
       </a>
       <a href="{% url 'dashboard_exhibitors' %}?booth=unallocated{% if is_verified %}&is_verified={{ is_verified }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}"
-         style="padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if booth_filter == 'unallocated' %}background: #f59e0b; color: #ffffff; box-shadow: 0 1px 3px rgba(245,158,11,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
+         style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if booth_filter == 'unallocated' %}background: #f59e0b; color: #ffffff; box-shadow: 0 1px 3px rgba(245,158,11,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
         Unallocated ({{ unallocated_count|default:"0" }})
       </a>
     </div>
@@ -67,50 +92,36 @@
     {% if booth_filter %}<input type="hidden" name="booth" value="{{ booth_filter }}">{% endif %}
 
     <!-- Date Range -->
-    <input type="date" name="start_date" value="{{ start_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; width: 125px;" title="Start Date">
-    <span style="color: #94a3b8; font-size: 11px; font-weight: 600;">to</span>
-    <input type="date" name="end_date" value="{{ end_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; width: 125px;" title="End Date">
+    <div style="display: inline-flex; align-items: center; gap: 4px;">
+      <input type="date" name="start_date" value="{{ start_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;" title="Start Date">
+      <span style="color: #94a3b8; font-size: 11px; font-weight: 600;">to</span>
+      <input type="date" name="end_date" value="{{ end_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;" title="End Date">
+    </div>
 
     <!-- Status Dropdown -->
-    <select name="is_verified" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; max-width: 135px;">
+    <select name="is_verified" style="border: 1px solid #cbd5e1; padding: 0 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; height: 36px; min-width: 120px;">
       <option value="">All Statuses</option>
       <option value="1" {% if is_verified == '1' %}selected{% endif %}>Verified</option>
       <option value="0" {% if is_verified == '0' %}selected{% endif %}>Unverified</option>
     </select>
 
     <!-- Sort By -->
-    <select name="sort_by" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; max-width: 140px;">
+    <select name="sort_by" style="border: 1px solid #cbd5e1; padding: 0 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; height: 36px; min-width: 130px;">
       <option value="company_name" {% if sort_by == 'company_name' %}selected{% endif %}>Name (A-Z)</option>
       <option value="-company_name" {% if sort_by == '-company_name' %}selected{% endif %}>Name (Z-A)</option>
       <option value="booth" {% if sort_by == 'booth' %}selected{% endif %}>Booth Number</option>
     </select>
 
-    <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(23,104,255,0.25); white-space: nowrap;">
-      <i data-feather="search" style="width: 13px; height: 13px;"></i> Apply Filter
+    <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 0 16px; border-radius: 6px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(23,104,255,0.25); height: 36px; white-space: nowrap;">
+      <i data-feather="filter" style="width: 13px; height: 13px;"></i> Apply Filter
     </button>
 
     {% if start_date or end_date or is_verified or sort_by != 'company_name' or booth_filter %}
-    <a href="{% url 'dashboard_exhibitors' %}" style="font-size: 11.5px; color: #64748b; text-decoration: none; font-weight: 600; padding: 4px 6px; white-space: nowrap;">
+    <a href="{% url 'dashboard_exhibitors' %}" style="font-size: 12px; color: #64748b; text-decoration: none; font-weight: 600; padding: 6px 10px; white-space: nowrap;">
       Reset
     </a>
     {% endif %}
-
-    <!-- Export Separator -->
-    <div style="width: 1px; height: 18px; background: #e2e8f0; margin: 0 2px;"></div>
-
-    <!-- Export Buttons -->
-    <button type="submit" name="format" value="excel" formaction="{% url 'dashboard_export_generic' 'Exhibitor' %}" style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
-      <i data-feather="file" style="width: 13px; height: 13px;"></i> Excel
-    </button>
-    <button type="submit" name="format" value="csv" formaction="{% url 'dashboard_export_generic' 'Exhibitor' %}" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
-      <i data-feather="file-text" style="width: 13px; height: 13px;"></i> CSV
-    </button>
   </form>
-
-  <!-- Add New Exhibitor Button (Pinned to Right) -->
-  <a href="{% url 'exhibitor_create' %}" style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%); color: #ffffff; text-decoration: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 750; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(79,70,229,0.25); white-space: nowrap; flex-shrink: 0;">
-    <i data-feather="plus" style="width: 14px; height: 14px;"></i> Add New Exhibitor
-  </a>
 </div>
 
 <!-- STRUCTURED DATA TABLE CARD -->

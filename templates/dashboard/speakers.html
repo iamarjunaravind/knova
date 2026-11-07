@@ -7,6 +7,29 @@
 {% block page_category %}Academic Personnel &amp; Keynotes{% endblock %}
 
 {% block content %}
+<!-- Top Page Header Banner -->
+<div class="cms-header" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:0 4px 16px rgba(15,23,42,0.03); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+  <div>
+    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 4px 0; display:flex; align-items:center; gap:10px;">
+      <i data-feather="mic" style="color:#1768ff;"></i> Speakers &amp; Education Experts
+    </h2>
+    <p style="font-size:13px; color:#64748b; margin:0; line-height:1.4;">
+      Keynote lecturers, panel moderators, and on-floor academic advisory personnel.
+    </p>
+  </div>
+  <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+    <a href="{% url 'expert_attendance_scanner' %}" target="_blank" class="btn btn-outline-secondary" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#f8fafc; border:1px solid #cbd5e1; color:#334155;">
+      <i data-feather="camera" style="width:14px; height:14px; color:#7c3aed;"></i> Station Scanner
+    </a>
+    <button type="button" onclick="openAddExpertModal()" style="background:#7c3aed; border:1px solid #7c3aed; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 15px; cursor:pointer; box-shadow:0 2px 6px rgba(124,58,237,0.25);">
+      <i data-feather="plus" style="width:14px; height:14px;"></i> Add Education Expert
+    </button>
+    <a href="{% url 'speaker_create' %}" style="background:#1768ff; border:1px solid #1768ff; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 16px; text-decoration:none; box-shadow:0 2px 6px rgba(23, 104, 255, 0.25);">
+      <i data-feather="plus" style="width:14px; height:14px;"></i> Add Keynote Speaker
+    </a>
+  </div>
+</div>
+
 <!-- ALERT MESSAGES -->
 {% if messages %}
 <div style="margin-bottom: 20px;">
@@ -73,72 +96,50 @@
   </div>
 </div>
 
-<!-- FILTER & ACTION TOOLBAR (UNIFIED TOGGLE & CONTROLS) -->
-<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+<!-- FILTER & SEARCH TOOLBAR -->
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
   
-  <!-- Left Side: Toggle Pills & Search Form -->
-  <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+  <!-- Left Side: Toggle Pills -->
+  <div style="display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 8px; border: 1px solid #e2e8f0; flex-shrink: 0;">
+    <a href="{% url 'dashboard_speakers' %}?type=all{% if query %}&q={{ query|urlencode }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}"
+       style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'all' or not filter_type %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
+      All ({{ total_all_count }})
+    </a>
+    <a href="{% url 'dashboard_speakers' %}?type=speaker{% if query %}&q={{ query|urlencode }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}"
+       style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'speaker' or filter_type == 'speakers' %}background: #0284c7; color: #ffffff; box-shadow: 0 1px 3px rgba(2,132,199,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
+      Speakers ({{ total_speakers_count }})
+    </a>
+    <a href="{% url 'dashboard_speakers' %}?type=expert{% if query %}&q={{ query|urlencode }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}"
+       style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'expert' or filter_type == 'experts' %}background: #7c3aed; color: #ffffff; box-shadow: 0 1px 3px rgba(124,58,237,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
+      Education Experts ({{ total_experts_count }})
+    </a>
+  </div>
+
+  <!-- Right Side: Search & Sort Form -->
+  <form method="GET" action="{% url 'dashboard_speakers' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap;">
+    <input type="hidden" name="type" value="{{ filter_type|default:'all' }}">
     
-    <!-- 1. Toggle Pill Filter (All / Speakers / Education Experts) -->
-    <div style="display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 8px; border: 1px solid #e2e8f0;">
-      <a href="{% url 'dashboard_speakers' %}?type=all{% if query %}&q={{ query|urlencode }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}"
-         style="padding: 5px 12px; border-radius: 6px; font-size: 11.5px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'all' or not filter_type %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
-        All ({{ total_all_count }})
-      </a>
-      <a href="{% url 'dashboard_speakers' %}?type=speaker{% if query %}&q={{ query|urlencode }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}"
-         style="padding: 5px 12px; border-radius: 6px; font-size: 11.5px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'speaker' or filter_type == 'speakers' %}background: #0284c7; color: #ffffff; box-shadow: 0 1px 3px rgba(2,132,199,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
-        Speakers ({{ total_speakers_count }})
-      </a>
-      <a href="{% url 'dashboard_speakers' %}?type=expert{% if query %}&q={{ query|urlencode }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}"
-         style="padding: 5px 12px; border-radius: 6px; font-size: 11.5px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'expert' or filter_type == 'experts' %}background: #7c3aed; color: #ffffff; box-shadow: 0 1px 3px rgba(124,58,237,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
-        Education Experts ({{ total_experts_count }})
-      </a>
+    <!-- Search Field -->
+    <div style="position: relative; width: 240px;">
+      <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search name, desk, affiliation..." style="width: 100%; border: 1px solid #cbd5e1; padding: 0 10px 0 32px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;">
+      <i data-feather="search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: #94a3b8;"></i>
     </div>
 
-    <!-- 2. Search & Sort Form -->
-    <form method="GET" action="{% url 'dashboard_speakers' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap;">
-      <input type="hidden" name="type" value="{{ filter_type|default:'all' }}">
-      
-      <!-- Search Field -->
-      <div style="position: relative; width: 230px;">
-        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search name, desk, affiliation..." style="width: 100%; border: 1px solid #cbd5e1; padding: 6px 8px 6px 28px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; box-sizing: border-box;">
-        <i data-feather="search" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; color: #94a3b8;"></i>
-      </div>
+    <!-- Sort By -->
+    <select name="sort_by" style="border: 1px solid #cbd5e1; padding: 0 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; height: 36px; min-width: 130px;">
+      <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
+      <option value="-name" {% if sort_by == '-name' %}selected{% endif %}>Name (Z-A)</option>
+      <option value="type" {% if sort_by == 'type' %}selected{% endif %}>Role / Type</option>
+    </select>
 
-      <!-- Sort By -->
-      <select name="sort_by" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600;">
-        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
-        <option value="-name" {% if sort_by == '-name' %}selected{% endif %}>Name (Z-A)</option>
-        <option value="type" {% if sort_by == 'type' %}selected{% endif %}>Role / Type</option>
-      </select>
-
-      <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
-        <i data-feather="filter" style="width: 12px; height: 12px;"></i> Filter
-      </button>
-
-      {% if query or sort_by != 'name' or filter_type != 'all' %}
-      <a href="{% url 'dashboard_speakers' %}" style="color: #64748b; font-size: 11.5px; font-weight: 600; text-decoration: none; padding: 5px;">Clear</a>
-      {% endif %}
-    </form>
-  </div>
-
-  <!-- Right Side: Action Buttons -->
-  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-    <!-- Add Speaker Button -->
-    <a href="{% url 'speaker_create' %}" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; text-decoration: none; padding: 7px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(2,132,199,0.25); white-space: nowrap;">
-      <i data-feather="plus" style="width: 13px; height: 13px;"></i> Add Speaker
-    </a>
-
-    <!-- Add Education Expert Button -->
-    <button type="button" onclick="openAddExpertModal()" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color: #ffffff; border: none; padding: 7px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(124,58,237,0.25); cursor: pointer; white-space: nowrap;">
-      <i data-feather="plus" style="width: 13px; height: 13px;"></i> Add Education Expert
+    <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 0 16px; border-radius: 6px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; height: 36px; box-shadow: 0 1px 3px rgba(23,104,255,0.25); white-space: nowrap;">
+      <i data-feather="filter" style="width: 13px; height: 13px;"></i> Filter
     </button>
 
-    <!-- Scan Consultations Link -->
-    <a href="{% url 'expert_attendance_scanner' %}" target="_blank" style="background: #ffffff; border: 1px solid #cbd5e1; color: #475569; padding: 6px 11px; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
-      <i data-feather="camera" style="width: 13px; height: 13px; color: #7c3aed;"></i> Station Scanner
-    </a>
-  </div>
+    {% if query or sort_by != 'name' or filter_type != 'all' %}
+    <a href="{% url 'dashboard_speakers' %}" style="color: #64748b; font-size: 12px; font-weight: 600; text-decoration: none; padding: 6px 10px;">Clear</a>
+    {% endif %}
+  </form>
 </div>
 
 <!-- MAIN UNIFIED TABLE CARD -->

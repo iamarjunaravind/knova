@@ -5,6 +5,32 @@
 {% block page_title %}Expos &amp; Seminars Management{% endblock %}
 
 {% block content %}
+<!-- Top Page Header Banner -->
+<div class="cms-header" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:0 4px 16px rgba(15,23,42,0.03); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+  <div>
+    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 4px 0; display:flex; align-items:center; gap:10px;">
+      <i data-feather="calendar" style="color:#1768ff;"></i> Expos &amp; Seminars Management
+    </h2>
+    <p style="font-size:13px; color:#64748b; margin:0; line-height:1.4;">
+      Flagship global education expos, GCC host venues, masterclasses, and keynote seminar schedules.
+    </p>
+  </div>
+  <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+    <a href="{% url 'dashboard_export_generic' 'eventlocation' %}?format=excel" class="btn btn-outline-secondary" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#ecfdf5; border:1px solid #a7f3d0; color:#059669;">
+      <i data-feather="file" style="width:14px; height:14px;"></i> Excel
+    </a>
+    <a href="{% url 'dashboard_export_generic' 'eventlocation' %}?format=csv" class="btn btn-outline-secondary" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8;">
+      <i data-feather="file-text" style="width:14px; height:14px;"></i> CSV
+    </a>
+    <a href="{% url 'programme_create' %}" style="background:#7c3aed; border:1px solid #7c3aed; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 15px; text-decoration:none; box-shadow:0 2px 6px rgba(124,58,237,0.25);">
+      <i data-feather="plus" style="width:14px; height:14px;"></i> Add Seminar
+    </a>
+    <a href="{% url 'event_create' %}" style="background:#1768ff; border:1px solid #1768ff; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 16px; text-decoration:none; box-shadow:0 2px 6px rgba(23, 104, 255, 0.25);">
+      <i data-feather="plus" style="width:14px; height:14px;"></i> Add Expo
+    </a>
+  </div>
+</div>
+
 <!-- KPI METRIC CARDS -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px;">
   <!-- Metric 1: Total Programs -->
@@ -50,22 +76,22 @@
   </a>
 </div>
 
-<!-- FILTER & ACTION TOOLBAR (SINGLE LINE) -->
-<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+<!-- FILTER & SEARCH TOOLBAR -->
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
   
-  <form method="GET" action="{% url 'dashboard_events' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap;">
-    <!-- Type Pills Inside Toolbar (Consistently Blue on Selection) -->
-    <div style="display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 8px; gap: 3px; margin-right: 4px;">
+  <form method="GET" action="{% url 'dashboard_events' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap; width: 100%;">
+    <!-- Type Pills Inside Toolbar -->
+    <div style="display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 8px; gap: 3px; margin-right: 6px; flex-shrink: 0;">
       <a href="{% url 'dashboard_events' %}?type=all{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if query %}&q={{ query|urlencode }}{% endif %}"
-         style="padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'all' or not filter_type %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
+         style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'all' or not filter_type %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
         All ({{ total_all_count|default:"8" }})
       </a>
       <a href="{% url 'dashboard_events' %}?type=expo{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if query %}&q={{ query|urlencode }}{% endif %}"
-         style="padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'expo' %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
+         style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'expo' %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
         Expos ({{ total_expos_count|default:"4" }})
       </a>
       <a href="{% url 'dashboard_events' %}?type=seminar{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if query %}&q={{ query|urlencode }}{% endif %}"
-         style="padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'seminar' %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
+         style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'seminar' %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
         Seminars ({{ total_seminars_count|default:"4" }})
       </a>
     </div>
@@ -73,58 +99,39 @@
     <input type="hidden" name="type" value="{{ filter_type|default:'all' }}">
 
     <!-- Search keyword -->
-    <div style="position: relative; display: inline-flex; align-items: center;">
-      <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search title, venue, speaker..." style="border: 1px solid #cbd5e1; padding: 6px 26px 6px 28px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; width: 185px;">
-      <i data-feather="search" style="width: 13px; height: 13px; color: #94a3b8; position: absolute; left: 8px; pointer-events: none;"></i>
+    <div style="position: relative; width: 220px;">
+      <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search title, venue, speaker..." style="width: 100%; border: 1px solid #cbd5e1; padding: 0 28px 0 32px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;">
+      <i data-feather="search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: #94a3b8; pointer-events: none;"></i>
       {% if query %}
-      <a href="{% url 'dashboard_events' %}?type={{ filter_type|default:'all' }}" style="position: absolute; right: 8px; color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 700; line-height: 1;" title="Clear Search">&times;</a>
+      <a href="{% url 'dashboard_events' %}?type={{ filter_type|default:'all' }}" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 700;" title="Clear Search">&times;</a>
       {% endif %}
     </div>
 
     <!-- Date Range -->
-    <input type="date" name="start_date" value="{{ start_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; width: 125px;" title="Start Date">
-    <span style="color: #94a3b8; font-size: 11px; font-weight: 600;">to</span>
-    <input type="date" name="end_date" value="{{ end_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; width: 125px;" title="End Date">
+    <div style="display: inline-flex; align-items: center; gap: 4px;">
+      <input type="date" name="start_date" value="{{ start_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;" title="Start Date">
+      <span style="color: #94a3b8; font-size: 11px; font-weight: 600;">to</span>
+      <input type="date" name="end_date" value="{{ end_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;" title="End Date">
+    </div>
 
     <!-- Sort By -->
-    <select name="sort_by" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; max-width: 140px;">
+    <select name="sort_by" style="border: 1px solid #cbd5e1; padding: 0 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; height: 36px; min-width: 140px;">
       <option value="date" {% if sort_by == 'date' or sort_by == 'start_date' %}selected{% endif %}>Date (Ascending)</option>
       <option value="-date" {% if sort_by == '-date' or sort_by == '-start_date' %}selected{% endif %}>Date (Descending)</option>
       <option value="title" {% if sort_by == 'title' or sort_by == 'name' %}selected{% endif %}>Title (A-Z)</option>
       <option value="-title" {% if sort_by == '-title' or sort_by == '-name' %}selected{% endif %}>Title (Z-A)</option>
     </select>
 
-    <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(23,104,255,0.25); white-space: nowrap;">
-      <i data-feather="search" style="width: 13px; height: 13px;"></i> Apply Filter
+    <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 0 16px; border-radius: 6px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(23,104,255,0.25); height: 36px; white-space: nowrap;">
+      <i data-feather="filter" style="width: 13px; height: 13px;"></i> Apply Filter
     </button>
 
     {% if start_date or end_date or sort_by != 'date' %}
-    <a href="{% url 'dashboard_events' %}?type={{ filter_type|default:'all' }}" style="font-size: 11.5px; color: #64748b; text-decoration: none; font-weight: 600; padding: 4px 6px; white-space: nowrap;">
+    <a href="{% url 'dashboard_events' %}?type={{ filter_type|default:'all' }}" style="font-size: 12px; color: #64748b; text-decoration: none; font-weight: 600; padding: 6px 10px; white-space: nowrap;">
       Reset
     </a>
     {% endif %}
-
-    <!-- Export Separator -->
-    <div style="width: 1px; height: 18px; background: #e2e8f0; margin: 0 2px;"></div>
-
-    <!-- Export Buttons -->
-    <button type="submit" name="format" value="excel" formaction="{% url 'dashboard_export_generic' 'eventlocation' %}" style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
-      <i data-feather="file" style="width: 13px; height: 13px;"></i> Excel
-    </button>
-    <button type="submit" name="format" value="csv" formaction="{% url 'dashboard_export_generic' 'eventlocation' %}" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
-      <i data-feather="file-text" style="width: 13px; height: 13px;"></i> CSV
-    </button>
   </form>
-
-  <!-- Action Buttons (Pinned to Right) -->
-  <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0; white-space: nowrap;">
-    <a href="{% url 'event_create' %}" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; text-decoration: none; padding: 7px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(2,132,199,0.25);">
-      <i data-feather="plus" style="width: 13px; height: 13px;"></i> Add Expo
-    </a>
-    <a href="{% url 'programme_create' %}" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color: #ffffff; text-decoration: none; padding: 7px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 6px rgba(124,58,237,0.25);">
-      <i data-feather="plus" style="width: 13px; height: 13px;"></i> Add Seminar
-    </a>
-  </div>
 </div>
 
 <!-- STRUCTURED DATA TABLE CARD -->
