@@ -291,6 +291,8 @@ def get_smtp_config():
     smtp_user = getattr(config, 'smtp_user', '') or os.environ.get('EMAIL_HOST_USER', '')
     smtp_password = getattr(config, 'smtp_password', '') or os.environ.get('EMAIL_HOST_PASSWORD', '')
     smtp_use_tls = getattr(config, 'smtp_use_tls', True)
+    if smtp_port == 587 or 'gmail' in str(smtp_host).lower():
+        smtp_use_tls = True
     recipient = getattr(config, 'backup_email_recipient', '') or os.environ.get('BACKUP_EMAIL_RECIPIENT', 'arjunaravinda@gmail.com')
     recipients_list = parse_email_recipients(recipient)
     backup_enabled = getattr(config, 'backup_enabled', True)

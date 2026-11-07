@@ -3535,6 +3535,8 @@ def dashboard_save_backup_settings(request):
         except (TypeError, ValueError):
             cfg.smtp_port = 587
         cfg.smtp_use_tls = request.POST.get('smtp_use_tls') == 'on' or 'smtp_use_tls' in request.POST
+        if cfg.smtp_port == 587 or 'gmail' in cfg.smtp_host.lower():
+            cfg.smtp_use_tls = True
         cfg.save()
 
         # If user also requested an instant test email
