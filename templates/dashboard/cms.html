@@ -88,27 +88,21 @@
     border-color: #0d54d9;
   }
 
-  /* Main Top Navigation Tabs - Uniform 7-Col Software Grid */
+  /* Main Top Navigation Tabs - Uniform Responsive Auto-Wrap Flex */
   .cms-nav-tabs {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 6px;
     background: #e2e8f0;
-    padding: 5px;
+    padding: 6px;
     border-radius: 12px;
     margin-bottom: 22px;
-  }
-  @media (max-width: 1200px) {
-    .cms-nav-tabs {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-  @media (max-width: 768px) {
-    .cms-nav-tabs {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    box-sizing: border-box;
+    width: 100%;
   }
   .cms-nav-tab {
+    flex: 1 1 150px;
+    min-width: 140px;
     height: 42px;
     display: inline-flex;
     align-items: center;
@@ -123,7 +117,7 @@
     cursor: pointer;
     transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
-    padding: 0 8px;
+    padding: 0 12px;
     text-decoration: none;
     box-sizing: border-box;
   }

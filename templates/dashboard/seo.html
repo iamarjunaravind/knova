@@ -18,18 +18,20 @@
   .cms-header {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 22px 26px;
-    margin-bottom: 22px;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    border-radius: 14px;
+    padding: 18px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 16px;
+    box-sizing: border-box;
+    width: 100%;
   }
   .cms-header-text h2 {
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 800;
     color: #0f172a;
     margin: 0 0 4px 0;
@@ -90,27 +92,21 @@
     color: #0f172a;
   }
 
-  /* SEO Dedicated Navigation Tabs (Unified Grid) */
+  /* SEO Dedicated Navigation Tabs (Unified Responsive Auto-Wrap Flex) */
   .seo-nav-tabs {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 6px;
     background: #e2e8f0;
-    padding: 5px;
+    padding: 6px;
     border-radius: 12px;
     margin-bottom: 22px;
-  }
-  @media (max-width: 1100px) {
-    .seo-nav-tabs {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  @media (max-width: 768px) {
-    .seo-nav-tabs {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    box-sizing: border-box;
+    width: 100%;
   }
   .seo-nav-tab {
+    flex: 1 1 160px;
+    min-width: 150px;
     height: 42px;
     display: inline-flex;
     align-items: center;
@@ -125,9 +121,13 @@
     cursor: pointer;
     transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
-    padding: 0 8px;
+    padding: 0 12px;
     text-decoration: none;
     box-sizing: border-box;
+  }
+  .seo-nav-tab span {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .seo-nav-tab i, .seo-nav-tab svg {
     width: 15px;
@@ -353,22 +353,22 @@
   <!-- Dedicated SEO Navigation Tabs -->
   <div class="seo-nav-tabs">
     <button type="button" class="seo-nav-tab {% if seo_tab == 'primary' or not seo_tab %}active{% endif %}" data-tab="primary" onclick="switchSeoTab('primary', this)">
-      <i data-feather="globe"></i> Primary Meta &amp; Canonical
+      <i data-feather="globe"></i> <span>Primary Meta &amp; Canonical</span>
     </button>
     <button type="button" class="seo-nav-tab {% if seo_tab == 'social' %}active{% endif %}" data-tab="social" onclick="switchSeoTab('social', this)">
-      <i data-feather="share-2"></i> OpenGraph &amp; Social
+      <i data-feather="share-2"></i> <span>OpenGraph &amp; Social</span>
     </button>
     <button type="button" class="seo-nav-tab {% if seo_tab == 'webmaster' %}active{% endif %}" data-tab="webmaster" onclick="switchSeoTab('webmaster', this)">
-      <i data-feather="check-circle"></i> Search Console &amp; Verification
+      <i data-feather="check-circle"></i> <span>Search Console &amp; Verification</span>
     </button>
     <button type="button" class="seo-nav-tab {% if seo_tab == 'crawling' %}active{% endif %}" data-tab="crawling" onclick="switchSeoTab('crawling', this)">
-      <i data-feather="cpu"></i> Crawling &amp; Robots.txt
+      <i data-feather="cpu"></i> <span>Crawling &amp; Robots.txt</span>
     </button>
     <button type="button" class="seo-nav-tab {% if seo_tab == 'schema' %}active{% endif %}" data-tab="schema" onclick="switchSeoTab('schema', this)">
-      <i data-feather="code"></i> Schema.org Structured Data
+      <i data-feather="code"></i> <span>Schema.org Structured Data</span>
     </button>
     <button type="button" class="seo-nav-tab {% if seo_tab == 'perpage' %}active{% endif %}" data-tab="perpage" onclick="switchSeoTab('perpage', this)">
-      <i data-feather="file-text"></i> Per-Page Meta Overrides
+      <i data-feather="file-text"></i> <span>Per-Page Meta Overrides</span>
     </button>
   </div>
 

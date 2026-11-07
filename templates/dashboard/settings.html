@@ -8,20 +8,19 @@
 {% block content %}
 <style>
   .settings-nav-tabs {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 6px;
     background: #e2e8f0;
-    padding: 5px;
+    padding: 6px;
     border-radius: 12px;
     margin-bottom: 22px;
-  }
-  @media (max-width: 991px) {
-    .settings-nav-tabs {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    box-sizing: border-box;
+    width: 100%;
   }
   .settings-nav-tab {
+    flex: 1 1 180px;
+    min-width: 160px;
     height: 42px;
     display: inline-flex;
     align-items: center;
@@ -36,7 +35,7 @@
     cursor: pointer;
     transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
-    padding: 0 8px;
+    padding: 0 12px;
     text-decoration: none;
     box-sizing: border-box;
   }
