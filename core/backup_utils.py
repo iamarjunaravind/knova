@@ -282,6 +282,7 @@ def send_backup_email(dump_bytes, filename, record_count, size_formatted, recipi
     Sends backup snapshot to recipient with RFC 2156/4021 24h expiration headers.
     Returns (success: bool, status_message: str).
     """
+    import socket
     smtp_cfg = custom_smtp or get_smtp_config()
     to_email = recipient or smtp_cfg.get('recipient') or 'arjunaravinda@gmail.com'
     sender_email = smtp_cfg.get('user') or 'backup@knovaexpo.com'
@@ -291,6 +292,14 @@ def send_backup_email(dump_bytes, filename, record_count, size_formatted, recipi
             "SMTP credentials not configured. Please enter your SMTP username and App Password "
             "in the settings below to enable automatic email delivery to " + to_email
         )
+
+    # Force IPv4 for SMTP host to prevent IPv6 rDNS rejection from Gmail
+    orig_getaddrinfo = socket.getaddrinfo
+    def getaddrinfo_v4(host, port, family=0, type=0, proto=0, flags=0):
+        if 'smtp' in str(host).lower() or 'mail' in str(host).lower():
+            return orig_getaddrinfo(host, port, socket.AF_INET, type, proto, flags)
+        return orig_getaddrinfo(host, port, family, type, proto, flags)
+    socket.getaddrinfo = getaddrinfo_v4
 
     # Calculate expiration time (24 hours from now) for email headers
     expire_time = time.time() + (24 * 3600)
@@ -375,6 +384,8 @@ Future Begins Here
 
     except Exception as e:
         return False, f"SMTP dispatch to {to_email} failed: {str(e)}"
+    finally:
+        socket.getaddrinfo = orig_getaddrinfo
 
 
 def cleanup_gmail_imap_backups(username, password, retention_hours=24):
