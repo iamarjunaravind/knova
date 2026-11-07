@@ -2086,14 +2086,54 @@ function handleEventorNewsletterSubmit(e) {
         <div class="mrk-msg-bubble">
           <div class="mrk-bubble-sender">
             <strong>{{ site_config.chatbot_name|default:"Mr. K - Your eBuddy" }}</strong>
-            <span class="mrk-pill-tag">AI Advisor</span>
+            <span class="mrk-pill-tag">Your AI Companion</span>
           </div>
-          <p class="mrk-bubble-text">
-            Hi there! 👋 I'm <strong>{{ site_config.chatbot_name|default:'Mr. K - Your eBuddy' }}</strong> ({{ site_config.chatbot_username|default:"@Mr.K_YourE_Buddy" }}) for KNOVA 2027.
+          <p class="mrk-bubble-text" style="font-weight: 600; font-size: 13.5px; color: #0f172a; margin-bottom: 6px;">
+            Hi there! 👋 Welcome to KNOVA 2027!
           </p>
-          <p class="mrk-bubble-text">
-            Ask me anything about <strong>free entry tickets, participating universities, $5M+ scholarships, or booth booking</strong>. If I can't answer, you can instantly continue on WhatsApp with our human advisors!
+          <p class="mrk-bubble-text" style="margin-bottom: 8px;">
+            I'm <strong>Mr. K – Your eBuddy</strong> ({{ site_config.chatbot_username|default:"@Mr.K_YourE_Buddy" }}), your friendly AI companion here to help you explore the world of education.
           </p>
+          <p class="mrk-bubble-text" style="font-weight: 650; color: #1e3a8a; margin-top: 8px; margin-bottom: 4px;">
+            🎓 Curious about what's waiting for you at KNOVA 2027?
+          </p>
+          <p class="mrk-bubble-text" style="margin-bottom: 6px;">
+            Feel free to ask me about:
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 6px; margin: 6px 0 10px 0; padding-left: 2px;">
+            <div style="display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px; line-height: 1.45;">
+              <span>🎟️</span> <span><strong>Event details</strong> and free entry registration</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px; line-height: 1.45;">
+              <span>🏛️</span> <span><strong>Participating universities</strong> and institutions</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px; line-height: 1.45;">
+              <span>🎓</span> <span><strong>Scholarship</strong> and sponsorship opportunities</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px; line-height: 1.45;">
+              <span>🤝</span> <span><strong>Meeting universities</strong> and exploring study options</span>
+            </div>
+            <div style="display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px; line-height: 1.45;">
+              <span>🏢</span> <span><strong>Exhibitor participation</strong> and booth enquiries</span>
+            </div>
+          </div>
+          <p class="mrk-bubble-text" style="margin-bottom: 10px;">
+            I'm here to make your KNOVA journey easier, more informative and exciting!
+          </p>
+          <p class="mrk-bubble-text" style="font-weight: 650; color: #1e3a8a; margin-top: 8px; margin-bottom: 4px;">
+            💬 Still curious? Let's keep the conversation going!
+          </p>
+          <p class="mrk-bubble-text" style="margin-bottom: 4px;">
+            Your eBuddy, Mr. K, is just a WhatsApp message away.
+          </p>
+          <p class="mrk-bubble-text" style="margin-bottom: 8px;">
+            Click the WhatsApp button and let's chat. I'm always happy to help you explore! 😊
+          </p>
+          <div style="margin-top: 6px;">
+            <button type="button" onclick="openWhatsAppChat('Hi Mr. K, I would like to chat about KNOVA 2027!')" style="display: inline-flex; align-items: center; gap: 6px; background: #25D366; color: #ffffff; border: none; padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(37,211,102,0.3); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+              <i class="ti ti-brand-whatsapp" style="font-size: 14px;"></i> Chat on WhatsApp
+            </button>
+          </div>
           <div class="mrk-msg-timestamp" id="mrkInitTime">Just now</div>
         </div>
       </div>
@@ -2969,9 +3009,25 @@ function handleEventorNewsletterSubmit(e) {
         <div class="mrk-msg-bubble">
           <div class="mrk-bubble-sender">
             <strong>{{ site_config.chatbot_name|default:"Mr. K - Your eBuddy" }}</strong>
-            <span class="mrk-pill-tag">AI Advisor</span>
+            <span class="mrk-pill-tag">Your AI Companion</span>
           </div>
-          <p class="mrk-bubble-text">Conversation reset! 👋 What can I help you explore today for KNOVA 2027?</p>
+          <p class="mrk-bubble-text" style="font-weight: 600; font-size: 13.5px; color: #0f172a; margin-bottom: 6px;">
+            Hi there! 👋 Welcome to KNOVA 2027!
+          </p>
+          <p class="mrk-bubble-text" style="margin-bottom: 8px;">
+            I'm <strong>Mr. K – Your eBuddy</strong>, your friendly AI companion here to help you explore the world of education.
+          </p>
+          <p class="mrk-bubble-text" style="font-weight: 650; color: #1e3a8a; margin-top: 8px; margin-bottom: 4px;">
+            🎓 Curious about what's waiting for you at KNOVA 2027?
+          </p>
+          <p class="mrk-bubble-text" style="margin-bottom: 6px;">
+            Feel free to ask me about event details, participating universities, scholarships, or booth booking!
+          </p>
+          <div style="margin-top: 6px;">
+            <button type="button" onclick="openWhatsAppChat('Hi Mr. K, I would like to chat about KNOVA 2027!')" style="display: inline-flex; align-items: center; gap: 6px; background: #25D366; color: #ffffff; border: none; padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 6px rgba(37,211,102,0.3);">
+              <i class="ti ti-brand-whatsapp" style="font-size: 14px;"></i> Chat on WhatsApp
+            </button>
+          </div>
           <div class="mrk-msg-timestamp">${getFormattedTime()}</div>
         </div>
       </div>
