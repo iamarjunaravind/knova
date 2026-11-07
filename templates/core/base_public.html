@@ -845,16 +845,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   ======================================================== */
 
+  /* ========================================================
+     UNIFORM FOOTER ALIGNMENT & SPACING STYLES
+  ======================================================== */
   footer.eventor-footer {
     background:
       radial-gradient(circle at 85% 90%, rgba(23, 104, 255, 0.28) 0%, transparent 60%),
       radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
       linear-gradient(135deg, #061022 0%, #081d45 50%, #0c2b64 100%) !important;
     color: #cbd5e1 !important;
-    padding: 42px 0 24px 0 !important;
+    padding: 52px 0 26px 0 !important;
     position: relative !important;
     overflow: hidden !important;
-    border-top: 1px solid rgba(23, 104, 255, 0.2) !important;
+    border-top: 1px solid rgba(23, 104, 255, 0.22) !important;
   }
 
   footer.eventor-footer::before {
@@ -864,7 +867,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(23, 104, 255, 0.6) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.7) 50%, transparent 100%);
     pointer-events: none;
   }
 
@@ -881,20 +884,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   .eventor-footer-grid {
     display: grid !important;
-    grid-template-columns: 2fr 1fr 1fr 1fr !important;
-    gap: 36px !important;
-    margin-bottom: 28px !important;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr !important;
+    gap: clamp(24px, 3.5vw, 44px) !important;
+    margin-bottom: 34px !important;
     align-items: flex-start !important;
   }
 
+  /* Column 1: Brand Info */
   .eventor-footer-brand-col {
     max-width: 340px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .eventor-footer-logo-wrap {
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 0 16px 0 !important;
   }
 
   .eventor-footer-logo {
-    display: inline-block !important;
+    display: inline-flex !important;
+    align-items: center !important;
     text-decoration: none !important;
-    margin-bottom: 12px !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .eventor-footer-logo-img {
@@ -906,45 +921,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   .eventor-footer-brand-desc {
-    font-size: 12.5px !important;
+    font-size: 13px !important;
     color: #94a3b8 !important;
-    line-height: 1.55 !important;
-    margin: 0 0 16px 0 !important;
+    line-height: 1.6 !important;
+    margin: 0 0 18px 0 !important;
     font-weight: 400 !important;
-    max-width: 320px !important;
   }
 
   .eventor-footer-social-row {
     display: flex !important;
     align-items: center !important;
     gap: 8px !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .eventor-footer-social-btn {
-    width: 32px !important;
-    height: 32px !important;
+    width: 34px !important;
+    height: 34px !important;
     background: rgba(255, 255, 255, 0.06) !important;
     border: 1px solid rgba(255, 255, 255, 0.14) !important;
     border-radius: 8px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    color: #ffffff !important;
+    color: #cbd5e1 !important;
     font-size: 14px !important;
     text-decoration: none !important;
     transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
+    margin: 0 !important;
   }
 
   .eventor-footer-social-btn:hover {
     background: #1768ff !important;
-    border-color: #1768ff !important;
+    border-color: #38bdf8 !important;
     color: #ffffff !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 16px rgba(23, 104, 255, 0.4) !important;
   }
 
+  /* Navigation Columns 2, 3, 4 */
   .eventor-footer-nav-col {
     display: flex !important;
     flex-direction: column !important;
@@ -952,104 +970,146 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   .eventor-footer-col-title {
     font-family: 'Poppins', var(--eventor-heading-font), sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 700 !important;
+    font-size: 13.5px !important;
+    font-weight: 750 !important;
     color: #ffffff !important;
-    margin: 0 0 14px 0 !important;
-    letter-spacing: -0.2px !important;
+    margin: 0 0 16px 0 !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+    padding: 0 !important;
   }
 
   .eventor-footer-links-list {
     display: flex !important;
     flex-direction: column !important;
-    gap: 8px !important;
+    gap: 10px !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
+  /* Reset any external margins (e.g. from style.css footer a, footer p) to guarantee 100% uniform spacing */
+  footer.eventor-footer a.eventor-footer-link,
+  footer.eventor-footer span.eventor-footer-link,
   .eventor-footer-link {
-    font-size: 12.5px !important;
-    color: #94a3b8 !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    color: #cbd5e1 !important;
     text-decoration: none !important;
     transition: color 0.2s ease, transform 0.2s ease !important;
-    display: inline-block !important;
-    font-weight: 400 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    font-weight: 450 !important;
     width: fit-content !important;
+    margin: 0 !important;
+    padding: 2px 0 !important;
+    box-sizing: border-box !important;
   }
 
+  footer.eventor-footer span.eventor-footer-link {
+    color: #8899ac !important;
+    cursor: default !important;
+    pointer-events: none !important;
+  }
+
+  footer.eventor-footer a.eventor-footer-link:hover,
   .eventor-footer-link:hover {
     color: #38bdf8 !important;
-    transform: translateX(3px) !important;
+    transform: translateX(4px) !important;
   }
 
+  /* Legal Compliance divider in Col 4 */
+  .eventor-footer-legal-divider {
+    margin-top: 12px !important;
+    padding-top: 12px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  /* Footer Bottom Copyright */
   .eventor-footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-    padding-top: 20px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding-top: 22px !important;
     text-align: center !important;
+    margin-top: 10px !important;
   }
 
   .eventor-footer-bottom-text {
-    font-size: 12px !important;
-    color: rgba(255, 255, 255, 0.48) !important;
+    font-size: 12.5px !important;
+    color: rgba(255, 255, 255, 0.5) !important;
     margin: 0 !important;
-    line-height: 1.5 !important;
+    line-height: 1.6 !important;
+    font-weight: 400 !important;
   }
 
   @media (max-width: 991px) {
     .eventor-footer-grid {
       grid-template-columns: 1fr 1fr !important;
-      gap: 32px !important;
-      margin-bottom: 24px !important;
+      gap: 32px 24px !important;
+      margin-bottom: 28px !important;
     }
 
     .eventor-footer-brand-col {
       grid-column: 1 / -1 !important;
       max-width: 100% !important;
     }
-
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 580px) {
     footer.eventor-footer {
-      padding: 34px 0 18px 0 !important;
+      padding: 38px 0 20px 0 !important;
     }
 
     .eventor-footer-grid {
-      grid-template-columns: 1fr 1fr !important;
-      gap: 24px 16px !important;
-      margin-bottom: 22px !important;
+      grid-template-columns: 1fr !important;
+      gap: 26px !important;
+      margin-bottom: 24px !important;
     }
 
-    .eventor-footer-brand-desc {
-      font-size: 12px !important;
-      margin-bottom: 14px !important;
+    .eventor-footer-brand-col {
+      grid-column: 1 !important;
     }
 
     .eventor-footer-col-title {
-      font-size: 13px !important;
-      margin-bottom: 10px !important;
+      height: auto !important;
+      margin-bottom: 12px !important;
+    }
+
+    .eventor-footer-logo-wrap {
+      height: auto !important;
+      margin-bottom: 12px !important;
+    }
+
+    .eventor-footer-brand-desc {
+      font-size: 12.5px !important;
+      margin-bottom: 14px !important;
     }
 
     .eventor-footer-links-list {
-      gap: 6px !important;
+      gap: 9px !important;
     }
 
     .eventor-footer-link {
-      font-size: 12px !important;
+      font-size: 12.5px !important;
     }
 
     .eventor-footer-social-btn {
-      width: 30px !important;
-      height: 30px !important;
-      font-size: 13px !important;
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 13.5px !important;
     }
 
     .eventor-footer-bottom {
-      padding-top: 16px !important;
+      padding-top: 18px !important;
     }
 
     .eventor-footer-bottom-text {
-      font-size: 11px !important;
+      font-size: 11.5px !important;
     }
-
   }
 
   /* Mobile Responsive View (<= 820px) */
@@ -1713,11 +1773,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <div class="eventor-footer-brand-col">
 
-        <a class="eventor-footer-logo" href="{% url 'index' %}" aria-label="KNOVA Homepage">
-
-          <img src="{% if site_config.site_footer_logo %}{{ site_config.site_footer_logo.url }}{% elif site_config.site_logo %}{{ site_config.site_logo.url }}{% else %}{% static 'assets/logo.webp' %}{% endif %}" alt="KNOVA Logo" width="88" height="42" loading="lazy" decoding="async" class="eventor-footer-logo-img">
-
-        </a>
+        <div class="eventor-footer-logo-wrap">
+          <a class="eventor-footer-logo" href="{% url 'index' %}" aria-label="KNOVA Homepage">
+            <img src="{% if site_config.site_footer_logo %}{{ site_config.site_footer_logo.url }}{% elif site_config.site_logo %}{{ site_config.site_logo.url }}{% else %}{% static 'assets/logo.webp' %}{% endif %}" alt="KNOVA Logo" width="88" height="42" loading="lazy" decoding="async" class="eventor-footer-logo-img">
+          </a>
+        </div>
 
         <p class="eventor-footer-brand-desc">
           {{ site_config.footer_tagline|default:"KNOVA connects universities, academic institutions, students and families through engaging education experiences, meaningful institutional connections and digital opportunities across local, regional and international landscapes." }}
@@ -1799,7 +1859,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <a href="mailto:{{ site_config.email_outreach|default:'outreach@knovaexpo.com' }}?subject=Institutional%20Outreach%20Inquiry" class="eventor-footer-link">Institutional Outreach</a>
           {% endfor %}
 
-          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; flex-direction: column; gap: 8px;">
+          <div class="eventor-footer-legal-divider">
             {% for item in site_config.get_footer_legal_links %}
               {% if item.url %}
                 <a href="{{ item.url }}" class="eventor-footer-link">{{ item.text }}</a>
