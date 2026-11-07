@@ -5154,6 +5154,24 @@ Connect with leading universities, explore scholarships and discover the possibi
 
     <!-- Tab: Footer & Social Links -->
     <div id="cmsTabContent-footer" class="cms-tab-content" style="{% if active_tab != 'footer' %}display: none;{% endif %}">
+      <!-- Quick Navigation & Admin Notice Banner -->
+      <div style="background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%); border: 1.5px solid #bfdbfe; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div style="width: 42px; height: 42px; border-radius: 10px; background: #2563eb; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(37,99,235,0.25);">
+            <i data-feather="compass" style="width:22px; height:22px;"></i>
+          </div>
+          <div>
+            <h4 style="margin: 0; font-size: 15px; font-weight: 800; color: #1e3a8a;">Footer Links & Navigation Columns Editor</h4>
+            <p style="margin: 3px 0 0 0; font-size: 12.5px; color: #475569;">
+              Edit column headings (<strong>Explore</strong>, <strong>Participate</strong>, <strong>Connect</strong>), link labels, and URLs below. You can also edit them directly in the <a href="/portal/admin/core/siteconfiguration/1/change/" target="_blank" style="color: #2563eb; font-weight: 750; text-decoration: underline;">Django Admin Console ↗</a>.
+            </p>
+          </div>
+        </div>
+        <a href="/portal/admin/core/siteconfiguration/1/change/" target="_blank" class="btn btn-outline-primary" style="font-size: 12.5px; font-weight: 750; background: #ffffff; padding: 8px 16px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; border-color: #2563eb; color: #2563eb;">
+          <i data-feather="external-link" style="width:14px; height:14px;"></i> Open in Django Admin
+        </a>
+      </div>
+
       <!-- Section Jump & Filter Dropdown Bar -->
       <div class="cms-section-filter-bar">
         <div class="cms-filter-left">
@@ -5207,7 +5225,7 @@ Connect with leading universities, explore scholarships and discover the possibi
       </div>
 
       <!-- 2. Column 2 Navigation: Title & Links -->
-      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-nav-col2">
+      <div class="cms-card cms-card-collapsible" id="sec-footer-nav-col2">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-nav-col2', event)">
           <div>
             <h3 class="cms-card-title"><i data-feather="compass" style="color:#0ea5e9;"></i> Column 2 Navigation: {{ config.footer_col2_title|default:"Explore" }}</h3>
@@ -5215,7 +5233,7 @@ Connect with leading universities, explore scholarships and discover the possibi
           </div>
           <div style="display:flex; align-items:center; gap:10px;">
             <span class="cms-card-toggle-pill">
-              <span class="cms-toggle-text">Expand</span>
+              <span class="cms-toggle-text">Collapse</span>
               <i data-feather="chevron-down"></i>
             </span>
           </div>
@@ -5325,7 +5343,7 @@ Connect with leading universities, explore scholarships and discover the possibi
       </div>
 
       <!-- 3. Column 3 Navigation: Title & Links -->
-      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-nav-col3">
+      <div class="cms-card cms-card-collapsible" id="sec-footer-nav-col3">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-nav-col3', event)">
           <div>
             <h3 class="cms-card-title"><i data-feather="check-square" style="color:#6366f1;"></i> Column 3 Navigation: {{ config.footer_col3_title|default:"Participate" }}</h3>
@@ -5333,7 +5351,7 @@ Connect with leading universities, explore scholarships and discover the possibi
           </div>
           <div style="display:flex; align-items:center; gap:10px;">
             <span class="cms-card-toggle-pill">
-              <span class="cms-toggle-text">Expand</span>
+              <span class="cms-toggle-text">Collapse</span>
               <i data-feather="chevron-down"></i>
             </span>
           </div>
@@ -5443,7 +5461,7 @@ Connect with leading universities, explore scholarships and discover the possibi
       </div>
 
       <!-- 4. Column 4: Connect & Legal -->
-      <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-nav-col4">
+      <div class="cms-card cms-card-collapsible" id="sec-footer-nav-col4">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-nav-col4', event)">
           <div>
             <h3 class="cms-card-title"><i data-feather="mail" style="color:#0ea5e9;"></i> Column 4: {{ config.footer_col4_title|default:"Connect" }} &amp; Legal Compliance</h3>
@@ -5451,7 +5469,7 @@ Connect with leading universities, explore scholarships and discover the possibi
           </div>
           <div style="display:flex; align-items:center; gap:10px;">
             <span class="cms-card-toggle-pill">
-              <span class="cms-toggle-text">Expand</span>
+              <span class="cms-toggle-text">Collapse</span>
               <i data-feather="chevron-down"></i>
             </span>
           </div>

@@ -92,6 +92,63 @@ class SiteConfigurationAdmin(admin.ModelAdmin):
         ("Services: Challenge Page Content", {
             "fields": ("challenge_page_title", "challenge_page_subtitle")
         }),
+        ("Footer: Tagline & Copyright", {
+            "fields": ("footer_tagline", "footer_copyright")
+        }),
+        ("Footer: Column 2 Navigation (e.g. Explore)", {
+            "fields": (
+                "footer_col2_title",
+                ("footer_col2_link1_text", "footer_col2_link1_url"),
+                ("footer_col2_link2_text", "footer_col2_link2_url"),
+                ("footer_col2_link3_text", "footer_col2_link3_url"),
+                ("footer_col2_link4_text", "footer_col2_link4_url"),
+                ("footer_col2_link5_text", "footer_col2_link5_url"),
+                ("footer_col2_link6_text", "footer_col2_link6_url"),
+            )
+        }),
+        ("Footer: Column 3 Navigation (e.g. Participate)", {
+            "fields": (
+                "footer_col3_title",
+                ("footer_col3_link1_text", "footer_col3_link1_url"),
+                ("footer_col3_link2_text", "footer_col3_link2_url"),
+                ("footer_col3_link3_text", "footer_col3_link3_url"),
+                ("footer_col3_link4_text", "footer_col3_link4_url"),
+                ("footer_col3_link5_text", "footer_col3_link5_url"),
+                ("footer_col3_link6_text", "footer_col3_link6_url"),
+            )
+        }),
+        ("Footer: Column 4 Navigation & Legal (e.g. Connect)", {
+            "fields": (
+                "footer_col4_title",
+                ("footer_col4_link1_text", "footer_col4_link1_url"),
+                ("footer_col4_link2_text", "footer_col4_link2_url"),
+                ("footer_col4_link3_text", "footer_col4_link3_url"),
+                ("footer_col4_link4_text", "footer_col4_link4_url"),
+                ("footer_col4_link5_text", "footer_col4_link5_url"),
+                "footer_legal_title",
+                ("footer_legal_link1_text", "footer_legal_link1_url"),
+                ("footer_legal_link2_text", "footer_legal_link2_url"),
+                ("footer_legal_link3_text", "footer_legal_link3_url"),
+            )
+        }),
+        ("Footer: Social Media Links & Titles", {
+            "fields": (
+                ("social_facebook_title", "social_facebook_url"),
+                ("social_twitter_title", "social_twitter_url"),
+                ("social_linkedin_title", "social_linkedin_url"),
+                ("social_instagram_title", "social_instagram_url"),
+                ("social_youtube_title", "social_youtube_url"),
+            )
+        }),
+        ("Contact & Official Venue Details", {
+            "fields": (
+                ("contact_email_general", "contact_phone"),
+                ("contact_email_exhibitors", "contact_email_speakers"),
+                ("contact_email_operations", "contact_email_outreach"),
+                "contact_venue_address",
+                ("chatbot_name", "whatsapp_username", "contact_whatsapp_number"),
+            )
+        }),
     )
 
 
