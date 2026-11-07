@@ -584,7 +584,9 @@
   }
   .cms-card-action-btn {
     height: 32px;
-    padding: 0 12px;
+    width: 175px;
+    min-width: 175px;
+    padding: 0 10px;
     font-size: 12px;
     font-weight: 750;
     color: #2563eb;
@@ -593,11 +595,13 @@
     border-radius: 8px;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     text-decoration: none;
     white-space: nowrap;
     box-sizing: border-box;
     transition: all 0.18s ease;
+    text-align: center;
   }
   .cms-card-action-btn:hover {
     background: #dbeafe;
@@ -617,19 +621,23 @@
   }
   .cms-card-toggle-pill {
     height: 32px;
+    width: 96px;
+    min-width: 96px;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     font-size: 12px;
     font-weight: 750;
     color: #475569;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    padding: 0 12px;
+    padding: 0 8px;
     border-radius: 8px;
     transition: all 0.2s ease;
     flex-shrink: 0;
     box-sizing: border-box;
+    text-align: center;
   }
   .cms-collapsible-header:hover .cms-card-toggle-pill {
     background: #e2e8f0;
@@ -2734,7 +2742,7 @@
           </div>
           <div class="cms-card-header-right">
             <a href="/dashboard/events/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
-              <i data-feather="calendar"></i> Manage Database Events &rarr;
+              <i data-feather="calendar"></i> Manage Events &rarr;
             </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
