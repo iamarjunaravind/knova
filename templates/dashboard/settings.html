@@ -55,6 +55,61 @@
     color: #0f172a;
     background: rgba(255, 255, 255, 0.65);
   }
+
+  /* On/Off Switch Component */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 24px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  input:checked + .slider {
+    background-color: #10b981;
+  }
+  input:checked + .slider:before {
+    transform: translateX(20px);
+  }
+  .email-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+  }
 </style>
 
 <!-- Top Header Banner -->
@@ -188,74 +243,127 @@
   <!-- AUTOMATED 5-MINUTE BACKUP & EMAIL SYSTEM -->
   <div class="glass-card" style="padding:24px; background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05); margin-bottom:24px;">
     <!-- Section Header -->
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:18px; padding-bottom:16px; border-bottom:1px solid #f1f5f9;">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:18px; padding-bottom:16px; border-bottom:1px solid #f1f5f9;">
       <div style="display:flex; align-items:center; gap:12px;">
         <div style="width:42px; height:42px; border-radius:10px; background:rgba(23,104,255,0.12); color:#1768ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
           <i data-feather="mail" style="width:22px; height:22px;"></i>
         </div>
         <div>
-          <div style="display:flex; align-items:center; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
             <h3 style="margin:0; font-size:16.5px; font-weight:800; color:#0f172a;">Automated 5-Minute Database Backup &amp; Email Delivery</h3>
-            <span style="background:#ecfdf5; color:#059669; font-size:11px; font-weight:800; padding:2px 8px; border-radius:999px; border:1px solid #a7f3d0; display:inline-flex; align-items:center; gap:4px;">
-              <span style="width:6px; height:6px; border-radius:50%; background:#059669; display:inline-block;"></span> Active Daemon
+            <span id="backup-status-badge" style="{% if config.backup_enabled %}background:#ecfdf5; color:#059669; border-color:#a7f3d0;{% else %}background:#fef3c7; color:#b45309; border-color:#fde68a;{% endif %} font-size:11px; font-weight:800; padding:2.5px 9px; border-radius:999px; border:1px solid; display:inline-flex; align-items:center; gap:5px;">
+              <span id="backup-status-dot" style="width:7px; height:7px; border-radius:50%; {% if config.backup_enabled %}background:#059669;{% else %}background:#d97706;{% endif %} display:inline-block;"></span>
+              <span id="backup-status-text">{% if config.backup_enabled %}Active Daemon (Every 5 Min){% else %}Delivery Paused{% endif %}</span>
             </span>
           </div>
           <span style="font-size:12.5px; color:#64748b;">
-            Modify sender and recipient email addresses below. Full database snapshots are dispatched every 5 minutes.
+            Modify sender and recipient email addresses below. Full database snapshots are dispatched every 5 minutes. 100% free with Gmail.
           </span>
         </div>
       </div>
-      <form method="POST" action="{% url 'dashboard_trigger_backup_email' %}" style="margin:0;">
-        {% csrf_token %}
-        <input type="hidden" name="recipient" value="{{ smtp_cfg.recipient|default:'arjunaravinda@gmail.com' }}">
-        <button type="submit" class="btn btn-primary" style="background:#1768ff; border-color:#1768ff; padding:8px 16px; font-size:12.5px; font-weight:700; display:inline-flex; align-items:center; gap:8px;">
-          <i data-feather="send" style="width:14px; height:14px;"></i> Trigger Immediate Backup Email
-        </button>
-      </form>
+
+      <!-- Header Controls: Sending On/Off Switch & Immediate Trigger -->
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <!-- Sending ON / OFF Toggle Switch -->
+        <div style="display:inline-flex; align-items:center; gap:10px; background:#f8fafc; border:1.5px solid {% if config.backup_enabled %}#a7f3d0{% else %}#fed7aa{% endif %}; padding:6px 14px; border-radius:10px; box-shadow:0 1px 2px rgba(0,0,0,0.03);" id="daemon_toggle_box">
+          <div style="display:flex; flex-direction:column;">
+            <span style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.3px;">Automated Sending</span>
+            <span style="font-size:12.5px; font-weight:800; color:{% if config.backup_enabled %}#059669{% else %}#ea580c{% endif %};" id="backup_toggle_label">
+              {% if config.backup_enabled %}● ACTIVE (ON){% else %}⏸ PAUSED (OFF){% endif %}
+            </span>
+          </div>
+          <label class="switch" style="margin:0;" title="Click to Pause or Resume Automated 5-Minute Backup Email Delivery">
+            <input type="checkbox" id="backup_daemon_switch" {% if config.backup_enabled %}checked{% endif %} onchange="toggleBackupDaemon(this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Immediate Backup Form -->
+        <form method="POST" action="{% url 'dashboard_trigger_backup_email' %}" style="margin:0;">
+          {% csrf_token %}
+          <input type="hidden" name="recipient" value="{{ smtp_cfg.recipient|default:'arjunaravinda@gmail.com' }}">
+          <button type="submit" class="btn btn-primary" style="background:#1768ff; border-color:#1768ff; padding:8px 16px; font-size:12.5px; font-weight:700; display:inline-flex; align-items:center; gap:8px;">
+            <i data-feather="send" style="width:14px; height:14px;"></i> Trigger Immediate Backup Email
+          </button>
+        </form>
+      </div>
     </div>
 
-    <!-- Live Status & Policy Banner -->
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:12px; margin-bottom:20px;">
-      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 16px; display:flex; align-items:center; gap:12px;">
-        <i data-feather="check-circle" style="width:20px; height:20px; color:#10b981; flex-shrink:0;"></i>
-        <div style="font-size:12.5px; line-height:1.4; color:#334155;">
-          <strong>Current Active Route:</strong><br>
-          <span style="color:#0f172a; font-weight:600;">{{ smtp_cfg.user|default:"[Sender not set]" }}</span>
-          <i data-feather="arrow-right" style="width:12px; height:12px; vertical-align:middle; color:#94a3b8; margin:0 4px;"></i>
-          <span style="color:#1768ff; font-weight:700;">{{ smtp_cfg.recipient|default:"arjunaravinda@gmail.com" }}</span>
+    <!-- Live Status & Policy Banners (3 Columns) -->
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap:12px; margin-bottom:20px;">
+      <!-- Active Route -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 16px; display:flex; align-items:flex-start; gap:12px;">
+        <i data-feather="check-circle" style="width:20px; height:20px; color:#10b981; flex-shrink:0; margin-top:2px;"></i>
+        <div style="font-size:12px; line-height:1.45; color:#334155; word-break:break-word;">
+          <strong style="font-size:12.5px; color:#0f172a;">Active Backup Route:</strong><br>
+          <span style="color:#64748b; font-size:11.5px;">From:</span> <span style="color:#0f172a; font-weight:600;">{{ smtp_cfg.user|default:"[Sender not set]" }}</span><br>
+          <span style="color:#64748b; font-size:11.5px;">To:</span>
+          <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:4px;">
+            {% for rec in smtp_cfg.recipients_list %}
+              <span class="email-chip"><i data-feather="inbox" style="width:10px; height:10px;"></i> {{ rec }}</span>
+            {% empty %}
+              <span class="email-chip"><i data-feather="inbox" style="width:10px; height:10px;"></i> {{ smtp_cfg.recipient|default:"arjunaravinda@gmail.com" }}</span>
+            {% endfor %}
+          </div>
         </div>
       </div>
-      <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px 16px; display:flex; align-items:center; gap:12px;">
-        <i data-feather="shield" style="width:20px; height:20px; color:#2563eb; flex-shrink:0;"></i>
-        <div style="font-size:12.5px; line-height:1.4; color:#1e40af;">
-          <strong>24-Hour Expiration &amp; Auto-Purge:</strong><br>
-          Emails carry RFC 2156 expiration headers. Server files older than 24h are auto-purged every 5 min.
+
+      <!-- 100% Free with Gmail -->
+      <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px 16px; display:flex; align-items:flex-start; gap:12px;">
+        <i data-feather="gift" style="width:20px; height:20px; color:#16a34a; flex-shrink:0; margin-top:2px;"></i>
+        <div style="font-size:12px; line-height:1.45; color:#166534;">
+          <strong style="font-size:12.5px; color:#14532d;">100% Free with Gmail:</strong><br>
+          Google allows up to <strong>500 free emails/day</strong> per Gmail account. 5-min intervals use <strong>288/day</strong> (well within free tier, zero charges). You can pause anytime with the On/Off switch.
+        </div>
+      </div>
+
+      <!-- 24-Hour Expiration Policy -->
+      <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px 16px; display:flex; align-items:flex-start; gap:12px;">
+        <i data-feather="shield" style="width:20px; height:20px; color:#2563eb; flex-shrink:0; margin-top:2px;"></i>
+        <div style="font-size:12px; line-height:1.45; color:#1e40af;">
+          <strong style="font-size:12.5px; color:#1e3a8a;">24-Hour Expiration &amp; Auto-Purge:</strong><br>
+          Emails carry RFC 2156 expiration headers. Server files older than 24h are auto-purged from disk every 5 min.
         </div>
       </div>
     </div>
 
-    <!-- Backup Email Configuration Form (Permanently Open & Visible) -->
+    <!-- Backup Email Configuration Form -->
     <form method="POST" action="{% url 'dashboard_save_backup_settings' %}" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.03);">
       {% csrf_token %}
+      <input type="hidden" name="from_full_form" value="1">
       
-      <div style="font-size:13.5px; font-weight:800; color:#0f172a; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
-        <i data-feather="sliders" style="width:16px; height:16px; color:#1768ff;"></i> Email Addresses &amp; Google Account Credentials
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+        <div style="font-size:13.5px; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:8px;">
+          <i data-feather="sliders" style="width:16px; height:16px; color:#1768ff;"></i> Email Addresses &amp; Google Account Credentials
+        </div>
+
+        <!-- In-Form Backup Delivery Active Checkbox -->
+        <label style="display:inline-flex; align-items:center; gap:8px; font-size:12.5px; font-weight:750; color:#0f172a; cursor:pointer; background:#f8fafc; border:1px solid #e2e8f0; padding:6px 12px; border-radius:8px;">
+          <input type="checkbox" name="backup_enabled" id="form_backup_enabled" {% if config.backup_enabled %}checked{% endif %} style="accent-color:#10b981; width:16px; height:16px;">
+          <span>Automated 5-Minute Dispatch Enabled</span>
+        </label>
       </div>
 
       <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap:18px; margin-bottom:18px;">
-        <!-- Destination / Recipient Email -->
-        <div>
+        <!-- Destination / Recipient Email(s) -->
+        <div style="grid-column: 1 / -1;">
           <label style="display:block; font-size:12px; font-weight:800; color:#1e293b; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px;">
-            Destination Email ID (Where Backups are Sent) <span style="color:#ef4444;">*</span>
+            Destination Email IDs (Where Backups are Sent) <span style="color:#ef4444;">*</span>
           </label>
           <div style="position:relative;">
-            <i data-feather="inbox" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#64748b;"></i>
-            <input type="email" name="backup_email_recipient" value="{{ config.backup_email_recipient|default:'arjunaravinda@gmail.com' }}" required
-                   placeholder="e.g. arjunaravinda@gmail.com"
-                   style="width:100%; height:42px; padding:0 14px 0 38px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; font-weight:600; color:#0f172a; box-sizing:border-box; background:#f8fafc;">
+            <i data-feather="inbox" style="position:absolute; left:12px; top:12px; width:16px; height:16px; color:#64748b;"></i>
+            <textarea name="backup_email_recipient" id="backup_email_recipient" rows="2" required
+                      placeholder="e.g. arjunaravinda@gmail.com, second_email@gmail.com, admin@knovaexpo.com"
+                      oninput="updateRecipientChips(this.value)"
+                      style="width:100%; min-height:46px; padding:10px 14px 10px 38px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; font-weight:600; color:#0f172a; box-sizing:border-box; background:#f8fafc; font-family:inherit; resize:vertical;">{{ config.backup_email_recipient|default:'arjunaravinda@gmail.com' }}</textarea>
           </div>
-          <span style="display:block; font-size:11.5px; color:#64748b; margin-top:5px; line-height:1.35;">
-            The recipient inbox that receives the automated database archive every 5 minutes.
+          <!-- Live Parsed Recipient Chips -->
+          <div id="recipient-chips-container" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+            <!-- Rendered automatically via Javascript -->
+          </div>
+          <span style="display:block; font-size:11.5px; color:#64748b; margin-top:6px; line-height:1.4;">
+            <i data-feather="info" style="width:12px; height:12px; vertical-align:middle; color:#1768ff;"></i>
+            <strong>Multiple Email Support:</strong> Enter one or multiple destination email IDs separated by commas (<code>,</code>), semicolons (<code>;</code>), or new lines. Every recipient receives each 5-minute backup snapshot simultaneously.
           </span>
         </div>
 
@@ -348,6 +456,118 @@
       }
       if (window.feather) { feather.replace(); }
     }
+
+    // Live Email Chips Preview
+    function updateRecipientChips(val) {
+      var container = document.getElementById('recipient-chips-container');
+      if (!container) return;
+      if (!val) {
+        container.innerHTML = '';
+        return;
+      }
+      var emails = val.replace(/[;\n\r]/g, ',').split(',');
+      var cleanEmails = [];
+      var seen = {};
+      for (var i = 0; i < emails.length; i++) {
+        var clean = emails[i].trim().toLowerCase();
+        if (clean && clean.indexOf('@') > 0 && clean.indexOf('.') > 0 && !seen[clean]) {
+          seen[clean] = true;
+          cleanEmails.push(clean);
+        }
+      }
+      if (cleanEmails.length === 0) {
+        container.innerHTML = '<span style="font-size:11px; color:#94a3b8; font-style:italic;">No valid email addresses detected yet.</span>';
+        return;
+      }
+      var html = '<span style="font-size:11.5px; font-weight:700; color:#475569; display:inline-flex; align-items:center; margin-right:4px;">Recipients (' + cleanEmails.length + '):</span>';
+      for (var j = 0; j < cleanEmails.length; j++) {
+        html += '<span class="email-chip"><i data-feather="inbox" style="width:10px; height:10px;"></i> ' + cleanEmails[j] + '</span>';
+      }
+      container.innerHTML = html;
+      if (window.feather) { feather.replace(); }
+    }
+
+    // Toggle Automated Backup Daemon On / Off Instantly via AJAX
+    function toggleBackupDaemon(isActive) {
+      var toggleBox = document.getElementById('daemon_toggle_box');
+      var toggleLabel = document.getElementById('backup_toggle_label');
+      var badge = document.getElementById('backup-status-badge');
+      var dot = document.getElementById('backup-status-dot');
+      var text = document.getElementById('backup-status-text');
+      var formCheckbox = document.getElementById('form_backup_enabled');
+      var masterSwitch = document.getElementById('backup_daemon_switch');
+
+      if (formCheckbox) formCheckbox.checked = isActive;
+
+      // Optimistic UI update
+      if (isActive) {
+        if (toggleBox) toggleBox.style.borderColor = '#a7f3d0';
+        if (toggleLabel) {
+          toggleLabel.innerHTML = '● ACTIVE (ON)';
+          toggleLabel.style.color = '#059669';
+        }
+        if (badge) {
+          badge.style.background = '#ecfdf5';
+          badge.style.color = '#059669';
+          badge.style.borderColor = '#a7f3d0';
+        }
+        if (dot) dot.style.background = '#059669';
+        if (text) text.innerText = 'Active Daemon (Every 5 Min)';
+      } else {
+        if (toggleBox) toggleBox.style.borderColor = '#fed7aa';
+        if (toggleLabel) {
+          toggleLabel.innerHTML = '⏸ PAUSED (OFF)';
+          toggleLabel.style.color = '#ea580c';
+        }
+        if (badge) {
+          badge.style.background = '#fef3c7';
+          badge.style.color = '#b45309';
+          badge.style.borderColor = '#fde68a';
+        }
+        if (dot) dot.style.background = '#d97706';
+        if (text) text.innerText = 'Delivery Paused';
+      }
+
+      var formData = new FormData();
+      formData.append('state', isActive ? 'true' : 'false');
+      formData.append('is_ajax', '1');
+
+      var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]');
+      if (csrfToken) {
+        formData.append('csrfmiddlewaretoken', csrfToken.value);
+      }
+
+      fetch('{% url "dashboard_toggle_backup_status" %}', {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: formData
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data.status === 'success') {
+          // Toast Notification if available
+          if (window.showToast) {
+            window.showToast(data.message, 'success');
+          }
+        } else {
+          alert('Error: ' + (data.message || 'Failed to toggle backup status'));
+          masterSwitch.checked = !isActive;
+        }
+      })
+      .catch(function(err) {
+        console.error('Toggle error:', err);
+      });
+    }
+
+    // Initialize recipient chips on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      var txt = document.getElementById('backup_email_recipient');
+      if (txt) {
+        updateRecipientChips(txt.value);
+      }
+    });
   </script>
 
   <!-- RECENT BACKUP ARCHIVES (LAST 24 HOURS) -->

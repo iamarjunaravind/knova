@@ -40,11 +40,22 @@ class Command(BaseCommand):
             action='store_true',
             help='Skip sending the email and only perform disk backup and retention cleanup'
         )
+        parser.add_argument(
+            '--force',
+            action='store_true',
+            help='Execute backup even if automated backups are paused in dashboard settings'
+        )
 
     def handle(self, *args, **options):
         compress = not options.get('no_compress')
         retention = options.get('retention', 24)
         recipient = options.get('email')
+
+        # Check if automated backup delivery is paused by admin
+        smtp_cfg = get_smtp_config()
+        if not options.get('force') and not smtp_cfg.get('enabled', True):
+            self.stdout.write(self.style.WARNING(f"[{timezone.now()}] Automated backup email delivery is currently PAUSED by administrator in Dashboard settings. Skipping backup sequence."))
+            return
 
         self.stdout.write(self.style.NOTICE(f"[{timezone.now()}] Starting automated KNOVA database backup..."))
 

@@ -145,6 +145,7 @@ urlpatterns = [
     path('settings/backup/download/<str:filename>/', dashboard_views.dashboard_download_stored_backup, name='dashboard_download_stored_backup'),
     path('settings/backup/send-email/', dashboard_views.dashboard_trigger_backup_email, name='dashboard_trigger_backup_email'),
     path('settings/backup/save-config/', dashboard_views.dashboard_save_backup_settings, name='dashboard_save_backup_settings'),
+    path('settings/backup/toggle-status/', dashboard_views.dashboard_toggle_backup_status, name='dashboard_toggle_backup_status'),
     path('settings/restore/', dashboard_views.dashboard_restore_data, name='dashboard_restore_data'),
     path('settings/export/excel/', dashboard_views.dashboard_export_excel, name='dashboard_export_excel'),
     path('settings/export/csv/', dashboard_views.dashboard_export_csv, name='dashboard_export_csv'),

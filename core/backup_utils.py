@@ -253,6 +253,32 @@ def restore_database_dump(file_bytes_or_buffer, original_filename, clean_wipe=Fa
             return False, f"Database restoration failed: {str(e)}", 0
 
 
+def parse_email_recipients(recipient_input):
+    """
+    Parses a string or list of recipient emails, supporting comma, semicolon, space, or newline delimiters.
+    Returns a clean list of validated unique email strings.
+    """
+    if not recipient_input:
+        return ['arjunaravinda@gmail.com']
+    if isinstance(recipient_input, list):
+        raw_items = recipient_input
+    else:
+        raw_str = str(recipient_input)
+        for sep in [';', '\n', '\r']:
+            raw_str = raw_str.replace(sep, ',')
+        raw_items = raw_str.split(',')
+
+    emails = []
+    seen = set()
+    for item in raw_items:
+        clean = item.strip().lower()
+        if clean and '@' in clean and '.' in clean:
+            if clean not in seen:
+                seen.add(clean)
+                emails.append(clean)
+    return emails if emails else ['arjunaravinda@gmail.com']
+
+
 def get_smtp_config():
     """
     Reads SMTP configuration from SiteConfiguration or environment variables.
@@ -266,6 +292,8 @@ def get_smtp_config():
     smtp_password = getattr(config, 'smtp_password', '') or os.environ.get('EMAIL_HOST_PASSWORD', '')
     smtp_use_tls = getattr(config, 'smtp_use_tls', True)
     recipient = getattr(config, 'backup_email_recipient', '') or os.environ.get('BACKUP_EMAIL_RECIPIENT', 'arjunaravinda@gmail.com')
+    recipients_list = parse_email_recipients(recipient)
+    backup_enabled = getattr(config, 'backup_enabled', True)
 
     return {
         'host': smtp_host,
@@ -273,24 +301,28 @@ def get_smtp_config():
         'user': smtp_user,
         'password': smtp_password,
         'use_tls': smtp_use_tls,
-        'recipient': recipient.strip() or 'arjunaravinda@gmail.com',
+        'recipient': ", ".join(recipients_list),
+        'recipients_list': recipients_list,
+        'enabled': backup_enabled,
     }
 
 
 def send_backup_email(dump_bytes, filename, record_count, size_formatted, recipient=None, custom_smtp=None):
     """
-    Sends backup snapshot to recipient with RFC 2156/4021 24h expiration headers.
+    Sends backup snapshot to recipient(s) with RFC 2156/4021 24h expiration headers.
+    Supports single or multiple destination email addresses.
     Returns (success: bool, status_message: str).
     """
     import socket
     smtp_cfg = custom_smtp or get_smtp_config()
-    to_email = recipient or smtp_cfg.get('recipient') or 'arjunaravinda@gmail.com'
+    recipients_list = parse_email_recipients(recipient or smtp_cfg.get('recipient'))
     sender_email = smtp_cfg.get('user') or 'backup@knovaexpo.com'
+    recipients_str = ", ".join(recipients_list)
 
     if not smtp_cfg.get('user') or not smtp_cfg.get('password'):
         return False, (
             "SMTP credentials not configured. Please enter your SMTP username and App Password "
-            "in the settings below to enable automatic email delivery to " + to_email
+            "in the settings below to enable automatic email delivery to " + recipients_str
         )
 
     # Force IPv4 for SMTP host to prevent IPv6 rDNS rejection from Gmail
@@ -315,6 +347,7 @@ Archive File   : {filename}
 Snapshot Size  : {size_formatted}
 Total Records  : {record_count} verified objects
 Platform Host  : knovaexpo.com
+Recipients     : {recipients_str}
 
 Data Included:
 -------------
@@ -324,7 +357,7 @@ Data Included:
 
 Retention & Auto-Deletion:
 --------------------------
-This backup was automatically dispatched by your 5-minute automated backup system.
+This backup was automatically dispatched by your automated backup system.
 In accordance with your retention policy, this snapshot email is tagged with an
 Expires header for 24 hours. Local server backups older than 24 hours are
 automatically purged from disk.
@@ -357,7 +390,7 @@ Future Begins Here
             subject=subject,
             body=body,
             from_email=sender_email,
-            to=[to_email],
+            to=recipients_list,
             connection=backend_conn,
             headers={
                 'Expires': rfc_expire_date,
@@ -380,10 +413,10 @@ Future Begins Here
         except Exception:
             pass
 
-        return True, f"Backup email successfully dispatched to {to_email} with 24-hour expiration header."
+        return True, f"Backup email successfully dispatched to {recipients_str} with 24-hour expiration header."
 
     except Exception as e:
-        return False, f"SMTP dispatch to {to_email} failed: {str(e)}"
+        return False, f"SMTP dispatch to {recipients_str} failed: {str(e)}"
     finally:
         socket.getaddrinfo = orig_getaddrinfo
 

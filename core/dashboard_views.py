@@ -3467,6 +3467,39 @@ def dashboard_trigger_backup_email(request):
 
 
 @login_required(login_url='/portal/login/')
+def dashboard_toggle_backup_status(request):
+    if not request.user.is_superuser and not request.user.is_staff and not request.user.groups.filter(name__in=['admin', 'manager']).exists():
+        from django.http import JsonResponse
+        return JsonResponse({'status': 'error', 'message': 'Permission denied.'}, status=403)
+
+    from .models import SiteConfiguration
+    from django.http import JsonResponse
+    cfg = SiteConfiguration.get_solo()
+
+    if request.method == 'POST':
+        state_param = request.POST.get('state')
+        if state_param is not None:
+            cfg.backup_enabled = state_param.lower() in ['true', '1', 'on']
+        else:
+            cfg.backup_enabled = not cfg.backup_enabled
+        cfg.save()
+
+    label = "Active (Every 5 min)" if cfg.backup_enabled else "Paused"
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.POST.get('is_ajax')
+
+    if is_ajax:
+        return JsonResponse({
+            'status': 'success',
+            'backup_enabled': cfg.backup_enabled,
+            'label': label,
+            'message': f"Automated 5-minute backup email delivery is now {label}."
+        })
+
+    messages.success(request, f"Automated backup delivery status updated: {label}.")
+    return redirect('/dashboard/settings/?tab=backup')
+
+
+@login_required(login_url='/portal/login/')
 def dashboard_save_backup_settings(request):
     if not request.user.is_superuser and not request.user.is_staff and not request.user.groups.filter(name__in=['admin', 'manager']).exists():
         from django.core.exceptions import PermissionDenied
@@ -3474,10 +3507,19 @@ def dashboard_save_backup_settings(request):
 
     if request.method == 'POST':
         from .models import SiteConfiguration
+        from .backup_utils import parse_email_recipients
         cfg = SiteConfiguration.get_solo()
-        recipient = request.POST.get('backup_email_recipient', '').strip()
-        if recipient:
-            cfg.backup_email_recipient = recipient
+
+        # Handle pause/resume toggle
+        if 'backup_enabled' in request.POST:
+            cfg.backup_enabled = request.POST.get('backup_enabled') in ['on', '1', 'true', True]
+        elif 'from_full_form' in request.POST:
+            cfg.backup_enabled = False
+
+        recipient_raw = request.POST.get('backup_email_recipient', '').strip()
+        if recipient_raw:
+            recipients_list = parse_email_recipients(recipient_raw)
+            cfg.backup_email_recipient = ", ".join(recipients_list)
 
         smtp_user = request.POST.get('smtp_user', '').strip()
         if smtp_user:
@@ -3498,7 +3540,7 @@ def dashboard_save_backup_settings(request):
         # If user also requested an instant test email
         if request.POST.get('test_send'):
             from .backup_utils import generate_backup, send_backup_email
-            backup_data = generate_backup(compress=True)
+            backup_data = generate_backup(compressed=True)
             ok, msg = send_backup_email(
                 dump_bytes=backup_data['content'],
                 filename=backup_data['filename'],
@@ -3507,11 +3549,12 @@ def dashboard_save_backup_settings(request):
                 recipient=cfg.backup_email_recipient
             )
             if ok:
-                messages.success(request, f"Settings saved! Test backup successfully dispatched to {cfg.backup_email_recipient}.")
+                messages.success(request, f"Settings saved! Test backup successfully dispatched to: {cfg.backup_email_recipient}.")
             else:
                 messages.warning(request, f"Settings saved, but test email delivery reported: {msg}")
         else:
-            messages.success(request, f"Backup mail settings updated successfully! Sender: {cfg.smtp_user or 'Default'} → Recipient: {cfg.backup_email_recipient}")
+            status_text = "Active (Every 5 min)" if cfg.backup_enabled else "Paused (No emails sent)"
+            messages.success(request, f"Backup mail settings updated successfully! Status: {status_text} | Recipients: {cfg.backup_email_recipient}")
 
     return redirect('/dashboard/settings/?tab=backup')
 
