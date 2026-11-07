@@ -94,29 +94,29 @@
 <div id="tabContent-backup" class="tab-content" style="display:none;">
 
   <!-- Quick Status Strip -->
-  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap:14px; margin-bottom:20px;">
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap:14px; margin-bottom:20px;">
     <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:14px 18px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
-      <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Database Engine</div>
-      <div style="font-size:16px; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:6px;">
-        <i data-feather="server" style="width:16px; height:16px; color:#1768ff;"></i> {{ db_vendor|upper }}
+      <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Automated Backup Schedule</div>
+      <div style="font-size:15px; font-weight:800; color:#10b981; display:flex; align-items:center; gap:6px;">
+        <i data-feather="clock" style="width:16px; height:16px;"></i> Every 5 Min (Active)
       </div>
     </div>
     <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:14px 18px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
-      <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Automated Schedule</div>
-      <div style="font-size:16px; font-weight:800; color:#10b981; display:flex; align-items:center; gap:6px;">
-        <i data-feather="clock" style="width:16px; height:16px;"></i> Every 5 Minutes
+      <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Sender Gmail Account</div>
+      <div style="font-size:13.5px; font-weight:800; color:#0f172a; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:flex; align-items:center; gap:6px;" title="{{ smtp_cfg.user|default:'Not Configured' }}">
+        <i data-feather="send" style="width:16px; height:16px; color:#1768ff; flex-shrink:0;"></i> {{ smtp_cfg.user|default:"Not Configured" }}
       </div>
     </div>
     <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:14px 18px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
-      <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Backup Email ID</div>
-      <div style="font-size:14px; font-weight:800; color:#0f172a; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:flex; align-items:center; gap:6px;">
-        <i data-feather="mail" style="width:16px; height:16px; color:#1768ff; flex-shrink:0;"></i> {{ smtp_cfg.recipient|default:"arjunaravinda@gmail.com" }}
+      <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Destination Recipient</div>
+      <div style="font-size:13.5px; font-weight:800; color:#0f172a; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:flex; align-items:center; gap:6px;" title="{{ smtp_cfg.recipient|default:'arjunaravinda@gmail.com' }}">
+        <i data-feather="inbox" style="width:16px; height:16px; color:#059669; flex-shrink:0;"></i> {{ smtp_cfg.recipient|default:"arjunaravinda@gmail.com" }}
       </div>
     </div>
     <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:14px 18px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
-      <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Auto-Deletion Policy</div>
-      <div style="font-size:16px; font-weight:800; color:#d97706; display:flex; align-items:center; gap:6px;">
-        <i data-feather="trash-2" style="width:16px; height:16px;"></i> Purge After 24h
+      <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Email Expiration &amp; Purge</div>
+      <div style="font-size:15px; font-weight:800; color:#d97706; display:flex; align-items:center; gap:6px;">
+        <i data-feather="trash-2" style="width:16px; height:16px;"></i> Auto-Purge 24h
       </div>
     </div>
   </div>
@@ -187,82 +187,168 @@
 
   <!-- AUTOMATED 5-MINUTE BACKUP & EMAIL SYSTEM -->
   <div class="glass-card" style="padding:24px; background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05); margin-bottom:24px;">
+    <!-- Section Header -->
     <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-bottom:18px; padding-bottom:16px; border-bottom:1px solid #f1f5f9;">
       <div style="display:flex; align-items:center; gap:12px;">
-        <div style="width:40px; height:40px; border-radius:10px; background:rgba(23,104,255,0.12); color:#1768ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-          <i data-feather="mail" style="width:20px; height:20px;"></i>
+        <div style="width:42px; height:42px; border-radius:10px; background:rgba(23,104,255,0.12); color:#1768ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <i data-feather="mail" style="width:22px; height:22px;"></i>
         </div>
         <div>
-          <h3 style="margin:0; font-size:16px; font-weight:700; color:#0f172a;">Automated 5-Minute Backup &amp; Email Delivery</h3>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <h3 style="margin:0; font-size:16.5px; font-weight:800; color:#0f172a;">Automated 5-Minute Database Backup &amp; Email Delivery</h3>
+            <span style="background:#ecfdf5; color:#059669; font-size:11px; font-weight:800; padding:2px 8px; border-radius:999px; border:1px solid #a7f3d0; display:inline-flex; align-items:center; gap:4px;">
+              <span style="width:6px; height:6px; border-radius:50%; background:#059669; display:inline-block;"></span> Active Daemon
+            </span>
+          </div>
           <span style="font-size:12.5px; color:#64748b;">
-            Full database snapshots are automatically dispatched to <strong>{{ smtp_cfg.recipient|default:"arjunaravinda@gmail.com" }}</strong> every 5 minutes.
+            Modify sender and recipient email addresses below. Full database snapshots are dispatched every 5 minutes.
           </span>
         </div>
       </div>
       <form method="POST" action="{% url 'dashboard_trigger_backup_email' %}" style="margin:0;">
         {% csrf_token %}
         <input type="hidden" name="recipient" value="{{ smtp_cfg.recipient|default:'arjunaravinda@gmail.com' }}">
-        <button type="submit" class="btn btn-primary" style="background:#1768ff; border-color:#1768ff; padding:9px 18px; font-size:13px; font-weight:700; display:inline-flex; align-items:center; gap:8px;">
-          <i data-feather="send" style="width:15px; height:15px;"></i> Send Backup Email Now
+        <button type="submit" class="btn btn-primary" style="background:#1768ff; border-color:#1768ff; padding:8px 16px; font-size:12.5px; font-weight:700; display:inline-flex; align-items:center; gap:8px;">
+          <i data-feather="send" style="width:14px; height:14px;"></i> Trigger Immediate Backup Email
         </button>
       </form>
     </div>
 
-    <!-- Info Notice Box -->
-    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px 16px; font-size:13px; color:#1e40af; margin-bottom:20px; display:flex; gap:10px; align-items:flex-start;">
-      <i data-feather="info" style="width:18px; height:18px; flex-shrink:0; margin-top:2px; color:#2563eb;"></i>
-      <div style="line-height:1.5;">
-        <strong>Retention &amp; Auto-Deletion Policy:</strong>
-        Each automated snapshot email is tagged with standard RFC 2156 expiration headers set to expire within 24 hours of delivery. Local server snapshot archives older than 24 hours are automatically purged on every backup cycle.
+    <!-- Live Status & Policy Banner -->
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap:12px; margin-bottom:20px;">
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 16px; display:flex; align-items:center; gap:12px;">
+        <i data-feather="check-circle" style="width:20px; height:20px; color:#10b981; flex-shrink:0;"></i>
+        <div style="font-size:12.5px; line-height:1.4; color:#334155;">
+          <strong>Current Active Route:</strong><br>
+          <span style="color:#0f172a; font-weight:600;">{{ smtp_cfg.user|default:"[Sender not set]" }}</span>
+          <i data-feather="arrow-right" style="width:12px; height:12px; vertical-align:middle; color:#94a3b8; margin:0 4px;"></i>
+          <span style="color:#1768ff; font-weight:700;">{{ smtp_cfg.recipient|default:"arjunaravinda@gmail.com" }}</span>
+        </div>
+      </div>
+      <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:12px 16px; display:flex; align-items:center; gap:12px;">
+        <i data-feather="shield" style="width:20px; height:20px; color:#2563eb; flex-shrink:0;"></i>
+        <div style="font-size:12.5px; line-height:1.4; color:#1e40af;">
+          <strong>24-Hour Expiration &amp; Auto-Purge:</strong><br>
+          Emails carry RFC 2156 expiration headers. Server files older than 24h are auto-purged every 5 min.
+        </div>
       </div>
     </div>
 
-    <!-- SMTP Credentials Configuration Form -->
-    <details style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px 18px;">
-      <summary style="font-size:13.5px; font-weight:700; color:#0f172a; cursor:pointer; user-select:none; display:flex; align-items:center; gap:8px;">
-        <i data-feather="settings" style="width:15px; height:15px; color:#64748b;"></i> Configure SMTP &amp; Email Delivery Settings
-      </summary>
-      <form method="POST" action="{% url 'dashboard_save_backup_settings' %}" style="margin-top:16px; display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap:14px;">
-        {% csrf_token %}
+    <!-- Backup Email Configuration Form (Permanently Open & Visible) -->
+    <form method="POST" action="{% url 'dashboard_save_backup_settings' %}" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:12px; padding:20px; box-shadow:0 1px 4px rgba(0,0,0,0.03);">
+      {% csrf_token %}
+      
+      <div style="font-size:13.5px; font-weight:800; color:#0f172a; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+        <i data-feather="sliders" style="width:16px; height:16px; color:#1768ff;"></i> Email Addresses &amp; Google Account Credentials
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap:18px; margin-bottom:18px;">
+        <!-- Destination / Recipient Email -->
         <div>
-          <label style="display:block; font-size:12px; font-weight:700; color:#475569; text-transform:uppercase; margin-bottom:5px;">Recipient Email ID *</label>
-          <input type="email" name="backup_email_recipient" value="{{ config.backup_email_recipient|default:'arjunaravinda@gmail.com' }}" required
-                 style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; box-sizing:border-box;">
-        </div>
-        <div>
-          <label style="display:block; font-size:12px; font-weight:700; color:#475569; text-transform:uppercase; margin-bottom:5px;">SMTP Server Host</label>
-          <input type="text" name="smtp_host" value="{{ config.smtp_host|default:'smtp.gmail.com' }}"
-                 style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; box-sizing:border-box;">
-        </div>
-        <div>
-          <label style="display:block; font-size:12px; font-weight:700; color:#475569; text-transform:uppercase; margin-bottom:5px;">SMTP Port</label>
-          <input type="number" name="smtp_port" value="{{ config.smtp_port|default:587 }}"
-                 style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; box-sizing:border-box;">
-        </div>
-        <div>
-          <label style="display:block; font-size:12px; font-weight:700; color:#475569; text-transform:uppercase; margin-bottom:5px;">SMTP Username / Gmail Address</label>
-          <input type="text" name="smtp_user" value="{{ config.smtp_user|default:'' }}" placeholder="e.g. notifications@knovaexpo.com"
-                 style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; box-sizing:border-box;">
-        </div>
-        <div>
-          <label style="display:block; font-size:12px; font-weight:700; color:#475569; text-transform:uppercase; margin-bottom:5px;">SMTP Password / Google App Password</label>
-          <input type="password" name="smtp_password" placeholder="••••••••••••••••"
-                 style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; box-sizing:border-box;">
-        </div>
-        <div style="display:flex; align-items:center; gap:8px; padding-top:24px;">
-          <label style="font-size:13px; font-weight:600; color:#334155; display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
-            <input type="checkbox" name="smtp_use_tls" {% if config.smtp_use_tls %}checked{% endif %} style="accent-color:#1768ff;">
-            <span>Use TLS Encryption (Recommended)</span>
+          <label style="display:block; font-size:12px; font-weight:800; color:#1e293b; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px;">
+            Destination Email ID (Where Backups are Sent) <span style="color:#ef4444;">*</span>
           </label>
+          <div style="position:relative;">
+            <i data-feather="inbox" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#64748b;"></i>
+            <input type="email" name="backup_email_recipient" value="{{ config.backup_email_recipient|default:'arjunaravinda@gmail.com' }}" required
+                   placeholder="e.g. arjunaravinda@gmail.com"
+                   style="width:100%; height:42px; padding:0 14px 0 38px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; font-weight:600; color:#0f172a; box-sizing:border-box; background:#f8fafc;">
+          </div>
+          <span style="display:block; font-size:11.5px; color:#64748b; margin-top:5px; line-height:1.35;">
+            The recipient inbox that receives the automated database archive every 5 minutes.
+          </span>
         </div>
-        <div style="grid-column: 1 / -1; display:flex; justify-content:flex-end; margin-top:8px;">
-          <button type="submit" class="btn btn-primary" style="background:#0f172a; border-color:#0f172a; padding:9px 20px; font-size:13px; font-weight:700; display:inline-flex; align-items:center; gap:8px;">
-            <i data-feather="check" style="width:15px; height:15px;"></i> Save Email &amp; SMTP Settings
-          </button>
+
+        <!-- Sender Gmail Address -->
+        <div>
+          <label style="display:block; font-size:12px; font-weight:800; color:#1e293b; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px;">
+            Sender Email ID (Google / Gmail Account) <span style="color:#ef4444;">*</span>
+          </label>
+          <div style="position:relative;">
+            <i data-feather="send" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#64748b;"></i>
+            <input type="email" name="smtp_user" value="{{ config.smtp_user|default:'' }}" required
+                   placeholder="e.g. arjunaravindambrammala@gmail.com"
+                   style="width:100%; height:42px; padding:0 14px 0 38px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; font-weight:600; color:#0f172a; box-sizing:border-box; background:#f8fafc;">
+          </div>
+          <span style="display:block; font-size:11.5px; color:#64748b; margin-top:5px; line-height:1.35;">
+            The Google/Gmail address that authenticates to dispatch the outgoing email.
+          </span>
         </div>
-      </form>
-    </details>
+
+        <!-- Google App Password -->
+        <div>
+          <label style="display:block; font-size:12px; font-weight:800; color:#1e293b; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px;">
+            Google App Password (16 Characters) <span style="color:#ef4444;">*</span>
+          </label>
+          <div style="position:relative;">
+            <i data-feather="key" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#64748b;"></i>
+            <input type="password" id="smtp_password_input" name="smtp_password"
+                   placeholder="{% if config.smtp_password %}•••• •••• •••• •••• (Configured){% else %}e.g. qlvv akhd vkwv lbpt{% endif %}"
+                   style="width:100%; height:42px; padding:0 42px 0 38px; border:1px solid #cbd5e1; border-radius:8px; font-size:13.5px; font-weight:600; color:#0f172a; box-sizing:border-box; background:#f8fafc; font-family:monospace;">
+            <button type="button" onclick="togglePasswordVisibility()" title="Show/Hide Password"
+                    style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; color:#64748b; cursor:pointer; padding:6px; display:flex; align-items:center;">
+              <i data-feather="eye" id="password_toggle_icon" style="width:16px; height:16px;"></i>
+            </button>
+          </div>
+          <span style="display:block; font-size:11.5px; color:#64748b; margin-top:5px; line-height:1.35;">
+            Generated under Google Account &gt; Security &gt; 2-Step Verification &gt; App Passwords. Can be entered with or without spaces.
+          </span>
+        </div>
+      </div>
+
+      <!-- Advanced SMTP Details Accordion (Pre-filled defaults) -->
+      <details style="border-top:1px dashed #e2e8f0; padding-top:14px; margin-bottom:18px;">
+        <summary style="font-size:12.5px; font-weight:700; color:#64748b; cursor:pointer; display:inline-flex; align-items:center; gap:6px; user-select:none;">
+          <i data-feather="settings" style="width:14px; height:14px;"></i> Advanced SMTP Server Settings (Default: smtp.gmail.com:587)
+        </summary>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap:14px; margin-top:12px; background:#f8fafc; padding:14px; border-radius:8px; border:1px solid #e2e8f0;">
+          <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:4px;">SMTP Host</label>
+            <input type="text" name="smtp_host" value="{{ config.smtp_host|default:'smtp.gmail.com' }}"
+                   style="width:100%; height:36px; padding:0 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:12.5px; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:4px;">SMTP Port</label>
+            <input type="number" name="smtp_port" value="{{ config.smtp_port|default:587 }}"
+                   style="width:100%; height:36px; padding:0 10px; border:1px solid #cbd5e1; border-radius:6px; font-size:12.5px; box-sizing:border-box;">
+          </div>
+          <div style="display:flex; align-items:center; padding-top:20px;">
+            <label style="font-size:12.5px; font-weight:600; color:#334155; display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
+              <input type="checkbox" name="smtp_use_tls" {% if config.smtp_use_tls %}checked{% endif %} style="accent-color:#1768ff; width:16px; height:16px;">
+              <span>Use TLS (Recommended for Gmail)</span>
+            </label>
+          </div>
+        </div>
+      </details>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:10px; border-top:1px solid #f1f5f9; padding-top:14px;">
+        <button type="submit" name="test_send" value="1" class="btn btn-outline-secondary"
+                style="background:#f8fafc; border:1px solid #cbd5e1; color:#0f172a; padding:9px 18px; font-size:13px; font-weight:700; display:inline-flex; align-items:center; gap:8px; border-radius:8px;">
+          <i data-feather="send" style="width:15px; height:15px; color:#1768ff;"></i> Save &amp; Send Test Backup Now
+        </button>
+        <button type="submit" class="btn btn-primary"
+                style="background:#1768ff; border-color:#1768ff; padding:9px 22px; font-size:13px; font-weight:700; display:inline-flex; align-items:center; gap:8px; border-radius:8px;">
+          <i data-feather="check" style="width:15px; height:15px;"></i> Save Mail IDs &amp; Settings
+        </button>
+      </div>
+    </form>
   </div>
+
+  <script>
+    function togglePasswordVisibility() {
+      var pwdInput = document.getElementById('smtp_password_input');
+      var toggleIcon = document.getElementById('password_toggle_icon');
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        toggleIcon.setAttribute('data-feather', 'eye-off');
+      } else {
+        pwdInput.type = 'password';
+        toggleIcon.setAttribute('data-feather', 'eye');
+      }
+      if (window.feather) { feather.replace(); }
+    }
+  </script>
 
   <!-- RECENT BACKUP ARCHIVES (LAST 24 HOURS) -->
   <div class="glass-card" style="padding:24px; background:#ffffff; border:1px solid #e2e8f0; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">

@@ -3438,7 +3438,7 @@ def dashboard_restore_data(request):
 
 @login_required(login_url='/portal/login/')
 def dashboard_trigger_backup_email(request):
-    if not request.user.is_superuser:
+    if not request.user.is_superuser and not request.user.is_staff and not request.user.groups.filter(name__in=['admin', 'manager']).exists():
         from django.core.exceptions import PermissionDenied
         raise PermissionDenied("Only administrators can dispatch backups.")
     
@@ -3468,27 +3468,50 @@ def dashboard_trigger_backup_email(request):
 
 @login_required(login_url='/portal/login/')
 def dashboard_save_backup_settings(request):
-    if not request.user.is_superuser:
+    if not request.user.is_superuser and not request.user.is_staff and not request.user.groups.filter(name__in=['admin', 'manager']).exists():
         from django.core.exceptions import PermissionDenied
         raise PermissionDenied("Only administrators can change system configuration.")
 
     if request.method == 'POST':
         from .models import SiteConfiguration
         cfg = SiteConfiguration.get_solo()
-        cfg.backup_email_recipient = request.POST.get('backup_email_recipient', 'arjunaravinda@gmail.com').strip()
-        cfg.smtp_host = request.POST.get('smtp_host', 'smtp.gmail.com').strip()
+        recipient = request.POST.get('backup_email_recipient', '').strip()
+        if recipient:
+            cfg.backup_email_recipient = recipient
+
+        smtp_user = request.POST.get('smtp_user', '').strip()
+        if smtp_user:
+            cfg.smtp_user = smtp_user
+
+        new_password = request.POST.get('smtp_password', '').strip().replace(' ', '')
+        if new_password:
+            cfg.smtp_password = new_password
+
+        cfg.smtp_host = request.POST.get('smtp_host', 'smtp.gmail.com').strip() or 'smtp.gmail.com'
         try:
             cfg.smtp_port = int(request.POST.get('smtp_port', 587))
         except (TypeError, ValueError):
             cfg.smtp_port = 587
-        cfg.smtp_user = request.POST.get('smtp_user', '').strip()
-        new_password = request.POST.get('smtp_password', '').strip()
-        if new_password:
-            cfg.smtp_password = new_password
-        cfg.smtp_use_tls = request.POST.get('smtp_use_tls') == 'on'
+        cfg.smtp_use_tls = request.POST.get('smtp_use_tls') == 'on' or 'smtp_use_tls' in request.POST
         cfg.save()
 
-        messages.success(request, "Automated backup & SMTP email configuration saved successfully.")
+        # If user also requested an instant test email
+        if request.POST.get('test_send'):
+            from .backup_utils import generate_backup, send_backup_email
+            backup_data = generate_backup(compress=True)
+            ok, msg = send_backup_email(
+                dump_bytes=backup_data['content'],
+                filename=backup_data['filename'],
+                record_count=backup_data['record_count'],
+                size_formatted=backup_data['size_formatted'],
+                recipient=cfg.backup_email_recipient
+            )
+            if ok:
+                messages.success(request, f"Settings saved! Test backup successfully dispatched to {cfg.backup_email_recipient}.")
+            else:
+                messages.warning(request, f"Settings saved, but test email delivery reported: {msg}")
+        else:
+            messages.success(request, f"Backup mail settings updated successfully! Sender: {cfg.smtp_user or 'Default'} → Recipient: {cfg.backup_email_recipient}")
 
     return redirect('/dashboard/settings/?tab=backup')
 
