@@ -112,3 +112,4 @@ class Command(BaseCommand):
             pass
 
         self.stdout.write(self.style.SUCCESS(f"[{timezone.now()}] Automated backup sequence completed successfully."))
+
