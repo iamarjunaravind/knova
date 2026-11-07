@@ -1381,7 +1381,7 @@ class ParentSchedule(models.Model):
 class University(models.Model):
     name = models.CharField(max_length=255, db_index=True)
     slug = models.SlugField(unique=True)
-    is_approved = models.BooleanField(default=False, db_index=True)
+    is_approved = models.BooleanField(default=True, db_index=True)
     hero_priority = models.PositiveIntegerField(
         default=0,
         db_index=True,

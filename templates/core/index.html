@@ -1248,10 +1248,17 @@
   }
 
   /* Tablets Landscape & Small Laptops (821px - 1024px) */
-  @media (max-width: 1024px) {
-    .uni-card, .orbital-ring {
-      display: none !important;
+  @media (max-width: 1024px) and (min-width: 821px) {
+    .uni-card {
+      transform: scale(0.82) !important;
+      transform-origin: center !important;
     }
+    .p-1, .p-2, .p-3 { left: 8px !important; }
+    .p-4, .p-5, .p-6 { right: 8px !important; }
+    .orbital-ring {
+      opacity: 0.25 !important;
+    }
+  }
 
     .hero-master-card {
       max-width: clamp(400px, 75vh, 660px) !important;
@@ -2306,12 +2313,10 @@
   </button>
 
   {% if site_config.show_university_cards %}
-{% if site_config.show_university_cards %}
   <!-- Smooth Re-Center Button when Panned -->
   <button id="recenterBtn" class="canvas-recenter-btn" title="Re-center view" aria-label="Re-center canvas view" onclick="recenterCanvas()">
     <i class="ti ti-focus-2"></i> <span>Center View</span>
   </button>
-  {% endif %}
   {% endif %}
 
   <!-- Modern Luminous Dual-Wave Divider -->

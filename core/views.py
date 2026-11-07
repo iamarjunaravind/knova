@@ -20,30 +20,30 @@ def index(request):
 
     countries = sorted(list(set(uni_countries + ex_countries)))
 
-    hero_universities = University.objects.filter(
+    hero_universities = list(University.objects.filter(
         is_approved=True,
         hero_priority__gte=1
-
     ).select_related('profile').annotate(
         courses_count=Count('courses', distinct=True),
         scholarships_count=Count('scholarships', distinct=True)
-
-    ).order_by('hero_priority')[:15]
+    ).order_by('hero_priority')[:15])
 
     if len(hero_universities) < 15:
-
         existing_ids = [u.id for u in hero_universities]
-
         extra_unis = University.objects.filter(
             is_approved=True
-
         ).exclude(id__in=existing_ids).select_related('profile').annotate(
             courses_count=Count('courses', distinct=True),
             scholarships_count=Count('scholarships', distinct=True)
-
         ).order_by('id')[:(15 - len(hero_universities))]
-
         hero_universities = list(hero_universities) + list(extra_unis)
+
+    # Fallback: If no universities are explicitly marked approved yet, still populate hero cards
+    if not hero_universities:
+        hero_universities = list(University.objects.select_related('profile').annotate(
+            courses_count=Count('courses', distinct=True),
+            scholarships_count=Count('scholarships', distinct=True)
+        ).order_by('hero_priority', 'id')[:15])
 
     hero_courses = Course.objects.filter(is_active=True, status='Approved').filter(Q(university__isnull=True) | Q(university__is_approved=True)).select_related('university', 'university__profile')[:6]
 
