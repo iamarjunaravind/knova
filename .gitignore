@@ -45,6 +45,7 @@ ehthumbs.db
 *.log
 backups/
 *.json.gz
+scratch/
 
 # Scratch & diagnostic scripts from development
 check_*.py

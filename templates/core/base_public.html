@@ -12,6 +12,13 @@
 
 <title>{% block page_title %}{% if request.path == '/about/' and site_config.seo_about_title %}{{ site_config.seo_about_title }}{% elif request.path == '/courses/' and site_config.seo_courses_title %}{{ site_config.seo_courses_title }}{% elif request.path == '/exhibitors/' and site_config.seo_exhibitors_title %}{{ site_config.seo_exhibitors_title }}{% elif request.path == '/events/' and site_config.seo_events_title %}{{ site_config.seo_events_title }}{% elif request.path == '/scholarships/' and site_config.seo_scholarships_title %}{{ site_config.seo_scholarships_title }}{% elif request.path == '/speakers/' and site_config.seo_speakers_title %}{{ site_config.seo_speakers_title }}{% elif request.path == '/map/' and site_config.seo_map_title %}{{ site_config.seo_map_title }}{% elif request.path == '/sponsors/' and site_config.seo_sponsors_title %}{{ site_config.seo_sponsors_title }}{% else %}{{ site_config.meta_title|default:"KNOVA - Future Begins Here" }}{% endif %}{% endblock %}</title>
 
+<!-- Favicon / Title Logo -->
+<link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}">
+<link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/favicon-32x32.png' %}">
+<link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/favicon-16x16.png' %}">
+<link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/apple-touch-icon.png' %}">
+<link rel="shortcut icon" href="{% static 'assets/favicon.ico' %}">
+
 <meta name="description" content="{% block meta_description %}{% if request.path == '/about/' and site_config.seo_about_desc %}{{ site_config.seo_about_desc }}{% elif request.path == '/courses/' and site_config.seo_courses_desc %}{{ site_config.seo_courses_desc }}{% elif request.path == '/exhibitors/' and site_config.seo_exhibitors_desc %}{{ site_config.seo_exhibitors_desc }}{% elif request.path == '/events/' and site_config.seo_events_desc %}{{ site_config.seo_events_desc }}{% elif request.path == '/scholarships/' and site_config.seo_scholarships_desc %}{{ site_config.seo_scholarships_desc }}{% elif request.path == '/speakers/' and site_config.seo_speakers_desc %}{{ site_config.seo_speakers_desc }}{% elif request.path == '/map/' and site_config.seo_map_desc %}{{ site_config.seo_map_desc }}{% elif request.path == '/sponsors/' and site_config.seo_sponsors_desc %}{{ site_config.seo_sponsors_desc }}{% else %}{{ site_config.meta_description|default:'Meet world-class universities, discover global study opportunities and connect with education experts at KNOVA GCC.' }}{% endif %}{% endblock %}">
 
 {% if site_config.meta_keywords %}
