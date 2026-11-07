@@ -6,6 +6,23 @@
 {% block page_title %}Mr. K Chatbot Knowledge Base{% endblock %}
 
 {% block content %}
+<!-- Top Page Header Banner -->
+<div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:22px 26px; margin-bottom:22px; box-shadow:0 4px 16px rgba(15,23,42,0.03); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+  <div>
+    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 4px 0; display:flex; align-items:center; gap:10px;">
+      <i data-feather="help-circle" style="color:#06b6d4;"></i> Mr. K Chatbot Knowledge Base &amp; Q&amp;A
+    </h2>
+    <p style="font-size:13px; color:#64748b; margin:0; line-height:1.4;">
+      Manage automated intelligent answers, suggestion chips carousel, and trigger keywords matching for the AI companion.
+    </p>
+  </div>
+  <div style="display:flex; align-items:center; gap:10px;">
+    <a href="{% url 'chatbot_faq_create' %}" style="background:#1768ff; border:1px solid #1768ff; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 16px; text-decoration:none; box-shadow: 0 2px 6px rgba(23, 104, 255, 0.25);">
+      <i data-feather="plus" style="width:14px; height:14px;"></i> Add New Question
+    </a>
+  </div>
+</div>
+
 <!-- KPI METRIC CARDS -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px;">
   <!-- Metric 1: Total FAQs -->

@@ -13,12 +13,14 @@
     margin: 0 auto;
     padding-bottom: 70px;
   }
-  .seo-header {
+  
+  /* Modern Page Header Banner matching CMS */
+  .cms-header {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
-    padding: 24px 28px;
-    margin-bottom: 24px;
+    padding: 22px 26px;
+    margin-bottom: 22px;
     box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
     display: flex;
     justify-content: space-between;
@@ -26,68 +28,136 @@
     flex-wrap: wrap;
     gap: 16px;
   }
-  .seo-header-title h2 {
+  .cms-header-text h2 {
     font-size: 20px;
     font-weight: 800;
     color: #0f172a;
-    margin: 0 0 6px 0;
+    margin: 0 0 4px 0;
     display: flex;
     align-items: center;
     gap: 10px;
+    letter-spacing: -0.3px;
   }
-  .seo-header-title p {
-    font-size: 13.5px;
+  .cms-header-text p {
+    font-size: 13px;
     color: #64748b;
     margin: 0;
+    line-height: 1.4;
   }
-
-  /* SEO Dedicated Tabs */
-  .seo-nav-tabs {
+  .cms-header-actions {
     display: flex;
-    gap: 8px;
-    background: #f1f5f9;
-    padding: 6px;
-    border-radius: 12px;
-    margin-bottom: 24px;
+    gap: 10px;
+    align-items: center;
     flex-wrap: wrap;
   }
-  .seo-nav-tab {
-    flex: 1;
-    min-width: 150px;
-    text-align: center;
-    padding: 10px 16px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #475569;
-    background: transparent;
-    border: none;
+  .cms-btn-primary {
+    background: #1768ff;
+    color: #ffffff;
+    border: 1px solid #1768ff;
+    padding: 9px 18px;
     border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     cursor: pointer;
+    box-shadow: 0 2px 6px rgba(23, 104, 255, 0.25);
     transition: all 0.2s ease;
-    display: flex;
+  }
+  .cms-btn-primary:hover {
+    background: #0f56d9;
+    border-color: #0f56d9;
+    box-shadow: 0 4px 12px rgba(23, 104, 255, 0.35);
+  }
+  .cms-btn-secondary {
+    background: #ffffff;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .cms-btn-secondary:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: #0f172a;
+  }
+
+  /* SEO Dedicated Navigation Tabs (Unified Grid) */
+  .seo-nav-tabs {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    background: #e2e8f0;
+    padding: 5px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+  }
+  @media (max-width: 1100px) {
+    .seo-nav-tabs {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 768px) {
+    .seo-nav-tabs {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .seo-nav-tab {
+    height: 42px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 7px;
+    font-size: 12.5px;
+    font-weight: 750;
+    color: #475569;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    padding: 0 8px;
     text-decoration: none;
+    box-sizing: border-box;
+  }
+  .seo-nav-tab i, .seo-nav-tab svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    stroke-width: 2.2px;
   }
   .seo-nav-tab.active {
     background: #ffffff;
-    color: #10b981;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    color: #1768ff;
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
   }
   .seo-nav-tab:hover:not(.active) {
     color: #0f172a;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.65);
   }
 
-  /* SEO Cards */
+  /* SEO Cards & Uniform Headers */
   .seo-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .seo-card:hover {
+    border-color: #cbd5e1;
   }
   .seo-card-header {
     display: flex;
@@ -96,20 +166,84 @@
     margin-bottom: 20px;
     padding-bottom: 14px;
     border-bottom: 1px solid #f1f5f9;
+    width: 100%;
+    gap: 16px;
   }
-  .seo-card-title {
+  .seo-card-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+  }
+  .seo-card-icon-squircle {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
     font-size: 16px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+  .seo-card-icon-squircle svg,
+  .seo-card-icon-squircle i {
+    width: 18px;
+    height: 18px;
+  }
+  .seo-card-header-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .seo-card-header-text .seo-card-title {
+    font-size: 15px;
     font-weight: 800;
     color: #0f172a;
     margin: 0;
+    line-height: 1.3;
+  }
+  .seo-card-header-text .seo-card-subtitle {
+    font-size: 12.5px;
+    color: #64748b;
+    margin: 3px 0 0 0;
+    line-height: 1.35;
+  }
+  .seo-card-header-right {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
-  .seo-card-subtitle {
-    font-size: 12.5px;
-    color: #64748b;
-    margin-top: 3px;
+  .seo-card-action-btn {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 750;
+    color: #2563eb;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    white-space: nowrap;
+    box-sizing: border-box;
+    transition: all 0.18s ease;
+  }
+  .seo-card-action-btn:hover {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+    text-decoration: none;
+  }
+  .seo-card-action-btn svg,
+  .seo-card-action-btn i {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
   }
 
   .form-group {
@@ -129,15 +263,15 @@
     padding: 9px 13px;
     font-size: 13.5px;
     color: #1e293b;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
     background: #ffffff;
     font-family: inherit;
     box-sizing: border-box;
   }
   .form-control:focus {
-    border-color: #10b981;
+    border-color: #1768ff;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.15);
   }
   .form-row {
     display: grid;
@@ -148,10 +282,10 @@
   /* Live Google Snippet Preview */
   .google-serp-preview {
     background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    border: 1.5px solid #e2e8f0;
     border-radius: 12px;
     padding: 16px 20px;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
     font-family: Arial, sans-serif;
   }
   .google-serp-url {
@@ -182,45 +316,36 @@
     margin: 0;
   }
 
-  /* Floating Save Bar */
-  .floating-save-bar {
-    position: fixed;
-    bottom: 24px;
-    left: calc(260px + (100% - 260px) / 2);
-    transform: translateX(-50%);
-    background: #0a1936;
+  /* Save Action Bar (Static at bottom of form - not blocking inputs) */
+  .cms-save-bar {
+    position: relative;
+    background: #0f172a;
     color: #ffffff;
-    padding: 12px 24px;
-    border-radius: 12px;
-    box-shadow: 0 12px 36px rgba(10, 25, 54, 0.35);
+    padding: 14px 24px;
+    border-radius: 14px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 20px;
-    z-index: 1000;
-  }
-  @media (max-width: 991px) {
-    .floating-save-bar {
-      left: 50%;
-      width: 90%;
-      justify-content: space-between;
-    }
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+    margin-top: 30px;
+    margin-bottom: 24px;
   }
 </style>
 
 <div class="seo-container">
 
   <!-- SEO Dedicated Header Banner -->
-  <div class="seo-header">
-    <div class="seo-header-title">
-      <h2><i data-feather="search" style="color:#10b981;"></i> Search Engine Optimization (SEO) &amp; Webmaster Manager</h2>
+  <div class="cms-header">
+    <div class="cms-header-text">
+      <h2><i data-feather="search" style="color:#1768ff;"></i> Search Engine Optimization (SEO) &amp; Webmaster Manager</h2>
       <p>Configure search engine rankings, metadata, Google Search Console verification, social sharing previews, and robots indexing.</p>
     </div>
-    <div style="display: flex; gap: 10px; align-items: center;">
-      <a href="/" target="_blank" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 13px;">
+    <div class="cms-header-actions">
+      <a href="/" target="_blank" class="cms-btn-secondary">
         <i data-feather="external-link" style="width: 14px; height: 14px;"></i> View Live Site
       </a>
-      <button type="button" class="btn btn-primary" onclick="submitSeoForm()" style="background:#10b981; border-color:#10b981; display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 13px;">
-        <i data-feather="save" style="width: 14px; height: 14px;"></i> Save SEO Changes
+      <button type="button" class="cms-btn-primary" onclick="submitSeoForm()">
+        <i data-feather="save" style="width: 14px; height: 14px;"></i> Save All Changes
       </button>
     </div>
   </div>
@@ -228,22 +353,22 @@
   <!-- Dedicated SEO Navigation Tabs -->
   <div class="seo-nav-tabs">
     <button type="button" class="seo-nav-tab {% if seo_tab == 'primary' or not seo_tab %}active{% endif %}" data-tab="primary" onclick="switchSeoTab('primary', this)">
-      <i data-feather="globe" style="width: 16px; height: 16px;"></i> Primary Meta &amp; Canonical
+      <i data-feather="globe"></i> Primary Meta &amp; Canonical
     </button>
     <button type="button" class="seo-nav-tab {% if seo_tab == 'social' %}active{% endif %}" data-tab="social" onclick="switchSeoTab('social', this)">
-      <i data-feather="share-2" style="width: 16px; height: 16px;"></i> OpenGraph &amp; Social
+      <i data-feather="share-2"></i> OpenGraph &amp; Social
     </button>
     <button type="button" class="seo-nav-tab {% if seo_tab == 'webmaster' %}active{% endif %}" data-tab="webmaster" onclick="switchSeoTab('webmaster', this)">
-      <i data-feather="check-circle" style="width: 16px; height: 16px;"></i> Search Console &amp; Verification
+      <i data-feather="check-circle"></i> Search Console &amp; Verification
     </button>
     <button type="button" class="seo-nav-tab {% if seo_tab == 'crawling' %}active{% endif %}" data-tab="crawling" onclick="switchSeoTab('crawling', this)">
-      <i data-feather="cpu" style="width: 16px; height: 16px;"></i> Crawling &amp; Robots.txt
+      <i data-feather="cpu"></i> Crawling &amp; Robots.txt
     </button>
     <button type="button" class="seo-nav-tab {% if seo_tab == 'schema' %}active{% endif %}" data-tab="schema" onclick="switchSeoTab('schema', this)">
-      <i data-feather="code" style="width: 16px; height: 16px;"></i> Schema.org Structured Data
+      <i data-feather="code"></i> Schema.org Structured Data
     </button>
     <button type="button" class="seo-nav-tab {% if seo_tab == 'perpage' %}active{% endif %}" data-tab="perpage" onclick="switchSeoTab('perpage', this)">
-      <i data-feather="file-text" style="width: 16px; height: 16px;"></i> Per-Page Meta Overrides
+      <i data-feather="file-text"></i> Per-Page Meta Overrides
     </button>
   </div>
 
@@ -262,7 +387,7 @@
           <i data-feather="eye" style="width:12px; height:12px; vertical-align:middle;"></i> Live Google Search Result Preview
         </div>
         <div class="google-serp-url">
-          <i data-feather="globe" style="width:12px; height:12px; color:#10b981;"></i>
+          <i data-feather="globe" style="width:12px; height:12px; color:#1768ff;"></i>
           <span>{{ config.canonical_base_url|default:"https://knovaexpo.com" }} &rsaquo;</span>
         </div>
         <a href="#" class="google-serp-title" id="serpPreviewTitle">{{ config.meta_title|default:"KNOVA — Future Begins Here" }}</a>
@@ -271,9 +396,14 @@
 
       <div class="seo-card">
         <div class="seo-card-header">
-          <div>
-            <h3 class="seo-card-title"><i data-feather="search" style="color:#10b981;"></i> Core Meta Tags &amp; Canonical URL</h3>
-            <p class="seo-card-subtitle">Default search engine title, description, and canonical URL served across all public pages.</p>
+          <div class="seo-card-header-left">
+            <div class="seo-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="globe"></i>
+            </div>
+            <div class="seo-card-header-text">
+              <h3 class="seo-card-title">Core Meta Tags &amp; Canonical URL</h3>
+              <p class="seo-card-subtitle">Default search engine title, description, and canonical URL served across all public pages.</p>
+            </div>
           </div>
         </div>
 
@@ -314,9 +444,14 @@
     <div id="seoTabContent-social" class="seo-tab-content" style="{% if seo_tab != 'social' %}display: none;{% endif %}">
       <div class="seo-card">
         <div class="seo-card-header">
-          <div>
-            <h3 class="seo-card-title"><i data-feather="share-2" style="color:#3b82f6;"></i> Social Media Sharing &amp; Open Graph Previews</h3>
-            <p class="seo-card-subtitle">Controls rich link previews when links are shared on WhatsApp, Facebook, LinkedIn, Twitter/X, and iMessage.</p>
+          <div class="seo-card-header-left">
+            <div class="seo-card-icon-squircle" style="background:#f5f3ff; color:#7c3aed;">
+              <i data-feather="share-2"></i>
+            </div>
+            <div class="seo-card-header-text">
+              <h3 class="seo-card-title">Social Media Sharing &amp; Open Graph Previews</h3>
+              <p class="seo-card-subtitle">Controls rich link previews when links are shared on WhatsApp, Facebook, LinkedIn, Twitter/X, and iMessage.</p>
+            </div>
           </div>
         </div>
 
@@ -383,9 +518,14 @@
     <div id="seoTabContent-webmaster" class="seo-tab-content" style="{% if seo_tab != 'webmaster' %}display: none;{% endif %}">
       <div class="seo-card">
         <div class="seo-card-header">
-          <div>
-            <h3 class="seo-card-title"><i data-feather="check-circle" style="color:#059669;"></i> Webmaster &amp; Search Console Verification</h3>
-            <p class="seo-card-subtitle">Connect and verify domain ownership on Google Search Console and Bing Webmaster Tools.</p>
+          <div class="seo-card-header-left">
+            <div class="seo-card-icon-squircle" style="background:#ecfdf5; color:#059669;">
+              <i data-feather="check-circle"></i>
+            </div>
+            <div class="seo-card-header-text">
+              <h3 class="seo-card-title">Webmaster &amp; Search Console Verification</h3>
+              <p class="seo-card-subtitle">Connect and verify domain ownership on Google Search Console and Bing Webmaster Tools.</p>
+            </div>
           </div>
         </div>
 
@@ -427,16 +567,21 @@
     <div id="seoTabContent-crawling" class="seo-tab-content" style="{% if seo_tab != 'crawling' %}display: none;{% endif %}">
       <div class="seo-card">
         <div class="seo-card-header">
-          <div>
-            <h3 class="seo-card-title"><i data-feather="cpu" style="color:#8b5cf6;"></i> Search Engine Indexing &amp; Crawling Controls</h3>
-            <p class="seo-card-subtitle">Manage crawler indexing permissions and dynamic robots.txt file output.</p>
+          <div class="seo-card-header-left">
+            <div class="seo-card-icon-squircle" style="background:#e0f2fe; color:#0284c7;">
+              <i data-feather="cpu"></i>
+            </div>
+            <div class="seo-card-header-text">
+              <h3 class="seo-card-title">Search Engine Indexing &amp; Crawling Controls</h3>
+              <p class="seo-card-subtitle">Manage crawler indexing permissions and dynamic robots.txt file output.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
-            <a href="/robots.txt" target="_blank" class="btn btn-outline-secondary btn-sm" style="font-size:12px; display:inline-flex; align-items:center; gap:4px;">
-              <i data-feather="external-link" style="width:12px; height:12px;"></i> View /robots.txt
+          <div class="seo-card-header-right">
+            <a href="/robots.txt" target="_blank" class="seo-card-action-btn">
+              <i data-feather="external-link"></i> View /robots.txt
             </a>
-            <a href="/sitemap.xml" target="_blank" class="btn btn-outline-secondary btn-sm" style="font-size:12px; display:inline-flex; align-items:center; gap:4px;">
-              <i data-feather="external-link" style="width:12px; height:12px;"></i> View /sitemap.xml
+            <a href="/sitemap.xml" target="_blank" class="seo-card-action-btn">
+              <i data-feather="external-link"></i> View /sitemap.xml
             </a>
           </div>
         </div>
@@ -456,7 +601,12 @@
             <span>Dynamic robots.txt Content</span>
             <span style="font-size:11px; color:#64748b; font-weight:normal;">Served directly at /robots.txt</span>
           </label>
-          <textarea name="robots_txt_content" class="form-control" rows="6" style="font-family:Consolas, Monaco, monospace; font-size:12.5px;">{{ config.robots_txt_content|default:"User-agent: *\nAllow: /\nDisallow: /dashboard/\nDisallow: /admin/\n\nSitemap: https://knovaexpo.com/sitemap.xml" }}</textarea>
+          <textarea name="robots_txt_content" class="form-control" rows="6" style="font-family:Consolas, Monaco, monospace; font-size:12.5px;">{{ config.robots_txt_content|default:"User-agent: *
+Allow: /
+Disallow: /dashboard/
+Disallow: /admin/
+
+Sitemap: https://knovaexpo.com/sitemap.xml" }}</textarea>
           <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Use standard robots.txt directives (User-agent, Disallow, Allow, Sitemap).</div>
         </div>
       </div>
@@ -468,9 +618,14 @@
     <div id="seoTabContent-schema" class="seo-tab-content" style="{% if seo_tab != 'schema' %}display: none;{% endif %}">
       <div class="seo-card">
         <div class="seo-card-header">
-          <div>
-            <h3 class="seo-card-title"><i data-feather="code" style="color:#d97706;"></i> Schema.org Structured Data &amp; Rich Snippets</h3>
-            <p class="seo-card-subtitle">Injected automatically as JSON-LD in the website &lt;head&gt; for Google rich search results.</p>
+          <div class="seo-card-header-left">
+            <div class="seo-card-icon-squircle" style="background:#faf5ff; color:#9333ea;">
+              <i data-feather="code"></i>
+            </div>
+            <div class="seo-card-header-text">
+              <h3 class="seo-card-title">Schema.org Structured Data &amp; Rich Snippets</h3>
+              <p class="seo-card-subtitle">Injected automatically as JSON-LD in the website &lt;head&gt; for Google rich search results.</p>
+            </div>
           </div>
           <label class="switch" style="position:relative; display:inline-block; width:44px; height:24px;">
             <input type="checkbox" name="enable_schema_org" {% if config.enable_schema_org %}checked{% endif %} style="opacity:0; width:0; height:0;">
@@ -512,9 +667,14 @@
     <div id="seoTabContent-perpage" class="seo-tab-content" style="{% if seo_tab != 'perpage' %}display: none;{% endif %}">
       <div class="seo-card">
         <div class="seo-card-header">
-          <div>
-            <h3 class="seo-card-title"><i data-feather="file-text" style="color:#0ea5e9;"></i> Per-Page Meta Title &amp; Description Overrides</h3>
-            <p class="seo-card-subtitle">Override the global default meta title and description for specific public pages.</p>
+          <div class="seo-card-header-left">
+            <div class="seo-card-icon-squircle" style="background:#fef3c7; color:#d97706;">
+              <i data-feather="file-text"></i>
+            </div>
+            <div class="seo-card-header-text">
+              <h3 class="seo-card-title">Per-Page Meta Title &amp; Description Overrides</h3>
+              <p class="seo-card-subtitle">Override the global default meta title and description for specific public pages.</p>
+            </div>
           </div>
         </div>
 
@@ -585,14 +745,14 @@
       </div>
     </div>
 
-    <!-- Floating Sticky Save Bar -->
-    <div class="floating-save-bar">
-      <div style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600;">
-        <i data-feather="info" style="color:#10b981; width:16px; height:16px;"></i>
-        <span>Remember to save your changes after editing SEO fields.</span>
+    <!-- Static Bottom Save Bar -->
+    <div class="cms-save-bar">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <i data-feather="info" style="color:#60a5fa; width:18px; height:18px;"></i>
+        <span style="font-size:13.5px; font-weight:600;">Remember to save your changes to publish updated SEO tags and webmaster verification tokens live.</span>
       </div>
-      <button type="button" class="btn btn-primary" onclick="submitSeoForm()" style="background:#10b981; border-color:#10b981; font-weight:700; padding:8px 20px; font-size:13px;">
-        Save Changes
+      <button type="button" class="cms-btn-primary" onclick="submitSeoForm()">
+        <i data-feather="save" style="width: 14px; height: 14px;"></i> Save All Changes
       </button>
     </div>
 
@@ -645,4 +805,3 @@
   });
 </script>
 {% endblock %}
-

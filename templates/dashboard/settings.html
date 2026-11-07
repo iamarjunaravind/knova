@@ -6,42 +6,86 @@
 {% block page_title %}Backup, Restore & Settings{% endblock %}
 
 {% block content %}
+<style>
+  .settings-nav-tabs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    background: #e2e8f0;
+    padding: 5px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+  }
+  @media (max-width: 991px) {
+    .settings-nav-tabs {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .settings-nav-tab {
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-size: 12.5px;
+    font-weight: 750;
+    color: #475569;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    padding: 0 8px;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+  .settings-nav-tab i, .settings-nav-tab svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    stroke-width: 2.2px;
+  }
+  .settings-nav-tab.active {
+    background: #ffffff;
+    color: #1768ff;
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  }
+  .settings-nav-tab:hover:not(.active) {
+    color: #0f172a;
+    background: rgba(255, 255, 255, 0.65);
+  }
+</style>
+
 <!-- Top Header Banner -->
-<div class="glass-card" style="padding: 20px 24px; margin-bottom: 22px; background: linear-gradient(135deg, #0a1936 0%, #1e293b 100%); color: #ffffff; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 25px -5px rgba(10, 25, 54, 0.25);">
-  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-    <div>
-      <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(99,102,241,0.25); border:1px solid rgba(99,102,241,0.4); padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; color:#a5b4fc; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:6px;">
-        <i data-feather="database" style="width:12px; height:12px;"></i> Central Data Management &amp; Settings
-      </div>
-      <h2 style="margin:0 0 4px 0; font-size:20px; font-weight:800; color:#ffffff;">System Backup, Data Sync &amp; Site Configuration</h2>
-      <p style="margin:0; font-size:13px; color:#94a3b8; max-width:700px; line-height:1.4;">
-        Manage full database snapshots, one-click restoration, bulk CSV spreadsheet imports, user profile exports, and site SEO meta parameters in one place.
-      </p>
-    </div>
+<div class="cms-header" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:22px 26px; margin-bottom:22px; box-shadow:0 4px 16px rgba(15,23,42,0.03); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+  <div>
+    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 4px 0; display:flex; align-items:center; gap:10px;">
+      <i data-feather="settings" style="color:#1768ff;"></i> Backup, Restore &amp; System Configuration
+    </h2>
+    <p style="font-size:13px; color:#64748b; margin:0; line-height:1.4;">
+      Manage database backups, snapshots, bulk CSV spreadsheet imports, and geographic country catalogs.
+    </p>
   </div>
 </div>
 
 <!-- Unified Navigation Tabs -->
-<div style="display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">
-  <button type="button" onclick="switchTab('backup')" id="tabBtn-backup" class="tab-btn"
-          style="padding:10px 18px; border-radius:8px; font-size:13px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s;">
-    <i data-feather="database" style="width:16px; height:16px;"></i> Database Backup &amp; Restore
+<div class="settings-nav-tabs">
+  <button type="button" onclick="switchTab('backup')" id="tabBtn-backup" class="settings-nav-tab">
+    <i data-feather="database"></i> Backup &amp; Restore
   </button>
-  <button type="button" onclick="switchTab('import')" id="tabBtn-import" class="tab-btn"
-          style="padding:10px 18px; border-radius:8px; font-size:13px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s;">
-    <i data-feather="upload-cloud" style="width:16px; height:16px;"></i> Bulk Data Import &amp; Sync
+  <button type="button" onclick="switchTab('import')" id="tabBtn-import" class="settings-nav-tab">
+    <i data-feather="upload-cloud"></i> Bulk Data Import
   </button>
-  <button type="button" onclick="switchTab('countries')" id="tabBtn-countries" class="tab-btn"
-          style="padding:10px 18px; border-radius:8px; font-size:13px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s;">
-    <i data-feather="globe" style="width:16px; height:16px;"></i> Countries Catalog
+  <button type="button" onclick="switchTab('countries')" id="tabBtn-countries" class="settings-nav-tab">
+    <i data-feather="globe"></i> Countries Catalog
   </button>
-  <button type="button" onclick="switchTab('export')" id="tabBtn-export" class="tab-btn"
-          style="padding:10px 18px; border-radius:8px; font-size:13px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s;">
-    <i data-feather="download" style="width:16px; height:16px;"></i> Data Export Center
+  <button type="button" onclick="switchTab('export')" id="tabBtn-export" class="settings-nav-tab">
+    <i data-feather="download"></i> Data Export Center
   </button>
-  <button type="button" onclick="switchTab('settings')" id="tabBtn-settings" class="tab-btn"
-          style="padding:10px 18px; border-radius:8px; font-size:13px; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s;">
-    <i data-feather="layout" style="width:16px; height:16px;"></i> Content &amp; SEO Hub
+  <button type="button" onclick="switchTab('settings')" id="tabBtn-settings" class="settings-nav-tab">
+    <i data-feather="layout"></i> Content &amp; SEO Hub
   </button>
 </div>
 
@@ -826,9 +870,7 @@ function switchTab(tabId) {
     const btn = document.getElementById('tabBtn-' + t);
     if (el) el.style.display = 'none';
     if (btn) {
-      btn.style.background = '#f1f5f9';
-      btn.style.color = '#475569';
-      btn.style.boxShadow = 'none';
+      btn.classList.remove('active');
     }
   });
 
@@ -837,9 +879,7 @@ function switchTab(tabId) {
   const activeBtn = document.getElementById('tabBtn-' + tabId);
   if (activeEl) activeEl.style.display = 'block';
   if (activeBtn) {
-    activeBtn.style.background = '#4f46e5';
-    activeBtn.style.color = '#ffffff';
-    activeBtn.style.boxShadow = '0 2px 4px rgba(79, 70, 229, 0.25)';
+    activeBtn.classList.add('active');
   }
 
   // Update URL search query without full reload
