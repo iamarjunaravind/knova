@@ -16,10 +16,10 @@
   .cms-header {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 24px 28px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    border-radius: 14px;
+    padding: 18px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -27,67 +27,135 @@
     gap: 16px;
   }
   .cms-header-title h2 {
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 800;
     color: #0f172a;
-    margin: 0 0 6px 0;
+    margin: 0 0 4px 0;
     display: flex;
     align-items: center;
     gap: 10px;
+    letter-spacing: -0.3px;
   }
   .cms-header-title p {
-    font-size: 13.5px;
+    font-size: 13px;
     color: #64748b;
     margin: 0;
+    line-height: 1.4;
+  }
+  .cms-header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .cms-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 38px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    color: #334155;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .cms-btn-secondary:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+  .cms-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 38px;
+    padding: 0 18px;
+    border-radius: 8px;
+    font-weight: 750;
+    font-size: 13px;
+    color: #ffffff;
+    background: #1768ff;
+    border: 1px solid #1768ff;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 2px 6px rgba(23, 104, 255, 0.22);
+  }
+  .cms-btn-primary:hover {
+    background: #0d54d9;
+    border-color: #0d54d9;
   }
 
-  /* Main Top Navigation Tabs */
+  /* Main Top Navigation Tabs - Uniform 7-Col Software Grid */
   .cms-nav-tabs {
-    display: flex;
-    gap: 8px;
-    background: #f1f5f9;
-    padding: 6px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    background: #e2e8f0;
+    padding: 5px;
     border-radius: 12px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+  @media (max-width: 1200px) {
+    .cms-nav-tabs {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  @media (max-width: 768px) {
+    .cms-nav-tabs {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
   .cms-nav-tab {
-    flex: 1;
-    min-width: 140px;
-    text-align: center;
-    padding: 10px 16px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #475569;
-    background: transparent;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
+    height: 42px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 7px;
+    font-size: 12.5px;
+    font-weight: 750;
+    color: #475569;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    padding: 0 8px;
     text-decoration: none;
+    box-sizing: border-box;
+  }
+  .cms-nav-tab i, .cms-nav-tab svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    stroke-width: 2.2px;
   }
   .cms-nav-tab.active {
     background: #ffffff;
     color: #1768ff;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
   }
   .cms-nav-tab:hover:not(.active) {
     color: #0f172a;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.65);
   }
 
   /* Cards & Sections */
   .cms-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .cms-card:hover {
+    border-color: #cbd5e1;
   }
   .cms-card-header {
     display: flex;
@@ -122,11 +190,13 @@
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
-    padding: 16px;
+    padding: 16px 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 14px;
+    min-height: 84px;
+    box-sizing: border-box;
     transition: all 0.2s ease;
   }
   .toggle-item-card:hover {
@@ -347,37 +417,38 @@
   .cms-section-filter-bar {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 12px 18px;
-    margin-bottom: 20px;
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-bottom: 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+    gap: 14px;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
     position: relative;
     z-index: 1;
   }
   .cms-filter-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex: 1;
-    min-width: 280px;
+    min-width: 0;
   }
   .cms-filter-label {
-    font-size: 13px;
-    font-weight: 700;
-    color: #1e293b;
+    font-size: 12.5px;
+    font-weight: 750;
+    color: #334155;
     margin: 0;
     white-space: nowrap;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
+    letter-spacing: -0.1px;
   }
   .cms-section-select {
-    padding: 8px 14px;
+    height: 38px;
+    padding: 0 12px;
     border: 1.5px solid #cbd5e1;
     border-radius: 8px;
     font-size: 13px;
@@ -385,7 +456,7 @@
     color: #0f172a;
     background-color: #f8fafc;
     cursor: pointer;
-    max-width: 440px;
+    max-width: 480px;
     width: 100%;
     transition: all 0.2s ease;
   }
@@ -399,20 +470,23 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
   }
   .btn-cms-action {
+    height: 38px;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     color: #334155;
     font-size: 12px;
-    font-weight: 700;
-    padding: 7px 14px;
+    font-weight: 750;
+    padding: 0 14px;
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 6px;
     transition: all 0.15s ease;
+    white-space: nowrap;
   }
   .btn-cms-action:hover {
     background: #e2e8f0;
@@ -425,11 +499,11 @@
     transition: all 0.2s ease;
   }
   .cms-card-collapsible.is-collapsed {
-    padding-top: 16px;
-    padding-bottom: 16px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     margin-bottom: 12px;
     border-color: #e2e8f0;
-    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.02);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
   }
   .cms-card-collapsible.is-collapsed .cms-card-header {
     margin-bottom: 0;
@@ -446,7 +520,22 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    transition: background 0.15s ease;
+    transition: all 0.15s ease;
+  }
+  .cms-card-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .cms-card-icon-squircle {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
   }
   .cms-collapsible-header:hover .cms-card-title {
     color: #2563eb;
@@ -456,17 +545,19 @@
     align-items: center;
     gap: 6px;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 750;
     color: #475569;
-    background: #f1f5f9;
+    background: #f8fafc;
     border: 1px solid #e2e8f0;
     padding: 5px 12px;
     border-radius: 20px;
     transition: all 0.2s ease;
+    flex-shrink: 0;
   }
   .cms-collapsible-header:hover .cms-card-toggle-pill {
     background: #e2e8f0;
     color: #0f172a;
+    border-color: #cbd5e1;
   }
   .cms-card-collapsible:not(.is-collapsed) .cms-card-toggle-pill {
     background: #eff6ff;
@@ -477,13 +568,136 @@
   .cms-card-toggle-pill svg,
   .cms-card-toggle-pill i {
     transition: transform 0.22s ease;
-    width: 14px;
-    height: 14px;
+    width: 13px;
+    height: 13px;
   }
   .cms-card-collapsible:not(.is-collapsed) .cms-card-toggle-pill .feather-chevron-down,
   .cms-card-collapsible:not(.is-collapsed) .cms-card-toggle-pill svg,
   .cms-card-collapsible:not(.is-collapsed) .cms-card-toggle-pill i {
     transform: rotate(180deg);
+  }
+
+  /* Admin Quick Notice Banner */
+  .cms-banner-card {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e0e7ff 100%);
+    border: 1.5px solid #bfdbfe;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.04);
+  }
+  .cms-banner-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.22);
+  }
+  .cms-banner-icon svg, .cms-banner-icon i {
+    width: 20px;
+    height: 20px;
+  }
+  .cms-banner-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .cms-banner-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: #1e3a8a;
+    letter-spacing: -0.2px;
+  }
+  .cms-banner-desc {
+    margin: 3px 0 0 0;
+    font-size: 12.5px;
+    color: #475569;
+    line-height: 1.4;
+  }
+  .cms-banner-desc a {
+    color: #2563eb;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+  .cms-banner-action {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 12.5px;
+    font-weight: 750;
+    background: #ffffff;
+    color: #2563eb;
+    border: 1.5px solid #bfdbfe;
+    padding: 8px 16px;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.08);
+  }
+  .cms-banner-action:hover {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+  }
+  .cms-banner-action svg, .cms-banner-action i {
+    width: 14px;
+    height: 14px;
+  }
+  @media (max-width: 860px) {
+    .cms-banner-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  /* Link Slots Uniform Layout */
+  .cms-link-slot-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    transition: all 0.15s ease;
+  }
+  .cms-link-slot-card:hover {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  }
+  .cms-link-slot-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .cms-link-badge {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: #475569;
+    background: #e2e8f0;
+    padding: 2px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .cms-link-slot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 14px;
+  }
+  @media (max-width: 680px) {
+    .cms-link-slot-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
 </style>
@@ -496,11 +710,11 @@
       <h2><i data-feather="layout" style="color:#1768ff;"></i> Website Content, Sections &amp; Page Editors</h2>
       <p>Configure homepage sections, add dynamic custom sections, disable navbar links, and edit every text across public service pages.</p>
     </div>
-    <div style="display: flex; gap: 10px; align-items: center;">
-      <a href="/" target="_blank" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 13px;">
+    <div class="cms-header-actions">
+      <a href="/" target="_blank" class="cms-btn-secondary">
         <i data-feather="external-link" style="width: 14px; height: 14px;"></i> View Live Site
       </a>
-      <button type="button" class="btn btn-primary" onclick="submitActiveCmsForm()" style="display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 13px;">
+      <button type="button" class="cms-btn-primary" onclick="submitActiveCmsForm()">
         <i data-feather="save" style="width: 14px; height: 14px;"></i> Save All Changes
       </button>
     </div>
@@ -509,25 +723,25 @@
   <!-- Main Navigation Tabs -->
   <div class="cms-nav-tabs">
     <button type="button" class="cms-nav-tab {% if active_tab == 'sections' %}active{% endif %}" data-tab="sections" onclick="switchCmsTab('sections', this)">
-      <i data-feather="layers" style="width: 16px; height: 16px;"></i> Section Visibility &amp; Hide/Show
+      <i data-feather="layers"></i> Section Visibility
     </button>
     <button type="button" class="cms-nav-tab {% if active_tab == 'homepage' %}active{% endif %}" data-tab="homepage" onclick="switchCmsTab('homepage', this)">
-      <i data-feather="home" style="width: 16px; height: 16px;"></i> Homepage Content
+      <i data-feather="home"></i> Homepage
     </button>
     <button type="button" class="cms-nav-tab {% if active_tab == 'about' %}active{% endif %}" data-tab="about" onclick="switchCmsTab('about', this)">
-      <i data-feather="info" style="width: 16px; height: 16px;"></i> About Us Page (/about/)
+      <i data-feather="info"></i> About Page
     </button>
     <button type="button" class="cms-nav-tab {% if active_tab == 'events' %}active{% endif %}" data-tab="events" onclick="switchCmsTab('events', this)">
-      <i data-feather="calendar" style="width: 16px; height: 16px;"></i> Events Page (/events/)
+      <i data-feather="calendar"></i> Events Page
     </button>
     <button type="button" class="cms-nav-tab {% if active_tab == 'services' %}active{% endif %}" data-tab="services" onclick="switchCmsTab('services', this)">
-      <i data-feather="grid" style="width: 16px; height: 16px;"></i> Other Pages &amp; Modules
+      <i data-feather="grid"></i> Pages &amp; Modules
     </button>
     <button type="button" class="cms-nav-tab {% if active_tab == 'navbar' %}active{% endif %}" data-tab="navbar" onclick="switchCmsTab('navbar', this)">
-      <i data-feather="navigation" style="width: 16px; height: 16px;"></i> Navbar &amp; Link Locks
+      <i data-feather="navigation"></i> Navbar Links
     </button>
     <button type="button" class="cms-nav-tab {% if active_tab == 'footer' %}active{% endif %}" data-tab="footer" onclick="switchCmsTab('footer', this)">
-      <i data-feather="compass" style="width: 16px; height: 16px;"></i> Footer &amp; Social Links
+      <i data-feather="compass"></i> Footer &amp; Social
     </button>
   </div>
 
@@ -5155,20 +5369,18 @@ Connect with leading universities, explore scholarships and discover the possibi
     <!-- Tab: Footer & Social Links -->
     <div id="cmsTabContent-footer" class="cms-tab-content" style="{% if active_tab != 'footer' %}display: none;{% endif %}">
       <!-- Quick Navigation & Admin Notice Banner -->
-      <div style="background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%); border: 1.5px solid #bfdbfe; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <div style="width: 42px; height: 42px; border-radius: 10px; background: #2563eb; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(37,99,235,0.25);">
-            <i data-feather="compass" style="width:22px; height:22px;"></i>
-          </div>
-          <div>
-            <h4 style="margin: 0; font-size: 15px; font-weight: 800; color: #1e3a8a;">Footer Links & Navigation Columns Editor</h4>
-            <p style="margin: 3px 0 0 0; font-size: 12.5px; color: #475569;">
-              Edit column headings (<strong>Explore</strong>, <strong>Participate</strong>, <strong>Connect</strong>), link labels, and URLs below. You can also edit them directly in the <a href="/portal/admin/core/siteconfiguration/1/change/" target="_blank" style="color: #2563eb; font-weight: 750; text-decoration: underline;">Django Admin Console ↗</a>.
-            </p>
-          </div>
+      <div class="cms-banner-card">
+        <div class="cms-banner-icon">
+          <i data-feather="compass"></i>
         </div>
-        <a href="/portal/admin/core/siteconfiguration/1/change/" target="_blank" class="btn btn-outline-primary" style="font-size: 12.5px; font-weight: 750; background: #ffffff; padding: 8px 16px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; border-color: #2563eb; color: #2563eb;">
-          <i data-feather="external-link" style="width:14px; height:14px;"></i> Open in Django Admin
+        <div class="cms-banner-body">
+          <h4 class="cms-banner-title">Footer Navigation Columns &amp; Links Editor</h4>
+          <p class="cms-banner-desc">
+            Edit column headings (<strong>Explore</strong>, <strong>Participate</strong>, <strong>Connect</strong>), link labels, and destination URLs below. All settings can also be managed directly in the <a href="/portal/admin/core/siteconfiguration/1/change/" target="_blank">Django Admin Console ↗</a>.
+          </p>
+        </div>
+        <a href="/portal/admin/core/siteconfiguration/1/change/" target="_blank" class="cms-banner-action">
+          <i data-feather="external-link"></i> Open in Django Admin
         </a>
       </div>
 
@@ -5180,10 +5392,10 @@ Connect with leading universities, explore scholarships and discover the possibi
           </label>
           <select id="footerSectionDropdown" class="cms-section-select" onchange="filterTabSection('cmsTabContent-footer', 'footerSectionDropdown', this.value)">
             <option value="all">⚡ View All Sections (Dropdown Accordion)</option>
-            <option value="sec-footer-tagline">📝 1. Footer Tagline &amp; Copyright</option>
-            <option value="sec-footer-nav-col2">🧭 2. Column 2: {{ config.footer_col2_title|default:"Explore" }} (Title &amp; Links)</option>
-            <option value="sec-footer-nav-col3">🎟️ 3. Column 3: {{ config.footer_col3_title|default:"Participate" }} (Title &amp; Links)</option>
-            <option value="sec-footer-nav-col4">📬 4. Column 4: {{ config.footer_col4_title|default:"Connect" }} &amp; Legal (Title &amp; Links)</option>
+            <option value="sec-footer-tagline">📄 1. Footer Tagline &amp; Copyright</option>
+            <option value="sec-footer-nav-col2">🧭 2. Column 2: {{ config.footer_col2_title|default:'Explore' }} (Title &amp; Links)</option>
+            <option value="sec-footer-nav-col3">🎟️ 3. Column 3: {{ config.footer_col3_title|default:'Participate' }} (Title &amp; Links)</option>
+            <option value="sec-footer-nav-col4">📬 4. Column 4: {{ config.footer_col4_title|default:'Connect' }} &amp; Legal (Title &amp; Links)</option>
             <option value="sec-footer-contact">📞 5. Contact &amp; Venue Details</option>
             <option value="sec-footer-social">🌐 6. Social Media Profile Links &amp; Titles</option>
           </select>
@@ -5201,16 +5413,19 @@ Connect with leading universities, explore scholarships and discover the possibi
       <!-- 1. Footer Tagline & Copyright -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-tagline">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-tagline', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="file-text" style="color:#0ea5e9;"></i> Footer Tagline &amp; Copyright</h3>
-            <p class="cms-card-subtitle">Footer brand tagline, copyright text, and licensing disclosure</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#e0f2fe; color:#0284c7;">
+              <i data-feather="file-text"></i>
+            </div>
+            <div>
+              <h3 class="cms-card-title">Footer Tagline &amp; Copyright</h3>
+              <p class="cms-card-subtitle">Footer brand tagline, copyright text, and licensing disclosure</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span class="cms-card-toggle-pill">
-              <span class="cms-toggle-text">Expand</span>
-              <i data-feather="chevron-down"></i>
-            </span>
-          </div>
+          <span class="cms-card-toggle-pill">
+            <span class="cms-toggle-text">Expand</span>
+            <i data-feather="chevron-down"></i>
+          </span>
         </div>
         <div class="cms-card-body">
           <div class="form-group">
@@ -5227,20 +5442,23 @@ Connect with leading universities, explore scholarships and discover the possibi
       <!-- 2. Column 2 Navigation: Title & Links -->
       <div class="cms-card cms-card-collapsible" id="sec-footer-nav-col2">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-nav-col2', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="compass" style="color:#0ea5e9;"></i> Column 2 Navigation: {{ config.footer_col2_title|default:"Explore" }}</h3>
-            <p class="cms-card-subtitle">Customize the column header title, link labels, and destination URLs</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="compass"></i>
+            </div>
+            <div>
+              <h3 class="cms-card-title">Column 2 Navigation: {{ config.footer_col2_title|default:'Explore' }}</h3>
+              <p class="cms-card-subtitle">Customize the column header title, link labels, and destination URLs</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span class="cms-card-toggle-pill">
-              <span class="cms-toggle-text">Collapse</span>
-              <i data-feather="chevron-down"></i>
-            </span>
-          </div>
+          <span class="cms-card-toggle-pill">
+            <span class="cms-toggle-text">Collapse</span>
+            <i data-feather="chevron-down"></i>
+          </span>
         </div>
         <div class="cms-card-body">
-          <div class="form-group" style="margin-bottom: 20px; background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 14px 16px;">
-            <label class="form-label" style="font-weight: 800; font-size: 13px; color: #1e3a8a;">Column 2 Header / Section Title</label>
+          <div class="cms-column-title-box theme-col2" style="background:#f0f7ff; border:1.5px solid #bfdbfe; border-radius:10px; padding:14px 16px; margin-bottom:20px;">
+            <label class="form-label" style="font-weight: 800; font-size: 12.5px; color: #1e3a8a; margin-bottom: 6px;">Column 2 Header / Section Title</label>
             <input type="text" name="footer_col2_title" class="form-control" value="{{ config.footer_col2_title|default:'Explore' }}" placeholder="e.g. Explore" style="font-weight: 700; font-size: 14px; background: #fff;">
             <span style="font-size: 11.5px; color: #3b82f6; margin-top: 4px; display: block;">Displayed at the top of the 2nd footer column.</span>
           </div>
@@ -5250,9 +5468,11 @@ Connect with leading universities, explore scholarships and discover the possibi
 
           <div style="display: flex; flex-direction: column; gap: 12px;">
             <!-- Col 2 Link 1 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #1</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #1</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col2_link1_text" class="form-control" value="{{ config.footer_col2_link1_text }}" placeholder="e.g. About KNOVA">
@@ -5265,12 +5485,14 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 2 Link 2 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #2</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #2</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
-                  <input type="text" name="footer_col2_link2_text" class="form-control" value="{{ config.footer_col2_link2_text }}" placeholder="e.g. Events & Experiences">
+                  <input type="text" name="footer_col2_link2_text" class="form-control" value="{{ config.footer_col2_link2_text }}" placeholder="e.g. Events &amp; Experiences">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Destination URL</label>
@@ -5280,9 +5502,11 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 2 Link 3 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #3</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #3</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col2_link3_text" class="form-control" value="{{ config.footer_col2_link3_text }}" placeholder="e.g. Speakers">
@@ -5295,9 +5519,11 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 2 Link 4 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #4</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #4</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col2_link4_text" class="form-control" value="{{ config.footer_col2_link4_text }}" placeholder="e.g. Participating Institutions">
@@ -5310,9 +5536,11 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 2 Link 5 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #5</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #5</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col2_link5_text" class="form-control" value="{{ config.footer_col2_link5_text }}" placeholder="e.g. Education Opportunities">
@@ -5325,9 +5553,11 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 2 Link 6 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #6 (ADDITIONAL)</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #6 (Optional)</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col2_link6_text" class="form-control" value="{{ config.footer_col2_link6_text }}" placeholder="Optional additional link">
@@ -5345,20 +5575,23 @@ Connect with leading universities, explore scholarships and discover the possibi
       <!-- 3. Column 3 Navigation: Title & Links -->
       <div class="cms-card cms-card-collapsible" id="sec-footer-nav-col3">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-nav-col3', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="check-square" style="color:#6366f1;"></i> Column 3 Navigation: {{ config.footer_col3_title|default:"Participate" }}</h3>
-            <p class="cms-card-subtitle">Customize the column header title, link labels, and destination URLs</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f5f3ff; color:#7c3aed;">
+              <i data-feather="check-square"></i>
+            </div>
+            <div>
+              <h3 class="cms-card-title">Column 3 Navigation: {{ config.footer_col3_title|default:'Participate' }}</h3>
+              <p class="cms-card-subtitle">Customize the column header title, link labels, and destination URLs</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span class="cms-card-toggle-pill">
-              <span class="cms-toggle-text">Collapse</span>
-              <i data-feather="chevron-down"></i>
-            </span>
-          </div>
+          <span class="cms-card-toggle-pill">
+            <span class="cms-toggle-text">Collapse</span>
+            <i data-feather="chevron-down"></i>
+          </span>
         </div>
         <div class="cms-card-body">
-          <div class="form-group" style="margin-bottom: 20px; background: #f5f3ff; border: 1.5px solid #ddd6fe; border-radius: 10px; padding: 14px 16px;">
-            <label class="form-label" style="font-weight: 800; font-size: 13px; color: #5b21b6;">Column 3 Header / Section Title</label>
+          <div class="cms-column-title-box theme-col3" style="background:#f5f3ff; border:1.5px solid #ddd6fe; border-radius:10px; padding:14px 16px; margin-bottom:20px;">
+            <label class="form-label" style="font-weight: 800; font-size: 12.5px; color: #5b21b6; margin-bottom: 6px;">Column 3 Header / Section Title</label>
             <input type="text" name="footer_col3_title" class="form-control" value="{{ config.footer_col3_title|default:'Participate' }}" placeholder="e.g. Participate" style="font-weight: 700; font-size: 14px; background: #fff;">
             <span style="font-size: 11.5px; color: #7c3aed; margin-top: 4px; display: block;">Displayed at the top of the 3rd footer column.</span>
           </div>
@@ -5368,9 +5601,11 @@ Connect with leading universities, explore scholarships and discover the possibi
 
           <div style="display: flex; flex-direction: column; gap: 12px;">
             <!-- Col 3 Link 1 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #1</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #1</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col3_link1_text" class="form-control" value="{{ config.footer_col3_link1_text }}" placeholder="e.g. Register for Expo">
@@ -5383,9 +5618,11 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 3 Link 2 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #2</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #2</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col3_link2_text" class="form-control" value="{{ config.footer_col3_link2_text }}" placeholder="e.g. Institutional Participation">
@@ -5398,9 +5635,11 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 3 Link 3 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #3</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #3</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col3_link3_text" class="form-control" value="{{ config.footer_col3_link3_text }}" placeholder="e.g. Become a Speaker">
@@ -5413,9 +5652,11 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 3 Link 4 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #4</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #4</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col3_link4_text" class="form-control" value="{{ config.footer_col3_link4_text }}" placeholder="e.g. Become a Sponsor">
@@ -5428,24 +5669,28 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 3 Link 5 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #5 (ADDITIONAL)</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #5 (Optional)</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col3_link5_text" class="form-control" value="{{ config.footer_col3_link5_text }}" placeholder="Optional additional link">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Destination URL</label>
-                  <input type="text" name="footer_col3_link5_url" class="form-control" value="{{ config.footer_col3_link5_url }}" placeholder="e.g. /challenge/">
+                  <input type="text" name="footer_col3_link5_url" class="form-control" value="{{ config.footer_col3_link5_url }}" placeholder="e.g. /scholarships/">
                 </div>
               </div>
             </div>
 
             <!-- Col 3 Link 6 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LINK #6 (ADDITIONAL)</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Link #6 (Optional)</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col3_link6_text" class="form-control" value="{{ config.footer_col3_link6_text }}" placeholder="Optional additional link">
@@ -5463,20 +5708,23 @@ Connect with leading universities, explore scholarships and discover the possibi
       <!-- 4. Column 4: Connect & Legal -->
       <div class="cms-card cms-card-collapsible" id="sec-footer-nav-col4">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-nav-col4', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="mail" style="color:#0ea5e9;"></i> Column 4: {{ config.footer_col4_title|default:"Connect" }} &amp; Legal Compliance</h3>
-            <p class="cms-card-subtitle">Customize the connect column title, routing links, and legal/privacy policy URLs</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ecfdf5; color:#059669;">
+              <i data-feather="mail"></i>
+            </div>
+            <div>
+              <h3 class="cms-card-title">Column 4: {{ config.footer_col4_title|default:'Connect' }} &amp; Legal Compliance</h3>
+              <p class="cms-card-subtitle">Customize the connect column title, routing links, and legal/privacy policy URLs</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span class="cms-card-toggle-pill">
-              <span class="cms-toggle-text">Collapse</span>
-              <i data-feather="chevron-down"></i>
-            </span>
-          </div>
+          <span class="cms-card-toggle-pill">
+            <span class="cms-toggle-text">Collapse</span>
+            <i data-feather="chevron-down"></i>
+          </span>
         </div>
         <div class="cms-card-body">
-          <div class="form-group" style="margin-bottom: 20px; background: #ecfdf5; border: 1.5px solid #a7f3d0; border-radius: 10px; padding: 14px 16px;">
-            <label class="form-label" style="font-weight: 800; font-size: 13px; color: #065f46;">Column 4 Header / Section Title</label>
+          <div class="cms-column-title-box theme-col4" style="background:#ecfdf5; border:1.5px solid #a7f3d0; border-radius:10px; padding:14px 16px; margin-bottom:20px;">
+            <label class="form-label" style="font-weight: 800; font-size: 12.5px; color: #065f46; margin-bottom: 6px;">Column 4 Header / Section Title</label>
             <input type="text" name="footer_col4_title" class="form-control" value="{{ config.footer_col4_title|default:'Connect' }}" placeholder="e.g. Connect" style="font-weight: 700; font-size: 14px; background: #fff;">
             <span style="font-size: 11.5px; color: #059669; margin-top: 4px; display: block;">Displayed at the top of the 4th footer column.</span>
           </div>
@@ -5485,9 +5733,11 @@ Connect with leading universities, explore scholarships and discover the possibi
 
           <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 22px;">
             <!-- Col 4 Link 1 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">CONNECT LINK #1</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Connect Link #1</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col4_link1_text" class="form-control" value="{{ config.footer_col4_link1_text }}" placeholder="e.g. Contact Us">
@@ -5500,9 +5750,11 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 4 Link 2 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">CONNECT LINK #2</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Connect Link #2</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col4_link2_text" class="form-control" value="{{ config.footer_col4_link2_text }}" placeholder="e.g. Event Coordination">
@@ -5515,9 +5767,11 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 4 Link 3 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">CONNECT LINK #3</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Connect Link #3</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col4_link3_text" class="form-control" value="{{ config.footer_col4_link3_text }}" placeholder="e.g. Institutional Outreach">
@@ -5530,9 +5784,11 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Col 4 Link 4 -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">CONNECT LINK #4 (OPTIONAL)</div>
-              <div class="form-row">
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge">Connect Link #4 (Optional)</span>
+              </div>
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Link Title / Label</label>
                   <input type="text" name="footer_col4_link4_text" class="form-control" value="{{ config.footer_col4_link4_text }}" placeholder="Optional connect link">
@@ -5554,9 +5810,11 @@ Connect with leading universities, explore scholarships and discover the possibi
 
             <div style="display: flex; flex-direction: column; gap: 12px;">
               <!-- Legal Link 1 -->
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-                <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LEGAL LINK #1</div>
-                <div class="form-row">
+              <div class="cms-link-slot-card">
+                <div class="cms-link-slot-header">
+                  <span class="cms-link-badge">Legal Link #1</span>
+                </div>
+                <div class="cms-link-slot-grid">
                   <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label">Link Title / Label</label>
                     <input type="text" name="footer_legal_link1_text" class="form-control" value="{{ config.footer_legal_link1_text }}" placeholder="e.g. Privacy Policy">
@@ -5569,31 +5827,35 @@ Connect with leading universities, explore scholarships and discover the possibi
               </div>
 
               <!-- Legal Link 2 -->
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-                <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LEGAL LINK #2</div>
-                <div class="form-row">
+              <div class="cms-link-slot-card">
+                <div class="cms-link-slot-header">
+                  <span class="cms-link-badge">Legal Link #2</span>
+                </div>
+                <div class="cms-link-slot-grid">
                   <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label">Link Title / Label</label>
-                    <input type="text" name="footer_legal_link2_text" class="form-control" value="{{ config.footer_legal_link2_text }}" placeholder="e.g. Terms & Conditions">
+                    <input type="text" name="footer_legal_link2_text" class="form-control" value="{{ config.footer_legal_link2_text }}" placeholder="e.g. Terms &amp; Conditions">
                   </div>
                   <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label">Destination URL</label>
-                    <input type="text" name="footer_legal_link2_url" class="form-control" value="{{ config.footer_legal_link2_url }}" placeholder="e.g. /terms-conditions/">
+                    <input type="text" name="footer_legal_link2_url" class="form-control" value="{{ config.footer_legal_link2_url }}" placeholder="e.g. /terms/">
                   </div>
                 </div>
               </div>
 
               <!-- Legal Link 3 -->
-              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-                <div style="font-size: 11.5px; font-weight: 750; color: #64748b; margin-bottom: 6px;">LEGAL LINK #3 (OPTIONAL)</div>
-                <div class="form-row">
+              <div class="cms-link-slot-card">
+                <div class="cms-link-slot-header">
+                  <span class="cms-link-badge">Legal Link #3 (Optional)</span>
+                </div>
+                <div class="cms-link-slot-grid">
                   <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label">Link Title / Label</label>
-                    <input type="text" name="footer_legal_link3_text" class="form-control" value="{{ config.footer_legal_link3_text }}" placeholder="e.g. Cookie Settings">
+                    <input type="text" name="footer_legal_link3_text" class="form-control" value="{{ config.footer_legal_link3_text }}" placeholder="Optional policy link">
                   </div>
                   <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label">Destination URL</label>
-                    <input type="text" name="footer_legal_link3_url" class="form-control" value="{{ config.footer_legal_link3_url }}" placeholder="e.g. /cookies/">
+                    <input type="text" name="footer_legal_link3_url" class="form-control" value="{{ config.footer_legal_link3_url }}" placeholder="e.g. /disclaimer/">
                   </div>
                 </div>
               </div>
@@ -5605,16 +5867,19 @@ Connect with leading universities, explore scholarships and discover the possibi
       <!-- 5. Contact & Venue Details -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-contact">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-contact', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="phone-call" style="color:#10b981;"></i> Contact &amp; Venue Details</h3>
-            <p class="cms-card-subtitle">Official contact email, support helpline phone, and physical exhibition venue</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ecfdf5; color:#10b981;">
+              <i data-feather="phone-call"></i>
+            </div>
+            <div>
+              <h3 class="cms-card-title">Contact &amp; Venue Details</h3>
+              <p class="cms-card-subtitle">Official contact email, support helpline phone, and physical exhibition venue</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span class="cms-card-toggle-pill">
-              <span class="cms-toggle-text">Expand</span>
-              <i data-feather="chevron-down"></i>
-            </span>
-          </div>
+          <span class="cms-card-toggle-pill">
+            <span class="cms-toggle-text">Expand</span>
+            <i data-feather="chevron-down"></i>
+          </span>
         </div>
         <div class="cms-card-body">
           <div class="form-row">
@@ -5687,27 +5952,32 @@ Connect with leading universities, explore scholarships and discover the possibi
       <!-- 6. Social Media Profile Links & Titles -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-footer-social">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-footer-social', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="share-2" style="color:#6366f1;"></i> Social Media Profile Links &amp; Titles</h3>
-            <p class="cms-card-subtitle">Customize titles and profile destination URLs for all official social networks</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f5f3ff; color:#6366f1;">
+              <i data-feather="share-2"></i>
+            </div>
+            <div>
+              <h3 class="cms-card-title">Social Media Profile Links &amp; Titles</h3>
+              <p class="cms-card-subtitle">Customize titles and profile destination URLs for all official social networks</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span class="cms-card-toggle-pill">
-              <span class="cms-toggle-text">Expand</span>
-              <i data-feather="chevron-down"></i>
-            </span>
-          </div>
+          <span class="cms-card-toggle-pill">
+            <span class="cms-toggle-text">Expand</span>
+            <i data-feather="chevron-down"></i>
+          </span>
         </div>
         <div class="cms-card-body">
           <p style="font-size: 12px; color: #64748b; margin: 0 0 16px 0;">Leave Profile URL empty to hide that network button from the footer.</p>
 
           <div style="display: flex; flex-direction: column; gap: 12px;">
             <!-- Facebook -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #1877f2; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
-                <i data-feather="facebook" style="width:14px; height:14px;"></i> FACEBOOK
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge" style="color: #1877f2; background: #eff6ff; display: inline-flex; align-items: center; gap: 4px;">
+                  <i data-feather="facebook" style="width:12px; height:12px;"></i> FACEBOOK
+                </span>
               </div>
-              <div class="form-row">
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Platform Label / Tooltip</label>
                   <input type="text" name="social_facebook_title" class="form-control" value="{{ config.social_facebook_title|default:'Facebook' }}" placeholder="Facebook">
@@ -5720,11 +5990,13 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Twitter / X -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
-                <i data-feather="twitter" style="width:14px; height:14px;"></i> TWITTER / X
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge" style="color: #0f172a; background: #f1f5f9; display: inline-flex; align-items: center; gap: 4px;">
+                  <i data-feather="twitter" style="width:12px; height:12px;"></i> TWITTER / X
+                </span>
               </div>
-              <div class="form-row">
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Platform Label / Tooltip</label>
                   <input type="text" name="social_twitter_title" class="form-control" value="{{ config.social_twitter_title|default:'Twitter / X' }}" placeholder="Twitter / X">
@@ -5737,11 +6009,13 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- LinkedIn -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #0a66c2; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
-                <i data-feather="linkedin" style="width:14px; height:14px;"></i> LINKEDIN
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge" style="color: #0a66c2; background: #eff6ff; display: inline-flex; align-items: center; gap: 4px;">
+                  <i data-feather="linkedin" style="width:12px; height:12px;"></i> LINKEDIN
+                </span>
               </div>
-              <div class="form-row">
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Platform Label / Tooltip</label>
                   <input type="text" name="social_linkedin_title" class="form-control" value="{{ config.social_linkedin_title|default:'LinkedIn' }}" placeholder="LinkedIn">
@@ -5754,11 +6028,13 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- Instagram -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #e1306c; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
-                <i data-feather="instagram" style="width:14px; height:14px;"></i> INSTAGRAM
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge" style="color: #e1306c; background: #fdf2f8; display: inline-flex; align-items: center; gap: 4px;">
+                  <i data-feather="instagram" style="width:12px; height:12px;"></i> INSTAGRAM
+                </span>
               </div>
-              <div class="form-row">
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Platform Label / Tooltip</label>
                   <input type="text" name="social_instagram_title" class="form-control" value="{{ config.social_instagram_title|default:'Instagram' }}" placeholder="Instagram">
@@ -5771,11 +6047,13 @@ Connect with leading universities, explore scholarships and discover the possibi
             </div>
 
             <!-- YouTube -->
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11.5px; font-weight: 750; color: #ff0000; margin-bottom: 6px; display:flex; align-items:center; gap:6px;">
-                <i data-feather="video" style="width:14px; height:14px;"></i> YOUTUBE
+            <div class="cms-link-slot-card">
+              <div class="cms-link-slot-header">
+                <span class="cms-link-badge" style="color: #ef4444; background: #fef2f2; display: inline-flex; align-items: center; gap: 4px;">
+                  <i data-feather="video" style="width:12px; height:12px;"></i> YOUTUBE
+                </span>
               </div>
-              <div class="form-row">
+              <div class="cms-link-slot-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                   <label class="form-label">Platform Label / Tooltip</label>
                   <input type="text" name="social_youtube_title" class="form-control" value="{{ config.social_youtube_title|default:'YouTube' }}" placeholder="YouTube">
@@ -5791,7 +6069,6 @@ Connect with leading universities, explore scholarships and discover the possibi
       </div>
     </div>
 
-    <!-- ========================================== -->
     <!-- TAB 6: SEO & SEARCH ENGINES MANAGER        -->
         <!-- Save Bar (Static at bottom) -->
     <div class="cms-save-bar">
