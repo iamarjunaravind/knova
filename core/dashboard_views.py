@@ -1957,6 +1957,23 @@ def dashboard_settings(request):
     except EmptyPage:
         page_obj = paginator.page(paginator.num_pages)
 
+    # Backup & Restore Context Data
+    from .backup_utils import list_recent_backups, get_smtp_config, get_backup_dir
+    import json
+    recent_backups = list_recent_backups()
+    smtp_cfg = get_smtp_config()
+    last_backup_meta = None
+    status_file = os.path.join(get_backup_dir(), 'last_backup_status.json')
+    if os.path.exists(status_file):
+        try:
+            with open(status_file, 'r', encoding='utf-8') as sf:
+                last_backup_meta = json.load(sf)
+        except Exception:
+            pass
+
+    from django.db import connection
+    db_vendor = connection.vendor
+
     context = {
         'form': form,
         'config': config,
@@ -1972,6 +1989,10 @@ def dashboard_settings(request):
         'selected_status': selected_status,
         'sort_by': sort_by,
         'q': q,
+        'recent_backups': recent_backups,
+        'smtp_cfg': smtp_cfg,
+        'last_backup_meta': last_backup_meta,
+        'db_vendor': db_vendor,
     }
     return render(request, 'dashboard/settings.html', context)
 
@@ -3349,10 +3370,47 @@ def dashboard_backup_data(request):
     if not request.user.is_superuser:
         from django.core.exceptions import PermissionDenied
         raise PermissionDenied("Only administrators can backup data.")
-    response = HttpResponse(content_type='application/json')
-    response['Content-Disposition'] = 'attachment; filename="backup.json"'
-    call_command('dumpdata', exclude=['contenttypes', 'auth.permission'], format='json', indent=2, stdout=response)
+    
+    from .backup_utils import generate_backup, save_backup_to_disk
+    compressed = request.GET.get('compress') == '1' or request.GET.get('format') == 'gz'
+    backup = generate_backup(compressed=compressed)
+    
+    # Save a copy to local disk to keep retention archive up to date
+    try:
+        save_backup_to_disk(backup['content'], backup['filename'])
+    except Exception:
+        pass
 
+    content_type = 'application/gzip' if compressed else 'application/json'
+    response = HttpResponse(backup['content'], content_type=content_type)
+    response['Content-Disposition'] = f'attachment; filename="{backup["filename"]}"'
+    return response
+
+
+@login_required(login_url='/portal/login/')
+def dashboard_download_stored_backup(request, filename):
+    if not request.user.is_superuser:
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("Only administrators can download backups.")
+    
+    from .backup_utils import get_backup_dir
+    safe_name = os.path.basename(filename)
+    if not safe_name.startswith('knova_backup_'):
+        messages.error(request, "Invalid backup filename requested.")
+        return redirect('/dashboard/settings/?tab=backup')
+    
+    backup_dir = get_backup_dir()
+    file_path = os.path.join(backup_dir, safe_name)
+    if not os.path.exists(file_path):
+        messages.error(request, "Requested backup file does not exist or has expired.")
+        return redirect('/dashboard/settings/?tab=backup')
+
+    with open(file_path, 'rb') as f:
+        content = f.read()
+
+    content_type = 'application/gzip' if safe_name.endswith('.gz') else 'application/json'
+    response = HttpResponse(content, content_type=content_type)
+    response['Content-Disposition'] = f'attachment; filename="{safe_name}"'
     return response
 
 
@@ -3361,20 +3419,78 @@ def dashboard_restore_data(request):
     if not request.user.is_superuser:
         from django.core.exceptions import PermissionDenied
         raise PermissionDenied("Only administrators can restore data.")
+    
+    from .backup_utils import restore_database_dump
     if request.method == 'POST' and request.FILES.get('backup_file'):
         uploaded_file = request.FILES['backup_file']
-        fs = FileSystemStorage()
-        filename = fs.save(uploaded_file.name, uploaded_file)
-        file_path = fs.path(filename)
-        try:
-            call_command('loaddata', file_path)
-            messages.success(request, "Data restored successfully.")
-        except Exception as e:
-            messages.error(request, f"Restore failed: {str(e)}")
-        finally:
-            fs.delete(filename)
+        clean_wipe = request.POST.get('clean_wipe') == '1'
+        
+        ok, msg, count = restore_database_dump(uploaded_file, uploaded_file.name, clean_wipe=clean_wipe)
+        if ok:
+            messages.success(request, f"Database restored successfully! {msg}")
+        else:
+            messages.error(request, f"Restore failed: {msg}")
+    else:
+        messages.warning(request, "Please choose a valid backup snapshot file (.json, .gz, or .zip).")
 
-    return redirect('dashboard_settings')
+    return redirect('/dashboard/settings/?tab=backup')
+
+
+@login_required(login_url='/portal/login/')
+def dashboard_trigger_backup_email(request):
+    if not request.user.is_superuser:
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("Only administrators can dispatch backups.")
+    
+    from .backup_utils import generate_backup, save_backup_to_disk, send_backup_email, get_smtp_config
+    if request.method == 'POST':
+        backup = generate_backup(compressed=True)
+        try:
+            save_backup_to_disk(backup['content'], backup['filename'])
+        except Exception:
+            pass
+        
+        target_email = request.POST.get('recipient') or get_smtp_config().get('recipient') or 'arjunaravinda@gmail.com'
+        ok, msg = send_backup_email(
+            dump_bytes=backup['content'],
+            filename=backup['filename'],
+            record_count=backup['record_count'],
+            size_formatted=backup['size_formatted'],
+            recipient=target_email
+        )
+        if ok:
+            messages.success(request, f"Backup snapshot ({backup['size_formatted']}, {backup['record_count']} objects) generated and dispatched! {msg}")
+        else:
+            messages.warning(request, f"Backup created & saved on server disk ({backup['size_formatted']}, {backup['record_count']} objects), but email status: {msg}")
+            
+    return redirect('/dashboard/settings/?tab=backup')
+
+
+@login_required(login_url='/portal/login/')
+def dashboard_save_backup_settings(request):
+    if not request.user.is_superuser:
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("Only administrators can change system configuration.")
+
+    if request.method == 'POST':
+        from .models import SiteConfiguration
+        cfg = SiteConfiguration.get_solo()
+        cfg.backup_email_recipient = request.POST.get('backup_email_recipient', 'arjunaravinda@gmail.com').strip()
+        cfg.smtp_host = request.POST.get('smtp_host', 'smtp.gmail.com').strip()
+        try:
+            cfg.smtp_port = int(request.POST.get('smtp_port', 587))
+        except (TypeError, ValueError):
+            cfg.smtp_port = 587
+        cfg.smtp_user = request.POST.get('smtp_user', '').strip()
+        new_password = request.POST.get('smtp_password', '').strip()
+        if new_password:
+            cfg.smtp_password = new_password
+        cfg.smtp_use_tls = request.POST.get('smtp_use_tls') == 'on'
+        cfg.save()
+
+        messages.success(request, "Automated backup & SMTP email configuration saved successfully.")
+
+    return redirect('/dashboard/settings/?tab=backup')
 
 
 @login_required(login_url='/portal/login/')

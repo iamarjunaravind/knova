@@ -43,6 +43,8 @@ ehthumbs.db
 
 # Logs
 *.log
+backups/
+*.json.gz
 
 # Scratch & diagnostic scripts from development
 check_*.py

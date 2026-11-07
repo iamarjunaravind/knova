@@ -1131,6 +1131,16 @@ class SiteConfiguration(models.Model):
     # Interactive Floor Map Asset Links
     map_pdf_url = models.CharField(max_length=500, blank=True, default="/static/assets/KNOVA_2027_FLOORPLAN.pdf", help_text="Direct link or path to downloadable floorplan PDF")
 
+    # Automated Database Backup & Email Configuration
+    backup_email_recipient = models.CharField(max_length=255, default="arjunaravinda@gmail.com", blank=True, help_text="Email address to receive automated database backups")
+    backup_frequency_minutes = models.IntegerField(default=5, help_text="Automated backup interval in minutes")
+    backup_retention_hours = models.IntegerField(default=24, help_text="Hours to retain backup archives before auto-purging")
+    smtp_host = models.CharField(max_length=255, blank=True, default="smtp.gmail.com")
+    smtp_port = models.IntegerField(default=587)
+    smtp_user = models.CharField(max_length=255, blank=True, default="")
+    smtp_password = models.CharField(max_length=255, blank=True, default="")
+    smtp_use_tls = models.BooleanField(default=True)
+
     class Meta:
         verbose_name = "Site Configuration"
 
