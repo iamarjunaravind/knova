@@ -516,31 +516,107 @@
   .cms-collapsible-header {
     cursor: pointer;
     user-select: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    gap: 16px !important;
     transition: all 0.15s ease;
   }
   .cms-card-header-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
   }
   .cms-card-icon-squircle {
-    width: 36px;
-    height: 36px;
-    border-radius: 9px;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     font-size: 16px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+  .cms-card-icon-squircle svg,
+  .cms-card-icon-squircle i {
+    width: 18px;
+    height: 18px;
+  }
+  .cms-card-header-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .cms-card-header-text .cms-card-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cms-card-header-text .cms-card-subtitle {
+    font-size: 12.5px;
+    color: #64748b;
+    margin: 3px 0 0 0;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (max-width: 1024px) {
+    .cms-card-header-text .cms-card-subtitle {
+      white-space: normal;
+    }
+  }
+  .cms-card-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .cms-card-action-btn {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 750;
+    color: #2563eb;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    white-space: nowrap;
+    box-sizing: border-box;
+    transition: all 0.18s ease;
+  }
+  .cms-card-action-btn:hover {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+  }
+  .cms-card-action-btn svg,
+  .cms-card-action-btn i {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
   }
   .cms-collapsible-header:hover .cms-card-title {
     color: #2563eb;
   }
   .cms-card-toggle-pill {
+    height: 32px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -549,10 +625,11 @@
     color: #475569;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    padding: 5px 12px;
-    border-radius: 20px;
+    padding: 0 12px;
+    border-radius: 8px;
     transition: all 0.2s ease;
     flex-shrink: 0;
+    box-sizing: border-box;
   }
   .cms-collapsible-header:hover .cms-card-toggle-pill {
     background: #e2e8f0;
@@ -763,13 +840,18 @@
       <!-- Core Sections Visibility Card -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="eye" style="color:#10b981;"></i> Homepage Core Sections Visibility</h3>
-            <p class="cms-card-subtitle">Add (show) or remove (hide) any section from the public homepage instantly.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ecfdf5; color:#059669;">
+              <i data-feather="eye"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Homepage Core Sections Visibility</h3>
+              <p class="cms-card-subtitle">Add (show) or remove (hide) any section from the public homepage instantly</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
-            <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleSections(true)">Show All</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleSections(false)">Hide All</button>
+          <div class="cms-card-header-right">
+            <button type="button" class="btn-cms-action" onclick="bulkToggleSections(true)"><i data-feather="eye"></i> Show All</button>
+            <button type="button" class="btn-cms-action" onclick="bulkToggleSections(false)"><i data-feather="eye-off"></i> Hide All</button>
           </div>
         </div>
 
@@ -1008,13 +1090,20 @@
       <!-- About Us Sections Visibility Card -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="info" style="color:#3b82f6;"></i> About Us Page Sections Visibility (/about/)</h3>
-            <p class="cms-card-subtitle">Show or hide any section of the public About Us page in real-time.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="info"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">About Us Page Sections Visibility (/about/)</h3>
+              <p class="cms-card-subtitle">Show or hide any section of the public About Us page in real-time.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleAbout(true)">Show All</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleAbout(false)">Hide All</button>
+          </div>
           </div>
         </div>
 
@@ -1123,13 +1212,20 @@
       <!-- Events & Expos Sections Visibility Card -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="calendar" style="color:#059669;"></i> Events &amp; Expos Page Sections Visibility (/events/)</h3>
-            <p class="cms-card-subtitle">Show or hide any section of the public Events and Expos page in real-time.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ecfdf5; color:#059669;">
+              <i data-feather="calendar"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Events &amp; Expos Page Sections Visibility (/events/)</h3>
+              <p class="cms-card-subtitle">Show or hide any section of the public Events and Expos page in real-time.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleEvents(true)">Show All</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleEvents(false)">Hide All</button>
+          </div>
           </div>
         </div>
 
@@ -1184,14 +1280,21 @@
       <!-- 4. Exhibitors & Universities Page Sections -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="briefcase" style="color:#6366f1;"></i> Exhibitors &amp; Universities Page Sections (/exhibitors/)</h3>
-            <p class="cms-card-subtitle">Control section visibility on the public exhibitors and university directory page.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f5f3ff; color:#7c3aed;">
+              <i data-feather="briefcase"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Exhibitors &amp; Universities Page Sections (/exhibitors/)</h3>
+              <p class="cms-card-subtitle">Control section visibility on the public exhibitors and university directory page.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <a href="/exhibitors/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;"><i data-feather="external-link" style="width:12px; height:12px;"></i> View Live Page</a>
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleFields(['show_exhibitors_hero', 'show_exhibitors_filters', 'show_exhibitors_grid'], true)">Show All</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleFields(['show_exhibitors_hero', 'show_exhibitors_filters', 'show_exhibitors_grid'], false)">Hide All</button>
+          </div>
           </div>
         </div>
         <div class="toggles-grid">
@@ -1231,14 +1334,21 @@
       <!-- 5. Scholarships & Grants Page Sections -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="award" style="color:#f59e0b;"></i> Scholarships &amp; Grants Page Sections (/scholarships/)</h3>
-            <p class="cms-card-subtitle">Control section visibility on the public scholarships and financial grants page.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fef3c7; color:#d97706;">
+              <i data-feather="award"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Scholarships &amp; Grants Page Sections (/scholarships/)</h3>
+              <p class="cms-card-subtitle">Control section visibility on the public scholarships and financial grants page.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <a href="/scholarships/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;"><i data-feather="external-link" style="width:12px; height:12px;"></i> View Live Page</a>
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleFields(['show_scholarships_hero', 'show_scholarships_filters', 'show_scholarships_grid', 'show_scholarships_cbt_teaser'], true)">Show All</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleFields(['show_scholarships_hero', 'show_scholarships_filters', 'show_scholarships_grid', 'show_scholarships_cbt_teaser'], false)">Hide All</button>
+          </div>
           </div>
         </div>
         <div class="toggles-grid">
@@ -1288,14 +1398,21 @@
       <!-- 6. Keynote Speakers Page Sections -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="mic" style="color:#0ea5e9;"></i> Keynote Speakers Page Sections (/speakers/)</h3>
-            <p class="cms-card-subtitle">Control section visibility on the keynote speakers and academic leaders page.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fdf2f8; color:#db2777;">
+              <i data-feather="mic"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Keynote Speakers Page Sections (/speakers/)</h3>
+              <p class="cms-card-subtitle">Control section visibility on the keynote speakers and academic leaders page.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <a href="/speakers/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;"><i data-feather="external-link" style="width:12px; height:12px;"></i> View Live Page</a>
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleFields(['show_speakers_hero', 'show_speakers_filters', 'show_speakers_grid', 'show_speakers_cta'], true)">Show All</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleFields(['show_speakers_hero', 'show_speakers_filters', 'show_speakers_grid', 'show_speakers_cta'], false)">Hide All</button>
+          </div>
           </div>
         </div>
         <div class="toggles-grid">
@@ -1345,14 +1462,21 @@
       <!-- 7. Programme Schedule Page Sections -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="calendar" style="color:#10b981;"></i> Programme Schedule Page Sections (/programme/)</h3>
-            <p class="cms-card-subtitle">Control section visibility on the expo itinerary and masterclass timetable page.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ecfdf5; color:#059669;">
+              <i data-feather="calendar"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Programme Schedule Page Sections (/programme/)</h3>
+              <p class="cms-card-subtitle">Control section visibility on the expo itinerary and masterclass timetable page.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <a href="/programme/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;"><i data-feather="external-link" style="width:12px; height:12px;"></i> View Live Page</a>
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleFields(['show_programme_hero', 'show_programme_filters', 'show_programme_schedule', 'show_programme_cta'], true)">Show All</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleFields(['show_programme_hero', 'show_programme_filters', 'show_programme_schedule', 'show_programme_cta'], false)">Hide All</button>
+          </div>
           </div>
         </div>
         <div class="toggles-grid">
@@ -1402,14 +1526,21 @@
       <!-- 8. Sponsors & Partners Page Sections -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="crown" style="color:#eab308;"></i> Sponsors &amp; Partners Page Sections (/sponsors/)</h3>
-            <p class="cms-card-subtitle">Control section visibility on the official sponsors and corporate partners page.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fefce8; color:#ca8a04;">
+              <i data-feather="crown"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Sponsors &amp; Partners Page Sections (/sponsors/)</h3>
+              <p class="cms-card-subtitle">Control section visibility on the official sponsors and corporate partners page.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <a href="/sponsors/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;"><i data-feather="external-link" style="width:12px; height:12px;"></i> View Live Page</a>
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleFields(['show_sponsors_hero', 'show_sponsors_filters', 'show_sponsors_platinum', 'show_sponsors_gold', 'show_sponsors_silver', 'show_sponsors_cta'], true)">Show All</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleFields(['show_sponsors_hero', 'show_sponsors_filters', 'show_sponsors_platinum', 'show_sponsors_gold', 'show_sponsors_silver', 'show_sponsors_cta'], false)">Hide All</button>
+          </div>
           </div>
         </div>
         <div class="toggles-grid">
@@ -1479,14 +1610,21 @@
       <!-- 9. Interactive Floor Map Page Sections -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="map" style="color:#059669;"></i> Interactive Floor Map Page Sections (/map/)</h3>
-            <p class="cms-card-subtitle">Control section visibility on the live expo venue floor blueprint page.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ccfbf1; color:#0d9488;">
+              <i data-feather="map"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Interactive Floor Map Page Sections (/map/)</h3>
+              <p class="cms-card-subtitle">Control section visibility on the live expo venue floor blueprint page.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <a href="/map/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;"><i data-feather="external-link" style="width:12px; height:12px;"></i> View Live Page</a>
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleFields(['show_map_hero', 'show_map_viewer', 'show_map_directory', 'show_map_legend'], true)">Show All</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleFields(['show_map_hero', 'show_map_viewer', 'show_map_directory', 'show_map_legend'], false)">Hide All</button>
+          </div>
           </div>
         </div>
         <div class="toggles-grid">
@@ -1536,14 +1674,21 @@
       <!-- 10. Academic Courses Page Sections -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="book-open" style="color:#3b82f6;"></i> Academic Courses Directory Page Sections (/courses/)</h3>
-            <p class="cms-card-subtitle">Control section visibility on the degree finder and course catalog page.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#e0f2fe; color:#0284c7;">
+              <i data-feather="book-open"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Academic Courses Directory Page Sections (/courses/)</h3>
+              <p class="cms-card-subtitle">Control section visibility on the degree finder and course catalog page.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <a href="/courses/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;"><i data-feather="external-link" style="width:12px; height:12px;"></i> View Live Page</a>
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleFields(['show_courses_hero', 'show_courses_filters', 'show_courses_grid'], true)">Show All</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleFields(['show_courses_hero', 'show_courses_filters', 'show_courses_grid'], false)">Hide All</button>
+          </div>
           </div>
         </div>
         <div class="toggles-grid">
@@ -1583,14 +1728,21 @@
       <!-- 11. KNOVA Challenge Page Sections -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="zap" style="color:#a855f7;"></i> KNOVA Challenge Page Sections (/challenge/)</h3>
-            <p class="cms-card-subtitle">Control section visibility on the gamified student passport and challenge quest page.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#faf5ff; color:#9333ea;">
+              <i data-feather="zap"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">KNOVA Challenge Page Sections (/challenge/)</h3>
+              <p class="cms-card-subtitle">Control section visibility on the gamified student passport and challenge quest page.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <a href="/challenge/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;"><i data-feather="external-link" style="width:12px; height:12px;"></i> View Live Page</a>
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleFields(['show_challenge_hero', 'show_challenge_flow', 'show_challenge_missions', 'show_challenge_activity', 'show_challenge_guide'], true)">Show All</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleFields(['show_challenge_hero', 'show_challenge_flow', 'show_challenge_missions', 'show_challenge_activity', 'show_challenge_guide'], false)">Hide All</button>
+          </div>
           </div>
         </div>
         <div class="toggles-grid">
@@ -1650,14 +1802,21 @@
       <!-- 12. Registration Page Sections -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="user-plus" style="color:#1768ff;"></i> Registration Page Sections (/register/)</h3>
-            <p class="cms-card-subtitle">Control section visibility on the public attendee and exhibitor registration page.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="user-plus"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Registration Page Sections (/register/)</h3>
+              <p class="cms-card-subtitle">Control section visibility on the public attendee and exhibitor registration page.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <a href="/register/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;"><i data-feather="external-link" style="width:12px; height:12px;"></i> View Live Page</a>
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="bulkToggleFields(['show_register_showcase', 'show_register_form'], true)">Show All</button>
             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="bulkToggleFields(['show_register_showcase', 'show_register_form'], false)">Hide All</button>
+          </div>
           </div>
         </div>
         <div class="toggles-grid">
@@ -1687,13 +1846,20 @@
       <!-- 13. Privacy & Terms Legal Pages -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="shield" style="color:#64748b;"></i> Legal &amp; Policy Pages (/privacy-policy/ &amp; /terms/)</h3>
-            <p class="cms-card-subtitle">Control section visibility on compliance, privacy policy, and terms pages.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f1f5f9; color:#475569;">
+              <i data-feather="shield"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Legal &amp; Policy Pages (/privacy-policy/ &amp; /terms/)</h3>
+              <p class="cms-card-subtitle">Control section visibility on compliance, privacy policy, and terms pages.</p>
+            </div>
           </div>
-          <div style="display:flex; gap:8px;">
+          <div class="cms-card-header-right">
+            <div style="display:flex; gap:8px;">
             <a href="/privacy-policy/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;"><i data-feather="external-link" style="width:12px; height:12px;"></i> View Privacy</a>
             <a href="/terms/" target="_blank" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;"><i data-feather="external-link" style="width:12px; height:12px;"></i> View Terms</a>
+          </div>
           </div>
         </div>
         <div class="toggles-grid">
@@ -1743,13 +1909,20 @@
       <!-- Custom Dynamic Sections (Add / Remove) -->
       <div class="cms-card">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="plus-square" style="color:#1768ff;"></i> Dynamic Custom Sections (Add &amp; Remove Sections)</h3>
-            <p class="cms-card-subtitle">Create brand new custom content sections, set their homepage placement, publish or delete them anytime.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f1f5f9; color:#475569;">
+              <i data-feather="plus-square"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Dynamic Custom Sections (Add &amp; Remove Sections)</h3>
+              <p class="cms-card-subtitle">Create brand new custom content sections, set their homepage placement, publish or delete them anytime.</p>
+            </div>
           </div>
-          <button type="button" class="btn btn-primary" onclick="openAddSectionModal()" style="display:inline-flex; align-items:center; gap:6px;">
+          <div class="cms-card-header-right">
+            <button type="button" class="btn btn-primary" onclick="openAddSectionModal()" style="display:inline-flex; align-items:center; gap:6px;">
             <i data-feather="plus" style="width:16px; height:16px;"></i> Add New Section
           </button>
+          </div>
         </div>
 
         {% if custom_sections_list %}
@@ -1805,9 +1978,14 @@
       <!-- Master Brand Logos & Navigation Assets -->
       <div class="cms-card" style="border-left: 4px solid #2563eb;">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="award" style="color:#2563eb;"></i> Website Brand Logos &amp; AI Chatbot Avatar</h3>
-            <p class="cms-card-subtitle">Change main header navbar logo, footer logo, and AI Assistant Mr. K avatar image</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="award"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Website Brand Logos &amp; AI Chatbot Avatar</h3>
+              <p class="cms-card-subtitle">Change main header navbar logo, footer logo, and AI Assistant Mr. K avatar image</p>
+            </div>
           </div>
         </div>
         <div class="cms-card-body">
@@ -1869,9 +2047,14 @@
       <!-- Master Navbar Control -->
       <div class="cms-card" style="border-left: 4px solid #ef4444;">
         <div class="cms-card-header">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="shield-off" style="color:#ef4444;"></i> Master Public Navigation Controls</h3>
-            <p class="cms-card-subtitle">Lock and disable clicking on the navigation bar, or disable individual menu links without deleting them.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ffe4e6; color:#e11d48;">
+              <i data-feather="shield-off"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Master Public Navigation Controls</h3>
+              <p class="cms-card-subtitle">Lock and disable clicking on the navigation bar, or disable individual menu links without deleting them</p>
+            </div>
           </div>
         </div>
 
@@ -2163,11 +2346,16 @@
       <!-- 1. Hero Section Content -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-hero">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-hero', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="star" style="color:#f59e0b;"></i> Hero Section &amp; Headlines</h3>
-            <p class="cms-card-subtitle">Badge pills, main headings, action CTA links, and background video disclaimer</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fef3c7; color:#d97706;">
+              <i data-feather="star"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Hero Section &amp; Headlines</h3>
+              <p class="cms-card-subtitle">Badge pills, main headings, action CTA links, and background video disclaimer</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -2273,11 +2461,16 @@
       <!-- 2. Quick Stats Bar -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-stats">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-stats', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="bar-chart-2" style="color:#10b981;"></i> Quick Stats Bar (4 Metrics)</h3>
-            <p class="cms-card-subtitle">4 live metrics counters: exhibiting institutions, expert sessions, industry partners, registered visitors</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ecfdf5; color:#059669;">
+              <i data-feather="bar-chart-2"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Quick Stats Bar (4 Metrics)</h3>
+              <p class="cms-card-subtitle">4 live metrics counters: exhibiting institutions, expert sessions, industry partners, registered visitors</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -2392,11 +2585,16 @@
       <!-- 3. Why KNOVA Section & 4 Feature Cards -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-why">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-why', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="check-circle" style="color:#6366f1;"></i> Why KNOVA Section, Checklist &amp; 4 Feature Cards</h3>
-            <p class="cms-card-subtitle">Left checklist value proposition and right 4 colored feature cards (courses, unis, sessions, grants)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eef2ff; color:#6366f1;">
+              <i data-feather="check-circle"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Why KNOVA Section, Checklist &amp; 4 Feature Cards</h3>
+              <p class="cms-card-subtitle">Left checklist value proposition and right 4 colored feature cards (courses, unis, sessions, grants)</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -2524,14 +2722,19 @@
 
       <!-- Event Locations & Tour Expansion Section Editor -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-locations">
-        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-locations', event)" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="map-pin" style="color:#0284c7;"></i> Event Locations &amp; Tour Expansion Section</h3>
-            <p class="cms-card-subtitle">Configure the 2-column showcase on the homepage: featured expo card (dates, venue, perks) and right-column tour expansion cities.</p>
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-locations', event)">
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#e0f2fe; color:#0284c7;">
+              <i data-feather="map-pin"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Event Locations &amp; Tour Expansion Section</h3>
+              <p class="cms-card-subtitle">Configure the 2-column showcase on the homepage: featured expo card (dates, venue, perks) and right-column tour expansion cities</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="/dashboard/events/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#0284c7; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#eff6ff; border:1px solid #bfdbfe; padding:6px 14px; border-radius:8px;">
-              <i data-feather="calendar" style="width:13px; height:13px;"></i> Manage Database Events &rarr;
+          <div class="cms-card-header-right">
+            <a href="/dashboard/events/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="calendar"></i> Manage Database Events &rarr;
             </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
@@ -2743,11 +2946,16 @@
       <!-- 4. How It Works Section -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-roadmap">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-roadmap', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="git-commit" style="color:#3b82f6;"></i> How It Works (Roadmap &amp; 4 Steps)</h3>
-            <p class="cms-card-subtitle">4-step attendee journey roadmap and 4 bottom highlight impact statistics</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="git-commit"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">How It Works (Roadmap &amp; 4 Steps)</h3>
+              <p class="cms-card-subtitle">4-step attendee journey roadmap and 4 bottom highlight impact statistics</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -2850,13 +3058,18 @@
       <!-- 6. Featured Exhibitors & Universities Homepage Section -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-exhibitors">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-exhibitors', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="briefcase" style="color:#6366f1;"></i> Featured Exhibitors &amp; Universities Section</h3>
-            <p class="cms-card-subtitle">Controls the homepage Featured Exhibitors carousel (#exhibitors) and public directory (/exhibitors/)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f5f3ff; color:#7c3aed;">
+              <i data-feather="briefcase"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Featured Exhibitors &amp; Universities Section</h3>
+              <p class="cms-card-subtitle">Controls the homepage Featured Exhibitors carousel (#exhibitors) and public directory (/exhibitors/)</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="/dashboard/exhibitors/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#6366f1; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#eef2ff; border:1px solid #c7d2fe; padding:6px 12px; border-radius:8px;">
-              <i data-feather="users" style="width:13px; height:13px;"></i> Manage Exhibitors &rarr;
+          <div class="cms-card-header-right">
+            <a href="/dashboard/exhibitors/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="users"></i> Manage Exhibitors &rarr;
             </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
@@ -2916,13 +3129,18 @@
       <!-- 7. Academic Courses Directory Section -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-courses">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-courses', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="book-open" style="color:#0ea5e9;"></i> Academic Courses &amp; Degree Programs Section</h3>
-            <p class="cms-card-subtitle">Controls the courses showcase, search filters, and degree directory page (/courses/)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#e0f2fe; color:#0284c7;">
+              <i data-feather="book-open"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Academic Courses &amp; Degree Programs Section</h3>
+              <p class="cms-card-subtitle">Controls the courses showcase, search filters, and degree directory page (/courses/)</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="/dashboard/courses/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#0ea5e9; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#f0f9ff; border:1px solid #bae6fd; padding:6px 12px; border-radius:8px;">
-              <i data-feather="book" style="width:13px; height:13px;"></i> Manage Courses &rarr;
+          <div class="cms-card-header-right">
+            <a href="/dashboard/courses/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="book"></i> Manage Courses &rarr;
             </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
@@ -2982,13 +3200,18 @@
       <!-- 8. Scholarships & Financial Grants Section -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-scholarships">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-scholarships', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="award" style="color:#10b981;"></i> Scholarships &amp; Financial Grants Section</h3>
-            <p class="cms-card-subtitle">Controls the homepage Scholarships &amp; Aid showcase (#scholarships) and public directory (/scholarships/)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fef3c7; color:#d97706;">
+              <i data-feather="award"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Scholarships &amp; Financial Grants Section</h3>
+              <p class="cms-card-subtitle">Highlight tier grants, funding caps, application CTAs, and directory (/scholarships/)</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="/dashboard/scholarships/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#10b981; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; border:1px solid #a7f3d0; padding:6px 12px; border-radius:8px;">
-              <i data-feather="gift" style="width:13px; height:13px;"></i> Manage Scholarships &rarr;
+          <div class="cms-card-header-right">
+            <a href="/dashboard/scholarships/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="award"></i> Manage Scholarships &rarr;
             </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
@@ -3062,13 +3285,18 @@
       <!-- 9. Keynote Speakers & Experts Section -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-speakers">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-speakers', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="mic" style="color:#f59e0b;"></i> Keynote Speakers &amp; Academic Leaders Section</h3>
-            <p class="cms-card-subtitle">Controls the homepage Speakers showcase (#speakers), Call for Speakers banner, and directory (/speakers/)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fdf2f8; color:#db2777;">
+              <i data-feather="mic"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Keynote Speakers &amp; Academic Leaders</h3>
+              <p class="cms-card-subtitle">Speaker showcase cards, topics, guest bios, and master list (/speakers/)</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="/dashboard/speakers/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#f59e0b; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#fffbeb; border:1px solid #fde68a; padding:6px 12px; border-radius:8px;">
-              <i data-feather="mic" style="width:13px; height:13px;"></i> Manage Speakers &rarr;
+          <div class="cms-card-header-right">
+            <a href="/dashboard/speakers/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="mic"></i> Manage Speakers &rarr;
             </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
@@ -3123,13 +3351,18 @@
       <!-- 10. Programme Schedule & Masterclasses Section -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-programme">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-programme', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="calendar" style="color:#ec4899;"></i> Programme Schedule &amp; Masterclasses Section</h3>
-            <p class="cms-card-subtitle">Controls the homepage Programme timetable (#programme) and full schedule (/programme/)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f5f3ff; color:#6366f1;">
+              <i data-feather="calendar"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Programme Schedule &amp; Masterclasses</h3>
+              <p class="cms-card-subtitle">Multi-day agenda showcase, workshop tracks, and full schedule (/programme/)</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="/dashboard/programme/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#ec4899; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#fdf2f8; border:1px solid #fbcfe8; padding:6px 12px; border-radius:8px;">
-              <i data-feather="calendar" style="width:13px; height:13px;"></i> Manage Sessions &rarr;
+          <div class="cms-card-header-right">
+            <a href="/dashboard/programme/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="calendar"></i> Manage Programme &rarr;
             </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
@@ -3181,13 +3414,18 @@
       <!-- 11. Sponsors & Industry Partners Section -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-sponsors">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-sponsors', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="crown" style="color:#eab308;"></i> Sponsors &amp; Industry Partners Showcase</h3>
-            <p class="cms-card-subtitle">Controls the homepage Sponsors marquee (#sponsors-marquee), impact KPIs, and directory (/sponsors/)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fefce8; color:#ca8a04;">
+              <i data-feather="crown"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Sponsors &amp; Industry Partners Showcase</h3>
+              <p class="cms-card-subtitle">Tiered sponsor logo ribbons (Headline, Platinum, Gold) and directory (/sponsors/)</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="/dashboard/sponsors/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#ca8a04; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#fefce8; border:1px solid #fef08a; padding:6px 12px; border-radius:8px;">
-              <i data-feather="award" style="width:13px; height:13px;"></i> Manage Sponsors &rarr;
+          <div class="cms-card-header-right">
+            <a href="/dashboard/sponsors/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="award"></i> Manage Sponsors &rarr;
             </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
@@ -3264,13 +3502,18 @@
       <!-- 12. Interactive Floor Map Preview Section -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-map">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-map', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="map" style="color:#14b8a6;"></i> Interactive Floor Map Preview Section</h3>
-            <p class="cms-card-subtitle">Controls the homepage Floor Map preview (#map) and full interactive map (/map/)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ccfbf1; color:#0d9488;">
+              <i data-feather="map"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Interactive Floor Map Preview Section</h3>
+              <p class="cms-card-subtitle">Expo blueprint banner, zone highlights, and interactive floor plan (/map/)</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="/map/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#0d9488; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#f0fdfa; border:1px solid #ccfbf1; padding:6px 12px; border-radius:8px;">
-              <i data-feather="external-link" style="width:13px; height:13px;"></i> View Floor Map &rarr;
+          <div class="cms-card-header-right">
+            <a href="/dashboard/booths/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="map"></i> Manage Floor Map &rarr;
             </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
@@ -3309,13 +3552,18 @@
       <!-- 13. KNOVA Challenge Gamified Quest Section -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-challenge">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-challenge', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="zap" style="color:#8b5cf6;"></i> KNOVA Challenge Gamified Quest Section</h3>
-            <p class="cms-card-subtitle">Controls the interactive quest callout, gamified missions, and attendee passport (/challenge/)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#faf5ff; color:#9333ea;">
+              <i data-feather="zap"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">KNOVA Challenge Gamified Quest Section</h3>
+              <p class="cms-card-subtitle">Gamified campus passport quest teaser, badge perks, and quest portal (/challenge/)</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="/challenge/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#8b5cf6; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#f5f3ff; border:1px solid #ddd6fe; padding:6px 12px; border-radius:8px;">
-              <i data-feather="target" style="width:13px; height:13px;"></i> View Challenge &rarr;
+          <div class="cms-card-header-right">
+            <a href="/challenge/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="external-link"></i> Preview Challenge &rarr;
             </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
@@ -3350,13 +3598,18 @@
       <!-- 14. Registration Passes & Tickets CTA Section -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-home-register">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-home-register', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="user-plus" style="color:#059669;"></i> Registration Passes &amp; Tickets CTA Section</h3>
-            <p class="cms-card-subtitle">Controls the homepage bottom Registration CTA (#register) and registration portal (/register/)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="user-plus"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Registration Passes &amp; Tickets CTA</h3>
+              <p class="cms-card-subtitle">Free attendee admission banner, fast-track QR ticketing, and checkout portal (/register/)</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="/dashboard/registrations/" target="_blank" onclick="event.stopPropagation()" style="font-size:12px; font-weight:700; color:#059669; text-decoration:none; display:inline-flex; align-items:center; gap:4px; background:#ecfdf5; border:1px solid #a7f3d0; padding:6px 12px; border-radius:8px;">
-              <i data-feather="users" style="width:13px; height:13px;"></i> View Attendees &rarr;
+          <div class="cms-card-header-right">
+            <a href="/register/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="external-link"></i> Preview Registration &rarr;
             </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
@@ -3408,11 +3661,16 @@
       <!-- 5. Headings & Subtitles of Core Homepage Sections -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-headings">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-headings', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="type" style="color:#0ea5e9;"></i> Section Headings &amp; Subtitles</h3>
-            <p class="cms-card-subtitle">Kicker subtitles and main titles across upcoming events, exhibitors, and sponsors</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f1f5f9; color:#475569;">
+              <i data-feather="type"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Master Section Headings &amp; Subtitles</h3>
+              <p class="cms-card-subtitle">Customize headings and subtitles for every major homepage section in one centralized place</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -3482,17 +3740,17 @@
 
       <!-- 6. Experience Expo & Testimonial Content -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-experience">
-        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-experience', event)" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="video" style="color:#0ea5e9;"></i> Experience Expo &amp; Student Testimonials</h3>
-            <p class="cms-card-subtitle">Split banner highlighting video expo tour on the left and student recommendation quote on the right</p>
-          </div>
-          <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
-            <div class="cms-no-toggle" style="display:flex; gap:10px; align-items:center;">
-              <span style="font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Visibility:</span>
-              <span class="toggle-status-pill pill-show_experience_video_card {% if config.show_experience_video_card %}status-visible{% else %}status-hidden{% endif %}" title="Toggle in Section Visibility tab">Video Card: {% if config.show_experience_video_card %}ON{% else %}OFF{% endif %}</span>
-              <span class="toggle-status-pill pill-show_experience_testimonial_card {% if config.show_experience_testimonial_card %}status-visible{% else %}status-hidden{% endif %}" title="Toggle in Section Visibility tab">Testimonial: {% if config.show_experience_testimonial_card %}ON{% else %}OFF{% endif %}</span>
+        <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-experience', event)">
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ffe4e6; color:#e11d48;">
+              <i data-feather="video"></i>
             </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Experience Expo &amp; Student Testimonials</h3>
+              <p class="cms-card-subtitle">Video documentary teaser, student success stories, and testimonial cards</p>
+            </div>
+          </div>
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -3559,11 +3817,19 @@
       <!-- 7. FAQ Items & Support Box -->
       <div class="cms-card cms-card-collapsible is-collapsed" id="sec-faq">
         <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-faq', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="help-circle" style="color:#8b5cf6;"></i> FAQ Items &amp; Guidance Box</h3>
-            <p class="cms-card-subtitle">Need 1-on-1 guidance box and all 8 expandable question/answer sets</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#cffafe; color:#0891b2;">
+              <i data-feather="help-circle"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">FAQ Items &amp; Guidance Box</h3>
+              <p class="cms-card-subtitle">Frequently asked visitor questions, admission guide, and quick answers accordion</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
+            <a href="/dashboard/faq/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="help-circle"></i> Manage Q&A &rarr;
+            </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -3741,11 +4007,16 @@
 <!-- Hero Section -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-about-hero">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-about-hero', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="star" style="color:#f59e0b;"></i> About Us Hero Header</h3>
-            <p class="cms-card-subtitle">Kicker badge, main title, subtitle, 2-min video button, and direct registration CTA link</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fef3c7; color:#d97706;">
+              <i data-feather="star"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">About Us Hero Header</h3>
+              <p class="cms-card-subtitle">Main heading, badge pills, and hero intro paragraphs on /about/</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -3786,11 +4057,16 @@
         <!-- Executive Overview & 4 Feature Pillars -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-about-overview">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-about-overview', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="layout" style="color:#10b981;"></i> Executive Overview &amp; 4 Feature Pillars</h3>
-            <p class="cms-card-subtitle">Strategic executive overview paragraph and 4 core capability cards</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="layout"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Executive Overview &amp; 4 Feature Pillars</h3>
+              <p class="cms-card-subtitle">Lead description and 4 interactive core pillars highlighting KNOVA's impact</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -3848,18 +4124,23 @@
         <!-- Media Spotlight & Video Card Editor -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-about-spotlight">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-about-spotlight', event)">
-            <div>
-              <h3 class="cms-card-title"><i data-feather="video" style="color:#0ea5e9;"></i> Overview Media Spotlight &amp; Video Card</h3>
-              <p class="cms-card-subtitle">Expo media card image, 2-minute overview video modal, year badge, and 3 live stat pills</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ffe4e6; color:#e11d48;">
+              <i data-feather="video"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Overview Media Spotlight &amp; Video Card</h3>
+              <p class="cms-card-subtitle">Visual media embed, video poster, and documentary feature showcase</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
             <!-- Image Upload & Preview Component -->
             <div class="cms-image-upload-card" style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:12px; padding:16px; margin-bottom:16px;">
               <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
@@ -3932,11 +4213,16 @@
         <!-- Scale & Proven Impact Metrics -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-about-metrics">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-about-metrics', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="bar-chart-2" style="color:#6366f1;"></i> The KNOVA Reach Metrics</h3>
-            <p class="cms-card-subtitle">Key scale and reach numerical indicators (Projected Visitors, Universities, Scholarship Opportunities)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ecfdf5; color:#059669;">
+              <i data-feather="bar-chart-2"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">The KNOVA Reach Metrics</h3>
+              <p class="cms-card-subtitle">4 verified statistics showcasing students, institutions, and global presence</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -3992,11 +4278,16 @@
         <!-- Mission, Vision & 3 Foundational Pillars -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-about-mission">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-about-mission', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="target" style="color:#0ea5e9;"></i> Mission, Vision &amp; 3 Foundational Pillars</h3>
-            <p class="cms-card-subtitle">Official institutional mission statement, vision statement, and 3 foundational pillars</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f5f3ff; color:#7c3aed;">
+              <i data-feather="target"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Mission, Vision &amp; 3 Foundational Pillars</h3>
+              <p class="cms-card-subtitle">Long-term vision statement, mission manifesto, and foundational strategic pillars</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -4044,11 +4335,16 @@
         <!-- 4 Institutional Values -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-about-values">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-about-values', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="shield" style="color:#8b5cf6;"></i> Core Institutional Values</h3>
-            <p class="cms-card-subtitle">4 core institutional values (Integrity, Inclusivity, Excellence, Innovation)</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#e0f2fe; color:#0284c7;">
+              <i data-feather="shield"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Core Institutional Values</h3>
+              <p class="cms-card-subtitle">Guiding principles, academic integrity, inclusivity, and student empowerment</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -4096,11 +4392,16 @@
         <!-- Strategic Evolution & Growth Journey -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-about-milestones">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-about-milestones', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="git-commit" style="color:#d97706;"></i> Growth Journey &amp; Milestones</h3>
-            <p class="cms-card-subtitle">4 foundational milestone timeline cards tracking growth and achievements</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="git-commit"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Growth Journey &amp; Milestones</h3>
+              <p class="cms-card-subtitle">Year-by-year chronological timeline of KNOVA's historic expansion</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -4152,11 +4453,16 @@
         <!-- Ready to Discover CTA Banner -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-about-cta">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-about-cta', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="check-circle" style="color:#059669;"></i> Ready to Discover Degree Pathway CTA Banner</h3>
-            <p class="cms-card-subtitle">Bottom conversion banner with register button and secondary portal links</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ecfdf5; color:#059669;">
+              <i data-feather="check-circle"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Ready to Discover Degree Pathway CTA</h3>
+              <p class="cms-card-subtitle">Closing call-to-action banner driving registration and visitor engagement</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -4223,11 +4529,16 @@
 <!-- Hero & Search -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-events-hero">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-events-hero', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="calendar" style="color:#10b981;"></i> Events Page Hero &amp; Live Search</h3>
-            <p class="cms-card-subtitle">Page badge, title, subtitle, search placeholder, and filter tags</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="calendar"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Events Page Hero &amp; Live Search</h3>
+              <p class="cms-card-subtitle">Configure title, search bar placeholder, and filter pills on /events/</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -4285,11 +4596,19 @@
         <!-- Featured Flagship Expo Card -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-events-featured">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-events-featured', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="award" style="color:#f59e0b;"></i> Featured Flagship Expo Showcase Card</h3>
-            <p class="cms-card-subtitle">Top featured expo card with dates, venue badge, perks, and CTA button</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fef3c7; color:#d97706;">
+              <i data-feather="award"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Featured Flagship Expo Showcase Card</h3>
+              <p class="cms-card-subtitle">Flagship exhibition banner with dates, venue, and highlight badges</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
+            <a href="/dashboard/events/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="calendar"></i> Manage Events &rarr;
+            </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -4331,11 +4650,19 @@
         <!-- GCC City Tour Calendar Grid -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-events-calendar">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-events-calendar', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="compass" style="color:#3b82f6;"></i> GCC City Tour Calendar Grid</h3>
-            <p class="cms-card-subtitle">GCC city calendar grid heading, subtitle, and tour stop badges</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f5f3ff; color:#7c3aed;">
+              <i data-feather="compass"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">GCC City Tour Calendar Grid</h3>
+              <p class="cms-card-subtitle">Regional roadshow stops across Riyadh, Dubai, Doha, Kuwait, and Muscat</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
+            <a href="/dashboard/events/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="calendar"></i> Manage Events &rarr;
+            </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -4369,11 +4696,19 @@
         <!-- Inside the Expo Activity Zones -->
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-events-zones">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-events-zones', event)">
-          <div>
-            <h3 class="cms-card-title"><i data-feather="grid" style="color:#8b5cf6;"></i> Inside the Expo: Activity Zones</h3>
-            <p class="cms-card-subtitle">Interactive activity zones heading and 4 zone highlight cards</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ccfbf1; color:#0d9488;">
+              <i data-feather="grid"></i>
+            </div>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Inside the Expo: Activity Zones</h3>
+              <p class="cms-card-subtitle">Specialized exhibition pavilions, counselling pods, and VIP lounges</p>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap:10px;">
+          <div class="cms-card-header-right">
+            <a href="/dashboard/booths/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="map"></i> Manage Zones &rarr;
+            </a>
             <span class="cms-card-toggle-pill">
               <span class="cms-toggle-text">Expand</span>
               <i data-feather="chevron-down"></i>
@@ -4474,21 +4809,26 @@
       <div id="subtab-exhibitors" class="service-subtab-content" style="display:block;">
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-exhibitors">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-exhibitors', event)">
-            <div>
-              <h3 class="cms-card-title"><i data-feather="briefcase" style="color:#6366f1;"></i> Exhibitors &amp; Universities Page Editor (/exhibitors/)</h3>
-              <p class="cms-card-subtitle">Edit headings, stats, search placeholder, and toggle section visibility on the live page.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f5f3ff; color:#7c3aed;">
+              <i data-feather="briefcase"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <a href="/exhibitors/" target="_blank" class="btn btn-sm btn-outline-primary" style="display:inline-flex; align-items:center; gap:5px;">
-              <i data-feather="external-link" style="width:13px; height:13px;"></i> View Live Page
-            </a>
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Exhibitors &amp; Universities Page Editor (/exhibitors/)</h3>
+              <p class="cms-card-subtitle">Configure search filters, badges, and public directory layout</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <a href="/dashboard/exhibitors/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="users"></i> Manage Exhibitors &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:12px; font-weight:700; color:#475569;"><i data-feather="sliders" style="width:13px; height:13px; vertical-align:middle; margin-right:4px;"></i> Section Visibility &amp; Layout:</span>
@@ -4551,18 +4891,23 @@
       <div id="subtab-unidetail" class="service-subtab-content" style="display:none;">
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-unidetail">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-unidetail', event)">
-            <div>
-              <h3 class="cms-card-title"><i data-feather="book-open" style="color:#2563eb;"></i> University Public Detail Page Editor (/university/&lt;slug&gt;/)</h3>
-              <p class="cms-card-subtitle">Configure header badges, KPI labels, campus facilities, 3-step admissions guide, and callback enquiry card</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#e0f2fe; color:#0284c7;">
+              <i data-feather="book-open"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">University Public Detail Page Editor</h3>
+              <p class="cms-card-subtitle">Banner badges, inquiry form defaults, and program showcase settings</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
             <!-- Action Bar -->
             <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:16px;">
               <a href="/university/kannur-university/" target="_blank" class="btn btn-sm btn-outline-primary" style="display:inline-flex; align-items:center; gap:5px;">
@@ -4745,21 +5090,26 @@
       <div id="subtab-scholarships" class="service-subtab-content" style="display:none;">
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-scholarships">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-scholarships', event)">
-          <div>
-              <h3 class="cms-card-title"><i data-feather="award" style="color:#f59e0b;"></i> Scholarships &amp; Grants Page Editor (/scholarships/)</h3>
-              <p class="cms-card-subtitle">Edit grant pool figures, scholarship guidelines, search placeholders, and section visibility.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fef3c7; color:#d97706;">
+              <i data-feather="award"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <a href="/scholarships/" target="_blank" class="btn btn-sm btn-outline-primary" style="display:inline-flex; align-items:center; gap:5px;">
-              <i data-feather="external-link" style="width:13px; height:13px;"></i> View Live Page
-            </a>
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Scholarships &amp; Grants Page Editor (/scholarships/)</h3>
+              <p class="cms-card-subtitle">Funding tier highlights, eligibility requirements, and application portal settings</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <a href="/dashboard/scholarships/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="award"></i> Manage Scholarships &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:12px; font-weight:700; color:#475569;"><i data-feather="sliders" style="width:13px; height:13px; vertical-align:middle; margin-right:4px;"></i> Section Visibility &amp; Layout:</span>
@@ -4826,21 +5176,26 @@
       <div id="subtab-speakers" class="service-subtab-content" style="display:none;">
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-speakers">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-speakers', event)">
-            <div>
-              <h3 class="cms-card-title"><i data-feather="mic" style="color:#0ea5e9;"></i> Keynote Speakers Page Editor (/speakers/)</h3>
-              <p class="cms-card-subtitle">Edit speaker page title, subtitles, Call-for-Speakers CTA banner, and section visibility.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fdf2f8; color:#db2777;">
+              <i data-feather="mic"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <a href="/speakers/" target="_blank" class="btn btn-sm btn-outline-primary" style="display:inline-flex; align-items:center; gap:5px;">
-              <i data-feather="external-link" style="width:13px; height:13px;"></i> View Live Page
-            </a>
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Keynote Speakers Page Editor (/speakers/)</h3>
+              <p class="cms-card-subtitle">Speaker directory cards, bio layouts, and key presentation session slots</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <a href="/dashboard/speakers/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="mic"></i> Manage Speakers &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:12px; font-weight:700; color:#475569;"><i data-feather="sliders" style="width:13px; height:13px; vertical-align:middle; margin-right:4px;"></i> Section Visibility &amp; Layout:</span>
@@ -4888,21 +5243,26 @@
       <div id="subtab-programme" class="service-subtab-content" style="display:none;">
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-programme">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-programme', event)">
-            <div>
-              <h3 class="cms-card-title"><i data-feather="calendar" style="color:#10b981;"></i> Programme Schedule Page Editor (/programme/)</h3>
-              <p class="cms-card-subtitle">Edit timetable headers, auditorium pass CTA, and toggle schedule sections.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="calendar"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <a href="/programme/" target="_blank" class="btn btn-sm btn-outline-primary" style="display:inline-flex; align-items:center; gap:5px;">
-              <i data-feather="external-link" style="width:13px; height:13px;"></i> View Live Page
-            </a>
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Programme Schedule Page Editor (/programme/)</h3>
+              <p class="cms-card-subtitle">Day-wise agenda tracks, time filters, and masterclass room assignments</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <a href="/dashboard/programme/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="calendar"></i> Manage Programme &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:12px; font-weight:700; color:#475569;"><i data-feather="sliders" style="width:13px; height:13px; vertical-align:middle; margin-right:4px;"></i> Section Visibility &amp; Layout:</span>
@@ -4950,21 +5310,26 @@
       <div id="subtab-sponsors" class="service-subtab-content" style="display:none;">
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-sponsors">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-sponsors', event)">
-            <div>
-              <h3 class="cms-card-title"><i data-feather="crown" style="color:#eab308;"></i> Sponsors &amp; Partners Page Editor (/sponsors/)</h3>
-              <p class="cms-card-subtitle">Edit partner statistics, headline tiers, sponsorship deck CTA, and tier visibilities.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#fefce8; color:#ca8a04;">
+              <i data-feather="crown"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <a href="/sponsors/" target="_blank" class="btn btn-sm btn-outline-primary" style="display:inline-flex; align-items:center; gap:5px;">
-              <i data-feather="external-link" style="width:13px; height:13px;"></i> View Live Page
-            </a>
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Sponsors &amp; Partners Page Editor (/sponsors/)</h3>
+              <p class="cms-card-subtitle">Partnership tiers, sponsorship prospectus download, and inquiry CTA</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <a href="/dashboard/sponsors/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="award"></i> Manage Sponsors &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:12px; font-weight:700; color:#475569;"><i data-feather="sliders" style="width:13px; height:13px; vertical-align:middle; margin-right:4px;"></i> Section Visibility &amp; Layout:</span>
@@ -5038,21 +5403,26 @@
       <div id="subtab-map" class="service-subtab-content" style="display:none;">
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-map">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-map', event)">
-            <div>
-              <h3 class="cms-card-title"><i data-feather="map" style="color:#059669;"></i> Interactive Floor Map Page Editor (/map/)</h3>
-              <p class="cms-card-subtitle">Configure blueprint title, search placeholder, and toggle interactive hall modules.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#ccfbf1; color:#0d9488;">
+              <i data-feather="map"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <a href="/map/" target="_blank" class="btn btn-sm btn-outline-primary" style="display:inline-flex; align-items:center; gap:5px;">
-              <i data-feather="external-link" style="width:13px; height:13px;"></i> View Live Page
-            </a>
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Interactive Floor Map Page Editor (/map/)</h3>
+              <p class="cms-card-subtitle">Hall blueprint, exhibitor search, and interactive booth wayfinding</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <a href="/dashboard/booths/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="map"></i> Manage Floor Map &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
 
           
           <!-- Interactive Floor Map Blueprint Image Upload -->
@@ -5108,21 +5478,26 @@
       <div id="subtab-courses" class="service-subtab-content" style="display:none;">
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-courses">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-courses', event)">
-            <div>
-              <h3 class="cms-card-title"><i data-feather="book-open" style="color:#3b82f6;"></i> Academic Courses Directory Editor (/courses/)</h3>
-              <p class="cms-card-subtitle">Configure course directory headings, search placeholders, metrics, and catalog visibility.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#e0f2fe; color:#0284c7;">
+              <i data-feather="book-open"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <a href="/courses/" target="_blank" class="btn btn-sm btn-outline-primary" style="display:inline-flex; align-items:center; gap:5px;">
-              <i data-feather="external-link" style="width:13px; height:13px;"></i> View Live Page
-            </a>
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Academic Courses Directory Editor (/courses/)</h3>
+              <p class="cms-card-subtitle">Discipline filters, degree level tags, and course card layout</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <a href="/dashboard/courses/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="book"></i> Manage Courses &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:12px; font-weight:700; color:#475569;"><i data-feather="sliders" style="width:13px; height:13px; vertical-align:middle; margin-right:4px;"></i> Section Visibility &amp; Layout:</span>
@@ -5184,21 +5559,26 @@
       <div id="subtab-challenge" class="service-subtab-content" style="display:none;">
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-challenge">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-challenge', event)">
-            <div>
-              <h3 class="cms-card-title"><i data-feather="zap" style="color:#a855f7;"></i> KNOVA Challenge Page Editor (/challenge/)</h3>
-              <p class="cms-card-subtitle">Configure passport gamification, quest descriptions, and individual mission module toggles.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#faf5ff; color:#9333ea;">
+              <i data-feather="zap"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <a href="/challenge/" target="_blank" class="btn btn-sm btn-outline-primary" style="display:inline-flex; align-items:center; gap:5px;">
-              <i data-feather="external-link" style="width:13px; height:13px;"></i> View Live Page
-            </a>
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">KNOVA Challenge Page Editor (/challenge/)</h3>
+              <p class="cms-card-subtitle">Configure passport gamification, quest descriptions, and mission module toggles</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <a href="/challenge/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="external-link"></i> Preview Challenge &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:12px; font-weight:700; color:#475569;"><i data-feather="sliders" style="width:13px; height:13px; vertical-align:middle; margin-right:4px;"></i> Section Visibility &amp; Layout:</span>
@@ -5233,21 +5613,26 @@
       <div id="subtab-register" class="service-subtab-content" style="display:none;">
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-register">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-register', event)">
-            <div>
-              <h3 class="cms-card-title"><i data-feather="user-plus" style="color:#1768ff;"></i> Registration Page &amp; Pass Editor (/register/)</h3>
-              <p class="cms-card-subtitle">Configure atmosphere showcase copy, registration card title, and toggle columns.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
+              <i data-feather="user-plus"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <a href="/register/" target="_blank" class="btn btn-sm btn-outline-primary" style="display:inline-flex; align-items:center; gap:5px;">
-              <i data-feather="external-link" style="width:13px; height:13px;"></i> View Live Page
-            </a>
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Registration Page &amp; Pass Editor (/register/)</h3>
+              <p class="cms-card-subtitle">Atmosphere showcase copy, ticket types, and fast-track registration card</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <a href="/register/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="external-link"></i> Preview Registration &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
 
           
           <!-- Registration Cityscape Photo Upload -->
@@ -5303,22 +5688,29 @@ Connect with leading universities, explore scholarships and discover the possibi
       <div id="subtab-legal" class="service-subtab-content" style="display:none;">
         <div class="cms-card cms-card-collapsible is-collapsed" id="sec-services-legal">
           <div class="cms-card-header cms-collapsible-header" onclick="toggleCmsCard('sec-services-legal', event)">
-            <div>
-              <h3 class="cms-card-title"><i data-feather="shield" style="color:#64748b;"></i> Privacy Policy &amp; Terms Editor</h3>
-              <p class="cms-card-subtitle">Edit legal titles, dates, or enter full custom HTML body to replace standard legal boilerplate.</p>
+          <div class="cms-card-header-left">
+            <div class="cms-card-icon-squircle" style="background:#f1f5f9; color:#475569;">
+              <i data-feather="shield"></i>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-              <div style="display:flex; gap:8px;">
-                <a href="/privacy-policy/" target="_blank" onclick="event.stopPropagation()" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;">View Privacy</a>
-                <a href="/terms/" target="_blank" onclick="event.stopPropagation()" class="btn btn-sm btn-outline-secondary" style="display:inline-flex; align-items:center; gap:4px;">View Terms</a>
-              </div>
-              <span class="cms-card-toggle-pill">
-                <span class="cms-toggle-text">Expand</span>
-                <i data-feather="chevron-down"></i>
-              </span>
+            <div class="cms-card-header-text">
+              <h3 class="cms-card-title">Privacy Policy &amp; Terms Editor</h3>
+              <p class="cms-card-subtitle">Edit legal titles, dates, or enter full custom HTML body to replace standard legal boilerplate</p>
             </div>
           </div>
-          <div class="cms-card-body">
+          <div class="cms-card-header-right">
+            <a href="/privacy-policy/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="shield"></i> View Privacy &rarr;
+            </a>
+            <a href="/terms/" target="_blank" onclick="event.stopPropagation()" class="cms-card-action-btn">
+              <i data-feather="file-text"></i> View Terms &rarr;
+            </a>
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
+        </div>
+        <div class="cms-card-body">
 
           <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:18px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:12px; font-weight:700; color:#475569;"><i data-feather="sliders" style="width:13px; height:13px; vertical-align:middle; margin-right:4px;"></i> Section Visibility &amp; Layout:</span>
@@ -5417,15 +5809,17 @@ Connect with leading universities, explore scholarships and discover the possibi
             <div class="cms-card-icon-squircle" style="background:#e0f2fe; color:#0284c7;">
               <i data-feather="file-text"></i>
             </div>
-            <div>
+            <div class="cms-card-header-text">
               <h3 class="cms-card-title">Footer Tagline &amp; Copyright</h3>
               <p class="cms-card-subtitle">Footer brand tagline, copyright text, and licensing disclosure</p>
             </div>
           </div>
-          <span class="cms-card-toggle-pill">
-            <span class="cms-toggle-text">Expand</span>
-            <i data-feather="chevron-down"></i>
-          </span>
+          <div class="cms-card-header-right">
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
         </div>
         <div class="cms-card-body">
           <div class="form-group">
@@ -5446,15 +5840,17 @@ Connect with leading universities, explore scholarships and discover the possibi
             <div class="cms-card-icon-squircle" style="background:#eff6ff; color:#2563eb;">
               <i data-feather="compass"></i>
             </div>
-            <div>
+            <div class="cms-card-header-text">
               <h3 class="cms-card-title">Column 2 Navigation: {{ config.footer_col2_title|default:'Explore' }}</h3>
               <p class="cms-card-subtitle">Customize the column header title, link labels, and destination URLs</p>
             </div>
           </div>
-          <span class="cms-card-toggle-pill">
-            <span class="cms-toggle-text">Collapse</span>
-            <i data-feather="chevron-down"></i>
-          </span>
+          <div class="cms-card-header-right">
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Collapse</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
         </div>
         <div class="cms-card-body">
           <div class="cms-column-title-box theme-col2" style="background:#f0f7ff; border:1.5px solid #bfdbfe; border-radius:10px; padding:14px 16px; margin-bottom:20px;">
@@ -5579,15 +5975,17 @@ Connect with leading universities, explore scholarships and discover the possibi
             <div class="cms-card-icon-squircle" style="background:#f5f3ff; color:#7c3aed;">
               <i data-feather="check-square"></i>
             </div>
-            <div>
+            <div class="cms-card-header-text">
               <h3 class="cms-card-title">Column 3 Navigation: {{ config.footer_col3_title|default:'Participate' }}</h3>
               <p class="cms-card-subtitle">Customize the column header title, link labels, and destination URLs</p>
             </div>
           </div>
-          <span class="cms-card-toggle-pill">
-            <span class="cms-toggle-text">Collapse</span>
-            <i data-feather="chevron-down"></i>
-          </span>
+          <div class="cms-card-header-right">
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Collapse</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
         </div>
         <div class="cms-card-body">
           <div class="cms-column-title-box theme-col3" style="background:#f5f3ff; border:1.5px solid #ddd6fe; border-radius:10px; padding:14px 16px; margin-bottom:20px;">
@@ -5712,15 +6110,17 @@ Connect with leading universities, explore scholarships and discover the possibi
             <div class="cms-card-icon-squircle" style="background:#ecfdf5; color:#059669;">
               <i data-feather="mail"></i>
             </div>
-            <div>
+            <div class="cms-card-header-text">
               <h3 class="cms-card-title">Column 4: {{ config.footer_col4_title|default:'Connect' }} &amp; Legal Compliance</h3>
               <p class="cms-card-subtitle">Customize the connect column title, routing links, and legal/privacy policy URLs</p>
             </div>
           </div>
-          <span class="cms-card-toggle-pill">
-            <span class="cms-toggle-text">Collapse</span>
-            <i data-feather="chevron-down"></i>
-          </span>
+          <div class="cms-card-header-right">
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Collapse</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
         </div>
         <div class="cms-card-body">
           <div class="cms-column-title-box theme-col4" style="background:#ecfdf5; border:1.5px solid #a7f3d0; border-radius:10px; padding:14px 16px; margin-bottom:20px;">
@@ -5871,15 +6271,17 @@ Connect with leading universities, explore scholarships and discover the possibi
             <div class="cms-card-icon-squircle" style="background:#ecfdf5; color:#10b981;">
               <i data-feather="phone-call"></i>
             </div>
-            <div>
+            <div class="cms-card-header-text">
               <h3 class="cms-card-title">Contact &amp; Venue Details</h3>
               <p class="cms-card-subtitle">Official contact email, support helpline phone, and physical exhibition venue</p>
             </div>
           </div>
-          <span class="cms-card-toggle-pill">
-            <span class="cms-toggle-text">Expand</span>
-            <i data-feather="chevron-down"></i>
-          </span>
+          <div class="cms-card-header-right">
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
         </div>
         <div class="cms-card-body">
           <div class="form-row">
@@ -5956,15 +6358,17 @@ Connect with leading universities, explore scholarships and discover the possibi
             <div class="cms-card-icon-squircle" style="background:#f5f3ff; color:#6366f1;">
               <i data-feather="share-2"></i>
             </div>
-            <div>
+            <div class="cms-card-header-text">
               <h3 class="cms-card-title">Social Media Profile Links &amp; Titles</h3>
               <p class="cms-card-subtitle">Customize titles and profile destination URLs for all official social networks</p>
             </div>
           </div>
-          <span class="cms-card-toggle-pill">
-            <span class="cms-toggle-text">Expand</span>
-            <i data-feather="chevron-down"></i>
-          </span>
+          <div class="cms-card-header-right">
+            <span class="cms-card-toggle-pill">
+              <span class="cms-toggle-text">Expand</span>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </div>
         </div>
         <div class="cms-card-body">
           <p style="font-size: 12px; color: #64748b; margin: 0 0 16px 0;">Leave Profile URL empty to hide that network button from the footer.</p>
