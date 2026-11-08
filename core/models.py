@@ -20,6 +20,7 @@ class EventLocation(models.Model):
 
 class Exhibitor(models.Model):
     user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='exhibitor_profile')
+    university = models.OneToOneField('University', on_delete=models.SET_NULL, null=True, blank=True, related_name='exhibitor')
     company_name = models.CharField(max_length=255, db_index=True)
     event_location = models.ForeignKey(EventLocation, on_delete=models.CASCADE, related_name='exhibitors')
     profile_description = models.TextField(blank=True)
@@ -1603,6 +1604,14 @@ class ExpoBooth(models.Model):
 
     def save(self, *args, **kwargs):
         self.clean()
+        # Automatically sync university and exhibitor relationships
+        if self.university and not self.exhibitor:
+            if hasattr(self.university, 'exhibitor') and self.university.exhibitor:
+                self.exhibitor = self.university.exhibitor
+        elif self.exhibitor and not self.university:
+            if self.exhibitor.university:
+                self.university = self.exhibitor.university
+
         if self.university or self.exhibitor:
             if self.status == 'AVAILABLE':
                 self.status = 'ASSIGNED'

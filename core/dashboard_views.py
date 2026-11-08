@@ -1137,7 +1137,35 @@ def exhibitor_create(request):
     if request.method == 'POST':
         form = ExhibitorForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            exh = form.save()
+            # Synchronize with University model
+            from .models import University, UniversityProfile
+            from django.utils.text import slugify
+            uni = University.objects.filter(name__iexact=exh.company_name).first()
+            if not uni:
+                base_slug = slugify(exh.company_name) or f"exh-{exh.id}"
+                slug = base_slug
+                c = 1
+                while University.objects.filter(slug=slug).exists():
+                    slug = f"{base_slug}-{c}"
+                    c += 1
+                uni = University.objects.create(
+                    name=exh.company_name,
+                    slug=slug,
+                    is_approved=exh.is_verified
+                )
+            if not exh.university:
+                exh.university = uni
+                exh.save(update_fields=['university'])
+
+            u_prof, _ = UniversityProfile.objects.get_or_create(university=uni)
+            if exh.country and not u_prof.location_state_country:
+                u_prof.location_state_country = exh.country
+            if exh.website and not u_prof.website:
+                u_prof.website = exh.website
+            if exh.logo and not u_prof.logo:
+                u_prof.logo = exh.logo
+            u_prof.save()
 
             return redirect('dashboard_exhibitors')
     else:
@@ -3790,7 +3818,35 @@ def university_create(request):
             if 'cover_image' in request.FILES:
                 profile.cover_image = request.FILES['cover_image']
             profile.save()
-            messages.success(request, f'University Card for "{uni.name}" automatically created and assigned to Hero Card #{uni.hero_priority}!')
+
+            # Auto-sync with Exhibitor model
+            from .models import Exhibitor, EventLocation, ExpoBooth
+            loc = EventLocation.objects.filter(is_active=True).first() or EventLocation.objects.first()
+            exh = Exhibitor.objects.filter(company_name__iexact=uni.name).first() or Exhibitor.objects.filter(university=uni).first()
+            if not exh and loc:
+                exh = Exhibitor.objects.create(
+                    university=uni,
+                    company_name=uni.name,
+                    event_location=loc,
+                    country=profile.location_state_country or "International",
+                    website=profile.website,
+                    logo=profile.logo,
+                    is_verified=uni.is_approved
+                )
+            elif exh and not exh.university:
+                exh.university = uni
+                exh.save(update_fields=['university'])
+
+            # Allocate an ExpoBooth if unallocated
+            if exh and not ExpoBooth.objects.filter(exhibitor=exh).exists() and not ExpoBooth.objects.filter(university=uni).exists():
+                available_booth = ExpoBooth.objects.filter(status='AVAILABLE', exhibitor__isnull=True, university__isnull=True).first()
+                if available_booth:
+                    available_booth.exhibitor = exh
+                    available_booth.university = uni
+                    available_booth.status = 'ASSIGNED'
+                    available_booth.save()
+
+            messages.success(request, f'University Card & Exhibitor Profile for "{uni.name}" successfully created and synced!')
 
             return redirect('dashboard_universities')
     else:

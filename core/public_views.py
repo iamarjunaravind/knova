@@ -440,7 +440,21 @@ def public_exhibitors(request):
         scholarships_count=Count('scholarships', distinct=True),
     ).order_by('sort_priority', 'name'))
 
-    exhibitors = exhibitor_records + uni_records
+    # Deduplicate: combine universities and exhibitors without repeats
+    seen_names = set()
+    combined_exhibitors = []
+    for u in uni_records:
+        norm = u.name.strip().lower()
+        if norm not in seen_names:
+            seen_names.add(norm)
+            combined_exhibitors.append(u)
+    for e in exhibitor_records:
+        norm = e.company_name.strip().lower()
+        if norm not in seen_names:
+            seen_names.add(norm)
+            combined_exhibitors.append(e)
+
+    exhibitors = combined_exhibitors
 
     saved_uni_ids = set()
     if request.user.is_authenticated:
