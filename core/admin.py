@@ -158,21 +158,30 @@ class UniversityProfileInline(admin.StackedInline):
     extra = 0
 
 
+class ExhibitorInline(admin.StackedInline):
+    model = Exhibitor
+    can_delete = False
+    extra = 0
+    fields = ('company_name', 'event_location', 'is_verified', 'country', 'tuition_range', 'offered_programs')
+
+
 @admin.register(University)
 class UniversityAdmin(admin.ModelAdmin):
-    list_display = ('name', 'hero_priority', 'is_approved', 'registration_date')
+    list_display = ('name', 'hero_priority', 'is_approved', 'get_booth', 'registration_date')
     list_editable = ('hero_priority', 'is_approved')
     list_filter = ('is_approved',)
     search_fields = ('name',)
     ordering = ('hero_priority', 'name')
     prepopulated_fields = {'slug': ('name',)}
-    inlines = [UniversityProfileInline]
+    inlines = [UniversityProfileInline, ExhibitorInline]
 
-
-@admin.register(UniversityProfile)
-class UniversityProfileAdmin(admin.ModelAdmin):
-    list_display = ('university', 'location_city')
-    search_fields = ('university__name', 'location_city')
+    def get_booth(self, obj):
+        if hasattr(obj, 'booth') and obj.booth:
+            return obj.booth.booth_number
+        elif hasattr(obj, 'exhibitor') and getattr(obj.exhibitor, 'booth', None):
+            return obj.exhibitor.booth.booth_number
+        return '-'
+    get_booth.short_description = 'Allocated Booth'
 
 
 @admin.register(CourseCategory)
@@ -210,9 +219,14 @@ class EventLocationAdmin(admin.ModelAdmin):
 
 @admin.register(Exhibitor)
 class ExhibitorAdmin(admin.ModelAdmin):
-    list_display = ('company_name', 'event_location')
-    list_filter = ('event_location',)
-    search_fields = ('company_name',)
+    list_display = ('company_name', 'university', 'event_location', 'get_booth_number', 'is_verified')
+    list_filter = ('event_location', 'is_verified')
+    search_fields = ('company_name', 'university__name')
+
+    def get_booth_number(self, obj):
+        booth = getattr(obj, 'booth', None)
+        return booth.booth_number if booth else '-'
+    get_booth_number.short_description = 'Booth'
 
 
 @admin.register(Sponsor)
