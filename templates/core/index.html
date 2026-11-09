@@ -6683,7 +6683,7 @@
   /* FAQ More Text Only (Pure text, no button element or button styles) */
   .faq-view-more-wrap {
     text-align: left;
-    padding-left: 2px;
+    padding-left: 15px;
     margin-top: 14px;
     padding-top: 4px;
   }
@@ -6747,6 +6747,10 @@
 
   .eventor-faq-item {
     padding: 10px 12px !important;
+  }
+
+  .faq-view-more-wrap {
+    padding-left: 13px !important;
   }
 
   /* Section 12: Still Have Questions */
@@ -8513,13 +8517,13 @@
             <i class="ti ti-layout-grid"></i> All Days
           </button>
           <button type="button" class="eventor-day-tab-btn" onclick="filterProgDay(this, 'day1')" role="tab" aria-selected="false">
-            <i class="ti ti-calendar-event"></i> 21 Oct &bull; Day 1
+            <i class="ti ti-calendar-event"></i> 25 Mar &bull; Day 1
           </button>
           <button type="button" class="eventor-day-tab-btn" onclick="filterProgDay(this, 'day2')" role="tab" aria-selected="false">
-            <i class="ti ti-calendar-event"></i> 22 Oct &bull; Day 2
+            <i class="ti ti-calendar-event"></i> 26 Mar &bull; Day 2
           </button>
           <button type="button" class="eventor-day-tab-btn" onclick="filterProgDay(this, 'day3')" role="tab" aria-selected="false">
-            <i class="ti ti-calendar-event"></i> 23 Oct &bull; Day 3
+            <i class="ti ti-calendar-event"></i> 27 Mar &bull; Day 3
           </button>
         </div>
       </div>
@@ -8538,11 +8542,11 @@
     <!-- 2-Column Schedule Grid of Rich Cards -->
     <div class="eventor-programme-grid eventor-stagger-parent">
       {% for session in programme_sessions %}
-      <div class="eventor-prog-card eventor-reveal" data-day="all" data-track="all">
+      <div class="eventor-prog-card eventor-reveal" data-day="{{ session.day_code }}" data-track="{{ session.track_code }}">
         <div>
           <div class="eventor-prog-card-top">
-            <span class="prog-track-badge track-admissions">
-              <i class="ti ti-calendar"></i> {{ session.date|date:"M d" }}
+            <span class="prog-track-badge track-{{ session.track_code }}">
+              <i class="ti ti-calendar"></i> {{ session.date|date:"M d" }} &bull; {{ session.track_label }}
             </span>
             <div class="eventor-prog-time-badge">
               <i class="ti ti-clock"></i> <span>{{ session.start_time|time:"h:i A" }} &ndash; {{ session.end_time|time:"h:i A" }}</span>
@@ -8600,13 +8604,25 @@
           The conference schedule and seminar sessions will be published here as soon as they are added in the database.
         </p>
       </div>
-      {% endfor %}</div>
+      {% endfor %}
+
+      <!-- Dynamic Empty Filter State when no sessions match filter -->
+      <div id="progEmptyMsg" style="display: none; grid-column: 1 / -1; width: 100%; text-align: center; padding: 42px 24px; background: #ffffff; border-radius: 16px; border: 1.5px dashed #e2e8f0;">
+        <div style="width: 44px; height: 44px; border-radius: 50%; background: #f8fafc; color: #64748b; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 20px;">
+          <i class="ti ti-filter-off"></i>
+        </div>
+        <h4 style="font-size: 15px; font-weight: 800; color: #0a1936; margin: 0 0 5px 0;">No sessions match the selected day &amp; track</h4>
+        <p style="font-size: 12.5px; color: #64748b; margin: 0 0 12px 0;">Try selecting a different day or track, or view all sessions.</p>
+        <button type="button" onclick="resetProgFilters()" style="background: #1768ff; color: #ffffff; border: none; border-radius: 20px; padding: 7px 18px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="ti ti-rotate-2"></i> Reset Filters
+        </button>
+      </div>
     </div>
 
     <!-- More / Less Sessions Toggle Button -->
-    <div class="prog-more-btn-wrap" id="progMoreBtnWrap">
+    <div class="prog-more-btn-wrap" id="progMoreBtnWrap" style="display: none;">
       <button type="button" class="prog-more-btn" id="progMoreBtn" onclick="toggleProgMore()">
-        <span id="progMoreBtnText">+ View More Sessions (4)</span>
+        <span id="progMoreBtnText">+ View More Sessions</span>
         <i id="progMoreBtnIcon" class="ti ti-chevron-down"></i>
       </button>
     </div>
@@ -8626,22 +8642,35 @@
   var currentProgDay = 'all';
   var currentProgTrack = 'all';
   var isExpanded = false;
+
   function applyProgFilters() {
     var cards = document.querySelectorAll('.section-programme .eventor-prog-card');
     var matchingCards = [];
+    var emptyMsg = document.getElementById('progEmptyMsg');
+
     cards.forEach(function(card) {
-      var cardDay = card.getAttribute('data-day');
-      var cardTrack = card.getAttribute('data-track');
+      var cardDay = (card.getAttribute('data-day') || '').trim();
+      var cardTrack = (card.getAttribute('data-track') || '').trim();
       var isCtaCard = card.classList.contains('eventor-prog-cta-card');
-      var matchDay = (currentProgDay === 'all' || cardDay === currentProgDay || isCtaCard);
-      var matchTrack = (currentProgTrack === 'all' || cardTrack === currentProgTrack || isCtaCard);
+
+      var matchDay = (currentProgDay === 'all' || cardDay === 'all' || cardDay === currentProgDay || cardDay.split(' ').indexOf(currentProgDay) !== -1 || isCtaCard);
+      var matchTrack = (currentProgTrack === 'all' || cardTrack === 'all' || cardTrack === currentProgTrack || cardTrack.split(' ').indexOf(currentProgTrack) !== -1 || isCtaCard);
+
       if (matchDay && matchTrack) {
         matchingCards.push(card);
       } else {
         card.style.display = 'none';
       }
-
     });
+
+    if (emptyMsg) {
+      if (matchingCards.length === 0) {
+        emptyMsg.style.display = 'block';
+      } else {
+        emptyMsg.style.display = 'none';
+      }
+    }
+
     var limit = isExpanded ? matchingCards.length : 2;
     matchingCards.forEach(function(card, idx) {
       if (idx < limit) {
@@ -8649,8 +8678,8 @@
       } else {
         card.style.display = 'none';
       }
-
     });
+
     var btnWrap = document.getElementById('progMoreBtnWrap');
     var btnText = document.getElementById('progMoreBtnText');
     var btnIcon = document.getElementById('progMoreBtnIcon');
@@ -8667,11 +8696,8 @@
           btnText.textContent = '+ View More Sessions (' + remaining + ')';
           btnIcon.className = 'ti ti-chevron-down';
         }
-
       }
-
     }
-
   }
 
   window.toggleProgMore = function() {
@@ -8682,9 +8708,7 @@
       if (progSection) {
         progSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-
     }
-
   };
 
   window.filterProgDay = function(btn, day) {
@@ -8695,6 +8719,7 @@
     btn.classList.add('active');
     btn.setAttribute('aria-selected', 'true');
     currentProgDay = day;
+    isExpanded = false;
     applyProgFilters();
   };
 
@@ -8704,6 +8729,30 @@
     });
     btn.classList.add('active');
     currentProgTrack = track;
+    isExpanded = false;
+    applyProgFilters();
+  };
+
+  window.resetProgFilters = function() {
+    currentProgDay = 'all';
+    currentProgTrack = 'all';
+    isExpanded = false;
+    document.querySelectorAll('.eventor-day-tab-btn').forEach(function(b, idx) {
+      if (idx === 0) {
+        b.classList.add('active');
+        b.setAttribute('aria-selected', 'true');
+      } else {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      }
+    });
+    document.querySelectorAll('.prog-track-btn').forEach(function(b, idx) {
+      if (idx === 0) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    });
     applyProgFilters();
   };
 
@@ -8800,9 +8849,9 @@
     </div>
 
     <!-- Eventor 4-Column Portrait Cards Grid -->
-    <div class="eventor-speakers-row eventor-stagger-parent">
-      {% for speaker in featured_speakers|slice:":4" %}
-      <div class="eventor-speaker-card eventor-reveal">
+    <div class="eventor-speakers-row eventor-stagger-parent" id="eventorSpeakersRow">
+      {% for speaker in featured_speakers %}
+      <div class="eventor-speaker-card eventor-reveal{% if forloop.counter > 4 %} spk-extra-card{% endif %}"{% if forloop.counter > 4 %} style="display: none;"{% endif %}>
         <div class="speaker-img-box">
           {% if speaker.photo %}
             <img src="{{ speaker.photo.url }}" alt="{{ speaker.name }}" width="300" height="400" loading="lazy" decoding="async">
@@ -8846,11 +8895,18 @@
       </button>
     </div>
 
-    <!-- Centered "+ Speakers" Button matching Eventor -->
-    <div style="text-align: center; margin-top: 24px; position: relative; z-index: 2;" class="eventor-reveal reveal-delay-2">
+    <!-- Centered More / Toggle Speakers Button -->
+    <div style="text-align: center; margin-top: 28px; position: relative; z-index: 2;" class="eventor-reveal reveal-delay-2">
+      {% if featured_speakers|length > 4 %}
+      <button type="button" class="eventor-plus-speakers-btn" id="spkMoreBtn" onclick="toggleSpeakersMore()" style="cursor: pointer; border: none;">
+        <span id="spkMoreBtnText">+ View More Speakers</span>
+        <i id="spkMoreBtnIcon" class="ti ti-chevron-down" style="font-size: 16px;"></i>
+      </button>
+      {% else %}
       <a href="{% url 'public_speakers' %}" class="eventor-plus-speakers-btn">
         + Speakers
       </a>
+      {% endif %}
     </div>
   </div>
 
@@ -8894,6 +8950,34 @@
         }, 50);
       }, { passive: true });
     }
+
+    var speakersExpanded = false;
+    window.toggleSpeakersMore = function() {
+      speakersExpanded = !speakersExpanded;
+      var extraCards = document.querySelectorAll('.eventor-speakers-row .spk-extra-card');
+      var btnText = document.getElementById('spkMoreBtnText');
+      var btnIcon = document.getElementById('spkMoreBtnIcon');
+      extraCards.forEach(function(card) {
+        if (speakersExpanded) {
+          card.style.display = 'flex';
+          card.style.animation = 'faqFadeIn 0.35s ease forwards';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      if (btnText) {
+        btnText.textContent = speakersExpanded ? 'Show Less' : '+ View More Speakers';
+      }
+      if (btnIcon) {
+        btnIcon.className = speakersExpanded ? 'ti ti-chevron-up' : 'ti ti-chevron-down';
+      }
+      if (!speakersExpanded) {
+        var spkSec = document.getElementById('speakers');
+        if (spkSec) {
+          spkSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    };
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initSpeakersCarousel);
@@ -9192,6 +9276,21 @@
         border-color: #cbd5e1;
         background: #f8fafc;
         transform: translateY(-1px);
+      }
+      .zone-spec-tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 130px;
+        min-width: 130px;
+        text-align: center;
+        box-sizing: border-box;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 6px;
+        border-radius: 6px;
+        flex-shrink: 0;
+        white-space: nowrap;
       }
       .cta-exp-card {
         transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
@@ -9588,7 +9687,7 @@
                   <span style="width: 12px; height: 12px; border-radius: 3px; background: #ef4444; flex-shrink: 0; box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);"></span>
                   <span style="font-size: 13px; font-weight: 750; color: #0a1936;">Shell Scheme Booth</span>
                 </div>
-                <span style="font-size: 11px; color: #475569; font-weight: 700; background: #fef2f2; border: 1px solid #fecaca; padding: 2px 8px; border-radius: 6px;">250 &times; 250 cm</span>
+                <span class="zone-spec-tag" style="color: #475569; background: #fef2f2; border: 1px solid #fecaca;">250 &times; 250 cm</span>
               </div>
 
               <!-- 2. Standard Booth -->
@@ -9597,7 +9696,7 @@
                   <span style="width: 12px; height: 12px; border-radius: 3px; background: #16a34a; flex-shrink: 0; box-shadow: 0 0 6px rgba(22, 163, 74, 0.4);"></span>
                   <span style="font-size: 13px; font-weight: 750; color: #0a1936;">Standard Booth</span>
                 </div>
-                <span style="font-size: 11px; color: #166534; font-weight: 700; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 2px 8px; border-radius: 6px;">300 &times; 300 cm</span>
+                <span class="zone-spec-tag" style="color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0;">300 &times; 300 cm</span>
               </div>
 
               <!-- 3. Large Booth -->
@@ -9606,7 +9705,7 @@
                   <span style="width: 12px; height: 12px; border-radius: 3px; background: #2563eb; flex-shrink: 0; box-shadow: 0 0 6px rgba(37, 99, 235, 0.4);"></span>
                   <span style="font-size: 13px; font-weight: 750; color: #0a1936;">Large Booth</span>
                 </div>
-                <span style="font-size: 11px; color: #1e40af; font-weight: 700; background: #eff6ff; border: 1px solid #bfdbfe; padding: 2px 8px; border-radius: 6px;">600 &times; 300 cm</span>
+                <span class="zone-spec-tag" style="color: #1e40af; background: #eff6ff; border: 1px solid #bfdbfe;">600 &times; 300 cm</span>
               </div>
 
               <!-- 4. Premium Booth -->
@@ -9615,7 +9714,7 @@
                   <span style="width: 12px; height: 12px; border-radius: 3px; background: #b45309; flex-shrink: 0; box-shadow: 0 0 6px rgba(180, 83, 9, 0.4);"></span>
                   <span style="font-size: 13px; font-weight: 750; color: #0a1936;">Premium Booth</span>
                 </div>
-                <span style="font-size: 11px; color: #92400e; font-weight: 700; background: #fffbeb; border: 1px solid #fde68a; padding: 2px 8px; border-radius: 6px;">600 &times; 400 cm</span>
+                <span class="zone-spec-tag" style="color: #92400e; background: #fffbeb; border: 1px solid #fde68a;">600 &times; 400 cm</span>
               </div>
 
               <!-- 5. Sponsorship Booth -->
@@ -9624,7 +9723,7 @@
                   <span style="width: 12px; height: 12px; border-radius: 3px; background: #787834; flex-shrink: 0; box-shadow: 0 0 6px rgba(120, 120, 52, 0.4);"></span>
                   <span style="font-size: 13px; font-weight: 750; color: #0a1936;">Sponsorship Booth</span>
                 </div>
-                <span style="font-size: 11px; color: #4a4a1c; font-weight: 700; background: #f7f7ee; border: 1px solid #e3e3c8; padding: 2px 8px; border-radius: 6px;">400 &times; 200 cm</span>
+                <span class="zone-spec-tag" style="color: #4a4a1c; background: #f7f7ee; border: 1px solid #e3e3c8;">400 &times; 200 cm</span>
               </div>
 
               <!-- 6. Seminar & Stage Area -->
@@ -9633,7 +9732,7 @@
                   <span style="width: 12px; height: 12px; border-radius: 3px; background: #c026d3; flex-shrink: 0; box-shadow: 0 0 6px rgba(192, 38, 211, 0.4);"></span>
                   <span style="font-size: 13px; font-weight: 750; color: #0a1936;">Seminar &amp; Stage Area</span>
                 </div>
-                <span style="font-size: 11px; color: #86198f; font-weight: 700; background: #fdf4ff; border: 1px solid #f5d0fe; padding: 2px 8px; border-radius: 6px;">100 Seats Capacity</span>
+                <span class="zone-spec-tag" style="color: #86198f; background: #fdf4ff; border: 1px solid #f5d0fe;">100 Seats Capacity</span>
               </div>
 
             </div>
@@ -10482,7 +10581,7 @@
         </div>
 
         <!-- More (Pure text, no button element) -->
-        <div class="faq-view-more-wrap" id="faqViewMoreWrap" style="text-align: left; margin-top: 14px;">
+        <div class="faq-view-more-wrap" id="faqViewMoreWrap" style="text-align: left; margin-top: 14px; padding-left: 15px;">
           <span id="faqMoreText" class="faq-more-text" onclick="toggleFaqViewMore()" style="cursor: pointer; display: inline-block; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: #1768ff; user-select: none; transition: color 0.2s ease;" onmouseover="this.style.color='#0a1936'; this.style.textDecoration='underline';" onmouseout="this.style.color='#1768ff'; this.style.textDecoration='none';">More</span>
         </div>
 

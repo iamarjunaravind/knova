@@ -163,13 +163,23 @@ class UniversityForm(forms.ModelForm):
 
     cover_image = forms.ImageField(required=False, label="Campus Banner / Cover Image")
 
-    short_description = forms.CharField(widget=forms.Textarea(attrs={'rows': 2}), required=False, label="Short Summary (Overview card)")
+    short_description = forms.CharField(widget=forms.Textarea(attrs={'rows': 2}), required=False, label="Short Card Summary (Quick Overview)")
 
-    about = forms.CharField(widget=forms.Textarea(attrs={'rows': 4}), required=False, label="About the University (Full Overview)")
+    about = forms.CharField(widget=forms.Textarea(attrs={'rows': 4}), required=False, label="About the University")
 
-    campus_facilities = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=False, label="Campus Facilities & Infrastructure")
+    campus_facilities = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=False, label="Campus & Facilities")
 
-    admission_process = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=False, label="Admission Process & Requirements")
+    academic_programmes = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=False, label="Academic Programmes & Areas of Specialisation")
+
+    admission_process = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=False, label="Admission Process & Entry Criteria")
+
+    scholarships_assistance = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=False, label="Scholarships & Financial Assistance")
+
+    international_support = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=False, label="International Student Support")
+
+    career_opportunities = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=False, label="Career Opportunities & Industry Partnerships")
+
+    why_choose_us = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=False, label="Why Choose Our University?")
 
     class Meta:
 
@@ -207,7 +217,12 @@ class UniversityForm(forms.ModelForm):
                 self.fields['short_description'].initial = profile.short_description
                 self.fields['about'].initial = profile.about
                 self.fields['campus_facilities'].initial = profile.campus_facilities
+                self.fields['academic_programmes'].initial = profile.academic_programmes
                 self.fields['admission_process'].initial = profile.admission_process
+                self.fields['scholarships_assistance'].initial = profile.scholarships_assistance
+                self.fields['international_support'].initial = profile.international_support
+                self.fields['career_opportunities'].initial = profile.career_opportunities
+                self.fields['why_choose_us'].initial = profile.why_choose_us
             except Exception:
                 pass
         else:

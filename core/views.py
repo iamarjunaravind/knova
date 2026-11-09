@@ -95,11 +95,11 @@ def index(request):
 
     # Programme sessions from database
 
-    programme_sessions = list(ProgrammeSession.objects.filter(event_location__is_upcoming=True).select_related('event_location', 'speaker').order_by('date', 'start_time')[:6])
+    programme_sessions = list(ProgrammeSession.objects.filter(event_location__is_upcoming=True).select_related('event_location', 'speaker').order_by('date', 'start_time')[:24])
 
     if not programme_sessions:
 
-        programme_sessions = list(ProgrammeSession.objects.all().select_related('event_location', 'speaker').order_by('date', 'start_time')[:6])
+        programme_sessions = list(ProgrammeSession.objects.all().select_related('event_location', 'speaker').order_by('date', 'start_time')[:24])
 
     # Dynamic counts strictly from database
 
@@ -124,7 +124,7 @@ def index(request):
         'events': EventLocation.objects.filter(is_active=True).order_by('start_date'),
         'upcoming_event': EventLocation.objects.filter(is_active=True, is_upcoming=True).first(),
         'featured_exhibitors': featured_exhibitors,
-        'featured_speakers': Speaker.objects.all()[:4],
+        'featured_speakers': Speaker.objects.all()[:12],
         'programme_sessions': programme_sessions,
         'universities': University.objects.filter(is_approved=True).select_related('profile').only('id', 'name', 'slug', 'profile__id', 'profile__location_city')[:150],
         'hero_universities': hero_universities,

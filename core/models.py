@@ -53,7 +53,12 @@ class Exhibitor(models.Model):
                 self.short_description = ex.profile_description or f"{ex.company_name} is an accredited educational institution and verified exhibitor."
                 self.about = ex.profile_description or f"{ex.company_name} is an accredited educational institution offering recognized undergraduate and postgraduate degree programs."
                 self.campus_facilities = "Modern academic lecture halls, research facilities, student advisory desks, and digital learning suites."
+                self.academic_programmes = "Comprehensive undergraduate, postgraduate, and professional certificate programs across diverse faculties."
                 self.admission_process = "Direct applications and scholarship evaluations are conducted at the university booth. Meet with admissions representatives for portfolio reviews."
+                self.scholarships_assistance = "Merit-based scholarships, financial aid grants, and international student bursaries available."
+                self.international_support = "Dedicated international office providing visa guidance, orientation, language assistance, and dedicated housing."
+                self.career_opportunities = "Industry partnerships, internship placements, alumni network, and dedicated career placement cell."
+                self.why_choose_us = "World-class faculty, globally accredited degrees, modern campus infrastructure, and vibrant student community."
                 self.description = self.short_description
         return ExhibitorProfileAdapter(self)
 
@@ -213,6 +218,43 @@ class ProgrammeSession(models.Model):
     def login_password(self):
         staff = self.coordinator_staff
         return staff.raw_password if staff else 'seminar123'
+
+    @property
+    def track_code(self):
+        import re
+        t = (self.title + ' ' + self.description).lower()
+        if re.search(r'\b(scholarship|scholarships|grant|grants|funding|tuition|waiver|fellowship)\b', t):
+            return 'scholarship'
+        elif re.search(r'\b(counseling|counselling|advisory|counselor|counsellor|advising|clinic)\b', t):
+            return 'counseling'
+        elif re.search(r'\b(ai|robotics|stem|tech|technology|computing|algorithms|engineer|engineering)\b', t):
+            return 'stem'
+        elif re.search(r'\b(visa|visas|post-study|singapore|lifestyle|living)\b', t):
+            return 'life'
+        return 'admissions'
+
+    @property
+    def track_label(self):
+        mapping = {
+            'stem': 'STEM & AI Careers',
+            'scholarship': 'Scholarships & Grants',
+            'life': 'Student Life & Visas',
+            'counseling': '1-on-1 Faculty Panels',
+            'admissions': 'UK & Global Admissions',
+        }
+        return mapping.get(self.track_code, 'UK & Global Admissions')
+
+    @property
+    def day_code(self):
+        if self.event_location and self.event_location.start_date:
+            delta = (self.date - self.event_location.start_date).days
+            if delta <= 0:
+                return 'day1'
+            elif delta == 1:
+                return 'day2'
+            else:
+                return 'day3'
+        return 'day1'
 
     @property
     def attendances_count(self):
@@ -1458,7 +1500,12 @@ class UniversityProfile(models.Model):
     short_description = models.TextField()
     about = models.TextField(blank=True)
     campus_facilities = models.TextField(blank=True)
+    academic_programmes = models.TextField(blank=True)
     admission_process = models.TextField(blank=True)
+    scholarships_assistance = models.TextField(blank=True)
+    international_support = models.TextField(blank=True)
+    career_opportunities = models.TextField(blank=True)
+    why_choose_us = models.TextField(blank=True)
 
     def __str__(self):
         return f"Profile: {self.university.name}"
@@ -2274,7 +2321,12 @@ def auto_create_university_card(sender, instance, created, **kwargs):
                 'short_description': f"{instance.name} is a premier higher education institution offering globally recognized academic degrees and scholarship opportunities.",
                 'about': f"Welcome to {instance.name}. We prepare students for global leadership, research excellence, and high-impact career pathways.",
                 'campus_facilities': "Modern lecture theatres, digital research labs, interactive study suites, and student advisory desks.",
-                'admission_process': "Direct consultation, portfolio evaluation, and on-spot scholarship assessment available at the university booth."
+                'academic_programmes': "Signature degree courses, international accreditations, and specialized research tracks designed for global industry readiness.",
+                'admission_process': "Direct consultation, portfolio evaluation, and on-spot scholarship assessment available at the university booth.",
+                'scholarships_assistance': "Merit-based waivers, partial tuition assistance, and competitive grants offered to eligible prospective students.",
+                'international_support': "Comprehensive visa guidance, student housing assistance, cultural transition mentorship, and 24/7 student welfare support.",
+                'career_opportunities': "Extensive corporate partner networks, on-campus recruitments, internships, and global alumni placement support.",
+                'why_choose_us': "World-class academic standards, state-of-the-art facilities, career-focused learning, and a vibrant global student community."
             }
         )
 

@@ -3812,7 +3812,12 @@ def university_create(request):
             profile.accreditation = form.cleaned_data.get('accreditation') or 'Accredited University'
             profile.about = form.cleaned_data.get('about') or f"{uni.name} offers comprehensive undergraduate and postgraduate programs with global accreditations."
             profile.campus_facilities = form.cleaned_data.get('campus_facilities') or "Modern lecture theatres, digital research labs, interactive study suites, and student advisory desks."
+            profile.academic_programmes = form.cleaned_data.get('academic_programmes') or "Signature degree courses, international accreditations, and specialized research tracks designed for global industry readiness."
             profile.admission_process = form.cleaned_data.get('admission_process') or "Direct consultation, portfolio evaluation, and on-spot scholarship assessment available at the university booth."
+            profile.scholarships_assistance = form.cleaned_data.get('scholarships_assistance') or "Merit-based waivers, partial tuition assistance, and competitive grants offered to eligible prospective students."
+            profile.international_support = form.cleaned_data.get('international_support') or "Comprehensive visa guidance, student housing assistance, cultural transition mentorship, and 24/7 student welfare support."
+            profile.career_opportunities = form.cleaned_data.get('career_opportunities') or "Extensive corporate partner networks, on-campus recruitments, internships, and global alumni placement support."
+            profile.why_choose_us = form.cleaned_data.get('why_choose_us') or "World-class academic standards, state-of-the-art facilities, career-focused learning, and a vibrant global student community."
             if 'logo' in request.FILES:
                 profile.logo = request.FILES['logo']
             if 'cover_image' in request.FILES:
@@ -3898,7 +3903,12 @@ def university_update(request, pk=None):
             profile.accreditation = form.cleaned_data.get('accreditation', '')
             profile.about = form.cleaned_data.get('about', '')
             profile.campus_facilities = form.cleaned_data.get('campus_facilities', '')
+            profile.academic_programmes = form.cleaned_data.get('academic_programmes', '')
             profile.admission_process = form.cleaned_data.get('admission_process', '')
+            profile.scholarships_assistance = form.cleaned_data.get('scholarships_assistance', '')
+            profile.international_support = form.cleaned_data.get('international_support', '')
+            profile.career_opportunities = form.cleaned_data.get('career_opportunities', '')
+            profile.why_choose_us = form.cleaned_data.get('why_choose_us', '')
             if 'logo' in request.FILES:
                 profile.logo = request.FILES['logo']
             if 'cover_image' in request.FILES:

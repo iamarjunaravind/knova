@@ -1843,6 +1843,10 @@
 
             <a href="#admissions" class="uni-tab-link" onclick="setActiveTab(this)"><i class="ti ti-checklist"></i> Admissions Guide</a>
 
+            {% if university.profile.career_opportunities %}
+            <a href="#careers" class="uni-tab-link" onclick="setActiveTab(this)"><i class="ti ti-briefcase"></i> Career Partnerships</a>
+            {% endif %}
+
         </nav>
 
     </div>
@@ -1923,6 +1927,15 @@
 
                     </div>
 
+                    {% if university.profile.why_choose_us %}
+                    <div style="margin-top: 20px; padding: 18px 22px; background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); border: 1.5px solid #bbf7d0; border-radius: 12px;">
+                        <h4 style="margin: 0 0 8px; font-size: 14.5px; font-weight: 800; color: #166534; display: flex; align-items: center; gap: 8px;">
+                            <i class="ti ti-trophy" style="color: #16a34a; font-size: 18px;"></i> Why Choose {{ university.name }}?
+                        </h4>
+                        <p style="margin: 0; font-size: 13.5px; color: #334155; line-height: 1.65;">{{ university.profile.why_choose_us|linebreaksbr }}</p>
+                    </div>
+                    {% endif %}
+
                 </div>
 
             </section>
@@ -1942,6 +1955,15 @@
                     </h2>
 
                 </div>
+
+                {% if university.profile.academic_programmes %}
+                <div class="uni-overview-card" style="margin-bottom: 16px;">
+                    <h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px;">
+                        <i class="ti ti-certificate" style="color: #1768ff; font-size: 16px;"></i> Academic Programmes & Areas of Specialisation
+                    </h4>
+                    <p style="margin: 0; font-size: 13.5px; color: #334155; line-height: 1.65;">{{ university.profile.academic_programmes|linebreaksbr }}</p>
+                </div>
+                {% endif %}
 
                 <!-- Instant Filter & Search Bar -->
 
@@ -2186,6 +2208,15 @@
 
                 </div>
 
+                {% if university.profile.scholarships_assistance %}
+                <div class="uni-overview-card" style="margin-bottom: 16px;">
+                    <h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px;">
+                        <i class="ti ti-cash" style="color: #f59e0b; font-size: 16px;"></i> Scholarships & Financial Assistance
+                    </h4>
+                    <p style="margin: 0; font-size: 13.5px; color: #334155; line-height: 1.65;">{{ university.profile.scholarships_assistance|linebreaksbr }}</p>
+                </div>
+                {% endif %}
+
                 {% if scholarships %}
 
                     {% for sc in scholarships %}
@@ -2328,6 +2359,15 @@
 
                 </div>
 
+                {% if university.profile.international_support %}
+                <div class="uni-overview-card" style="margin-top: 18px; background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); border: 1.5px solid #bfdbfe;">
+                    <h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 800; color: #1e40af; display: flex; align-items: center; gap: 8px;">
+                        <i class="ti ti-plane-arrival" style="color: #2563eb; font-size: 16px;"></i> International Student Support & Global Services
+                    </h4>
+                    <p style="margin: 0; font-size: 13.5px; color: #334155; line-height: 1.65;">{{ university.profile.international_support|linebreaksbr }}</p>
+                </div>
+                {% endif %}
+
             </section>
 
             <!-- 5. Admissions Guide -->
@@ -2381,6 +2421,18 @@
                 </div>
 
             </section>
+
+            <!-- 6. Career Opportunities & Industry Partnerships -->
+            {% if university.profile.career_opportunities %}
+            <section id="careers" class="uni-content-section">
+                <div class="uni-section-header">
+                    <h2 class="uni-section-title"><i class="ti ti-briefcase"></i> Career Opportunities & Industry Partnerships</h2>
+                </div>
+                <div class="uni-overview-card">
+                    <p style="margin: 0; font-size: 13.5px; color: #334155; line-height: 1.65;">{{ university.profile.career_opportunities|linebreaksbr }}</p>
+                </div>
+            </section>
+            {% endif %}
 
         </div>
 
