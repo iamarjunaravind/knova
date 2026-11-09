@@ -3,258 +3,659 @@
 {% block title %}{{ action }} University Profile & Content | KNOVA{% endblock %}
 
 {% block nav_uni_content %}active{% endblock %}
-
 {% block nav_universities %}active{% endblock %}
-
 {% block page_title %}{{ action }} University Content{% endblock %}
 
 {% block content %}
-<div style="max-width: 960px; margin: 0 auto; padding-bottom: 40px;">
+<div class="uni-edit-container">
 
-  <!-- Header Bar -->
-  <div class="glass-card" style="margin-bottom: 24px; padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-    <div>
-      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-        <span style="background: #eff6ff; color: #1768ff; padding: 4px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; text-transform: uppercase;">Institutional Editor</span>
-        <h2 style="margin: 0; font-size: 22px; font-weight: 800; color: #0a1936;">{{ action }} University Profile & Content</h2>
+  <!-- Header Card -->
+  <div class="glass-card uni-header-card">
+    <div class="uni-header-text">
+      <div class="uni-header-badge-row">
+        <span class="uni-editor-badge">Institutional Editor</span>
       </div>
-      <p style="color: #64748b; font-size: 13.5px; margin: 0;">Update institutional identity, public page descriptions, admission criteria, and branding assets.</p>
+      <h2 class="uni-header-title">{{ action }} University Profile & Content</h2>
+      <p class="uni-header-subtitle">Update institutional identity, public page descriptions, admission criteria, and branding assets.</p>
     </div>
     {% if university and university.slug %}
-    <div style="display: flex; gap: 10px; align-items: center;">
-      <a href="{% url 'university_detail' university.slug %}" target="_blank" class="btn" style="background: #ffffff !important; border: 1.5px solid #cbd5e1 !important; color: #0a1936; font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-        <i data-feather="external-link" style="width: 15px; height: 15px;"></i> View Public Page
+    <div class="uni-header-actions">
+      <a href="{% url 'university_detail' university.slug %}" target="_blank" class="btn-view-public">
+        <i data-feather="external-link" style="width: 14px; height: 14px;"></i> View Public Page
       </a>
     </div>
     {% endif %}
   </div>
-  <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 24px;">
+
+  <form method="POST" enctype="multipart/form-data" class="uni-edit-form">
     {% csrf_token %}
     {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
 
-    <!-- 1. Institutional Identity -->
-    <div class="glass-card" style="padding: 24px;">
-      <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-        <i data-feather="book-open" style="width: 18px; height: 18px; color: #1768ff;"></i> Institutional Identity & Overview
+    <!-- 1. Institutional Identity & Overview -->
+    <div class="glass-card form-section-card">
+      <h3 class="form-section-title">
+        <i data-feather="book-open" style="width: 18px; height: 18px; color: #1768ff;"></i> Institutional Identity &amp; Overview
       </h3>
-      <div style="display: flex; flex-direction: column; gap: 16px;">
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">University / Institution Name <span style="color:#ef4444;">*</span></label>
+      <div class="form-vertical-stack">
+        <div class="form-field-group">
+          <label class="form-field-label">University / Institution Name <span style="color:#ef4444;">*</span></label>
           {{ form.name }}
-          {% if form.name.errors %}<div style="color: #ef4444; font-size: 12px; margin-top: 3px;">{{ form.name.errors }}</div>{% endif %}
+          {% if form.name.errors %}<div class="form-field-error">{{ form.name.errors }}</div>{% endif %}
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Official Website URL</label>
+
+        <div class="form-grid-2col">
+          <div class="form-field-group">
+            <label class="form-field-label">Official Website URL</label>
             {{ form.website }}
-            <span style="font-size: 11.5px; color: #64748b;">e.g. https://www.keralauniversity.ac.in</span>
+            <span class="form-field-hint">e.g. https://www.keralauniversity.ac.in</span>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Established Year</label>
+          <div class="form-field-group">
+            <label class="form-field-label">Established Year</label>
             {{ form.established_year }}
-            <span style="font-size: 11.5px; color: #64748b;">e.g. 1937</span>
+            <span class="form-field-hint">e.g. 1937</span>
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Institution Type</label>
+
+        <div class="form-grid-2col">
+          <div class="form-field-group">
+            <label class="form-field-label">Institution Type</label>
             {{ form.university_type }}
+            <span class="form-field-hint">e.g. Public State University, Private Research</span>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Accreditation & Rankings</label>
+          <div class="form-field-group">
+            <label class="form-field-label">Accreditation &amp; Rankings</label>
             {{ form.accreditation }}
-            <span style="font-size: 11.5px; color: #64748b;">e.g. NAAC A++ Accredited &bull; NIRF Top 25</span>
+            <span class="form-field-hint">e.g. NAAC A++ Accredited &bull; NIRF Top 25</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 2. Location & Campus -->
-    <div class="glass-card" style="padding: 24px;">
-      <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+    <!-- 2. Campus Location -->
+    <div class="glass-card form-section-card">
+      <h3 class="form-section-title">
         <i data-feather="map-pin" style="width: 18px; height: 18px; color: #10b981;"></i> Campus Location
       </h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Campus City</label>
+      <div class="form-grid-2col">
+        <div class="form-field-group">
+          <label class="form-field-label">Campus City</label>
           {{ form.location_city }}
-          <span style="font-size: 11.5px; color: #64748b;">e.g. Thiruvananthapuram</span>
+          <span class="form-field-hint">e.g. Thiruvananthapuram, Cambridge, Boston</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">State & Country</label>
+        <div class="form-field-group">
+          <label class="form-field-label">State &amp; Country</label>
           {{ form.location_state_country }}
-          <span style="font-size: 11.5px; color: #64748b;">e.g. Kerala, India</span>
+          <span class="form-field-hint">e.g. Kerala, India or Massachusetts, USA</span>
         </div>
       </div>
     </div>
 
     <!-- 3. Media & Branding Assets -->
-    <div class="glass-card" style="padding: 24px;">
-      <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
-        <i data-feather="image" style="width: 18px; height: 18px; color: #8b5cf6;"></i> Media & Branding Assets
+    <div class="glass-card form-section-card">
+      <h3 class="form-section-title">
+        <i data-feather="image" style="width: 18px; height: 18px; color: #8b5cf6;"></i> Media &amp; Branding Assets
       </h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">University Emblem / Logo</label>
+      <div class="form-grid-2col">
+        <div class="media-upload-box">
+          <label class="form-field-label">University Emblem / Logo</label>
           {% if university and university.profile.logo %}
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
-            <img src="{{ university.profile.logo.url }}" alt="Logo" style="width: 48px; height: 48px; object-fit: contain; border-radius: 6px; background: #fff; padding: 3px;">
-            <div style="font-size: 12px; color: #64748b;">Current official emblem active</div>
+          <div class="current-media-preview">
+            <img src="{{ university.profile.logo.url }}" alt="Logo" class="media-thumb-logo">
+            <span class="media-active-note">Current official emblem active</span>
           </div>
           {% endif %}
           {{ form.logo }}
-          <span style="font-size: 11.5px; color: #64748b;">Square format recommended (PNG/JPG). Displays across listings, booth cards, and header.</span>
+          <span class="form-field-hint">Square format recommended (PNG/JPG). Displays across listings, booth cards, and header.</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Campus Cover Photo / Hero Banner</label>
+
+        <div class="media-upload-box">
+          <label class="form-field-label">Campus Cover Photo / Hero Banner</label>
           {% if university and university.profile.cover_image %}
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
-            <img src="{{ university.profile.cover_image.url }}" alt="Cover" style="width: 72px; height: 48px; object-fit: cover; border-radius: 6px;">
-            <div style="font-size: 12px; color: #64748b;">Current hero banner image active</div>
+          <div class="current-media-preview">
+            <img src="{{ university.profile.cover_image.url }}" alt="Cover" class="media-thumb-cover">
+            <span class="media-active-note">Current hero banner active</span>
           </div>
           {% endif %}
           {{ form.cover_image }}
-          <span style="font-size: 11.5px; color: #64748b;">High-resolution landscape photo for public page header banner.</span>
+          <span class="form-field-hint">High-resolution landscape photo for public page header banner.</span>
         </div>
       </div>
     </div>
 
     <!-- 4. Public Page Detailed Content -->
-    <div class="glass-card" style="padding: 24px;">
-      <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 800; color: #0a1936; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+    <div class="glass-card form-section-card">
+      <h3 class="form-section-title">
         <i data-feather="file-text" style="width: 18px; height: 18px; color: #f59e0b;"></i> Public Page Editorial Content
       </h3>
-      <div style="display: flex; flex-direction: column; gap: 20px;">
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Short Card Summary (Quick Overview)</label>
+      <div class="editorial-stack">
+
+        <!-- 1. Short Card Summary -->
+        <div class="editorial-field-item">
+          <label class="form-field-label">
+            <span class="field-num-pill">1</span> Short Card Summary (Quick Overview)
+          </label>
           {{ form.short_description }}
-          <span style="font-size: 11.5px; color: #64748b;">Shown on directory cards, search results, and quick preview modals. (1-2 sentences).</span>
+          <span class="form-field-hint">Shown on directory cards, search results, and quick preview modals (1-2 sentences).</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">About the University</label>
+
+        <!-- 2. About the University -->
+        <div class="editorial-field-item">
+          <label class="form-field-label">
+            <span class="field-num-pill">2</span> About the University
+          </label>
           {{ form.about }}
-          <span style="font-size: 11.5px; color: #64748b;">Comprehensive overview of university history, research pedigree, global partnerships, and academic mission.</span>
+          <span class="form-field-hint">Comprehensive overview of university history, research pedigree, global partnerships, and academic mission.</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Campus & Facilities</label>
+
+        <!-- 3. Campus & Facilities -->
+        <div class="editorial-field-item">
+          <label class="form-field-label">
+            <span class="field-num-pill">3</span> Campus &amp; Facilities
+          </label>
           {{ form.campus_facilities }}
-          <span style="font-size: 11.5px; color: #64748b;">Describe academic libraries, supercomputing centers, research laboratories, sports arenas, residential halls, and dining.</span>
+          <span class="form-field-hint">Describe academic libraries, supercomputing centers, research laboratories, sports arenas, residential halls, and dining.</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Academic Programmes & Areas of Specialisation</label>
+
+        <!-- 4. Academic Programmes & Areas of Specialisation -->
+        <div class="editorial-field-item">
+          <label class="form-field-label">
+            <span class="field-num-pill">4</span> Academic Programmes &amp; Areas of Specialisation
+          </label>
           {{ form.academic_programmes }}
-          <span style="font-size: 11.5px; color: #64748b;">Key faculties, signature degree programs, STEM / business disciplines, research tracks, and curriculum strengths.</span>
+          <span class="form-field-hint">Key faculties, signature degree programs, STEM / business disciplines, research tracks, and curriculum strengths.</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Admission Process & Entry Criteria</label>
+
+        <!-- 5. Admission Process & Entry Criteria -->
+        <div class="editorial-field-item">
+          <label class="form-field-label">
+            <span class="field-num-pill">5</span> Admission Process &amp; Entry Criteria
+          </label>
           {{ form.admission_process }}
-          <span style="font-size: 11.5px; color: #64748b;">Detail eligibility standards, intake periods, entrance tests required, document verification, and visa support.</span>
+          <span class="form-field-hint">Detail eligibility standards, intake periods, entrance tests required, document verification, and visa support.</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Scholarships & Financial Assistance</label>
+
+        <!-- 6. Scholarships & Financial Assistance -->
+        <div class="editorial-field-item">
+          <label class="form-field-label">
+            <span class="field-num-pill">6</span> Scholarships &amp; Financial Assistance
+          </label>
           {{ form.scholarships_assistance }}
-          <span style="font-size: 11.5px; color: #64748b;">Merit-based awards, need-based bursaries, full/partial tuition waivers, and scholarship application criteria.</span>
+          <span class="form-field-hint">Merit-based awards, need-based bursaries, full/partial tuition waivers, and scholarship application criteria.</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">International Student Support</label>
+
+        <!-- 7. International Student Support -->
+        <div class="editorial-field-item">
+          <label class="form-field-label">
+            <span class="field-num-pill">7</span> International Student Support
+          </label>
           {{ form.international_support }}
-          <span style="font-size: 11.5px; color: #64748b;">Dedicated international office, visa assistance, airport pickup, accommodation guidance, and cultural integration.</span>
+          <span class="form-field-hint">Dedicated international office, visa assistance, airport pickup, accommodation guidance, and cultural integration.</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Career Opportunities & Industry Partnerships</label>
+
+        <!-- 8. Career Opportunities & Industry Partnerships -->
+        <div class="editorial-field-item">
+          <label class="form-field-label">
+            <span class="field-num-pill">8</span> Career Opportunities &amp; Industry Partnerships
+          </label>
           {{ form.career_opportunities }}
-          <span style="font-size: 11.5px; color: #64748b;">Corporate partnerships, internship programs, on-campus recruitments, graduate employability stats, and career counseling.</span>
+          <span class="form-field-hint">Corporate partnerships, internship programs, on-campus recruitments, graduate employability stats, and career counseling.</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 6px;">
-          <label style="font-size: 13px; font-weight: 700; color: #0a1936;">Why Choose Our University?</label>
+
+        <!-- 9. Why Choose Our University? -->
+        <div class="editorial-field-item">
+          <label class="form-field-label">
+            <span class="field-num-pill">9</span> Why Choose Our University?
+          </label>
           {{ form.why_choose_us }}
-          <span style="font-size: 11.5px; color: #64748b;">Unique selling propositions, global rankings, student satisfaction, alumni achievements, and distinctive highlights.</span>
+          <span class="form-field-hint">Unique selling propositions, global rankings, student satisfaction, alumni achievements, and distinctive highlights.</span>
         </div>
+
       </div>
     </div>
 
     <!-- 5. Homepage Hero Banner & Visibility (Admin Only) -->
     {% if is_admin or request.user.is_superuser or request.user.is_staff or role == 'admin' %}
-    <div class="glass-card" style="padding: 24px;">
-      <h3 style="font-size: 15px; font-weight: 800; color: #0a1936; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+    <div class="glass-card form-section-card">
+      <h3 class="form-section-title">
         <i data-feather="layout" style="width: 18px; height: 18px; color: #1768ff;"></i> Homepage Hero Card Placement &amp; Visibility
       </h3>
-      <div style="display: grid; grid-template-columns: minmax(180px, 240px) 1fr; gap: 20px; align-items: start; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e2e8f0;">
-        <div>
-          <label for="{{ form.hero_priority.id_for_label }}" style="font-size: 13.5px; font-weight: 750; color: #0a1936; display: block; margin-bottom: 6px;">
+      <div class="hero-priority-grid">
+        <div class="form-field-group">
+          <label for="{{ form.hero_priority.id_for_label }}" class="form-field-label">
             Hero Card Position / Priority
           </label>
           {{ form.hero_priority }}
-          {% if form.hero_priority.errors %}<div style="color: #ef4444; font-size: 12px; margin-top: 4px;">{{ form.hero_priority.errors }}</div>{% endif %}
+          {% if form.hero_priority.errors %}<div class="form-field-error">{{ form.hero_priority.errors }}</div>{% endif %}
         </div>
-        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 14px 18px; font-size: 12.5px; color: #1e40af; line-height: 1.6;">
-          <strong style="color: #1768ff; display: block; margin-bottom: 4px;"><i data-feather="info" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> Homepage Hero Banner Layout Guide:</strong>
+        <div class="hero-guide-box">
+          <strong style="color: #1768ff; display: block; margin-bottom: 4px;">
+            <i data-feather="info" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i> Homepage Hero Banner Layout Guide:
+          </strong>
           &bull; <strong>Priority 1 &ndash; 3:</strong> Appears as the <strong>Left Floating Cards</strong> on homepage hero banner (Top, Middle, Bottom)<br>
           &bull; <strong>Priority 4 &ndash; 6:</strong> Appears as the <strong>Right Floating Cards</strong> on homepage hero banner (Top, Middle, Bottom)<br>
           &bull; <strong>Priority 7 &ndash; 15:</strong> Appears on the draggable canvas orbit surrounding the hero banner<br>
           &bull; <strong>Priority 0:</strong> Hidden from homepage hero cards (listed only in standard university directory)
         </div>
       </div>
-      <div style="display: flex; align-items: center; gap: 12px;">
+      <div class="form-checkbox-row">
         {{ form.is_approved }}
         <div>
-          <label for="{{ form.is_approved.id_for_label }}" style="font-size: 14px; font-weight: 700; color: #0a1936; cursor: pointer; display: block;">
+          <label for="{{ form.is_approved.id_for_label }}" style="font-size: 13.5px; font-weight: 700; color: #0a1936; cursor: pointer; display: block;">
             Publish University to Public Expo Directory &amp; Hero Cards
           </label>
-          <span style="font-size: 12px; color: #64748b;">When checked, this university is live for students, attendees, and search crawlers.</span>
+          <span class="form-field-hint">When checked, this university is live for students, attendees, and search crawlers.</span>
         </div>
       </div>
     </div>
     {% endif %}
 
-    <!-- Form Actions Bar -->
-    <div class="glass-card" style="padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; position: sticky; bottom: 20px; z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1.5px solid #bfdbfe; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px);">
+    <!-- Sticky Form Actions Bar -->
+    <div class="form-action-bar">
       <div>
-        <a href="{% if request.GET.next %}{{ request.GET.next }}{% elif user_university %}{% url 'university_dashboard_view' user_university.pk %}{% elif university %}{% url 'university_dashboard_view' university.pk %}{% else %}{% url 'dashboard_index' %}{% endif %}" style="color: #64748b; text-decoration: none; font-weight: 700; font-size: 13.5px; display: inline-flex; align-items: center; gap: 6px;">
+        <a href="{% if request.GET.next %}{{ request.GET.next }}{% elif user_university %}{% url 'university_dashboard_view' user_university.pk %}{% elif university %}{% url 'university_dashboard_view' university.pk %}{% else %}{% url 'dashboard_index' %}{% endif %}" class="btn-cancel-return">
           &larr; Cancel / Return
         </a>
       </div>
       <div style="display: flex; gap: 12px; align-items: center;">
-        <button type="submit" class="btn btn-primary" style="background: #1768ff; color: #0f172a !important; padding: 11px 28px; border-radius: 9px; font-weight: 800; font-size: 14px; border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(23,104,255,0.3); display: inline-flex; align-items: center; gap: 8px;">
+        <button type="submit" class="btn-save-profile">
           <i data-feather="check" style="width: 16px; height: 16px;"></i> Save University Profile
         </button>
       </div>
     </div>
+
   </form>
 </div>
 
 <style>
-  form input[type="text"], form input[type="url"], form select, form textarea, form input[type="file"] {
+  /* Layout Container */
+  .uni-edit-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding-bottom: 60px;
+  }
+
+  /* Header Card */
+  .uni-header-card {
+    margin-bottom: 24px;
+    padding: 22px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+  }
+  .uni-header-text {
+    flex: 1;
+    min-width: 280px;
+  }
+  .uni-header-badge-row {
+    margin-bottom: 6px;
+  }
+  .uni-editor-badge {
+    background: #eff6ff;
+    color: #1768ff;
+    border: 1px solid #bfdbfe;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+  }
+  .uni-header-title {
+    margin: 0 0 4px 0;
+    font-size: 21px;
+    font-weight: 800;
+    color: #0a1936;
+    letter-spacing: -0.3px;
+  }
+  .uni-header-subtitle {
+    color: #64748b;
+    font-size: 13px;
+    margin: 0;
+    line-height: 1.5;
+  }
+  .btn-view-public {
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    color: #0a1936 !important;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 9px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+  }
+  .btn-view-public:hover {
+    border-color: #1768ff !important;
+    color: #1768ff !important;
+    background: #f8fafc !important;
+  }
+
+  /* Form & Section Cards */
+  .uni-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .form-section-card {
+    padding: 24px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+  }
+  .form-section-title {
+    margin: 0 0 18px 0;
+    font-size: 15.5px;
+    font-weight: 800;
+    color: #0a1936;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 12px;
+    letter-spacing: -0.2px;
+  }
+
+  /* Stacks & Grids */
+  .form-vertical-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .form-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 680px) {
+    .form-grid-2col {
+      grid-template-columns: 1fr !important;
+      gap: 14px;
+    }
+  }
+
+  /* Field Groups & Labels */
+  .form-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .form-field-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0a1936;
+    display: flex;
+    align-items: center;
+  }
+  .form-field-hint {
+    font-size: 11.5px;
+    color: #64748b;
+    line-height: 1.4;
+  }
+  .form-field-error {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 3px;
+    font-weight: 600;
+  }
+
+  /* Number Badge for Editorial Content */
+  .field-num-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #1768ff;
+    font-size: 11px;
+    font-weight: 800;
+    margin-right: 7px;
+    flex-shrink: 0;
+  }
+
+  /* Normalized Inputs */
+  form input[type="text"],
+  form input[type="url"],
+  form input[type="number"],
+  form input[type="email"],
+  form input[type="password"],
+  form select {
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    color: #0a1936;
+    padding: 0 14px;
+    height: 44px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 13.5px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  /* Normalized Textareas */
+  form textarea {
     background: #ffffff;
     border: 1.5px solid #cbd5e1;
     color: #0a1936;
     padding: 12px 14px;
     border-radius: 9px;
     font-family: inherit;
+    font-size: 13.5px;
+    line-height: 1.55;
     width: 100%;
     box-sizing: border-box;
-    font-size: 13.5px;
-    line-height: 1.5;
     transition: all 0.2s ease;
+    resize: vertical;
   }
 
-  form input[type="text"]:focus, form input[type="url"]:focus, form select:focus, form textarea:focus {
+  /* Focus states */
+  form input[type="text"]:focus,
+  form input[type="url"]:focus,
+  form input[type="number"]:focus,
+  form input[type="email"]:focus,
+  form select:focus,
+  form textarea:focus {
     outline: none;
     border-color: #1768ff;
     box-shadow: 0 0 0 3px rgba(23,104,255,0.12);
   }
 
-  form textarea {
-    resize: vertical;
+  /* Clean number inputs */
+  form input[type="number"]::-webkit-inner-spin-button,
+  form input[type="number"]::-webkit-outer-spin-button {
+    opacity: 0.55;
   }
 
+  /* File Inputs */
+  form input[type="file"] {
+    background: #f8fafc;
+    border: 1.5px dashed #cbd5e1;
+    color: #475569;
+    padding: 10px 14px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 12.5px;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  form input[type="file"]:hover {
+    border-color: #1768ff;
+    background: #eff6ff;
+  }
+  form input[type="file"]::file-selector-button {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    margin-right: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  form input[type="file"]::file-selector-button:hover {
+    background: #f1f5f9;
+  }
+
+  /* Media Preview Box */
+  .media-upload-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #fafafa;
+    border: 1px solid #f1f5f9;
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .current-media-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+  }
+  .media-thumb-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #fff;
+    padding: 2px;
+  }
+  .media-thumb-cover {
+    width: 68px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  .media-active-note {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  /* Editorial Section Stack */
+  .editorial-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .editorial-field-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* Hero priority admin grid */
+  .hero-priority-grid {
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) 1fr;
+    gap: 20px;
+    align-items: start;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  @media (max-width: 680px) {
+    .hero-priority-grid {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+  }
+  .hero-guide-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 12.5px;
+    color: #1e40af;
+    line-height: 1.6;
+  }
+  .form-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
   form input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+    width: 19px;
+    height: 19px;
     accent-color: #1768ff;
     cursor: pointer;
+    flex-shrink: 0;
   }
 
+  /* Sticky Form Actions Bar */
+  .form-action-bar {
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    position: sticky;
+    bottom: 20px;
+    z-index: 100;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
+    border: 1.5px solid #bfdbfe;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
+  }
+  .btn-cancel-return {
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    transition: all 0.15s ease;
+  }
+  .btn-cancel-return:hover {
+    color: #0a1936;
+    background: #f1f5f9;
+  }
+  .btn-save-profile {
+    background: #1768ff;
+    color: #ffffff !important;
+    padding: 11px 28px;
+    border-radius: 9px;
+    font-weight: 800;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(23, 104, 255, 0.35);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+  }
+  .btn-save-profile:hover {
+    background: #0f52d6 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(23, 104, 255, 0.45);
+  }
+  .btn-save-profile:active {
+    transform: translateY(0);
+  }
 </style>
 
 {% endblock %}
