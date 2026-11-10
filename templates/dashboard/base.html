@@ -1657,6 +1657,7 @@
     <li><a href="{% url 'dashboard_events' %}" class="nav-item {% block nav_events %}{% endblock %}"><i data-feather="map-pin" style="width:18px; height:18px; color:#1768ff;"></i> Expos & Seminars</a></li>
     <li><a href="{% url 'dashboard_exhibitors' %}" class="nav-item {% block nav_exhibitors %}{% endblock %}"><i data-feather="briefcase" style="width:18px; height:18px; color:#8b5cf6;"></i> Exhibitors & Booths</a></li>
     <li><a href="{% url 'dashboard_universities' %}" class="nav-item {% block nav_universities %}{% endblock %}"><i data-feather="book-open" style="width:18px; height:18px; color:#0284c7;"></i> University Cards &amp; Hero</a></li>
+    <li><a href="{% url 'dashboard_courses' %}" class="nav-item {% block nav_courses %}{% endblock %}"><i data-feather="book" style="width:18px; height:18px; color:#8b5cf6;"></i> Courses &amp; Programs</a></li>
     <li><a href="{% url 'dashboard_registrations' %}" class="nav-item {% block nav_registrations %}{% endblock %}"><i data-feather="users" style="width:18px; height:18px; color:#10b981;"></i> Registrations & Attendees</a></li>
     <li><a href="{% url 'dashboard_speakers' %}" class="nav-item {% block nav_speakers %}{% endblock %}"><i data-feather="mic" style="width:18px; height:18px; color:#ec4899;"></i> Speakers &amp; Experts</a></li>
     <li><a href="{% url 'dashboard_sponsors' %}" class="nav-item {% block nav_sponsors %}{% endblock %}"><i data-feather="star" style="width:18px; height:18px; color:#eab308;"></i> Sponsors</a></li>
@@ -1694,7 +1695,7 @@
       <li><a href="{% url 'dashboard_exhibitor_scanner' %}" class="nav-item {% block nav_scanner %}{% endblock %}"><i data-feather="camera" style="width:18px; height:18px; color:#1768ff;"></i> Booth Punch Scanner</a></li>
       <li><a href="{% url 'dashboard_exhibitor_leads' %}" class="nav-item {% block nav_leads %}{% endblock %}"><i data-feather="user-check" style="width:18px; height:18px; color:#10b981;"></i> Attended Students & Leads</a></li>
       <li><a href="{% url 'dashboard_exhibitor_exams' %}" class="nav-item {% block nav_exh_exams_sub %}{% endblock %}"><i data-feather="award" style="width:18px; height:18px; color:#14b8a6;"></i> Student Exam Results</a></li>
-      <li><a href="{% url 'dashboard_index' %}#coursesSection" class="nav-item {% block nav_uni_courses %}{% endblock %}" id="navUniCourses"><i data-feather="book-open" style="width:18px; height:18px; color:#8b5cf6;"></i> Courses & Degrees</a></li>
+      <li><a href="{% url 'dashboard_courses' %}" class="nav-item {% block nav_uni_courses %}{% endblock %}" id="navUniCourses"><i data-feather="book-open" style="width:18px; height:18px; color:#8b5cf6;"></i> Courses & Degrees</a></li>
       <li><a href="{% url 'dashboard_index' %}#scholarshipsSection" class="nav-item {% block nav_uni_scholarships %}{% endblock %}"><i data-feather="award" style="width:18px; height:18px; color:#f59e0b;"></i> Scholarships</a></li>
       <li><a href="{% url 'university_staff_edit' %}" class="nav-item {% block nav_uni_content %}{% endblock %}"><i data-feather="edit-3" style="width:18px; height:18px; color:#f59e0b;"></i> Edit University Page</a></li>
       <li><a href="{% url 'dashboard_messages' %}" class="nav-item {% block nav_exh_messages %}{% endblock %}"><i data-feather="message-circle" style="width:18px; height:18px;"></i> Student Messages</a></li>

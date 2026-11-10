@@ -1,0 +1,434 @@
+{% extends base_template|default:'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Academic Courses & Degrees | KNOVA Dashboard{% endblock %}
+{% block nav_courses %}active{% endblock %}
+{% block page_title %}Academic Courses &amp; Degree Programs{% endblock %}
+
+{% block content %}
+<!-- Top Page Header Banner -->
+<div class="cms-header" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:0 4px 16px rgba(15,23,42,0.03); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+  <div>
+    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 4px 0; display:flex; align-items:center; gap:10px;">
+      <i data-feather="book-open" style="color:#8b5cf6;"></i> Academic Courses &amp; Degree Programs
+    </h2>
+    <p style="font-size:13px; color:#64748b; margin:0; line-height:1.4;">
+      Global academic degrees, eligibility criteria, tuition fees, and university program catalogs.
+    </p>
+  </div>
+  <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+    <a href="/courses/" target="_blank" class="btn btn-outline-secondary" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#f8fafc; border:1px solid #cbd5e1; color:#334155;">
+      <i data-feather="external-link" style="width:14px; height:14px;"></i> View Public Directory
+    </a>
+    <button onclick="document.getElementById('addCourseModal').style.display='flex'" style="background:#8b5cf6; border:1px solid #7c3aed; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 16px; cursor:pointer; box-shadow:0 2px 6px rgba(139, 92, 246, 0.3);">
+      <i data-feather="plus" style="width:14px; height:14px;"></i> + Add Program
+    </button>
+  </div>
+</div>
+
+<!-- KPI METRIC CARDS -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 22px;">
+  <!-- Metric 1: Total Courses -->
+  <a href="{% url 'dashboard_courses' %}" style="text-decoration: none; display: block; color: inherit;">
+    <div style="background: #ffffff; border: {% if not status_filter and not scholarship_filter %}2px solid #8b5cf6{% else %}1px solid #e2e8f0{% endif %}; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease;">
+      <div>
+        <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Total Courses</div>
+        <div style="font-size: 26px; font-weight: 850; color: #8b5cf6;">{{ total_count|default:"0" }}</div>
+        <div style="font-size: 11.5px; color: #64748b; font-weight: 600; margin-top: 2px;">Catalogued Degrees</div>
+      </div>
+      <div style="width: 44px; height: 44px; border-radius: 12px; background: #f5f3ff; color: #8b5cf6; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd6fe;">
+        <i data-feather="book" style="width: 20px; height: 20px;"></i>
+      </div>
+    </div>
+  </a>
+
+  <!-- Metric 2: Active & Approved -->
+  <a href="{% url 'dashboard_courses' %}?status=active" style="text-decoration: none; display: block; color: inherit;">
+    <div style="background: #ffffff; border: {% if status_filter == 'active' %}2px solid #10b981{% else %}1px solid #e2e8f0{% endif %}; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease;">
+      <div>
+        <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Active Programs</div>
+        <div style="font-size: 26px; font-weight: 850; color: #10b981;">{{ active_count|default:"0" }}</div>
+        <div style="font-size: 11.5px; color: #10b981; font-weight: 700; margin-top: 2px;">Published on Public Site</div>
+      </div>
+      <div style="width: 44px; height: 44px; border-radius: 12px; background: #ecfdf5; color: #10b981; display: flex; align-items: center; justify-content: center; border: 1px solid #a7f3d0;">
+        <i data-feather="check-circle" style="width: 20px; height: 20px;"></i>
+      </div>
+    </div>
+  </a>
+
+  <!-- Metric 3: Scholarship Eligible -->
+  <a href="{% url 'dashboard_courses' %}?scholarship=1" style="text-decoration: none; display: block; color: inherit;">
+    <div style="background: #ffffff; border: {% if scholarship_filter == '1' %}2px solid #f59e0b{% else %}1px solid #e2e8f0{% endif %}; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease;">
+      <div>
+        <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Scholarship Eligible</div>
+        <div style="font-size: 26px; font-weight: 850; color: #f59e0b;">{{ scholarship_count|default:"0" }}</div>
+        <div style="font-size: 11.5px; color: #f59e0b; font-weight: 700; margin-top: 2px;">Funded Study Options</div>
+      </div>
+      <div style="width: 44px; height: 44px; border-radius: 12px; background: #fffbeb; color: #f59e0b; display: flex; align-items: center; justify-content: center; border: 1px solid #fde68a;">
+        <i data-feather="award" style="width: 20px; height: 20px;"></i>
+      </div>
+    </div>
+  </a>
+
+  <!-- Metric 4: Academic Disciplines -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Categories</div>
+      <div style="font-size: 26px; font-weight: 850; color: #0284c7;">{{ category_count|default:"0" }}</div>
+      <div style="font-size: 11.5px; color: #0284c7; font-weight: 700; margin-top: 2px;">Fields of Study</div>
+    </div>
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #f0f9ff; color: #0284c7; display: flex; align-items: center; justify-content: center; border: 1px solid #bae6fd;">
+      <i data-feather="grid" style="width: 20px; height: 20px;"></i>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH & FILTER FORM -->
+<div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; padding:16px 20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(15,23,42,0.03);">
+  <form method="GET" action="{% url 'dashboard_courses' %}" style="display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+    <!-- Keyword Search -->
+    <div style="flex:1; min-width:220px; position:relative;">
+      <i data-feather="search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#94a3b8;"></i>
+      <input type="text" name="q" value="{{ query }}" placeholder="Search program, stream, university..." style="width:100%; height:38px; padding-left:36px; padding-right:12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none; box-sizing:border-box;">
+    </div>
+
+    <!-- University Filter (for Admins) -->
+    {% if is_admin %}
+    <div style="min-width:180px;">
+      <select name="university" style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#334155; background:#ffffff; outline:none;">
+        <option value="">All Universities</option>
+        {% for u in all_universities %}
+        <option value="{{ u.id }}" {% if uni_filter == u.id|stringformat:"s" %}selected{% endif %}>{{ u.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+
+    <!-- Category Filter -->
+    <div style="min-width:160px;">
+      <select name="category" style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#334155; background:#ffffff; outline:none;">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+        <option value="{{ cat.id }}" {% if cat_filter == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Degree Level Filter -->
+    <div style="min-width:140px;">
+      <select name="degree" style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#334155; background:#ffffff; outline:none;">
+        <option value="">All Degrees</option>
+        <option value="Undergraduate" {% if degree_filter == 'Undergraduate' or degree_filter == 'UG' %}selected{% endif %}>Undergraduate (UG)</option>
+        <option value="Postgraduate" {% if degree_filter == 'Postgraduate' or degree_filter == 'PG' %}selected{% endif %}>Postgraduate (PG)</option>
+        <option value="Doctorate" {% if degree_filter == 'Doctorate' or degree_filter == 'PhD' %}selected{% endif %}>Doctorate (PhD)</option>
+        <option value="Diploma" {% if degree_filter == 'Diploma' %}selected{% endif %}>Diploma</option>
+      </select>
+    </div>
+
+    <!-- Action Buttons -->
+    <button type="submit" style="background:#1768ff; color:#ffffff; border:none; height:38px; padding:0 18px; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+      <i data-feather="filter" style="width:14px; height:14px;"></i> Apply Filter
+    </button>
+    {% if query or uni_filter or cat_filter or degree_filter or status_filter or scholarship_filter %}
+    <a href="{% url 'dashboard_courses' %}" style="color:#64748b; text-decoration:none; font-size:12.5px; font-weight:700; padding:0 8px;">Clear</a>
+    {% endif %}
+  </form>
+</div>
+
+<!-- COURSES TABLE CARD -->
+<div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:14px; overflow:hidden; box-shadow:0 2px 8px rgba(15,23,42,0.03); margin-bottom:24px;">
+  <div style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; text-align:left;">
+      <thead>
+        <tr style="border-bottom:2px solid #e2e8f0; background:#f8fafc;">
+          <th style="padding:14px 18px; font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Degree / Program Name</th>
+          <th style="padding:14px 18px; font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Institution</th>
+          <th style="padding:14px 18px; font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Level & Stream</th>
+          <th style="padding:14px 18px; font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Duration & Mode</th>
+          <th style="padding:14px 18px; font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Tuition & Funding</th>
+          <th style="padding:14px 18px; font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase; text-align:right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for course in courses %}
+        <tr style="border-bottom:1px solid #f1f5f9; transition:background 0.15s ease;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+          <!-- Course Name -->
+          <td style="padding:16px 18px;">
+            <div style="font-weight:750; color:#0f172a; font-size:14px;">{{ course.name }}</div>
+            {% if course.category %}
+            <span style="display:inline-flex; align-items:center; gap:4px; background:#f1f5f9; color:#475569; font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px; margin-top:4px;">
+              {{ course.category.name }}
+            </span>
+            {% endif %}
+          </td>
+
+          <!-- University -->
+          <td style="padding:16px 18px;">
+            {% if course.university %}
+            <div style="font-weight:700; color:#1e293b; font-size:13px;">{{ course.university.name }}</div>
+            <div style="font-size:11.5px; color:#64748b; margin-top:2px;">{{ course.university.profile.location_state_country|default:"Global" }}</div>
+            {% else %}
+            <span style="color:#94a3b8; font-size:12.5px;">Unassigned</span>
+            {% endif %}
+          </td>
+
+          <!-- Level & Stream -->
+          <td style="padding:16px 18px; font-size:13px; color:#334155;">
+            <div style="font-weight:700; color:#0f172a;">{{ course.degree_type }}</div>
+            <div style="font-size:11.5px; color:#64748b; margin-top:2px;">{{ course.stream|default:"General" }}</div>
+          </td>
+
+          <!-- Duration & Mode -->
+          <td style="padding:16px 18px; font-size:13px; color:#334155;">
+            <div>{{ course.duration|default:"3 Years" }}</div>
+            <div style="font-size:11.5px; color:#64748b; margin-top:2px;">{{ course.mode|default:"Full Time" }}</div>
+          </td>
+
+          <!-- Tuition & Funding -->
+          <td style="padding:16px 18px;">
+            <div style="font-weight:700; color:#0f172a; font-size:13px;">{{ course.fees|default:"Inquire" }}</div>
+            {% if course.scholarship_available %}
+            <span style="display:inline-flex; align-items:center; gap:3px; background:#ecfdf5; color:#059669; font-size:11px; font-weight:700; padding:2px 7px; border-radius:12px; margin-top:4px; border:1px solid #a7f3d0;">
+              <i data-feather="award" style="width:10px; height:10px;"></i> Scholarship
+            </span>
+            {% endif %}
+          </td>
+
+          <!-- Actions -->
+          <td style="padding:16px 18px; text-align:right;">
+            <div style="display:inline-flex; align-items:center; gap:8px;">
+              <button onclick="openEditModal({{ course.id }}, '{{ course.name|escapejs }}', '{{ course.degree_type|escapejs }}', '{{ course.stream|escapejs }}', '{{ course.duration|escapejs }}', '{{ course.mode|escapejs }}', '{{ course.fees|escapejs }}', '{{ course.eligibility|escapejs }}', {% if course.scholarship_available %}true{% else %}false{% endif %}, {% if course.category %}{{ course.category.id }}{% else %}null{% endif %})" style="background:#eff6ff; border:1px solid #bfdbfe; color:#1768ff; height:32px; padding:0 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
+                <i data-feather="edit-2" style="width:12px; height:12px;"></i> Edit
+              </button>
+              <form method="POST" action="{% url 'university_course_delete' course.id %}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this program: {{ course.name|escapejs }}?');">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; height:32px; padding:0 10px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center;">
+                  <i data-feather="trash-2" style="width:12px; height:12px;"></i>
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" style="padding:48px 20px; text-align:center;">
+            <div style="width:48px; height:48px; border-radius:50%; background:#f1f5f9; color:#64748b; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;">
+              <i data-feather="book-open" style="width:24px; height:24px;"></i>
+            </div>
+            <h4 style="margin:0 0 4px 0; color:#0f172a; font-weight:750;">No Academic Programs Found</h4>
+            <p style="margin:0 0 16px 0; color:#64748b; font-size:13px;">No courses matched your current filter criteria.</p>
+            <a href="{% url 'dashboard_courses' %}" style="color:#1768ff; font-weight:700; font-size:13px; text-decoration:none;">Clear Filters &rarr;</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PAGINATION -->
+  {% if courses.has_other_pages %}
+  <div style="padding:16px 20px; border-top:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background:#f8fafc;">
+    <div style="font-size:13px; color:#64748b;">
+      Showing page <strong>{{ courses.number }}</strong> of <strong>{{ courses.paginator.num_pages }}</strong> (Total {{ courses.paginator.count }} programs)
+    </div>
+    <div style="display:flex; gap:6px;">
+      {% if courses.has_previous %}
+      <a href="?page={{ courses.previous_page_number }}{% if query %}&q={{ query|urlencode }}{% endif %}{% if uni_filter %}&university={{ uni_filter }}{% endif %}{% if cat_filter %}&category={{ cat_filter }}{% endif %}{% if degree_filter %}&degree={{ degree_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if scholarship_filter %}&scholarship={{ scholarship_filter }}{% endif %}" style="padding:6px 12px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; color:#334155; font-size:12.5px; font-weight:700; text-decoration:none;">&larr; Previous</a>
+      {% endif %}
+      {% if courses.has_next %}
+      <a href="?page={{ courses.next_page_number }}{% if query %}&q={{ query|urlencode }}{% endif %}{% if uni_filter %}&university={{ uni_filter }}{% endif %}{% if cat_filter %}&category={{ cat_filter }}{% endif %}{% if degree_filter %}&degree={{ degree_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if scholarship_filter %}&scholarship={{ scholarship_filter }}{% endif %}" style="padding:6px 12px; background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; color:#334155; font-size:12.5px; font-weight:700; text-decoration:none;">Next &rarr;</a>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- ADD COURSE MODAL -->
+<div id="addCourseModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:9999; align-items:center; justify-content:center; padding:16px;">
+  <div style="background:#ffffff; border-radius:16px; width:100%; max-width:600px; max-height:90vh; overflow-y:auto; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #f1f5f9; padding-bottom:14px;">
+      <h3 style="margin:0; font-size:18px; font-weight:800; color:#0f172a;">Add New Academic Program</h3>
+      <button onclick="document.getElementById('addCourseModal').style.display='none'" style="background:none; border:none; font-size:22px; cursor:pointer; color:#94a3b8;">&times;</button>
+    </div>
+
+    <form method="POST" action="{% url 'dashboard_course_create' %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+      {% if is_admin %}
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">University / Institution *</label>
+        <select name="university" required style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none;">
+          <option value="">Select University</option>
+          {% for u in all_universities %}
+          <option value="{{ u.id }}">{{ u.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Program / Degree Name *</label>
+        <input type="text" name="name" required placeholder="e.g. B.Sc. Computer Science" style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none; box-sizing:border-box;">
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+        <div>
+          <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Degree Level</label>
+          <select name="degree_type" style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none;">
+            <option value="Undergraduate">Undergraduate</option>
+            <option value="Postgraduate">Postgraduate</option>
+            <option value="Doctorate">Doctorate</option>
+            <option value="Diploma">Diploma</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Category / Field</label>
+          <select name="category" style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none;">
+            <option value="">Select Category</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+        <div>
+          <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Duration</label>
+          <input type="text" name="duration" value="3 Years" placeholder="e.g. 4 Years" style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none; box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Study Mode</label>
+          <select name="mode" style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none;">
+            <option value="Full Time">Full Time</option>
+            <option value="Part Time">Part Time</option>
+            <option value="Online">Online</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Tuition Fees</label>
+        <input type="text" name="fees" placeholder="e.g. $18,500 / year" style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none; box-sizing:border-box;">
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Eligibility Criteria</label>
+        <textarea name="eligibility" rows="2" placeholder="e.g. High school completion with minimum 3.0 GPA" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none; box-sizing:border-box;"></textarea>
+      </div>
+
+      <div style="margin-bottom:20px; display:flex; align-items:center; gap:8px;">
+        <input type="checkbox" name="scholarship_available" id="add_schol_check" style="width:16px; height:16px; accent-color:#8b5cf6;">
+        <label for="add_schol_check" style="font-size:13px; font-weight:700; color:#0f172a; cursor:pointer;">
+          Eligible for KNOVA & University Scholarships
+        </label>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" onclick="document.getElementById('addCourseModal').style.display='none'" style="height:38px; padding:0 16px; border:1px solid #cbd5e1; background:#ffffff; border-radius:8px; font-weight:700; font-size:13px; color:#64748b; cursor:pointer;">Cancel</button>
+        <button type="submit" style="height:38px; padding:0 20px; background:#8b5cf6; border:none; border-radius:8px; font-weight:700; font-size:13px; color:#ffffff; cursor:pointer;">Save Program</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- EDIT COURSE MODAL -->
+<div id="editCourseModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:9999; align-items:center; justify-content:center; padding:16px;">
+  <div style="background:#ffffff; border-radius:16px; width:100%; max-width:600px; max-height:90vh; overflow-y:auto; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; border-bottom:1px solid #f1f5f9; padding-bottom:14px;">
+      <h3 style="margin:0; font-size:18px; font-weight:800; color:#0f172a;">Edit Academic Program</h3>
+      <button onclick="document.getElementById('editCourseModal').style.display='none'" style="background:none; border:none; font-size:22px; cursor:pointer; color:#94a3b8;">&times;</button>
+    </div>
+
+    <form id="editCourseForm" method="POST" action="">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Program / Degree Name *</label>
+        <input type="text" id="edit_name" name="name" required style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none; box-sizing:border-box;">
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+        <div>
+          <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Degree Level</label>
+          <select id="edit_degree_type" name="degree_type" style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none;">
+            <option value="Undergraduate">Undergraduate</option>
+            <option value="Postgraduate">Postgraduate</option>
+            <option value="Doctorate">Doctorate</option>
+            <option value="Diploma">Diploma</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Category / Field</label>
+          <select id="edit_category" name="category" style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none;">
+            <option value="">Select Category</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+        <div>
+          <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Duration</label>
+          <input type="text" id="edit_duration" name="duration" style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none; box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Study Mode</label>
+          <select id="edit_mode" name="mode" style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none;">
+            <option value="Full Time">Full Time</option>
+            <option value="Part Time">Part Time</option>
+            <option value="Online">Online</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Tuition Fees</label>
+        <input type="text" id="edit_fees" name="fees" style="width:100%; height:40px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none; box-sizing:border-box;">
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px;">Eligibility Criteria</label>
+        <textarea id="edit_eligibility" name="eligibility" rows="2" style="width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; color:#0f172a; outline:none; box-sizing:border-box;"></textarea>
+      </div>
+
+      <div style="margin-bottom:20px; display:flex; align-items:center; gap:8px;">
+        <input type="checkbox" id="edit_scholarship_available" name="scholarship_available" style="width:16px; height:16px; accent-color:#8b5cf6;">
+        <label for="edit_scholarship_available" style="font-size:13px; font-weight:700; color:#0f172a; cursor:pointer;">
+          Eligible for KNOVA & University Scholarships
+        </label>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" onclick="document.getElementById('editCourseModal').style.display='none'" style="height:38px; padding:0 16px; border:1px solid #cbd5e1; background:#ffffff; border-radius:8px; font-weight:700; font-size:13px; color:#64748b; cursor:pointer;">Cancel</button>
+        <button type="submit" style="height:38px; padding:0 20px; background:#1768ff; border:none; border-radius:8px; font-weight:700; font-size:13px; color:#ffffff; cursor:pointer;">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openEditModal(id, name, degree, stream, duration, mode, fees, eligibility, schol, catId) {
+  const form = document.getElementById('editCourseForm');
+  form.action = '/dashboard/courses/' + id + '/edit/';
+  document.getElementById('edit_name').value = name || '';
+  document.getElementById('edit_degree_type').value = degree || 'Undergraduate';
+  document.getElementById('edit_duration').value = duration || '';
+  document.getElementById('edit_mode').value = mode || 'Full Time';
+  document.getElementById('edit_fees').value = fees || '';
+  document.getElementById('edit_eligibility').value = eligibility || '';
+  document.getElementById('edit_scholarship_available').checked = Boolean(schol);
+  if (catId) {
+    document.getElementById('edit_category').value = catId;
+  }
+  document.getElementById('editCourseModal').style.display = 'flex';
+}
+</script>
+{% endblock %}

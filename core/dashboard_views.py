@@ -3932,7 +3932,7 @@ def university_update(request, pk=None):
             if request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['Admin', 'admin']).exists():
                 return redirect('dashboard_universities')
 
-            return redirect('university_dashboard_view', pk=uni.pk)
+            return redirect('dashboard_courses')
     else:
         form = UniversityForm(instance=uni, is_admin=is_admin)
     is_admin = request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['Admin', 'admin']).exists()
@@ -4028,30 +4028,124 @@ def university_dashboard_view(request, pk=None):
 
 
 @login_required(login_url='/portal/login/')
+def dashboard_courses(request):
+    from .models import Course, University, CourseCategory
+    from django.db.models import Q
+    from django.core.paginator import Paginator
+
+    is_admin = (
+        request.user.is_superuser or
+        request.user.is_staff or
+        request.user.groups.filter(name__in=['Admin', 'admin', 'Manager', 'manager']).exists() or
+        request.user.username.lower() == 'admin'
+    )
+
+    courses = Course.objects.select_related('university', 'category').all().order_by('-id')
+
+    if not is_admin:
+        uni = None
+        if hasattr(request.user, 'university_staff') and request.user.university_staff:
+            uni = request.user.university_staff.university
+        elif hasattr(request.user, 'exhibitor_profile') and request.user.exhibitor_profile:
+            uni = University.objects.filter(name__iexact=request.user.exhibitor_profile.company_name).first()
+        elif hasattr(request.user, 'exhibitor_staff_profile') and request.user.exhibitor_staff_profile:
+            uni = University.objects.filter(name__iexact=request.user.exhibitor_staff_profile.exhibitor.company_name).first()
+        if uni:
+            courses = courses.filter(university=uni)
+        else:
+            courses = courses.none()
+
+    query = request.GET.get('q', '').strip()
+    uni_filter = request.GET.get('university', '').strip()
+    cat_filter = request.GET.get('category', '').strip()
+    degree_filter = request.GET.get('degree', '').strip()
+    status_filter = request.GET.get('status', '').strip()
+    scholarship_filter = request.GET.get('scholarship', '').strip()
+
+    if query:
+        courses = courses.filter(
+            Q(name__icontains=query) |
+            Q(university__name__icontains=query) |
+            Q(stream__icontains=query) |
+            Q(category__name__icontains=query)
+        )
+    if uni_filter:
+        courses = courses.filter(university_id=uni_filter)
+    if cat_filter:
+        courses = courses.filter(category_id=cat_filter)
+    if degree_filter:
+        courses = courses.filter(degree_type__iexact=degree_filter)
+    if status_filter == 'active':
+        courses = courses.filter(is_active=True, status='Approved')
+    elif status_filter == 'inactive':
+        courses = courses.filter(Q(is_active=False) | ~Q(status='Approved'))
+    if scholarship_filter == '1':
+        courses = courses.filter(scholarship_available=True)
+
+    paginator = Paginator(courses, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    all_unis = University.objects.filter(is_approved=True).order_by('name')
+    categories = CourseCategory.objects.all().order_by('name')
+
+    total_count = Course.objects.count() if is_admin else courses.count()
+    active_count = Course.objects.filter(is_active=True, status='Approved').count() if is_admin else courses.filter(is_active=True, status='Approved').count()
+    scholarship_count = Course.objects.filter(scholarship_available=True).count() if is_admin else courses.filter(scholarship_available=True).count()
+    category_count = CourseCategory.objects.count()
+
+    context = {
+        'role': 'admin' if is_admin else 'university',
+        'is_admin': is_admin,
+        'courses': page_obj,
+        'query': query,
+        'uni_filter': uni_filter,
+        'cat_filter': cat_filter,
+        'degree_filter': degree_filter,
+        'status_filter': status_filter,
+        'scholarship_filter': scholarship_filter,
+        'all_universities': all_unis,
+        'categories': categories,
+        'total_count': total_count,
+        'active_count': active_count,
+        'scholarship_count': scholarship_count,
+        'category_count': category_count,
+    }
+    return render(request, 'dashboard/courses.html', context)
+
+
+@login_required(login_url='/portal/login/')
 def university_course_create(request, uni_pk=None):
     from .models import University, Course, CourseCategory
     from django.shortcuts import get_object_or_404
     from django.contrib import messages
     from django.utils.text import slugify
+
     uni = None
-    if uni_pk:
+    uni_post_id = request.POST.get('university') or request.POST.get('university_id')
+    if uni_post_id:
+        uni = University.objects.filter(pk=uni_post_id).first()
+
+    if not uni and uni_pk:
         uni = get_object_or_404(University, pk=uni_pk)
-    elif hasattr(request.user, 'university_staff') and request.user.university_staff:
-        uni = request.user.university_staff.university
-    elif hasattr(request.user, 'exhibitor_profile') and request.user.exhibitor_profile:
-        uni = University.objects.filter(name__iexact=request.user.exhibitor_profile.company_name).first()
-    elif hasattr(request.user, 'exhibitor_staff_profile') and request.user.exhibitor_staff_profile:
-        uni = University.objects.filter(name__iexact=request.user.exhibitor_staff_profile.exhibitor.company_name).first()
-    elif request.user.is_superuser or request.user.is_staff:
-        uni = University.objects.first()
+    elif not uni:
+        if hasattr(request.user, 'university_staff') and request.user.university_staff:
+            uni = request.user.university_staff.university
+        elif hasattr(request.user, 'exhibitor_profile') and request.user.exhibitor_profile:
+            uni = University.objects.filter(name__iexact=request.user.exhibitor_profile.company_name).first()
+        elif hasattr(request.user, 'exhibitor_staff_profile') and request.user.exhibitor_staff_profile:
+            uni = University.objects.filter(name__iexact=request.user.exhibitor_staff_profile.exhibitor.company_name).first()
+        elif request.user.is_superuser or request.user.is_staff:
+            uni = University.objects.first()
+
     if not uni:
         messages.error(request, "University profile not found.")
+        return redirect('dashboard_courses')
 
-        return redirect('dashboard_index')
     if not can_manage_university(request.user, uni):
         messages.error(request, "Permission denied: you cannot add courses to this institution.")
+        return redirect('dashboard_courses')
 
-        return redirect('dashboard_index')
     if request.method == 'POST':
         name = request.POST.get('name', '').strip()
         degree_type = request.POST.get('degree_type', 'Undergraduate')
@@ -4088,10 +4182,9 @@ def university_course_create(request, uni_pk=None):
             next_url = request.POST.get('next') or request.META.get('HTTP_REFERER')
             if next_url:
                 return redirect(next_url)
+            return redirect('dashboard_courses')
 
-            return redirect('university_dashboard_view', pk=uni.pk)
-
-    return redirect('university_dashboard_view', pk=uni.pk)
+    return redirect('dashboard_courses')
 
 
 @login_required(login_url='/portal/login/')
@@ -4112,7 +4205,7 @@ def university_course_delete(request, pk):
     if next_url:
         return redirect(next_url)
 
-    return redirect('university_dashboard_view', pk=uni.pk)
+    return redirect('dashboard_courses')
 
 
 @login_required(login_url='/portal/login/')
@@ -4175,9 +4268,9 @@ def university_scholarship_create(request, uni_pk=None):
             if next_url:
                 return redirect(next_url)
 
-            return redirect('university_dashboard_view', pk=uni.pk)
+            return redirect('dashboard_courses')
 
-    return redirect('university_dashboard_view', pk=uni.pk)
+    return redirect('dashboard_courses')
 
 
 @login_required(login_url='/portal/login/')
@@ -4224,9 +4317,9 @@ def university_course_update(request, pk):
             if next_url:
                 return redirect(next_url)
 
-            return redirect('university_dashboard_view', pk=uni.pk)
+            return redirect('dashboard_courses')
 
-    return redirect('university_dashboard_view', pk=uni.pk)
+    return redirect('dashboard_courses')
 
 
 @login_required(login_url='/portal/login/')
@@ -4273,9 +4366,9 @@ def university_scholarship_update(request, pk):
             if next_url:
                 return redirect(next_url)
 
-            return redirect('university_dashboard_view', pk=uni.pk)
+            return redirect('dashboard_courses')
 
-    return redirect('university_dashboard_view', pk=uni.pk)
+    return redirect('dashboard_courses')
 
 
 def university_scholarship_delete(request, pk):
@@ -4295,7 +4388,7 @@ def university_scholarship_delete(request, pk):
     if next_url:
         return redirect(next_url)
 
-    return redirect('university_dashboard_view', pk=uni.pk)
+    return redirect('dashboard_courses')
 
 
 @login_required(login_url='/portal/login/')

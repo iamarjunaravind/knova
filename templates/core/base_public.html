@@ -1479,9 +1479,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       {% if site_config.show_nav_programs %}
         {% if site_config.disable_navbar or site_config.disable_nav_programs %}
-          <a href="javascript:void(0)" onclick="return false;" class="nav-disabled-link {% if request.resolver_match.url_name == 'courses_list' %}active{% endif %}" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled">Programs</a>
+          <a href="javascript:void(0)" onclick="return false;" class="nav-disabled-link {% if request.resolver_match.url_name == 'courses_list' or request.resolver_match.url_name == 'programs_list' %}active{% endif %}" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled">Programs</a>
         {% else %}
-          <a href="{% url 'courses_list' %}" class="{% if request.resolver_match.url_name == 'courses_list' %}active{% endif %}">Programs</a>
+          <a href="{% url 'courses_list' %}" class="{% if request.resolver_match.url_name == 'courses_list' or request.resolver_match.url_name == 'programs_list' %}active{% endif %}">Programs</a>
         {% endif %}
       {% endif %}
 

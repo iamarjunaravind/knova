@@ -57,6 +57,8 @@ urlpatterns = [
     path('universities/<int:pk>/overview/', dashboard_views.university_dashboard_view, name='university_dashboard_view'),
     path('universities/<int:pk>/edit/', dashboard_views.university_update, name='university_update'),
     path('universities/<int:pk>/delete/', dashboard_views.university_delete, name='university_delete'),
+    path('courses/', dashboard_views.dashboard_courses, name='dashboard_courses'),
+    path('courses/new/', dashboard_views.university_course_create, name='dashboard_course_create'),
     path('universities/<int:uni_pk>/courses/new/', dashboard_views.university_course_create, name='university_course_create'),
     path('universities/<int:uni_pk>/courses/create/', dashboard_views.university_course_create),
     path('university/courses/create/', dashboard_views.university_course_create),
