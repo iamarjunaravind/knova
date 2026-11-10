@@ -3723,35 +3723,89 @@ def dashboard_search(request):
 @login_required(login_url='/portal/login/')
 def dashboard_universities(request):
     from .models import University, UniversityProfile
-    from django.db.models import Q
+    from django.db.models import Q, Count
     from django.core.paginator import Paginator
+
+    view_mode = request.GET.get('view', 'cards').strip()  # 'cards' (Hero Cards only) or 'all' (Catalog)
     query = request.GET.get('q', '').strip()
     status_filter = request.GET.get('status', '').strip()
     country_filter = request.GET.get('country', '').strip()
-    from django.db.models import Case, When, Value, IntegerField
-    unis = University.objects.select_related('profile').all().order_by(
-        Case(
-            When(hero_priority=0, then=Value(999)),
-            default='hero_priority',
-            output_field=IntegerField()
-        ),
-        '-id'
-    )
-    if query:
-        unis = unis.filter(Q(name__icontains=query) | Q(profile__location_city__icontains=query) | Q(profile__location_state_country__icontains=query))
+
+    # Active Hero Cards displayed on homepage (Slots 1 to 15, approved)
+    hero_qs = University.objects.filter(
+        hero_priority__gte=1,
+        hero_priority__lte=15,
+        is_approved=True
+    ).select_related('profile').annotate(
+        courses_count=Count('courses', distinct=True),
+        scholarships_count=Count('scholarships', distinct=True)
+    ).order_by('hero_priority', 'id')
+
+    if query and view_mode == 'cards':
+        hero_qs = hero_qs.filter(
+            Q(name__icontains=query) |
+            Q(profile__location_city__icontains=query) |
+            Q(profile__location_state_country__icontains=query)
+        )
+
+    hero_cards = list(hero_qs)
+    filled_slots = {u.hero_priority: u for u in hero_cards}
+    all_slot_numbers = list(range(1, 16))
+    open_slot_numbers = [s for s in all_slot_numbers if s not in filled_slots]
+
+    # Slot structures for grid/table representation (Slots 1 to 15)
+    structured_slots = []
+    for s in all_slot_numbers:
+        uni = filled_slots.get(s)
+        zone_name = "Left Featured Node" if s <= 3 else ("Right Featured Node" if s <= 6 else "Orbit Canvas Node")
+        structured_slots.append({
+            'slot': s,
+            'zone': zone_name,
+            'university': uni,
+            'is_empty': uni is None
+        })
+
+    # Catalog universities not currently placed on hero cards (for the Quick-Add modal picker)
+    catalog_pool = University.objects.filter(
+        Q(hero_priority=0) | Q(hero_priority__gt=15) | Q(is_approved=False)
+    ).select_related('profile').order_by('name')
+
+    # Full Catalog view if user switches to '?view=all'
+    all_unis_qs = University.objects.select_related('profile').annotate(
+        courses_count=Count('courses', distinct=True),
+        scholarships_count=Count('scholarships', distinct=True)
+    ).all().order_by('-hero_priority', 'name')
+
+    if query and view_mode == 'all':
+        all_unis_qs = all_unis_qs.filter(
+            Q(name__icontains=query) |
+            Q(profile__location_city__icontains=query) |
+            Q(profile__location_state_country__icontains=query)
+        )
     if status_filter == 'approved':
-        unis = unis.filter(is_approved=True)
+        all_unis_qs = all_unis_qs.filter(is_approved=True)
     elif status_filter == 'hidden':
-        unis = unis.filter(is_approved=False)
+        all_unis_qs = all_unis_qs.filter(is_approved=False)
     if country_filter:
-        unis = unis.filter(profile__location_state_country__iexact=country_filter)
-    paginator = Paginator(unis, 25)
+        all_unis_qs = all_unis_qs.filter(profile__location_state_country__iexact=country_filter)
+
+    paginator = Paginator(all_unis_qs, 25)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
     all_countries = sorted(list(set(UniversityProfile.objects.exclude(location_state_country='').values_list('location_state_country', flat=True))))
+
     context = {
         'role': 'admin',
-        'universities': page_obj,
+        'view_mode': view_mode,
+        'hero_cards': hero_cards,
+        'structured_slots': structured_slots,
+        'filled_count': len(hero_cards),
+        'open_count': len(open_slot_numbers),
+        'open_slot_numbers': open_slot_numbers,
+        'next_available_slot': open_slot_numbers[0] if open_slot_numbers else 1,
+        'catalog_pool': catalog_pool[:250],
+        'catalog_universities': page_obj,
         'all_countries': all_countries,
         'query': query,
         'status_filter': status_filter,
@@ -3762,6 +3816,175 @@ def dashboard_universities(request):
     }
 
     return render(request, 'dashboard/universities.html', context)
+
+
+@login_required(login_url='/portal/login/')
+def university_add_hero(request):
+    """Add existing university or create brand new university directly into a Hero Card Slot (1-15)."""
+    from .models import University, UniversityProfile, Exhibitor, EventLocation, ExpoBooth
+    from django.shortcuts import get_object_or_404, redirect
+    from django.contrib import messages
+    from django.utils.text import slugify
+    import uuid
+
+    if not (request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['Admin', 'admin']).exists()):
+        messages.error(request, "Permission denied.")
+        return redirect('dashboard_index')
+
+    if request.method == 'POST':
+        mode = request.POST.get('mode', 'existing').strip()
+        try:
+            target_slot = int(request.POST.get('slot', 1))
+        except (ValueError, TypeError):
+            target_slot = 1
+        target_slot = max(1, min(15, target_slot))
+
+        # Clear any university currently in this slot to prevent collision
+        existing = University.objects.filter(hero_priority=target_slot).first()
+        if existing:
+            existing.hero_priority = 0
+            existing.save(update_fields=['hero_priority'])
+
+        if mode == 'existing':
+            uni_id = request.POST.get('university_id')
+            if not uni_id:
+                messages.error(request, "Please select an existing university from the catalog.")
+                return redirect('dashboard_universities')
+            uni = get_object_or_404(University, pk=uni_id)
+            uni.hero_priority = target_slot
+            uni.is_approved = True
+            uni.save(update_fields=['hero_priority', 'is_approved'])
+
+            # Sync Exhibitor
+            Exhibitor.objects.filter(company_name__iexact=uni.name).update(is_verified=True)
+
+            messages.success(request, f'"{uni.name}" is now placed on Hero Card Slot #{target_slot}!')
+            return redirect('dashboard_universities')
+
+        elif mode == 'new':
+            name = request.POST.get('name', '').strip()
+            if not name:
+                messages.error(request, "University name is required.")
+                return redirect('dashboard_universities')
+
+            base_slug = slugify(name) or f"uni-{uuid.uuid4().hex[:6]}"
+            slug = base_slug
+            counter = 1
+            while University.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            uni = University.objects.create(
+                name=name,
+                slug=slug,
+                hero_priority=target_slot,
+                is_approved=True
+            )
+
+            city = request.POST.get('location_city', '').strip() or 'Global Campus'
+            country = request.POST.get('location_state_country', '').strip() or 'International'
+            website = request.POST.get('website', '').strip()
+            est_year_str = request.POST.get('established_year', '').strip()
+            est_year = int(est_year_str) if est_year_str.isdigit() else 2000
+
+            profile = UniversityProfile.objects.create(
+                university=uni,
+                location_city=city,
+                location_state_country=country,
+                website=website,
+                established_year=est_year,
+                short_description=f"{uni.name} is a premier higher education institution offering accredited degree programs.",
+                about=f"Welcome to {uni.name}. We prepare students for global leadership, research excellence, and high-impact career pathways.",
+                campus_facilities="Modern lecture theatres, digital research labs, interactive study suites, and student advisory desks.",
+                academic_programmes="Undergraduate and postgraduate degrees across diverse academic disciplines.",
+                admission_process="Direct consultation, portfolio evaluation, and on-spot scholarship assessment available at the university booth.",
+                scholarships_assistance="Merit-based scholarships, tuition waivers, and educational assistance grants available.",
+                international_support="Visa assistance, international student onboarding, housing guidance, and academic counseling.",
+                career_opportunities="Dedicated career center, internship placements, and global employer networking.",
+                why_choose_us="Globally recognized faculty, state-of-the-art campus, and vibrant student community."
+            )
+
+            if 'logo' in request.FILES:
+                profile.logo = request.FILES['logo']
+                profile.save(update_fields=['logo'])
+
+            # Sync Exhibitor & allocate Booth
+            loc = EventLocation.objects.filter(is_active=True).first() or EventLocation.objects.first()
+            if loc:
+                exh = Exhibitor.objects.create(
+                    university=uni,
+                    company_name=uni.name,
+                    event_location=loc,
+                    country=country,
+                    website=website,
+                    logo=profile.logo,
+                    is_verified=True
+                )
+                avail_booth = ExpoBooth.objects.filter(status='AVAILABLE', exhibitor__isnull=True, university__isnull=True).first()
+                if avail_booth:
+                    avail_booth.exhibitor = exh
+                    avail_booth.university = uni
+                    avail_booth.status = 'ASSIGNED'
+                    avail_booth.save()
+
+            messages.success(request, f'New University "{uni.name}" successfully created and placed on Hero Card Slot #{target_slot}!')
+            return redirect('dashboard_universities')
+
+    return redirect('dashboard_universities')
+
+
+@login_required(login_url='/portal/login/')
+def university_remove_hero(request, pk):
+    """Remove a university from the Hero Cards (sets priority to 0), freeing its slot immediately."""
+    from .models import University
+    from django.shortcuts import get_object_or_404, redirect
+    from django.contrib import messages
+
+    if not (request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['Admin', 'admin']).exists()):
+        messages.error(request, "Permission denied.")
+        return redirect('dashboard_index')
+
+    if request.method == 'POST':
+        uni = get_object_or_404(University, pk=pk)
+        slot = uni.hero_priority
+        uni.hero_priority = 0
+        uni.save(update_fields=['hero_priority'])
+        messages.success(request, f'"{uni.name}" removed from Hero Cards. Its profile and courses remain safe in the catalog. Slot #{slot} is now open — click "+ Add University Card" to fill it.')
+
+    return redirect('dashboard_universities')
+
+
+@login_required(login_url='/portal/login/')
+def university_change_slot(request, pk):
+    """Change the slot (1-15) of an existing hero card."""
+    from .models import University
+    from django.shortcuts import get_object_or_404, redirect
+    from django.contrib import messages
+
+    if not (request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['Admin', 'admin']).exists()):
+        messages.error(request, "Permission denied.")
+        return redirect('dashboard_index')
+
+    if request.method == 'POST':
+        uni = get_object_or_404(University, pk=pk)
+        try:
+            new_slot = int(request.POST.get('slot', 1))
+        except (ValueError, TypeError):
+            new_slot = 1
+        new_slot = max(1, min(15, new_slot))
+        old_slot = uni.hero_priority
+
+        # Swap with occupant of new slot if any
+        existing = University.objects.filter(hero_priority=new_slot).exclude(pk=uni.pk).first()
+        if existing:
+            existing.hero_priority = old_slot
+            existing.save(update_fields=['hero_priority'])
+
+        uni.hero_priority = new_slot
+        uni.save(update_fields=['hero_priority'])
+        messages.success(request, f'"{uni.name}" moved to Hero Card Slot #{new_slot}!')
+
+    return redirect('dashboard_universities')
 
 
 def can_manage_university(user, uni):
@@ -3807,9 +4030,7 @@ def university_create(request):
                 counter += 1
             uni.slug = slug
             if not uni.hero_priority:
-                from django.db.models import Max
-                max_pri = University.objects.aggregate(Max('hero_priority'))['hero_priority__max'] or 0
-                uni.hero_priority = max_pri + 1
+                uni.hero_priority = 0
             uni.is_approved = True
             uni.save()
             profile, _ = UniversityProfile.objects.get_or_create(university=uni)
@@ -3967,8 +4188,12 @@ def university_delete(request, pk):
         return redirect('dashboard_index')
     if request.method == 'POST':
         name = uni.name
+        slot = uni.hero_priority
         uni.delete()
-        messages.success(request, f'University "{name}" has been removed.')
+        if slot and 1 <= slot <= 15:
+            messages.success(request, f'University "{name}" has been deleted. Hero Card Slot #{slot} is now open — click "+ Add University Card" to assign a replacement.')
+        else:
+            messages.success(request, f'University "{name}" has been removed.')
 
         return redirect('dashboard_universities')
 

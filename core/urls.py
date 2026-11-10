@@ -55,6 +55,9 @@ urlpatterns = [
     
     path('universities/', dashboard_views.dashboard_universities, name='dashboard_universities'),
     path('universities/new/', dashboard_views.university_create, name='university_create'),
+    path('universities/add-hero/', dashboard_views.university_add_hero, name='university_add_hero'),
+    path('universities/<int:pk>/remove-hero/', dashboard_views.university_remove_hero, name='university_remove_hero'),
+    path('universities/<int:pk>/change-slot/', dashboard_views.university_change_slot, name='university_change_slot'),
     path('universities/<int:pk>/overview/', dashboard_views.university_dashboard_view, name='university_dashboard_view'),
     path('universities/<int:pk>/edit/', dashboard_views.university_update, name='university_update'),
     path('universities/<int:pk>/delete/', dashboard_views.university_delete, name='university_delete'),

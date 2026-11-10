@@ -1,105 +1,374 @@
 {% extends base_template|default:'dashboard/base.html' %}
 {% load static %}
 
-{% block title %}Universities | KNOVA{% endblock %}
+{% block title %}University Cards &amp; Hero Orbit | KNOVA{% endblock %}
 {% block nav_universities %}active{% endblock %}
 {% block page_title %}University Cards Management{% endblock %}
 
 {% block content %}
+<style>
+  /* Custom Modal Styles */
+  .uni-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .uni-modal-overlay.open {
+    display: flex;
+  }
+  .uni-modal-card {
+    background: #ffffff;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 620px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 26px 28px;
+    box-shadow: 0 24px 50px rgba(15, 23, 42, 0.25);
+    position: relative;
+    border: 1px solid #e2e8f0;
+  }
+  .tab-pill {
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 750;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+  }
+  .tab-pill.active {
+    background: #1768ff;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(23, 104, 255, 0.3);
+  }
+  .tab-pill.inactive {
+    background: #ffffff;
+    color: #475569;
+    border: 1.5px solid #e2e8f0;
+  }
+  .tab-pill.inactive:hover {
+    background: #f8fafc;
+    color: #0f172a;
+    border-color: #cbd5e1;
+  }
+  .empty-slot-card {
+    border: 2px dashed #cbd5e1;
+    background: #f8fafc;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+  }
+  .empty-slot-card:hover {
+    border-color: #1768ff;
+    background: #eff6ff;
+  }
+</style>
+
 <!-- Top Page Header Banner -->
 <div class="cms-header" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:0 4px 16px rgba(15,23,42,0.03); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
   <div>
     <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 4px 0; display:flex; align-items:center; gap:10px;">
-      <i data-feather="book-open" style="color:#0284c7;"></i> University Cards &amp; Hero Orbit
+      <i data-feather="layout" style="color:#1768ff; width:22px; height:22px;"></i> University Cards &amp; Hero Orbit
     </h2>
     <p style="font-size:13px; color:#64748b; margin:0; line-height:1.4;">
-      Global institutional profiles, homepage floating hero nodes, beacon visibility, and course catalogs.
+      Universities displayed on the live homepage hero orbit (Slots 1 to 15). Manage orbital placement, replace or add cards.
     </p>
   </div>
   <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-    <a href="{% url 'dashboard_cms' %}?tab=sections" class="btn btn-outline-secondary" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#f8fafc; border:1px solid #cbd5e1; color:#334155;">
+    <a href="{% url 'dashboard_cms' %}?tab=sections" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#f8fafc; border:1px solid #cbd5e1; color:#334155;">
       <i data-feather="sliders" style="width:14px; height:14px;"></i> Hero Section Controls
     </a>
-    <a href="{% url 'university_create' %}" style="background:#1768ff; border:1px solid #1768ff; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 16px; text-decoration:none; box-shadow:0 2px 6px rgba(23, 104, 255, 0.25);">
-      <i data-feather="plus" style="width:14px; height:14px;"></i> Add University Card
-    </a>
+    <button type="button" onclick="openAddModal({{ next_available_slot }})" style="background:#1768ff; border:1px solid #1768ff; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 16px; cursor:pointer; box-shadow:0 2px 6px rgba(23, 104, 255, 0.25);">
+      <i data-feather="plus-circle" style="width:15px; height:15px;"></i> Add University Card
+    </button>
   </div>
 </div>
 
-<!-- Quick Global Hero Cards Toggle Banner -->
-<div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); flex-wrap: wrap;">
+<!-- View Mode Navigation Tabs -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap;">
+  <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+    <a href="{% url 'dashboard_universities' %}?view=cards" class="tab-pill {% if view_mode != 'all' %}active{% else %}inactive{% endif %}">
+      <i data-feather="layout" style="width: 14px; height: 14px;"></i> Active Hero Cards ({{ filled_count }} / 15 Displayed)
+    </a>
+    <a href="{% url 'dashboard_universities' %}?view=all" class="tab-pill {% if view_mode == 'all' %}active{% else %}inactive{% endif %}">
+      <i data-feather="database" style="width: 14px; height: 14px;"></i> All Catalog Institutions ({{ total_count }})
+    </a>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 8px;">
+    {% if open_count > 0 and view_mode != 'all' %}
+      <span style="font-size: 12px; font-weight: 750; background: #fffbeb; color: #b45309; border: 1px solid #fde68a; padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #f59e0b;"></span>
+        {{ open_count }} Open Slot{{ open_count|pluralize }} Available
+      </span>
+    {% elif view_mode != 'all' %}
+      <span style="font-size: 12px; font-weight: 750; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981;"></span>
+        All 15 Hero Cards Active
+      </span>
+    {% endif %}
+  </div>
+</div>
+
+{% if view_mode != 'all' %}
+<!-- ========================================== -->
+<!-- HERO CARDS VIEW: ONLY DISPLAYED HERO CARDS -->
+<!-- ========================================== -->
+
+<!-- Orbit Capacity Status Banner -->
+{% if open_count > 0 %}
+<div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 14px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
   <div style="display: flex; align-items: center; gap: 12px;">
-    <div style="width: 40px; height: 40px; border-radius: 10px; background: {% if site_config.show_university_cards %}#ecfdf5{% else %}#fef2f2{% endif %}; color: {% if site_config.show_university_cards %}#059669{% else %}#dc2626{% endif %}; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 1px solid {% if site_config.show_university_cards %}#a7f3d0{% else %}#fecaca{% endif %};">
-      <i data-feather="{% if site_config.show_university_cards %}eye{% else %}eye-off{% endif %}" style="width: 20px; height: 20px;"></i>
+    <div style="width: 40px; height: 40px; border-radius: 10px; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-size: 18px; border: 1px solid #fde68a; flex-shrink: 0;">
+      <i data-feather="alert-circle" style="width: 20px; height: 20px;"></i>
     </div>
     <div>
-      <div style="font-size: 14px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-        Homepage Hero University Cards:
-        <span style="font-size: 10.5px; font-weight: 800; padding: 2.5px 9px; border-radius: 9999px; text-transform: uppercase; {% if site_config.show_university_cards %}background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;{% else %}background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;{% endif %}">
-          {% if site_config.show_university_cards %}Visible On Live Site{% else %}Hidden From Live Site{% endif %}
-        </span>
+      <div style="font-size: 13.5px; font-weight: 800; color: #92400e;">
+        Slot #{{ next_available_slot }} is currently open! ({{ filled_count }} of 15 Hero Cards Active)
       </div>
-      <div style="font-size: 12px; color: #64748b; margin-top: 2px;">
-        Control whether floating university nodes and live beacons appear on the homepage hero arena.
+      <div style="font-size: 12px; color: #b45309; margin-top: 2px;">
+        Fill this slot to ensure all 15 floating orbital card nodes are rendered on the homepage arena.
       </div>
     </div>
   </div>
-  <div style="display: flex; align-items: center; gap: 10px;">
-    <a href="{% url 'dashboard_cms' %}?tab=sections" class="btn btn-sm" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 750; text-decoration: none; background: #f8fafc; color: #1e293b; border: 1.5px solid #cbd5e1;">
-      <i data-feather="sliders" style="width: 13px; height: 13px;"></i> Configure in CMS
-    </a>
+  <button type="button" onclick="openAddModal({{ next_available_slot }})" style="background: #b45309; color: #ffffff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 750; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 4px rgba(180, 83, 9, 0.25);">
+    <i data-feather="plus" style="width: 13px; height: 13px;"></i> Fill Slot #{{ next_available_slot }}
+  </button>
+</div>
+{% endif %}
+
+<!-- STRUCTURED DATA TABLE CARD: DISPLAYED HERO CARDS -->
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); overflow: hidden; margin-bottom: 30px;">
+  
+  <!-- Table Header Bar -->
+  <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: #ffffff;">
+    <div>
+      <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+        <i data-feather="compass" style="width: 18px; height: 18px; color: #1768ff;"></i> Active Hero University Cards
+      </h3>
+      <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">
+        Showing only universities displayed on the homepage cards (Slots 1 to 15).
+      </p>
+    </div>
+    <div style="display: inline-flex; align-items: center; gap: 8px;">
+      <button type="button" onclick="openAddModal({{ next_available_slot }})" style="background: #eff6ff; color: #1768ff; border: 1.5px solid #bfdbfe; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 750; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+        <i data-feather="plus" style="width: 13px; height: 13px;"></i> Add University Card
+      </button>
+    </div>
   </div>
+
+  <!-- Table Responsive Container -->
+  <div style="overflow-x: auto; width: 100%;">
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; min-width: 900px;">
+      <thead>
+        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+          <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 18%;">
+            Card Slot &amp; Placement
+          </th>
+          <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 32%;">
+            University Name
+          </th>
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 18%;">
+            Location
+          </th>
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 12%;">
+            Hero Display Status
+          </th>
+          <th style="padding: 13px 20px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; text-align: right; width: 20%;">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in structured_slots %}
+          {% if not item.is_empty %}
+            <!-- FILLED ACTIVE HERO CARD ROW -->
+            <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc';" onmouseout="this.style.background='transparent';">
+              
+              <!-- Column 1: Card Slot & Placement -->
+              <td style="padding: 14px 18px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  {% if item.slot <= 3 %}
+                    <span style="display: inline-flex; align-items: center; gap: 5px; background: #eff6ff; color: #1d4ed8; padding: 5px 11px; border-radius: 8px; font-size: 12px; font-weight: 800; border: 1px solid #bfdbfe;">
+                      <i data-feather="layout" style="width: 12px; height: 12px;"></i> #{{ item.slot }} &bull; Left Card
+                    </span>
+                  {% elif item.slot <= 6 %}
+                    <span style="display: inline-flex; align-items: center; gap: 5px; background: #faf5ff; color: #7e22ce; padding: 5px 11px; border-radius: 8px; font-size: 12px; font-weight: 800; border: 1px solid #e9d5ff;">
+                      <i data-feather="layout" style="width: 12px; height: 12px;"></i> #{{ item.slot }} &bull; Right Card
+                    </span>
+                  {% else %}
+                    <span style="display: inline-flex; align-items: center; gap: 5px; background: #f0fdf4; color: #15803d; padding: 5px 11px; border-radius: 8px; font-size: 12px; font-weight: 800; border: 1px solid #bbf7d0;">
+                      <i data-feather="compass" style="width: 12px; height: 12px;"></i> #{{ item.slot }} &bull; Orbit Arena
+                    </span>
+                  {% endif %}
+                </div>
+              </td>
+
+              <!-- Column 2: University Name & Logo -->
+              <td style="padding: 14px 18px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <div style="width: 42px; height: 42px; border-radius: 10px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1.5px solid #cbd5e1;">
+                    {% if item.university.profile.logo %}
+                      <img src="{{ item.university.profile.logo.url }}" alt="{{ item.university.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                      <span style="font-weight: 850; font-size: 15px; color: #1e293b;">{{ item.university.name|slice:":2"|upper }}</span>
+                    {% endif %}
+                  </div>
+                  <div>
+                    <a href="{% url 'university_detail' item.university.slug %}" target="_blank" style="font-weight: 800; color: #0f172a; text-decoration: none; font-size: 13.5px; line-height: 1.3;">
+                      {{ item.university.name }}
+                    </a>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; display: flex; gap: 8px;">
+                      <span>slug: {{ item.university.slug }}</span>
+                      <span>&bull;</span>
+                      <span style="color: #0284c7; font-weight: 600;">{{ item.university.courses_count|default:"0" }} Programs</span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Column 3: Location -->
+              <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+                <div style="font-weight: 750; color: #1e293b; font-size: 13px;">{{ item.university.profile.location_city|default:'—' }}</div>
+                <div style="font-size: 11.5px; color: #64748b; font-weight: 500; margin-top: 2px;">{{ item.university.profile.location_state_country|default:'International' }}</div>
+              </td>
+
+              <!-- Column 4: Hero Display Status -->
+              <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+                <span style="display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800;">
+                  <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></span>
+                  Active on Hero
+                </span>
+              </td>
+
+              <!-- Column 5: Actions -->
+              <td style="padding: 14px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; text-align: right;">
+                <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center; flex-wrap: wrap;">
+                  
+                  <!-- Slot Change Quick Dropdown Form -->
+                  <form action="{% url 'university_change_slot' item.university.pk %}" method="post" style="margin: 0; display: inline-flex; align-items: center;">
+                    {% csrf_token %}
+                    <select name="slot" onchange="this.form.submit()" title="Change Slot Position" style="padding: 4px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 750; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; cursor: pointer; height: 30px;">
+                      {% for s in "123456789012345"|make_list %}
+                        {% with slot_num=forloop.counter %}
+                          <option value="{{ slot_num }}" {% if item.slot == slot_num %}selected{% endif %}>
+                            Slot #{{ slot_num }}
+                          </option>
+                        {% endwith %}
+                      {% endfor %}
+                    </select>
+                  </form>
+
+                  <!-- Edit University -->
+                  <a href="{% url 'university_update' item.university.pk %}" title="Edit University Profile" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#f1f5f9';" onmouseout="this.style.background='#ffffff';">
+                    <i data-feather="edit-2" style="width: 12px; height: 12px;"></i> Edit
+                  </a>
+
+                  <!-- Remove from Hero Cards (Frees slot, keeps in catalog) -->
+                  <form action="{% url 'university_remove_hero' item.university.pk %}" method="post" onsubmit="return confirm('Remove {{ item.university.name }} from Hero Cards? This will free Slot #{{ item.slot }} while preserving the university profile and courses in your catalog.');" style="margin: 0; display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" title="Remove from Hero Cards" style="background: #ffffff; border: 1px solid #fed7aa; color: #c2410c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#fff7ed';" onmouseout="this.style.background='#ffffff';">
+                      <i data-feather="eye-off" style="width: 12px; height: 12px;"></i> Remove
+                    </button>
+                  </form>
+
+                  <!-- Delete University Completely -->
+                  <a href="{% url 'university_delete' item.university.pk %}" title="Permanently Delete University" style="background: #ffffff; border: 1px solid #fecaca; color: #dc2626; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#fef2f2';" onmouseout="this.style.background='#ffffff';">
+                    <i data-feather="trash-2" style="width: 12px; height: 12px;"></i>
+                  </a>
+
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <!-- EMPTY / OPEN HERO CARD SLOT ROW -->
+            <tr style="background: #fafafa; border-bottom: 1px dashed #cbd5e1;">
+              
+              <!-- Slot Badge -->
+              <td style="padding: 16px 18px; vertical-align: middle; border-bottom: 1px dashed #cbd5e1;">
+                <span style="display: inline-flex; align-items: center; gap: 5px; background: #fef3c7; color: #92400e; padding: 5px 11px; border-radius: 8px; font-size: 12px; font-weight: 800; border: 1px dashed #f59e0b;">
+                  <i data-feather="alert-circle" style="width: 12px; height: 12px;"></i> #{{ item.slot }} &bull; Open Slot
+                </span>
+              </td>
+
+              <!-- Placeholder University Info -->
+              <td style="padding: 16px 18px; vertical-align: middle; border-bottom: 1px dashed #cbd5e1;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <div style="width: 42px; height: 42px; border-radius: 10px; border: 2px dashed #94a3b8; display: flex; align-items: center; justify-content: center; color: #94a3b8; background: #ffffff;">
+                    <i data-feather="plus" style="width: 18px; height: 18px;"></i>
+                  </div>
+                  <div>
+                    <div style="font-weight: 800; color: #64748b; font-size: 13.5px;">
+                      Slot #{{ item.slot }} Available
+                    </div>
+                    <div style="font-size: 11.5px; color: #94a3b8; margin-top: 2px;">
+                      This card slot is currently empty. Click &ldquo;Add / Assign&rdquo; to fill it.
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Location placeholder -->
+              <td style="padding: 16px 16px; vertical-align: middle; border-bottom: 1px dashed #cbd5e1; color: #94a3b8; font-size: 12px;">
+                <em>Unassigned</em>
+              </td>
+
+              <!-- Status badge -->
+              <td style="padding: 16px 16px; vertical-align: middle; border-bottom: 1px dashed #cbd5e1;">
+                <span style="display: inline-flex; align-items: center; gap: 4px; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">
+                  Open Slot
+                </span>
+              </td>
+
+              <!-- Action: Fill Slot -->
+              <td style="padding: 16px 20px; vertical-align: middle; border-bottom: 1px dashed #cbd5e1; text-align: right;">
+                <button type="button" onclick="openAddModal({{ item.slot }})" style="background: #1768ff; color: #ffffff; border: none; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 750; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(23,104,255,0.25);">
+                  <i data-feather="plus" style="width: 13px; height: 13px;"></i> Add to Slot #{{ item.slot }}
+                </button>
+              </td>
+
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Table Footer Summary -->
+  <div style="padding: 14px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: #64748b; font-weight: 600; flex-wrap: wrap; gap: 10px;">
+    <div>
+      Showing <strong>{{ filled_count }}</strong> active university card{{ filled_count|pluralize }} on homepage hero orbit &bull; <strong>{{ open_count }}</strong> slot{{ open_count|pluralize }} available
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <a href="{% url 'dashboard_universities' %}?view=all" style="font-size: 12px; color: #1768ff; text-decoration: none; font-weight: 750;">
+        Browse All Catalog Institutions ({{ total_count }}) &rarr;
+      </a>
+    </div>
+  </div>
+
 </div>
 
-<!-- KPI METRIC CARDS -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px;">
-  <!-- Metric 1: Total Universities -->
-  <a href="{% url 'dashboard_universities' %}{% if query %}?q={{ query|urlencode }}{% endif %}" style="text-decoration: none; display: block; color: inherit;">
-    <div style="background: #ffffff; border: {% if not status_filter %}2px solid #1768ff{% else %}1px solid #e2e8f0{% endif %}; border-radius: 14px; padding: 18px 20px; box-shadow: {% if not status_filter %}0 4px 16px rgba(23, 104, 255, 0.18){% else %}0 2px 8px rgba(15, 23, 42, 0.03){% endif %}; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; cursor: pointer;">
-      <div>
-        <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Total Universities</div>
-        <div style="font-size: 26px; font-weight: 850; color: {% if not status_filter %}#1768ff{% else %}#0f172a{% endif %};">{{ total_count|default:"0" }}</div>
-        <div style="font-size: 11.5px; color: {% if not status_filter %}#1768ff{% else %}#1768ff{% endif %}; font-weight: 700; margin-top: 2px;">Global Institutions</div>
-      </div>
-      <div style="width: 44px; height: 44px; border-radius: 12px; background: {% if not status_filter %}#1768ff{% else %}#eff6ff{% endif %}; color: {% if not status_filter %}#ffffff{% else %}#1768ff{% endif %}; display: flex; align-items: center; justify-content: center; border: 1px solid {% if not status_filter %}#1768ff{% else %}#bfdbfe{% endif %}; box-shadow: {% if not status_filter %}0 2px 8px rgba(23, 104, 255, 0.35){% else %}none{% endif %};">
-        <i data-feather="book-open" style="width: 20px; height: 20px;"></i>
-      </div>
-    </div>
-  </a>
-
-  <!-- Metric 2: Displayed on Hero -->
-  <a href="{% url 'dashboard_universities' %}?status=approved{% if query %}&q={{ query|urlencode }}{% endif %}" style="text-decoration: none; display: block; color: inherit;">
-    <div style="background: #ffffff; border: {% if status_filter == 'approved' %}2px solid #1768ff{% else %}1px solid #e2e8f0{% endif %}; border-radius: 14px; padding: 18px 20px; box-shadow: {% if status_filter == 'approved' %}0 4px 16px rgba(23, 104, 255, 0.18){% else %}0 2px 8px rgba(15, 23, 42, 0.03){% endif %}; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; cursor: pointer;">
-      <div>
-        <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Displayed on Hero</div>
-        <div style="font-size: 26px; font-weight: 850; color: {% if status_filter == 'approved' %}#1768ff{% else %}#059669{% endif %};">{{ approved_count|default:"0" }}</div>
-        <div style="font-size: 11.5px; color: {% if status_filter == 'approved' %}#1768ff{% else %}#059669{% endif %}; font-weight: 700; margin-top: 2px;">Active Hero Orbit Cards</div>
-      </div>
-      <div style="width: 44px; height: 44px; border-radius: 12px; background: {% if status_filter == 'approved' %}#1768ff{% else %}#ecfdf5{% endif %}; color: {% if status_filter == 'approved' %}#ffffff{% else %}#059669{% endif %}; display: flex; align-items: center; justify-content: center; border: 1px solid {% if status_filter == 'approved' %}#1768ff{% else %}#a7f3d0{% endif %}; box-shadow: {% if status_filter == 'approved' %}0 2px 8px rgba(23, 104, 255, 0.35){% else %}none{% endif %};">
-        <i data-feather="layout" style="width: 20px; height: 20px;"></i>
-      </div>
-    </div>
-  </a>
-
-  <!-- Metric 3: Hidden from Hero -->
-  <a href="{% url 'dashboard_universities' %}?status=hidden{% if query %}&q={{ query|urlencode }}{% endif %}" style="text-decoration: none; display: block; color: inherit;">
-    <div style="background: #ffffff; border: {% if status_filter == 'hidden' %}2px solid #1768ff{% else %}1px solid #e2e8f0{% endif %}; border-radius: 14px; padding: 18px 20px; box-shadow: {% if status_filter == 'hidden' %}0 4px 16px rgba(23, 104, 255, 0.18){% else %}0 2px 8px rgba(15, 23, 42, 0.03){% endif %}; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; cursor: pointer;">
-      <div>
-        <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Hidden from Hero</div>
-        <div style="font-size: 26px; font-weight: 850; color: {% if status_filter == 'hidden' %}#1768ff{% else %}#64748b{% endif %};">{{ hidden_count|default:"0" }}</div>
-        <div style="font-size: 11.5px; color: {% if status_filter == 'hidden' %}#1768ff{% else %}#64748b{% endif %}; font-weight: 700; margin-top: 2px;">Standard Catalog View</div>
-      </div>
-      <div style="width: 44px; height: 44px; border-radius: 12px; background: {% if status_filter == 'hidden' %}#1768ff{% else %}#f8fafc{% endif %}; color: {% if status_filter == 'hidden' %}#ffffff{% else %}#64748b{% endif %}; display: flex; align-items: center; justify-content: center; border: 1px solid {% if status_filter == 'hidden' %}#1768ff{% else %}#e2e8f0{% endif %}; box-shadow: {% if status_filter == 'hidden' %}0 2px 8px rgba(23, 104, 255, 0.35){% else %}none{% endif %};">
-        <i data-feather="eye-off" style="width: 20px; height: 20px;"></i>
-      </div>
-    </div>
-  </a>
-</div>
+{% else %}
+<!-- ============================================== -->
+<!-- CATALOG VIEW: ALL 161 UNIVERSITIES WITH SEARCH -->
+<!-- ============================================== -->
 
 <!-- FILTER & SEARCH TOOLBAR -->
 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
   
   <form method="GET" action="{% url 'dashboard_universities' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap; width: 100%;">
+    <input type="hidden" name="view" value="all">
+
     <!-- Search Query -->
     <div style="position: relative; width: 220px;">
       <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search name, city..." style="width: 100%; border: 1px solid #cbd5e1; padding: 0 10px 0 32px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;">
@@ -117,8 +386,8 @@
     <!-- Status Dropdown -->
     <select name="status" style="border: 1px solid #cbd5e1; padding: 0 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; height: 36px; min-width: 140px;">
       <option value="">All Statuses</option>
-      <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Visible on Hero</option>
-      <option value="hidden" {% if status_filter == 'hidden' %}selected{% endif %}>Hidden</option>
+      <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Approved</option>
+      <option value="hidden" {% if status_filter == 'hidden' %}selected{% endif %}>Hidden / Draft</option>
     </select>
 
     <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 0 16px; border-radius: 6px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(23,104,255,0.25); height: 36px; white-space: nowrap;">
@@ -126,31 +395,28 @@
     </button>
 
     {% if query or country_filter or status_filter %}
-    <a href="{% url 'dashboard_universities' %}" style="font-size: 12px; color: #64748b; text-decoration: none; font-weight: 600; padding: 6px 10px; white-space: nowrap;">
+    <a href="{% url 'dashboard_universities' %}?view=all" style="font-size: 12px; color: #64748b; text-decoration: none; font-weight: 600; padding: 6px 10px; white-space: nowrap;">
       Reset
     </a>
     {% endif %}
   </form>
 </div>
 
-<!-- STRUCTURED DATA TABLE CARD -->
-<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); overflow: hidden;">
+<!-- STRUCTURED DATA TABLE CARD: CATALOG -->
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); overflow: hidden; margin-bottom: 30px;">
   
-  <!-- Table Header Bar -->
-  <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: #ffffff;">
+  <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
     <div>
       <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-        <i data-feather="book-open" style="width: 18px; height: 18px; color: #1768ff;"></i> University Profiles &amp; Hero Cards
+        <i data-feather="database" style="width: 18px; height: 18px; color: #1768ff;"></i> All Institutional Profiles in Catalog
       </h3>
-      <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">Global university listings, hero banner orbital priority, and publication states</p>
+      <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">Full directory of 161 universities with courses, scholarships, and hero promotion options.</p>
     </div>
     <div style="display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 750; color: #475569;">
-      <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981;"></span>
-      {{ total_count|default:"0" }} Total Universities
+      {{ total_count|default:"0" }} Total Institutions
     </div>
   </div>
 
-  <!-- Table Responsive Container -->
   <div style="overflow-x: auto; width: 100%;">
     <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; min-width: 900px;">
       <thead>
@@ -162,10 +428,10 @@
             Location
           </th>
           <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 22%;">
-            Hero Banner Placement
+            Hero Card Status
           </th>
           <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 12%;">
-            Status
+            Publication
           </th>
           <th style="padding: 13px 20px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; text-align: right; width: 16%;">
             Actions
@@ -173,10 +439,9 @@
         </tr>
       </thead>
       <tbody>
-        {% for uni in universities %}
+        {% for uni in catalog_universities %}
         <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc';" onmouseout="this.style.background='transparent';">
           
-          <!-- Column 1: University Name & Logo -->
           <td style="padding: 14px 18px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
             <div style="display: flex; align-items: center; gap: 12px;">
               <div style="width: 40px; height: 40px; border-radius: 10px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #cbd5e1;">
@@ -195,32 +460,23 @@
             </div>
           </td>
 
-          <!-- Column 2: Location -->
           <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
             <div style="font-weight: 750; color: #1e293b; font-size: 13px;">{{ uni.profile.location_city|default:'—' }}</div>
             <div style="font-size: 11.5px; color: #64748b; font-weight: 500; margin-top: 2px;">{{ uni.profile.location_state_country|default:'' }}</div>
           </td>
 
-          <!-- Column 3: Hero Banner Placement -->
           <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
-            {% if uni.hero_priority >= 1 and uni.hero_priority <= 3 %}
+            {% if uni.hero_priority >= 1 and uni.hero_priority <= 15 and uni.is_approved %}
               <span style="display: inline-flex; align-items: center; gap: 5px; background: #eff6ff; color: #1d4ed8; padding: 4px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 800; border: 1px solid #bfdbfe;">
-                <i data-feather="layout" style="width: 12px; height: 12px;"></i> #{{ uni.hero_priority }} &bull; Left Card
-              </span>
-            {% elif uni.hero_priority >= 4 and uni.hero_priority <= 6 %}
-              <span style="display: inline-flex; align-items: center; gap: 5px; background: #faf5ff; color: #7e22ce; padding: 4px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 800; border: 1px solid #e9d5ff;">
-                <i data-feather="layout" style="width: 12px; height: 12px;"></i> #{{ uni.hero_priority }} &bull; Right Card
-              </span>
-            {% elif uni.hero_priority >= 7 and uni.hero_priority <= 15 %}
-              <span style="display: inline-flex; align-items: center; gap: 5px; background: #f0fdf4; color: #15803d; padding: 4px 10px; border-radius: 8px; font-size: 11.5px; font-weight: 750; border: 1px solid #bbf7d0;">
-                <i data-feather="compass" style="width: 12px; height: 12px;"></i> #{{ uni.hero_priority }} &bull; Orbit
+                <i data-feather="layout" style="width: 12px; height: 12px;"></i> #{{ uni.hero_priority }} Active Card
               </span>
             {% else %}
-              <span style="color: #94a3b8; font-size: 12px; font-weight: 600;">Standard Catalog</span>
+              <button type="button" onclick="openAddModalWithUni({{ uni.pk }}, '{{ uni.name|escapejs }}', {{ next_available_slot }})" style="background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 750; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                <i data-feather="plus" style="width: 11px; height: 11px; color: #1768ff;"></i> Place on Hero
+              </button>
             {% endif %}
           </td>
 
-          <!-- Column 4: Status -->
           <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
             {% if uni.is_approved %}
               <span style="display: inline-flex; align-items: center; gap: 5px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800;">
@@ -233,47 +489,23 @@
             {% endif %}
           </td>
 
-          <!-- Column 5: Action Buttons -->
           <td style="padding: 14px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; text-align: right;">
             <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
-              
-              <form action="{% url 'toggle_verification' 'university' uni.pk %}" method="post" style="margin: 0; display: inline;">
-                {% csrf_token %}
-                {% if uni.is_approved %}
-                  <button type="submit" title="Remove from hero grid" style="background: #ffffff; border: 1px solid #fecaca; color: #dc2626; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#fef2f2';" onmouseout="this.style.background='#ffffff';">
-                    <i data-feather="eye-off" style="width: 12px; height: 12px;"></i> Hide
-                  </button>
-                {% else %}
-                  <button type="submit" title="Add to hero grid" style="background: #ffffff; border: 1px solid #a7f3d0; color: #059669; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#ecfdf5';" onmouseout="this.style.background='#ffffff';">
-                    <i data-feather="eye" style="width: 12px; height: 12px;"></i> Hero
-                  </button>
-                {% endif %}
-              </form>
-
-              <a href="{% url 'university_dashboard_view' uni.pk %}" title="View Analytics" style="background: #ffffff; border: 1px solid #bbf7d0; color: #16a34a; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#f0fdf4';" onmouseout="this.style.background='#ffffff';">
-                <i data-feather="bar-chart-2" style="width: 12px; height: 12px;"></i> Stats
-              </a>
-
-              <a href="{% url 'university_update' uni.pk %}" title="Edit University" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#f1f5f9';" onmouseout="this.style.background='#ffffff';">
+              <a href="{% url 'university_update' uni.pk %}" title="Edit University" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
                 <i data-feather="edit-2" style="width: 12px; height: 12px;"></i> Edit
               </a>
-
-              <a href="{% url 'university_delete' uni.pk %}" title="Delete University" style="background: #ffffff; border: 1px solid #fed7aa; color: #ea580c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#fff7ed';" onmouseout="this.style.background='#ffffff';">
-                <i data-feather="trash-2" style="width: 12px; height: 12px;"></i> Delete
+              <a href="{% url 'university_delete' uni.pk %}" title="Delete University" style="background: #ffffff; border: 1px solid #fed7aa; color: #ea580c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                <i data-feather="trash-2" style="width: 12px; height: 12px;"></i>
               </a>
-
             </div>
           </td>
         </tr>
         {% empty %}
         <tr>
           <td colspan="5" style="padding: 48px 20px; text-align: center; background: #ffffff;">
-            <div style="width: 52px; height: 52px; border-radius: 50%; background: #f8fafc; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #94a3b8;">
-              <i data-feather="book-open" style="width: 24px; height: 24px;"></i>
-            </div>
             <div style="font-weight: 800; color: #0f172a; font-size: 15px; margin-bottom: 4px;">No Universities Found</div>
-            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0;">No university records match your selected filter criteria.</p>
-            <a href="{% url 'dashboard_universities' %}" style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; text-decoration: none;">
+            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0;">No records matched your search query.</p>
+            <a href="{% url 'dashboard_universities' %}?view=all" style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; text-decoration: none;">
               Reset Filters
             </a>
           </td>
@@ -283,31 +515,280 @@
     </table>
   </div>
 
-  <!-- Table Footer Pagination / Summary Strip -->
+  <!-- Pagination -->
   <div style="padding: 12px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #64748b; font-weight: 600;">
     <div>
-      Showing <strong>{{ universities|length }}</strong> on current page of <strong>{{ total_count|default:"0" }}</strong> total universities
+      Showing <strong>{{ catalog_universities|length }}</strong> of <strong>{{ total_count|default:"0" }}</strong> total universities
     </div>
-    {% if universities.has_other_pages %}
+    {% if catalog_universities.has_other_pages %}
     <div style="display: flex; gap: 6px; align-items: center;">
-      {% if universities.has_previous %}
-        <a href="?page={{ universities.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if country_filter %}&country={{ country_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" style="padding: 4px 10px; font-size: 11.5px; background: #ffffff; border: 1px solid #cbd5e1; color: #334155; text-decoration: none; border-radius: 6px; font-weight: 700;">&laquo; Prev</a>
+      {% if catalog_universities.has_previous %}
+        <a href="?view=all&page={{ catalog_universities.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if country_filter %}&country={{ country_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" style="padding: 4px 10px; font-size: 11.5px; background: #ffffff; border: 1px solid #cbd5e1; color: #334155; text-decoration: none; border-radius: 6px; font-weight: 700;">&laquo; Prev</a>
       {% endif %}
-      <span style="font-size: 11.5px; color: #475569;">Page {{ universities.number }} / {{ universities.paginator.num_pages }}</span>
-      {% if universities.has_next %}
-        <a href="?page={{ universities.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if country_filter %}&country={{ country_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" style="padding: 4px 10px; font-size: 11.5px; background: #ffffff; border: 1px solid #cbd5e1; color: #334155; text-decoration: none; border-radius: 6px; font-weight: 700;">Next &raquo;</a>
+      <span style="font-size: 11.5px; color: #475569;">Page {{ catalog_universities.number }} / {{ catalog_universities.paginator.num_pages }}</span>
+      {% if catalog_universities.has_next %}
+        <a href="?view=all&page={{ catalog_universities.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if country_filter %}&country={{ country_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" style="padding: 4px 10px; font-size: 11.5px; background: #ffffff; border: 1px solid #cbd5e1; color: #334155; text-decoration: none; border-radius: 6px; font-weight: 700;">Next &raquo;</a>
       {% endif %}
-    </div>
-    {% else %}
-    <div style="font-size: 11.5px; color: #94a3b8;">
-      KNOVA Global Higher Education Expo 2027
     </div>
     {% endif %}
   </div>
 
 </div>
+{% endif %}
+
+
+<!-- ============================================================== -->
+<!-- MODAL: ADD UNIVERSITY TO HERO CARDS (EXISTING OR BRAND NEW)   -->
+<!-- ============================================================== -->
+<div id="addUniversityModal" class="uni-modal-overlay" onclick="if(event.target===this) closeAddModal();">
+  <div class="uni-modal-card">
+    
+    <!-- Modal Close Button -->
+    <button type="button" onclick="closeAddModal()" style="position: absolute; top: 20px; right: 20px; background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b;">
+      <i data-feather="x" style="width: 16px; height: 16px;"></i>
+    </button>
+
+    <!-- Modal Header -->
+    <div style="margin-bottom: 20px;">
+      <h3 style="font-size: 18px; font-weight: 850; color: #0f172a; margin: 0 0 6px 0; display: flex; align-items: center; gap: 8px;">
+        <i data-feather="plus-circle" style="color: #1768ff; width: 20px; height: 20px;"></i>
+        Add University to Hero Cards
+      </h3>
+      <p style="font-size: 13px; color: #64748b; margin: 0; line-height: 1.4;">
+        Assign an existing university from the catalog or create a brand new university for the homepage orbit.
+      </p>
+    </div>
+
+    <!-- Modal Internal Tabs -->
+    <div style="display: flex; gap: 8px; margin-bottom: 22px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
+      <button type="button" id="tabBtnExisting" onclick="switchModalTab('existing')" style="padding: 8px 14px; font-size: 12.5px; font-weight: 750; border-radius: 8px; border: none; cursor: pointer; background: #1768ff; color: #ffffff; display: inline-flex; align-items: center; gap: 6px;">
+        <i data-feather="database" style="width: 13px; height: 13px;"></i> Select from Catalog
+      </button>
+      <button type="button" id="tabBtnNew" onclick="switchModalTab('new')" style="padding: 8px 14px; font-size: 12.5px; font-weight: 750; border-radius: 8px; border: 1.5px solid #e2e8f0; cursor: pointer; background: #ffffff; color: #475569; display: inline-flex; align-items: center; gap: 6px;">
+        <i data-feather="plus" style="width: 13px; height: 13px;"></i> Create Brand New
+      </button>
+    </div>
+
+    <!-- FORM 1: SELECT EXISTING FROM CATALOG -->
+    <div id="formSectionExisting">
+      <form action="{% url 'university_add_hero' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="mode" value="existing">
+
+        <!-- Select Card Slot -->
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
+            Target Hero Card Slot <span style="color: #dc2626;">*</span>
+          </label>
+          <select name="slot" id="existingSlotSelect" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 12px; font-size: 13px; font-weight: 700; color: #1e293b; background: #ffffff; outline: none;">
+            {% for s in "123456789012345"|make_list %}
+              {% with slot_num=forloop.counter %}
+                <option value="{{ slot_num }}">
+                  Slot #{{ slot_num }} 
+                  {% if slot_num in open_slot_numbers %}(Open - Recommended){% else %}(Will Replace Current Card){% endif %}
+                </option>
+              {% endwith %}
+            {% endfor %}
+          </select>
+          <div style="font-size: 11px; color: #64748b; margin-top: 4px;">
+            Slots 1-3: Left Hero &bull; Slots 4-6: Right Hero &bull; Slots 7-15: Orbit Ring
+          </div>
+        </div>
+
+        <!-- Filter catalog search inside modal -->
+        <div style="margin-bottom: 8px;">
+          <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
+            Select University from Catalog <span style="color: #dc2626;">*</span>
+          </label>
+          <input type="text" id="uniFilterInput" onkeyup="filterUniSelect()" placeholder="Type to filter catalog universities..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px; font-size: 12px; color: #334155; margin-bottom: 8px; background: #f8fafc; box-sizing: border-box;">
+        </div>
+
+        <div style="margin-bottom: 22px;">
+          <select name="university_id" id="modalUniSelect" size="8" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 6px; font-size: 12.5px; color: #1e293b; background: #ffffff; outline: none; height: 180px;">
+            {% for u in catalog_pool %}
+              <option value="{{ u.pk }}">
+                {{ u.name }} ({{ u.profile.location_state_country|default:u.profile.location_city|default:'International' }})
+              </option>
+            {% endfor %}
+          </select>
+          <div style="font-size: 11.5px; color: #64748b; margin-top: 4px;">
+            {{ catalog_pool|length }} institutions available in catalog. Click to select one.
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+          <button type="button" onclick="closeAddModal()" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 9px 18px; border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer;">
+            Cancel
+          </button>
+          <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 750; cursor: pointer; box-shadow: 0 2px 6px rgba(23,104,255,0.25);">
+            Add to Hero Cards &rarr;
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- FORM 2: CREATE BRAND NEW UNIVERSITY -->
+    <div id="formSectionNew" style="display: none;">
+      <form action="{% url 'university_add_hero' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="mode" value="new">
+
+        <!-- University Name -->
+        <div style="margin-bottom: 14px;">
+          <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
+            University / Institution Name <span style="color: #dc2626;">*</span>
+          </label>
+          <input type="text" name="name" required placeholder="e.g. Imperial College London, Stanford University" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #1e293b; background: #ffffff; box-sizing: border-box;">
+        </div>
+
+        <!-- City & Country Row -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+          <div>
+            <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
+              Campus City
+            </label>
+            <input type="text" name="location_city" placeholder="e.g. Oxford, Melbourne, Boston" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #1e293b; background: #ffffff; box-sizing: border-box;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
+              Country / State
+            </label>
+            <input type="text" name="location_state_country" placeholder="e.g. United Kingdom, USA" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #1e293b; background: #ffffff; box-sizing: border-box;">
+          </div>
+        </div>
+
+        <!-- Website & Established Year -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 14px;">
+          <div>
+            <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
+              Official Website URL
+            </label>
+            <input type="url" name="website" placeholder="https://www.example.edu" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #1e293b; background: #ffffff; box-sizing: border-box;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
+              Est. Year
+            </label>
+            <input type="number" name="established_year" placeholder="1985" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #1e293b; background: #ffffff; box-sizing: border-box;">
+          </div>
+        </div>
+
+        <!-- Target Slot & Logo -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px;">
+          <div>
+            <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
+              Hero Card Slot <span style="color: #dc2626;">*</span>
+            </label>
+            <select name="slot" id="newSlotSelect" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 13px; font-weight: 700; color: #1e293b; background: #ffffff; box-sizing: border-box;">
+              {% for s in "123456789012345"|make_list %}
+                {% with slot_num=forloop.counter %}
+                  <option value="{{ slot_num }}">
+                    Slot #{{ slot_num }} 
+                    {% if slot_num in open_slot_numbers %}(Open){% else %}(Will Replace){% endif %}
+                  </option>
+                {% endwith %}
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
+              University Logo / Emblem
+            </label>
+            <input type="file" name="logo" accept="image/*" style="width: 100%; font-size: 12px; color: #475569; padding: 6px 0;">
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+          <button type="button" onclick="closeAddModal()" style="background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 9px 18px; border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer;">
+            Cancel
+          </button>
+          <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 750; cursor: pointer; box-shadow: 0 2px 6px rgba(23,104,255,0.25);">
+            Create &amp; Place on Hero &rarr;
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
 
 <script>
+function openAddModal(preferredSlot) {
+  var modal = document.getElementById('addUniversityModal');
+  if (modal) {
+    modal.classList.add('open');
+    if (preferredSlot) {
+      var slotSel1 = document.getElementById('existingSlotSelect');
+      var slotSel2 = document.getElementById('newSlotSelect');
+      if (slotSel1) slotSel1.value = preferredSlot;
+      if (slotSel2) slotSel2.value = preferredSlot;
+    }
+    switchModalTab('existing');
+  }
+}
+
+function openAddModalWithUni(uniId, uniName, preferredSlot) {
+  openAddModal(preferredSlot);
+  var sel = document.getElementById('modalUniSelect');
+  if (sel) {
+    sel.value = uniId;
+  }
+}
+
+function closeAddModal() {
+  var modal = document.getElementById('addUniversityModal');
+  if (modal) {
+    modal.classList.remove('open');
+  }
+}
+
+function switchModalTab(tab) {
+  var secExist = document.getElementById('formSectionExisting');
+  var secNew = document.getElementById('formSectionNew');
+  var btnExist = document.getElementById('tabBtnExisting');
+  var btnNew = document.getElementById('tabBtnNew');
+
+  if (tab === 'existing') {
+    if (secExist) secExist.style.display = 'block';
+    if (secNew) secNew.style.display = 'none';
+    if (btnExist) {
+      btnExist.style.background = '#1768ff';
+      btnExist.style.color = '#ffffff';
+      btnExist.style.border = 'none';
+    }
+    if (btnNew) {
+      btnNew.style.background = '#ffffff';
+      btnNew.style.color = '#475569';
+      btnNew.style.border = '1.5px solid #e2e8f0';
+    }
+  } else {
+    if (secExist) secExist.style.display = 'none';
+    if (secNew) secNew.style.display = 'block';
+    if (btnNew) {
+      btnNew.style.background = '#1768ff';
+      btnNew.style.color = '#ffffff';
+      btnNew.style.border = 'none';
+    }
+    if (btnExist) {
+      btnExist.style.background = '#ffffff';
+      btnExist.style.color = '#475569';
+      btnExist.style.border = '1.5px solid #e2e8f0';
+    }
+  }
+}
+
+function filterUniSelect() {
+  var input = document.getElementById('uniFilterInput');
+  var filter = input ? input.value.toLowerCase() : '';
+  var select = document.getElementById('modalUniSelect');
+  if (!select) return;
+  var options = select.options;
+  for (var i = 0; i < options.length; i++) {
+    var txt = options[i].text.toLowerCase();
+    options[i].style.display = txt.indexOf(filter) > -1 ? '' : 'none';
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   if (typeof feather !== 'undefined') {
     feather.replace();
