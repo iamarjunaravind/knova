@@ -1,9 +1,9 @@
 {% extends base_template|default:'dashboard/base.html' %}
 {% load static %}
 
-{% block title %}University Cards &amp; Hero Orbit | KNOVA{% endblock %}
+{% block title %}Exhibitor Cards &amp; Hero Orbit | KNOVA{% endblock %}
 {% block nav_universities %}active{% endblock %}
-{% block page_title %}University Cards Management{% endblock %}
+{% block page_title %}Exhibitor Cards Management{% endblock %}
 
 {% block content %}
 <style>
@@ -78,18 +78,21 @@
 <div class="cms-header" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:0 4px 16px rgba(15,23,42,0.03); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
   <div>
     <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 4px 0; display:flex; align-items:center; gap:10px;">
-      <i data-feather="layout" style="color:#1768ff; width:22px; height:22px;"></i> University Cards &amp; Hero Orbit
+      <i data-feather="layout" style="color:#1768ff; width:22px; height:22px;"></i> Exhibitor Cards &amp; Hero Orbit
     </h2>
     <p style="font-size:13px; color:#64748b; margin:0; line-height:1.4;">
-      Universities displayed on the live homepage hero orbit (Slots 1 to 15). Manage orbital placement, replace or add cards.
+      Exhibitors &amp; universities displayed on the live homepage hero orbit (Slots 1 to 15). Manage orbital placement, replace or add cards.
     </p>
   </div>
   <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+    <a href="{% url 'public_universities' %}" target="_blank" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8;">
+      <i data-feather="external-link" style="width:14px; height:14px;"></i> View Public Page
+    </a>
     <a href="{% url 'dashboard_cms' %}?tab=sections" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#f8fafc; border:1px solid #cbd5e1; color:#334155;">
       <i data-feather="sliders" style="width:14px; height:14px;"></i> Hero Section Controls
     </a>
     <button type="button" onclick="openAddModal({{ next_available_slot }})" style="background:#1768ff; border:1px solid #1768ff; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 16px; cursor:pointer; box-shadow:0 2px 6px rgba(23, 104, 255, 0.25);">
-      <i data-feather="plus-circle" style="width:15px; height:15px;"></i> Add University Card
+      <i data-feather="plus-circle" style="width:15px; height:15px;"></i> Add Exhibitor Card
     </button>
   </div>
 </div>
@@ -98,10 +101,10 @@
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap;">
   <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
     <a href="{% url 'dashboard_universities' %}?view=cards" class="tab-pill {% if view_mode != 'all' %}active{% else %}inactive{% endif %}">
-      <i data-feather="layout" style="width: 14px; height: 14px;"></i> Active Hero Cards ({{ filled_count }} / 15 Displayed)
+      <i data-feather="layout" style="width: 14px; height: 14px;"></i> Active Hero Exhibitor Cards ({{ filled_count }} / 15 Displayed)
     </a>
     <a href="{% url 'dashboard_universities' %}?view=all" class="tab-pill {% if view_mode == 'all' %}active{% else %}inactive{% endif %}">
-      <i data-feather="database" style="width: 14px; height: 14px;"></i> All Catalog Institutions ({{ total_count }})
+      <i data-feather="database" style="width: 14px; height: 14px;"></i> All Catalog Exhibitors &amp; Universities ({{ total_count }})
     </a>
   </div>
 
@@ -114,7 +117,7 @@
     {% elif view_mode != 'all' %}
       <span style="font-size: 12px; font-weight: 750; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;">
         <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981;"></span>
-        All 15 Hero Cards Active
+        All 15 Exhibitor Cards Active
       </span>
     {% endif %}
   </div>
@@ -134,7 +137,7 @@
     </div>
     <div>
       <div style="font-size: 13.5px; font-weight: 800; color: #92400e;">
-        Slot #{{ next_available_slot }} is currently open! ({{ filled_count }} of 15 Hero Cards Active)
+        Slot #{{ next_available_slot }} is currently open! ({{ filled_count }} of 15 Exhibitor Cards Active)
       </div>
       <div style="font-size: 12px; color: #b45309; margin-top: 2px;">
         Fill this slot to ensure all 15 floating orbital card nodes are rendered on the homepage arena.
@@ -154,37 +157,40 @@
   <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: #ffffff;">
     <div>
       <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-        <i data-feather="compass" style="width: 18px; height: 18px; color: #1768ff;"></i> Active Hero University Cards
+        <i data-feather="compass" style="width: 18px; height: 18px; color: #1768ff;"></i> Active Hero Exhibitor Cards
       </h3>
       <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">
-        Showing only universities displayed on the homepage cards (Slots 1 to 15).
+        Showing only exhibitors &amp; universities displayed on the homepage cards (Slots 1 to 15).
       </p>
     </div>
     <div style="display: inline-flex; align-items: center; gap: 8px;">
+      <a href="{% url 'public_universities' %}" target="_blank" style="background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 750; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+        <i data-feather="eye" style="width: 13px; height: 13px; color: #1768ff;"></i> View on Public Page
+      </a>
       <button type="button" onclick="openAddModal({{ next_available_slot }})" style="background: #eff6ff; color: #1768ff; border: 1.5px solid #bfdbfe; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 750; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-        <i data-feather="plus" style="width: 13px; height: 13px;"></i> Add University Card
+        <i data-feather="plus" style="width: 13px; height: 13px;"></i> Add Exhibitor Card
       </button>
     </div>
   </div>
 
   <!-- Table Responsive Container -->
   <div style="overflow-x: auto; width: 100%;">
-    <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; min-width: 900px;">
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; min-width: 950px;">
       <thead>
         <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
           <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 18%;">
             Card Slot &amp; Placement
           </th>
-          <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 32%;">
-            University Name
+          <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 30%;">
+            Exhibitor / Institution Name
           </th>
-          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 18%;">
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 16%;">
             Location
           </th>
           <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 12%;">
             Hero Display Status
           </th>
-          <th style="padding: 13px 20px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; text-align: right; width: 20%;">
+          <th style="padding: 13px 20px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; text-align: right; width: 24%;">
             Actions
           </th>
         </tr>
@@ -214,7 +220,7 @@
                 </div>
               </td>
 
-              <!-- Column 2: University Name & Logo -->
+              <!-- Column 2: University / Exhibitor Name & Logo -->
               <td style="padding: 14px 18px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
                 <div style="display: flex; align-items: center; gap: 12px;">
                   <div style="width: 42px; height: 42px; border-radius: 10px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1.5px solid #cbd5e1;">
@@ -255,6 +261,11 @@
               <td style="padding: 14px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; text-align: right;">
                 <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center; flex-wrap: wrap;">
                   
+                  <!-- View Public Page Button -->
+                  <a href="{% url 'university_detail' item.university.slug %}" target="_blank" title="View Public Page for {{ item.university.name }}" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#dbeafe';" onmouseout="this.style.background='#eff6ff';">
+                    <i data-feather="external-link" style="width: 12px; height: 12px;"></i> View Public Page
+                  </a>
+
                   <!-- Slot Change Quick Dropdown Form -->
                   <form action="{% url 'university_change_slot' item.university.pk %}" method="post" style="margin: 0; display: inline-flex; align-items: center;">
                     {% csrf_token %}
@@ -269,8 +280,8 @@
                     </select>
                   </form>
 
-                  <!-- Edit University -->
-                  <a href="{% url 'university_update' item.university.pk %}" title="Edit University Profile" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#f1f5f9';" onmouseout="this.style.background='#ffffff';">
+                  <!-- Edit University / Exhibitor -->
+                  <a href="{% url 'university_update' item.university.pk %}" title="Edit Profile" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#f1f5f9';" onmouseout="this.style.background='#ffffff';">
                     <i data-feather="edit-2" style="width: 12px; height: 12px;"></i> Edit
                   </a>
 
@@ -282,8 +293,8 @@
                     </button>
                   </form>
 
-                  <!-- Delete University Completely -->
-                  <a href="{% url 'university_delete' item.university.pk %}" title="Permanently Delete University" style="background: #ffffff; border: 1px solid #fecaca; color: #dc2626; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#fef2f2';" onmouseout="this.style.background='#ffffff';">
+                  <!-- Delete Completely -->
+                  <a href="{% url 'university_delete' item.university.pk %}" title="Permanently Delete" style="background: #ffffff; border: 1px solid #fecaca; color: #dc2626; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#fef2f2';" onmouseout="this.style.background='#ffffff';">
                     <i data-feather="trash-2" style="width: 12px; height: 12px;"></i>
                   </a>
 
@@ -301,7 +312,7 @@
                 </span>
               </td>
 
-              <!-- Placeholder University Info -->
+              <!-- Placeholder Info -->
               <td style="padding: 16px 18px; vertical-align: middle; border-bottom: 1px dashed #cbd5e1;">
                 <div style="display: flex; align-items: center; gap: 12px;">
                   <div style="width: 42px; height: 42px; border-radius: 10px; border: 2px dashed #94a3b8; display: flex; align-items: center; justify-content: center; color: #94a3b8; background: #ffffff;">
@@ -312,7 +323,7 @@
                       Slot #{{ item.slot }} Available
                     </div>
                     <div style="font-size: 11.5px; color: #94a3b8; margin-top: 2px;">
-                      This card slot is currently empty. Click &ldquo;Add / Assign&rdquo; to fill it.
+                      This exhibitor card slot is currently empty. Click &ldquo;Add to Slot #{{ item.slot }}&rdquo; to fill it.
                     </div>
                   </div>
                 </div>
@@ -347,10 +358,13 @@
   <!-- Table Footer Summary -->
   <div style="padding: 14px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: #64748b; font-weight: 600; flex-wrap: wrap; gap: 10px;">
     <div>
-      Showing <strong>{{ filled_count }}</strong> active university card{{ filled_count|pluralize }} on homepage hero orbit &bull; <strong>{{ open_count }}</strong> slot{{ open_count|pluralize }} available
+      Showing <strong>{{ filled_count }}</strong> active exhibitor card{{ filled_count|pluralize }} on homepage hero orbit &bull; <strong>{{ open_count }}</strong> slot{{ open_count|pluralize }} available
     </div>
-    <div style="display: flex; gap: 8px; align-items: center;">
-      <a href="{% url 'dashboard_universities' %}?view=all" style="font-size: 12px; color: #1768ff; text-decoration: none; font-weight: 750;">
+    <div style="display: flex; gap: 14px; align-items: center;">
+      <a href="{% url 'public_universities' %}" target="_blank" style="font-size: 12px; color: #1768ff; text-decoration: none; font-weight: 750; display: inline-flex; align-items: center; gap: 4px;">
+        <i data-feather="external-link" style="width: 12px; height: 12px;"></i> View Public Directory
+      </a>
+      <a href="{% url 'dashboard_universities' %}?view=all" style="font-size: 12px; color: #475569; text-decoration: none; font-weight: 750;">
         Browse All Catalog Institutions ({{ total_count }}) &rarr;
       </a>
     </div>
@@ -408,9 +422,9 @@
   <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
     <div>
       <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-        <i data-feather="database" style="width: 18px; height: 18px; color: #1768ff;"></i> All Institutional Profiles in Catalog
+        <i data-feather="database" style="width: 18px; height: 18px; color: #1768ff;"></i> All Institutional &amp; Exhibitor Profiles in Catalog
       </h3>
-      <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">Full directory of 161 universities with courses, scholarships, and hero promotion options.</p>
+      <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">Full directory of 161 exhibitors with courses, scholarships, and hero promotion options.</p>
     </div>
     <div style="display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 750; color: #475569;">
       {{ total_count|default:"0" }} Total Institutions
@@ -418,22 +432,22 @@
   </div>
 
   <div style="overflow-x: auto; width: 100%;">
-    <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; min-width: 900px;">
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; min-width: 950px;">
       <thead>
         <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-          <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 32%;">
-            University Name
+          <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 30%;">
+            Exhibitor / Institution Name
           </th>
           <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 18%;">
             Location
           </th>
-          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 22%;">
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 18%;">
             Hero Card Status
           </th>
           <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 12%;">
             Publication
           </th>
-          <th style="padding: 13px 20px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; text-align: right; width: 16%;">
+          <th style="padding: 13px 20px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; text-align: right; width: 22%;">
             Actions
           </th>
         </tr>
@@ -490,11 +504,14 @@
           </td>
 
           <td style="padding: 14px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; text-align: right;">
-            <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
-              <a href="{% url 'university_update' uni.pk %}" title="Edit University" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+            <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center; flex-wrap: wrap;">
+              <a href="{% url 'university_detail' uni.slug %}" target="_blank" title="View Public Page" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                <i data-feather="external-link" style="width: 12px; height: 12px;"></i> Public
+              </a>
+              <a href="{% url 'university_update' uni.pk %}" title="Edit Profile" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
                 <i data-feather="edit-2" style="width: 12px; height: 12px;"></i> Edit
               </a>
-              <a href="{% url 'university_delete' uni.pk %}" title="Delete University" style="background: #ffffff; border: 1px solid #fed7aa; color: #ea580c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+              <a href="{% url 'university_delete' uni.pk %}" title="Delete" style="background: #ffffff; border: 1px solid #fed7aa; color: #ea580c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
                 <i data-feather="trash-2" style="width: 12px; height: 12px;"></i>
               </a>
             </div>
@@ -503,7 +520,7 @@
         {% empty %}
         <tr>
           <td colspan="5" style="padding: 48px 20px; text-align: center; background: #ffffff;">
-            <div style="font-weight: 800; color: #0f172a; font-size: 15px; margin-bottom: 4px;">No Universities Found</div>
+            <div style="font-weight: 800; color: #0f172a; font-size: 15px; margin-bottom: 4px;">No Exhibitors Found</div>
             <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0;">No records matched your search query.</p>
             <a href="{% url 'dashboard_universities' %}?view=all" style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; text-decoration: none;">
               Reset Filters
@@ -518,7 +535,7 @@
   <!-- Pagination -->
   <div style="padding: 12px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #64748b; font-weight: 600;">
     <div>
-      Showing <strong>{{ catalog_universities|length }}</strong> of <strong>{{ total_count|default:"0" }}</strong> total universities
+      Showing <strong>{{ catalog_universities|length }}</strong> of <strong>{{ total_count|default:"0" }}</strong> total institutions
     </div>
     {% if catalog_universities.has_other_pages %}
     <div style="display: flex; gap: 6px; align-items: center;">
@@ -538,7 +555,7 @@
 
 
 <!-- ============================================================== -->
-<!-- MODAL: ADD UNIVERSITY TO HERO CARDS (EXISTING OR BRAND NEW)   -->
+<!-- MODAL: ADD EXHIBITOR TO HERO CARDS (EXISTING OR BRAND NEW)     -->
 <!-- ============================================================== -->
 <div id="addUniversityModal" class="uni-modal-overlay" onclick="if(event.target===this) closeAddModal();">
   <div class="uni-modal-card">
@@ -552,10 +569,10 @@
     <div style="margin-bottom: 20px;">
       <h3 style="font-size: 18px; font-weight: 850; color: #0f172a; margin: 0 0 6px 0; display: flex; align-items: center; gap: 8px;">
         <i data-feather="plus-circle" style="color: #1768ff; width: 20px; height: 20px;"></i>
-        Add University to Hero Cards
+        Add Exhibitor to Hero Cards
       </h3>
       <p style="font-size: 13px; color: #64748b; margin: 0; line-height: 1.4;">
-        Assign an existing university from the catalog or create a brand new university for the homepage orbit.
+        Assign an existing exhibitor/university from the catalog or create a brand new exhibitor for the homepage orbit.
       </p>
     </div>
 
@@ -598,9 +615,9 @@
         <!-- Filter catalog search inside modal -->
         <div style="margin-bottom: 8px;">
           <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
-            Select University from Catalog <span style="color: #dc2626;">*</span>
+            Select Exhibitor from Catalog <span style="color: #dc2626;">*</span>
           </label>
-          <input type="text" id="uniFilterInput" onkeyup="filterUniSelect()" placeholder="Type to filter catalog universities..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px; font-size: 12px; color: #334155; margin-bottom: 8px; background: #f8fafc; box-sizing: border-box;">
+          <input type="text" id="uniFilterInput" onkeyup="filterUniSelect()" placeholder="Type to filter catalog exhibitors..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px; font-size: 12px; color: #334155; margin-bottom: 8px; background: #f8fafc; box-sizing: border-box;">
         </div>
 
         <div style="margin-bottom: 22px;">
@@ -627,16 +644,16 @@
       </form>
     </div>
 
-    <!-- FORM 2: CREATE BRAND NEW UNIVERSITY -->
+    <!-- FORM 2: CREATE BRAND NEW EXHIBITOR -->
     <div id="formSectionNew" style="display: none;">
       <form action="{% url 'university_add_hero' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="hidden" name="mode" value="new">
 
-        <!-- University Name -->
+        <!-- Name -->
         <div style="margin-bottom: 14px;">
           <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
-            University / Institution Name <span style="color: #dc2626;">*</span>
+            Exhibitor / Institution Name <span style="color: #dc2626;">*</span>
           </label>
           <input type="text" name="name" required placeholder="e.g. Imperial College London, Stanford University" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #1e293b; background: #ffffff; box-sizing: border-box;">
         </div>
@@ -692,7 +709,7 @@
           </div>
           <div>
             <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
-              University Logo / Emblem
+              Logo / Emblem
             </label>
             <input type="file" name="logo" accept="image/*" style="width: 100%; font-size: 12px; color: #475569; padding: 6px 0;">
           </div>

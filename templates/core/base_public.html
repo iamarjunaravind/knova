@@ -1495,9 +1495,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       {% if site_config.show_nav_exhibitors %}
         {% if site_config.disable_navbar or site_config.disable_nav_exhibitors %}
-          <a href="javascript:void(0)" onclick="return false;" class="nav-disabled-link {% if request.resolver_match.url_name == 'public_exhibitors' %}active{% endif %}" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled">Exhibitors</a>
+          <a href="javascript:void(0)" onclick="return false;" class="nav-disabled-link {% if request.resolver_match.url_name in 'public_exhibitors public_universities' %}active{% endif %}" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Link currently disabled">Universities</a>
         {% else %}
-          <a href="{% url 'public_exhibitors' %}" class="{% if request.resolver_match.url_name == 'public_exhibitors' %}active{% endif %}">Exhibitors</a>
+          <a href="{% url 'public_universities' %}" class="{% if request.resolver_match.url_name in 'public_exhibitors public_universities' %}active{% endif %}">Universities</a>
         {% endif %}
       {% endif %}
 

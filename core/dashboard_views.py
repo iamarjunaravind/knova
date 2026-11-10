@@ -3949,7 +3949,7 @@ def university_remove_hero(request, pk):
         slot = uni.hero_priority
         uni.hero_priority = 0
         uni.save(update_fields=['hero_priority'])
-        messages.success(request, f'"{uni.name}" removed from Hero Cards. Its profile and courses remain safe in the catalog. Slot #{slot} is now open — click "+ Add University Card" to fill it.')
+        messages.success(request, f'"{uni.name}" removed from Hero Cards. Its profile and courses remain safe in the catalog. Slot #{slot} is now open — click "+ Add Exhibitor Card" to fill it.')
 
     return redirect('dashboard_universities')
 
@@ -4191,9 +4191,9 @@ def university_delete(request, pk):
         slot = uni.hero_priority
         uni.delete()
         if slot and 1 <= slot <= 15:
-            messages.success(request, f'University "{name}" has been deleted. Hero Card Slot #{slot} is now open — click "+ Add University Card" to assign a replacement.')
+            messages.success(request, f'Exhibitor "{name}" has been deleted. Hero Card Slot #{slot} is now open — click "+ Add Exhibitor Card" to assign a replacement.')
         else:
-            messages.success(request, f'University "{name}" has been removed.')
+            messages.success(request, f'Exhibitor "{name}" has been removed.')
 
         return redirect('dashboard_universities')
 

@@ -48,6 +48,8 @@ urlpatterns = [
     path('register/', public_views.public_register, name='public_register'),
     path('events/', public_views.public_events, name='public_events'),
     path('exhibitors/', public_views.public_exhibitors, name='public_exhibitors'),
+    path('universities/', public_views.public_exhibitors, name='public_universities'),
+    path('universities', RedirectView.as_view(url='/universities/', permanent=True)),
     path('map/', public_views.public_expo_map, name='public_expo_map'),
     path('scholarships/', public_views.public_scholarships, name='public_scholarships'),
     path('scholarships/exam-booking/', public_views.scholarship_exam_booking, name='scholarship_exam_booking'),

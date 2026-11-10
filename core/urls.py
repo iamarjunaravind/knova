@@ -54,6 +54,7 @@ urlpatterns = [
     path('events/<int:pk>/delete/', dashboard_views.event_delete, name='event_delete'),
     
     path('universities/', dashboard_views.dashboard_universities, name='dashboard_universities'),
+    path('exhibitor-cards/', dashboard_views.dashboard_universities, name='dashboard_exhibitor_cards'),
     path('universities/new/', dashboard_views.university_create, name='university_create'),
     path('universities/add-hero/', dashboard_views.university_add_hero, name='university_add_hero'),
     path('universities/<int:pk>/remove-hero/', dashboard_views.university_remove_hero, name='university_remove_hero'),
