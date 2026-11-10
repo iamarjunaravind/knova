@@ -1,110 +1,128 @@
 {% extends base_template|default:'dashboard/base.html' %}
 {% load rbac_tags %}
 
-{% block title %}Seminars | KNOVA{% endblock %}
+{% block title %}Keynote Seminars | KNOVA Dashboard{% endblock %}
+{% block nav_seminars %}active{% endblock %}
 {% block nav_programme %}active{% endblock %}
-{% block page_title %}Seminars{% endblock %}
+{% block nav_seminar_programme %}active{% endblock %}
+{% block page_title %}Keynote Seminars &amp; Masterclasses{% endblock %}
 
 {% block content %}
+<!-- Top Page Header Banner -->
+<div class="cms-header" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:0 4px 16px rgba(15,23,42,0.03); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+  <div>
+    <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 4px 0; display:flex; align-items:center; gap:10px;">
+      <i data-feather="mic" style="color:#7c3aed;"></i> Keynote Seminars &amp; Masterclasses
+    </h2>
+    <p style="font-size:13px; color:#64748b; margin:0; line-height:1.4;">
+      Keynote masterclasses, expert panel clinics, admissions workshops, and auditorium schedules.
+    </p>
+  </div>
+  <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+    <a href="{% url 'dashboard_export_generic' 'programmesession' %}?format=excel" class="btn btn-outline-secondary" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#ecfdf5; border:1px solid #a7f3d0; color:#059669;">
+      <i data-feather="file" style="width:14px; height:14px;"></i> Excel
+    </a>
+    <a href="{% url 'dashboard_export_generic' 'programmesession' %}?format=csv" class="btn btn-outline-secondary" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8;">
+      <i data-feather="file-text" style="width:14px; height:14px;"></i> CSV
+    </a>
+    {% if request.user.is_superuser or request.user.is_staff %}
+    <a href="{% url 'programme_create' %}" style="background:#7c3aed; border:1px solid #6d28d9; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 16px; text-decoration:none; box-shadow:0 2px 6px rgba(124,58,237,0.25);">
+      <i data-feather="plus" style="width:14px; height:14px;"></i> + Add Seminar
+    </a>
+    {% endif %}
+  </div>
+</div>
+
 <!-- KPI METRIC CARDS -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px;">
   <!-- Metric 1: Total Sessions -->
   <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
     <div>
       <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Total Sessions</div>
-      <div style="font-size: 26px; font-weight: 850; color: #0f172a;">{{ total_sessions_count|default:sessions.count|default:0 }}</div>
-      <div style="font-size: 11.5px; color: #10b981; font-weight: 600; margin-top: 2px;">Keynotes, Panels &amp; Seminars</div>
+      <div style="font-size: 26px; font-weight: 850; color: #7c3aed;">{{ total_sessions_count|default:sessions.count|default:"0" }}</div>
+      <div style="font-size: 11.5px; color: #7c3aed; font-weight: 700; margin-top: 2px;">Keynotes &amp; Panels</div>
     </div>
-    <div style="width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; color: #1768ff; display: flex; align-items: center; justify-content: center; border: 1px solid #bfdbfe;">
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #f5f3ff; color: #7c3aed; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd6fe;">
       <i data-feather="calendar" style="width: 20px; height: 20px;"></i>
     </div>
   </div>
 
-  <!-- Metric 2: Programme Status -->
+  <!-- Metric 2: Keynote Speakers -->
   <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
     <div>
-      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Auditoriums &amp; Halls</div>
-      <div style="font-size: 26px; font-weight: 850; color: #0284c7;">Active</div>
-      <div style="font-size: 11.5px; color: #0284c7; font-weight: 600; margin-top: 2px;">Main Stages &amp; Breakout Rooms</div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Keynote Speakers</div>
+      <div style="font-size: 26px; font-weight: 850; color: #ec4899;">{{ speakers_count|default:"0" }}</div>
+      <div style="font-size: 11.5px; color: #ec4899; font-weight: 700; margin-top: 2px;">Global Deans &amp; Experts</div>
+    </div>
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #fdf2f8; color: #ec4899; display: flex; align-items: center; justify-content: center; border: 1px solid #fbcfe8;">
+      <i data-feather="mic" style="width: 20px; height: 20px;"></i>
+    </div>
+  </div>
+
+  <!-- Metric 3: Auditoriums & Stages -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Auditoriums &amp; Stages</div>
+      <div style="font-size: 26px; font-weight: 850; color: #0284c7;">{{ stages_count|default:"2" }}</div>
+      <div style="font-size: 11.5px; color: #0284c7; font-weight: 700; margin-top: 2px;">Main Stages &amp; Breakout Rooms</div>
     </div>
     <div style="width: 44px; height: 44px; border-radius: 12px; background: #f0f9ff; color: #0284c7; display: flex; align-items: center; justify-content: center; border: 1px solid #bae6fd;">
       <i data-feather="layers" style="width: 20px; height: 20px;"></i>
     </div>
   </div>
-
-  <!-- Metric 3: Filtered Count -->
-  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
-    <div>
-      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Showing in View</div>
-      <div style="font-size: 26px; font-weight: 850; color: #7c3aed;">{{ sessions|length }}</div>
-      <div style="font-size: 11.5px; color: #64748b; font-weight: 600; margin-top: 2px;">Filtered Sessions</div>
-    </div>
-    <div style="width: 44px; height: 44px; border-radius: 12px; background: #f5f3ff; color: #7c3aed; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd6fe;">
-      <i data-feather="filter" style="width: 20px; height: 20px;"></i>
-    </div>
-  </div>
 </div>
 
-<!-- FILTER & ACTION TOOLBAR (SINGLE LINE) -->
-<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 14px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
-  
-  <form method="GET" action="{% url 'dashboard_programme' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap;">
+<!-- FILTER & SEARCH TOOLBAR -->
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+  <form method="GET" action="{% url 'dashboard_seminars' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap; width: 100%;">
+    <!-- Search keyword -->
+    <div style="position: relative; width: 240px; flex: 1; min-width: 200px;">
+      <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search seminar title, speaker, hall..." style="width: 100%; border: 1px solid #cbd5e1; padding: 0 28px 0 32px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;">
+      <i data-feather="search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: #94a3b8; pointer-events: none;"></i>
+      {% if query %}
+      <a href="{% url 'dashboard_seminars' %}" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 700;" title="Clear Search">&times;</a>
+      {% endif %}
+    </div>
+
     <!-- Date Range -->
-    <input type="date" name="start_date" value="{{ start_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; width: 125px;" title="Start Date">
-    <span style="color: #94a3b8; font-size: 11px; font-weight: 600;">to</span>
-    <input type="date" name="end_date" value="{{ end_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; width: 125px;" title="End Date">
+    <div style="display: inline-flex; align-items: center; gap: 4px;">
+      <input type="date" name="start_date" value="{{ start_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;" title="Start Date">
+      <span style="color: #94a3b8; font-size: 11px; font-weight: 600;">to</span>
+      <input type="date" name="end_date" value="{{ end_date|default:'' }}" style="border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;" title="End Date">
+    </div>
 
     <!-- Sort By -->
-    <select name="sort_by" style="border: 1px solid #cbd5e1; padding: 6px 8px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; max-width: 140px;">
+    <select name="sort_by" style="border: 1px solid #cbd5e1; padding: 0 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; height: 36px; min-width: 140px;">
       <option value="date" {% if sort_by == 'date' %}selected{% endif %}>Date (Earliest First)</option>
       <option value="-date" {% if sort_by == '-date' %}selected{% endif %}>Date (Latest First)</option>
       <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Title (A-Z)</option>
       <option value="-title" {% if sort_by == '-title' %}selected{% endif %}>Title (Z-A)</option>
     </select>
 
-    <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(23,104,255,0.25); white-space: nowrap;">
-      <i data-feather="search" style="width: 13px; height: 13px;"></i> Apply Filter
+    <button type="submit" style="background: #7c3aed; color: #ffffff; border: none; padding: 0 16px; border-radius: 6px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(124,58,237,0.25); height: 36px; white-space: nowrap;">
+      <i data-feather="filter" style="width: 13px; height: 13px;"></i> Apply Filter
     </button>
 
-    {% if start_date or end_date or sort_by != 'date' %}
-    <a href="{% url 'dashboard_programme' %}" style="font-size: 11.5px; color: #64748b; text-decoration: none; font-weight: 600; padding: 4px 6px; white-space: nowrap;">
+    {% if start_date or end_date or sort_by != 'date' or query %}
+    <a href="{% url 'dashboard_seminars' %}" style="font-size: 12px; color: #64748b; text-decoration: none; font-weight: 600; padding: 6px 10px; white-space: nowrap;">
       Reset
     </a>
     {% endif %}
-
-    <!-- Export Separator -->
-    <div style="width: 1px; height: 18px; background: #e2e8f0; margin: 0 2px;"></div>
-
-    <!-- Export Buttons -->
-    <button type="submit" name="format" value="excel" formaction="{% url 'dashboard_export_generic' 'programmesession' %}" style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #059669; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
-      <i data-feather="file" style="width: 13px; height: 13px;"></i> Excel
-    </button>
-    <button type="submit" name="format" value="csv" formaction="{% url 'dashboard_export_generic' 'programmesession' %}" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
-      <i data-feather="file-text" style="width: 13px; height: 13px;"></i> CSV
-    </button>
   </form>
-
-  <!-- Add New Session Button (Pinned to Right) -->
-  {% if request.user.is_superuser or request.user.is_staff %}
-  <a href="{% url 'programme_create' %}" style="background: linear-gradient(135deg, #1768ff 0%, #0d54d9 100%); color: #ffffff; text-decoration: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 750; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(23,104,255,0.25); white-space: nowrap; flex-shrink: 0;">
-    <i data-feather="plus" style="width: 14px; height: 14px;"></i> Add New Seminar
-  </a>
-  {% endif %}
 </div>
 
 <!-- STRUCTURED DATA TABLE CARD -->
 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); overflow: hidden;">
-  
   <!-- Table Header Bar -->
   <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: #ffffff;">
     <div>
       <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-        <i data-feather="clock" style="width: 18px; height: 18px; color: #1768ff;"></i> Seminars &amp; Sessions
+        <i data-feather="mic" style="width: 18px; height: 18px; color: #7c3aed;"></i> Keynote Seminars &amp; Masterclasses
       </h3>
       <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">Schedule of masterclasses, panel discussions, and keynotes</p>
     </div>
     <div style="display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 750; color: #475569;">
-      <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981;"></span>
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: #7c3aed;"></span>
       {{ sessions|length }} Scheduled Session{{ sessions|length|pluralize }}
     </div>
   </div>
@@ -115,15 +133,15 @@
       <thead>
         <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
           <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 34%;">
-            Session Title
+            Seminar Title &amp; Details
           </th>
           <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 20%;">
             Location &amp; Hall
           </th>
-          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 22%;">
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 20%;">
             Date &amp; Time
           </th>
-          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 14%;">
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 16%;">
             Speaker
           </th>
           <th style="padding: 13px 20px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; text-align: right; width: 10%;">
@@ -134,20 +152,39 @@
       <tbody>
         {% for session in sessions %}
         <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc';" onmouseout="this.style.background='transparent';">
-          
-          <!-- Column 1: Session Title -->
+          <!-- Column 1: Title & Credentials -->
           <td style="padding: 14px 18px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
-            <div style="font-weight: 800; color: #0f172a; font-size: 13.5px; line-height: 1.3;">{{ session.title }}</div>
+            <div style="font-weight: 800; color: #0f172a; font-size: 13.5px; line-height: 1.3;">
+              {{ session.title }}
+            </div>
             {% if session.description %}
-            <div style="font-size: 11.5px; color: #64748b; margin-top: 3px; line-height: 1.3;">{{ session.description|truncatechars:55 }}</div>
+            <div style="font-size: 11.5px; color: #64748b; margin-top: 3px; line-height: 1.3;">
+              {{ session.description|truncatechars:70 }}
+            </div>
             {% endif %}
+
+            <!-- Staff Credentials pill with 1-click Copy -->
+            <div style="margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 3px 8px;">
+              <span style="font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: #64748b; display: inline-flex; align-items: center; gap: 3px;">
+                <i data-feather="key" style="width: 10px; height: 10px; color: #7c3aed;"></i> Staff:
+              </span>
+              <span style="font-family: monospace; font-size: 11.5px; background: #ffffff; border: 1px solid #cbd5e1; padding: 1px 6px; border-radius: 4px; color: #1e293b; font-weight: 700;">
+                User: <span style="color: #1768ff;">{{ session.login_username|default:"seminar_staff" }}</span>
+              </span>
+              <span style="font-family: monospace; font-size: 11.5px; background: #ffffff; border: 1px solid #cbd5e1; padding: 1px 6px; border-radius: 4px; color: #1e293b; font-weight: 700;">
+                Pass: <span style="color: #059669;">{{ session.login_password|default:"seminar123" }}</span>
+              </span>
+              <button type="button" onclick="navigator.clipboard.writeText('{{ session.login_username|default:"seminar_staff" }} / {{ session.login_password|default:"seminar123" }}'); const btn=this; btn.textContent='Copied!'; setTimeout(() => btn.textContent='Copy', 1500);" style="background: #ffffff; border: 1px solid #cbd5e1; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 4px; cursor: pointer; color: #475569;">
+                Copy
+              </button>
+            </div>
           </td>
 
           <!-- Column 2: Location & Hall -->
           <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
             <div style="display: flex; align-items: center; gap: 6px; font-weight: 750; color: #0f172a; font-size: 13px;">
               <i data-feather="map-pin" style="width: 13px; height: 13px; color: #ef4444;"></i>
-              {{ session.event_location.city|default:"Dubai" }}
+              {{ session.event_location.city|default:"Bahrain" }}
             </div>
             {% if session.hall_name %}
             <div style="margin-top: 3px;">
@@ -182,22 +219,17 @@
             {% endif %}
           </td>
 
-          <!-- Column 5: Action Buttons -->
+          <!-- Column 5: Actions -->
           <td style="padding: 14px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; text-align: right;">
             <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
-              
-              <!-- Edit Session -->
-              <a href="{% url 'programme_update' session.pk %}" title="Edit Session" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#f1f5f9';" onmouseout="this.style.background='#ffffff';">
+              <a href="{% url 'programme_update' session.pk %}" title="Edit Seminar" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#f1f5f9';" onmouseout="this.style.background='#ffffff';">
                 <i data-feather="edit-2" style="width: 12px; height: 12px;"></i> Edit
               </a>
-
-              <!-- Delete Session -->
               {% if request.user.is_superuser or request.user.is_staff %}
-              <a href="{% url 'programme_delete' session.pk %}" title="Delete Session" style="background: #ffffff; border: 1px solid #fed7aa; color: #ea580c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#fff7ed';" onmouseout="this.style.background='#ffffff';">
+              <a href="{% url 'programme_delete' session.pk %}" title="Delete Seminar" style="background: #ffffff; border: 1px solid #fed7aa; color: #ea580c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#fff7ed';" onmouseout="this.style.background='#ffffff';">
                 <i data-feather="trash-2" style="width: 12px; height: 12px;"></i> Delete
               </a>
               {% endif %}
-
             </div>
           </td>
         </tr>
@@ -205,11 +237,11 @@
         <tr>
           <td colspan="5" style="padding: 48px 20px; text-align: center; background: #ffffff;">
             <div style="width: 52px; height: 52px; border-radius: 50%; background: #f8fafc; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #94a3b8;">
-              <i data-feather="calendar" style="width: 24px; height: 24px;"></i>
+              <i data-feather="mic" style="width: 24px; height: 24px;"></i>
             </div>
-            <div style="font-weight: 800; color: #0f172a; font-size: 15px; margin-bottom: 4px;">No Sessions Found</div>
-            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0;">No programme sessions match your selected filter criteria.</p>
-            <a href="{% url 'dashboard_programme' %}" style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; text-decoration: none;">
+            <div style="font-weight: 800; color: #0f172a; font-size: 15px; margin-bottom: 4px;">No Keynote Seminars Found</div>
+            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0;">No seminar sessions match your selected filter criteria.</p>
+            <a href="{% url 'dashboard_seminars' %}" style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; text-decoration: none;">
               Reset Filters
             </a>
           </td>
@@ -219,16 +251,15 @@
     </table>
   </div>
 
-  <!-- Table Footer Summary Strip -->
+  <!-- Table Footer Strip -->
   <div style="padding: 12px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #64748b; font-weight: 600;">
     <div>
-      Showing <strong>{{ sessions|length }}</strong> of <strong>{{ total_sessions_count|default:sessions.count|default:0 }}</strong> total sessions
+      Showing <strong>{{ sessions|length }}</strong> of <strong>{{ total_sessions_count|default:sessions.count|default:"0" }}</strong> total seminars
     </div>
     <div style="font-size: 11.5px; color: #94a3b8;">
       KNOVA Global Higher Education Expo 2027
     </div>
   </div>
-
 </div>
 
 <script>

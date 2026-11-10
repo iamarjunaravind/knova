@@ -1,18 +1,19 @@
 {% extends base_template|default:'dashboard/base.html' %}
 
-{% block title %}Expos &amp; Seminars | KNOVA{% endblock %}
+{% block title %}Flagship Expos | KNOVA Dashboard{% endblock %}
 {% block nav_events %}active{% endblock %}
-{% block page_title %}Expos &amp; Seminars Management{% endblock %}
+{% block nav_expos %}active{% endblock %}
+{% block page_title %}Flagship Expos Management{% endblock %}
 
 {% block content %}
 <!-- Top Page Header Banner -->
 <div class="cms-header" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; padding:20px 24px; margin-bottom:20px; box-shadow:0 4px 16px rgba(15,23,42,0.03); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
   <div>
     <h2 style="font-size:20px; font-weight:800; color:#0f172a; margin:0 0 4px 0; display:flex; align-items:center; gap:10px;">
-      <i data-feather="calendar" style="color:#1768ff;"></i> Expos &amp; Seminars Management
+      <i data-feather="compass" style="color:#1768ff;"></i> Flagship Higher Education Expos
     </h2>
     <p style="font-size:13px; color:#64748b; margin:0; line-height:1.4;">
-      Flagship global education expos, GCC host venues, masterclasses, and keynote seminar schedules.
+      Flagship global education exhibitions, GCC host venues, dates, and event floor locations.
     </p>
   </div>
   <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -22,88 +23,60 @@
     <a href="{% url 'dashboard_export_generic' 'eventlocation' %}?format=csv" class="btn btn-outline-secondary" style="height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:12.5px; border-radius:8px; padding:0 14px; text-decoration:none; background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8;">
       <i data-feather="file-text" style="width:14px; height:14px;"></i> CSV
     </a>
-    <a href="{% url 'programme_create' %}" style="background:#7c3aed; border:1px solid #7c3aed; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 15px; text-decoration:none; box-shadow:0 2px 6px rgba(124,58,237,0.25);">
-      <i data-feather="plus" style="width:14px; height:14px;"></i> Add Seminar
-    </a>
     <a href="{% url 'event_create' %}" style="background:#1768ff; border:1px solid #1768ff; color:#ffffff; height:38px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:13px; border-radius:8px; padding:0 16px; text-decoration:none; box-shadow:0 2px 6px rgba(23, 104, 255, 0.25);">
-      <i data-feather="plus" style="width:14px; height:14px;"></i> Add Expo
+      <i data-feather="plus" style="width:14px; height:14px;"></i> + Add Expo
     </a>
   </div>
 </div>
 
 <!-- KPI METRIC CARDS -->
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px;">
-  <!-- Metric 1: Total Programs -->
-  <a href="{% url 'dashboard_events' %}?type=all{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if query %}&q={{ query|urlencode }}{% endif %}" style="text-decoration: none; display: block; color: inherit;">
-    <div style="background: #ffffff; border: {% if filter_type == 'all' or not filter_type %}2px solid #1768ff{% else %}1px solid #e2e8f0{% endif %}; border-radius: 14px; padding: 18px 20px; box-shadow: {% if filter_type == 'all' or not filter_type %}0 4px 16px rgba(23, 104, 255, 0.18){% else %}0 2px 8px rgba(15, 23, 42, 0.03){% endif %}; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; cursor: pointer;">
-      <div>
-        <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Total Programs</div>
-        <div style="font-size: 26px; font-weight: 850; color: {% if filter_type == 'all' or not filter_type %}#1768ff{% else %}#0f172a{% endif %};">{{ total_all_count|default:"8" }}</div>
-        <div style="font-size: 11.5px; color: {% if filter_type == 'all' or not filter_type %}#1768ff{% else %}#10b981{% endif %}; font-weight: 700; margin-top: 2px;">Expos &amp; Seminars Scheduled</div>
-      </div>
-      <div style="width: 44px; height: 44px; border-radius: 12px; background: {% if filter_type == 'all' or not filter_type %}#1768ff{% else %}#eff6ff{% endif %}; color: {% if filter_type == 'all' or not filter_type %}#ffffff{% else %}#1768ff{% endif %}; display: flex; align-items: center; justify-content: center; border: 1px solid {% if filter_type == 'all' or not filter_type %}#1768ff{% else %}#bfdbfe{% endif %}; box-shadow: {% if filter_type == 'all' or not filter_type %}0 2px 8px rgba(23, 104, 255, 0.35){% else %}none{% endif %};">
-        <i data-feather="calendar" style="width: 20px; height: 20px;"></i>
-      </div>
+  <!-- Metric 1: Total Expos -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Total Expos</div>
+      <div style="font-size: 26px; font-weight: 850; color: #1768ff;">{{ total_expos_count|default:"0" }}</div>
+      <div style="font-size: 11.5px; color: #1768ff; font-weight: 700; margin-top: 2px;">Flagship Exhibitions</div>
     </div>
-  </a>
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; color: #1768ff; display: flex; align-items: center; justify-content: center; border: 1px solid #bfdbfe;">
+      <i data-feather="compass" style="width: 20px; height: 20px;"></i>
+    </div>
+  </div>
 
-  <!-- Metric 2: Flagship Expos -->
-  <a href="{% url 'dashboard_events' %}?type=expo{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if query %}&q={{ query|urlencode }}{% endif %}" style="text-decoration: none; display: block; color: inherit;">
-    <div style="background: #ffffff; border: {% if filter_type == 'expo' %}2px solid #1768ff{% else %}1px solid #e2e8f0{% endif %}; border-radius: 14px; padding: 18px 20px; box-shadow: {% if filter_type == 'expo' %}0 4px 16px rgba(23, 104, 255, 0.18){% else %}0 2px 8px rgba(15, 23, 42, 0.03){% endif %}; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; cursor: pointer;">
-      <div>
-        <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Flagship Expos</div>
-        <div style="font-size: 26px; font-weight: 850; color: {% if filter_type == 'expo' %}#1768ff{% else %}#0284c7{% endif %};">{{ total_expos_count|default:"4" }}</div>
-        <div style="font-size: 11.5px; color: {% if filter_type == 'expo' %}#1768ff{% else %}#0284c7{% endif %}; font-weight: 700; margin-top: 2px;">GCC Host Cities</div>
-      </div>
-      <div style="width: 44px; height: 44px; border-radius: 12px; background: {% if filter_type == 'expo' %}#1768ff{% else %}#f0f9ff{% endif %}; color: {% if filter_type == 'expo' %}#ffffff{% else %}#0284c7{% endif %}; display: flex; align-items: center; justify-content: center; border: 1px solid {% if filter_type == 'expo' %}#1768ff{% else %}#bae6fd{% endif %}; box-shadow: {% if filter_type == 'expo' %}0 2px 8px rgba(23, 104, 255, 0.35){% else %}none{% endif %};">
-        <i data-feather="compass" style="width: 20px; height: 20px;"></i>
-      </div>
+  <!-- Metric 2: Upcoming Editions -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Upcoming Expos</div>
+      <div style="font-size: 26px; font-weight: 850; color: #059669;">{{ upcoming_expos_count|default:"0" }}</div>
+      <div style="font-size: 11.5px; color: #059669; font-weight: 700; margin-top: 2px;">Scheduled Live Events</div>
     </div>
-  </a>
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #ecfdf5; color: #059669; display: flex; align-items: center; justify-content: center; border: 1px solid #a7f3d0;">
+      <i data-feather="calendar" style="width: 20px; height: 20px;"></i>
+    </div>
+  </div>
 
-  <!-- Metric 3: Keynote Seminars -->
-  <a href="{% url 'dashboard_events' %}?type=seminar{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if query %}&q={{ query|urlencode }}{% endif %}" style="text-decoration: none; display: block; color: inherit;">
-    <div style="background: #ffffff; border: {% if filter_type == 'seminar' %}2px solid #1768ff{% else %}1px solid #e2e8f0{% endif %}; border-radius: 14px; padding: 18px 20px; box-shadow: {% if filter_type == 'seminar' %}0 4px 16px rgba(23, 104, 255, 0.18){% else %}0 2px 8px rgba(15, 23, 42, 0.03){% endif %}; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; cursor: pointer;">
-      <div>
-        <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Keynote Seminars</div>
-        <div style="font-size: 26px; font-weight: 850; color: {% if filter_type == 'seminar' %}#1768ff{% else %}#7c3aed{% endif %};">{{ total_seminars_count|default:"4" }}</div>
-        <div style="font-size: 11.5px; color: {% if filter_type == 'seminar' %}#1768ff{% else %}#7c3aed{% endif %}; font-weight: 700; margin-top: 2px;">Masterclasses &amp; Clinics</div>
-      </div>
-      <div style="width: 44px; height: 44px; border-radius: 12px; background: {% if filter_type == 'seminar' %}#1768ff{% else %}#f5f3ff{% endif %}; color: {% if filter_type == 'seminar' %}#ffffff{% else %}#7c3aed{% endif %}; display: flex; align-items: center; justify-content: center; border: 1px solid {% if filter_type == 'seminar' %}#1768ff{% else %}#ddd6fe{% endif %}; box-shadow: {% if filter_type == 'seminar' %}0 2px 8px rgba(23, 104, 255, 0.35){% else %}none{% endif %};">
-        <i data-feather="mic" style="width: 20px; height: 20px;"></i>
-      </div>
+  <!-- Metric 3: Host Cities -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03); display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <div style="font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Host Cities</div>
+      <div style="font-size: 26px; font-weight: 850; color: #0284c7;">{{ cities_count|default:"0" }}</div>
+      <div style="font-size: 11.5px; color: #0284c7; font-weight: 700; margin-top: 2px;">GCC &amp; Global Venues</div>
     </div>
-  </a>
+    <div style="width: 44px; height: 44px; border-radius: 12px; background: #f0f9ff; color: #0284c7; display: flex; align-items: center; justify-content: center; border: 1px solid #bae6fd;">
+      <i data-feather="map-pin" style="width: 20px; height: 20px;"></i>
+    </div>
+  </div>
 </div>
 
 <!-- FILTER & SEARCH TOOLBAR -->
 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
-  
   <form method="GET" action="{% url 'dashboard_events' %}" style="display: flex; gap: 8px; align-items: center; margin: 0; flex-wrap: wrap; width: 100%;">
-    <!-- Type Pills Inside Toolbar -->
-    <div style="display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 8px; gap: 3px; margin-right: 6px; flex-shrink: 0;">
-      <a href="{% url 'dashboard_events' %}?type=all{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if query %}&q={{ query|urlencode }}{% endif %}"
-         style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'all' or not filter_type %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
-        All ({{ total_all_count|default:"8" }})
-      </a>
-      <a href="{% url 'dashboard_events' %}?type=expo{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if query %}&q={{ query|urlencode }}{% endif %}"
-         style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'expo' %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
-        Expos ({{ total_expos_count|default:"4" }})
-      </a>
-      <a href="{% url 'dashboard_events' %}?type=seminar{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if sort_by %}&sort_by={{ sort_by }}{% endif %}{% if query %}&q={{ query|urlencode }}{% endif %}"
-         style="padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 750; text-decoration: none; transition: all 0.15s ease; {% if filter_type == 'seminar' %}background: #1768ff; color: #ffffff; box-shadow: 0 1px 3px rgba(23,104,255,0.25);{% else %}background: transparent; color: #64748b;{% endif %}">
-        Seminars ({{ total_seminars_count|default:"4" }})
-      </a>
-    </div>
-
-    <input type="hidden" name="type" value="{{ filter_type|default:'all' }}">
-
     <!-- Search keyword -->
-    <div style="position: relative; width: 220px;">
-      <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search title, venue, speaker..." style="width: 100%; border: 1px solid #cbd5e1; padding: 0 28px 0 32px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;">
+    <div style="position: relative; width: 240px; flex: 1; min-width: 200px;">
+      <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search expo name, city, venue..." style="width: 100%; border: 1px solid #cbd5e1; padding: 0 28px 0 32px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; height: 36px; box-sizing: border-box;">
       <i data-feather="search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: #94a3b8; pointer-events: none;"></i>
       {% if query %}
-      <a href="{% url 'dashboard_events' %}?type={{ filter_type|default:'all' }}" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 700;" title="Clear Search">&times;</a>
+      <a href="{% url 'dashboard_events' %}" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 700;" title="Clear Search">&times;</a>
       {% endif %}
     </div>
 
@@ -116,18 +89,18 @@
 
     <!-- Sort By -->
     <select name="sort_by" style="border: 1px solid #cbd5e1; padding: 0 10px; border-radius: 6px; font-size: 12px; color: #334155; outline: none; background: #f8fafc; font-weight: 600; height: 36px; min-width: 140px;">
-      <option value="date" {% if sort_by == 'date' or sort_by == 'start_date' %}selected{% endif %}>Date (Ascending)</option>
-      <option value="-date" {% if sort_by == '-date' or sort_by == '-start_date' %}selected{% endif %}>Date (Descending)</option>
-      <option value="title" {% if sort_by == 'title' or sort_by == 'name' %}selected{% endif %}>Title (A-Z)</option>
-      <option value="-title" {% if sort_by == '-title' or sort_by == '-name' %}selected{% endif %}>Title (Z-A)</option>
+      <option value="date" {% if sort_by == 'date' %}selected{% endif %}>Date (Ascending)</option>
+      <option value="-date" {% if sort_by == '-date' %}selected{% endif %}>Date (Descending)</option>
+      <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name (A-Z)</option>
+      <option value="-name" {% if sort_by == '-name' %}selected{% endif %}>Name (Z-A)</option>
     </select>
 
     <button type="submit" style="background: #1768ff; color: #ffffff; border: none; padding: 0 16px; border-radius: 6px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 1px 3px rgba(23,104,255,0.25); height: 36px; white-space: nowrap;">
       <i data-feather="filter" style="width: 13px; height: 13px;"></i> Apply Filter
     </button>
 
-    {% if start_date or end_date or sort_by != 'date' %}
-    <a href="{% url 'dashboard_events' %}?type={{ filter_type|default:'all' }}" style="font-size: 12px; color: #64748b; text-decoration: none; font-weight: 600; padding: 6px 10px; white-space: nowrap;">
+    {% if start_date or end_date or sort_by != 'date' or query %}
+    <a href="{% url 'dashboard_events' %}" style="font-size: 12px; color: #64748b; text-decoration: none; font-weight: 600; padding: 6px 10px; white-space: nowrap;">
       Reset
     </a>
     {% endif %}
@@ -136,39 +109,35 @@
 
 <!-- STRUCTURED DATA TABLE CARD -->
 <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04); overflow: hidden;">
-  
   <!-- Table Header Bar -->
   <div style="padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: #ffffff;">
     <div>
       <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-        <i data-feather="map" style="width: 18px; height: 18px; color: #1768ff;"></i> Flagship Expos &amp; Keynote Seminars
+        <i data-feather="compass" style="width: 18px; height: 18px; color: #1768ff;"></i> Flagship Higher Education Expos
       </h3>
-      <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">Multi-city higher education exhibitions and keynote auditoriums</p>
+      <p style="margin: 3px 0 0; font-size: 12px; color: #64748b;">Multi-city higher education exhibitions and host venues</p>
     </div>
     <div style="display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 750; color: #475569;">
       <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981;"></span>
-      {{ items|length }} Active Program{{ items|length|pluralize }}
+      {{ items|length }} Active Expo{{ items|length|pluralize }}
     </div>
   </div>
 
   <!-- Table Responsive Container -->
   <div style="overflow-x: auto; width: 100%;">
-    <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; min-width: 900px;">
+    <table style="width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; min-width: 800px;">
       <thead>
         <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-          <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 12%;">
-            Type
+          <th style="padding: 13px 18px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 35%;">
+            Expo Edition / Name
           </th>
-          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 34%;">
-            Program / Event Name
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 22%;">
+            Host City &amp; Venue
           </th>
-          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 18%;">
-            City &amp; Venue
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 23%;">
+            Dates &amp; Exhibition Timings
           </th>
-          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 18%;">
-            Date &amp; Time Details
-          </th>
-          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 8%;">
+          <th style="padding: 13px 16px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; width: 10%;">
             Status
           </th>
           <th style="padding: 13px 20px; color: #475569; font-size: 11.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 2px solid #e2e8f0; text-align: right; width: 10%;">
@@ -179,92 +148,59 @@
       <tbody>
         {% for item in items %}
         <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.15s ease;" onmouseover="this.style.background='#f8fafc';" onmouseout="this.style.background='transparent';">
-          
-          <!-- Column 1: Type -->
+          <!-- Column 1: Expo Name -->
           <td style="padding: 14px 18px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
-            {% if item.type_key == 'expo' %}
-              <span style="display: inline-flex; align-items: center; gap: 4px; background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; padding: 3px 8px; border-radius: 6px; font-weight: 800; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;">
-                <i data-feather="compass" style="width: 12px; height: 12px;"></i> Expo
-              </span>
-            {% else %}
-              <span style="display: inline-flex; align-items: center; gap: 4px; background: #ede9fe; color: #7c3aed; border: 1px solid #ddd6fe; padding: 3px 8px; border-radius: 6px; font-weight: 800; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;">
-                <i data-feather="mic" style="width: 12px; height: 12px;"></i> Seminar
-              </span>
-            {% endif %}
-          </td>
-
-          <!-- Column 2: Event Name -->
-          <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
-            <div style="font-weight: 800; color: #0f172a; font-size: 13.5px; line-height: 1.3;">
+            <div style="font-weight: 800; color: #0f172a; font-size: 14px; line-height: 1.3;">
               {{ item.title }}
             </div>
-            {% if item.speaker %}
-              <div style="font-size: 11.5px; color: #64748b; margin-top: 3px; display: inline-flex; align-items: center; gap: 4px;">
-                <i data-feather="user" style="width: 12px; height: 12px; color: #8b5cf6;"></i>
-                <span>Speaker: <strong style="color: #475569;">{{ item.speaker }}</strong></span>
-              </div>
-            {% endif %}
-            {% if item.type_key == 'seminar' %}
-              <div style="margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 3px 8px;">
-                <span style="font-size: 10.5px; font-weight: 800; text-transform: uppercase; color: #64748b; display: inline-flex; align-items: center; gap: 3px;">
-                  <i data-feather="key" style="width: 10px; height: 10px; color: #8b5cf6;"></i> Staff:
-                </span>
-                <span style="font-family: monospace; font-size: 11.5px; background: #ffffff; border: 1px solid #cbd5e1; padding: 1px 6px; border-radius: 4px; color: #1e293b; font-weight: 700;">
-                  User: <span style="color: #1768ff;">{{ item.login_username }}</span>
-                </span>
-                <span style="font-family: monospace; font-size: 11.5px; background: #ffffff; border: 1px solid #cbd5e1; padding: 1px 6px; border-radius: 4px; color: #1e293b; font-weight: 700;">
-                  Pass: <span style="color: #059669;">{{ item.login_password }}</span>
-                </span>
-                <button type="button" onclick="navigator.clipboard.writeText('{{ item.login_username }} / {{ item.login_password }}'); const btn=this; btn.textContent='Copied!'; setTimeout(() => btn.textContent='Copy', 1500);" style="background: #ffffff; border: 1px solid #cbd5e1; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 4px; cursor: pointer; color: #475569;">
-                  Copy
-                </button>
-              </div>
-            {% endif %}
-          </td>
-
-          <!-- Column 3: City & Venue -->
-          <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
-            <div style="display: flex; align-items: center; gap: 5px; font-weight: 750; color: #0f172a; font-size: 13px;">
-              <i data-feather="map-pin" style="width: 13px; height: 13px; color: #ef4444;"></i>
-              {{ item.city }}
-            </div>
-            <div style="font-size: 11.5px; color: #64748b; margin-top: 2px;">
+            <div style="font-size: 11.5px; color: #64748b; margin-top: 3px;">
               {{ item.venue }}
             </div>
           </td>
 
-          <!-- Column 4: Date & Time -->
+          <!-- Column 2: City & Venue -->
           <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
-            <div style="display: flex; align-items: center; gap: 5px; font-weight: 750; color: #0f172a; font-size: 12.5px;">
-              <i data-feather="calendar" style="width: 12px; height: 12px; color: #10b981;"></i>
-              <span>{{ item.date_display }}</span>
+            <div style="display: flex; align-items: center; gap: 6px; font-weight: 750; color: #0f172a; font-size: 13px;">
+              <i data-feather="map-pin" style="width: 13px; height: 13px; color: #ef4444;"></i>
+              {{ item.city }}
             </div>
-            <div style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #64748b; margin-top: 2px;">
-              <i data-feather="clock" style="width: 11px; height: 11px; color: #f59e0b;"></i>
-              <span>{{ item.time_display }}</span>
+            <div style="font-size: 11.5px; color: #64748b; margin-top: 3px;">
+              {{ item.venue }}
             </div>
           </td>
 
-          <!-- Column 5: Status -->
+          <!-- Column 3: Dates & Timings -->
+          <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+            <div style="display: flex; align-items: center; gap: 6px; font-weight: 750; color: #0f172a; font-size: 13px;">
+              <i data-feather="calendar" style="width: 13px; height: 13px; color: #1768ff;"></i>
+              {{ item.date_display }}
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #64748b; margin-top: 3px; font-weight: 600;">
+              <i data-feather="clock" style="width: 11px; height: 11px; color: #94a3b8;"></i>
+              {{ item.time_display }}
+            </div>
+          </td>
+
+          <!-- Column 4: Status -->
           <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
             {% if item.is_active %}
-              <span style="display: inline-flex; align-items: center; gap: 4px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 800;">
-                Active
-              </span>
+            <span style="display: inline-flex; align-items: center; gap: 4px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 750;">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></span> Active
+            </span>
             {% else %}
-              <span style="display: inline-flex; align-items: center; gap: 4px; background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 700;">
-                Inactive
-              </span>
+            <span style="display: inline-flex; align-items: center; gap: 4px; background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 750;">
+              Inactive
+            </span>
             {% endif %}
           </td>
 
-          <!-- Column 6: Actions -->
+          <!-- Column 5: Actions -->
           <td style="padding: 14px 20px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; text-align: right;">
             <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
-              <a href="{{ item.edit_url }}" title="Edit Program" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#f1f5f9';" onmouseout="this.style.background='#ffffff';">
+              <a href="{{ item.edit_url }}" title="Edit Expo" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#f1f5f9';" onmouseout="this.style.background='#ffffff';">
                 <i data-feather="edit-2" style="width: 12px; height: 12px;"></i> Edit
               </a>
-              <a href="{{ item.delete_url }}" title="Delete Program" style="background: #ffffff; border: 1px solid #fed7aa; color: #ea580c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#fff7ed';" onmouseout="this.style.background='#ffffff';">
+              <a href="{{ item.delete_url }}" title="Delete Expo" style="background: #ffffff; border: 1px solid #fed7aa; color: #ea580c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.15s ease;" onmouseover="this.style.background='#fff7ed';" onmouseout="this.style.background='#ffffff';">
                 <i data-feather="trash-2" style="width: 12px; height: 12px;"></i> Delete
               </a>
             </div>
@@ -272,12 +208,12 @@
         </tr>
         {% empty %}
         <tr>
-          <td colspan="6" style="padding: 48px 20px; text-align: center; background: #ffffff;">
+          <td colspan="5" style="padding: 48px 20px; text-align: center; background: #ffffff;">
             <div style="width: 52px; height: 52px; border-radius: 50%; background: #f8fafc; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; color: #94a3b8;">
-              <i data-feather="calendar" style="width: 24px; height: 24px;"></i>
+              <i data-feather="compass" style="width: 24px; height: 24px;"></i>
             </div>
-            <div style="font-weight: 800; color: #0f172a; font-size: 15px; margin-bottom: 4px;">No Programs Found</div>
-            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0;">No expo or seminar records match your selected filter criteria.</p>
+            <div style="font-weight: 800; color: #0f172a; font-size: 15px; margin-bottom: 4px;">No Expos Found</div>
+            <p style="font-size: 12.5px; color: #64748b; margin: 0 0 16px 0;">No exhibition events match your selected search criteria.</p>
             <a href="{% url 'dashboard_events' %}" style="display: inline-block; background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; text-decoration: none;">
               Reset Filters
             </a>
@@ -288,16 +224,15 @@
     </table>
   </div>
 
-  <!-- Table Footer Summary Strip -->
+  <!-- Table Footer Strip -->
   <div style="padding: 12px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #64748b; font-weight: 600;">
     <div>
-      Showing <strong>{{ items|length }}</strong> of <strong>{{ total_all_count|default:"8" }}</strong> total programs
+      Showing <strong>{{ items|length }}</strong> of <strong>{{ total_expos_count|default:"0" }}</strong> total expos
     </div>
     <div style="font-size: 11.5px; color: #94a3b8;">
       KNOVA Global Higher Education Expo 2027
     </div>
   </div>
-
 </div>
 
 <script>

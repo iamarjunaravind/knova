@@ -862,16 +862,20 @@ def dashboard_matches(request):
 
 @login_required(login_url='/portal/login/')
 def dashboard_events(request):
-    from .models import EventLocation, ProgrammeSession
+    from .models import EventLocation
     from django.urls import reverse
     from django.db.models import Q
+    from django.shortcuts import redirect
+
+    # If requested seminar type, redirect to dedicated seminars page
+    if request.GET.get('type') == 'seminar':
+        return redirect('dashboard_seminars')
+
     query = request.GET.get('q', '').strip()
-    filter_type = request.GET.get('type', 'all').lower()
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
     sort_by = request.GET.get('sort_by', 'date')
 
-    # Query expos
     events_qs = EventLocation.objects.all()
     if query:
         events_qs = events_qs.filter(Q(name__icontains=query) | Q(city__icontains=query) | Q(venue__icontains=query))
@@ -880,69 +884,29 @@ def dashboard_events(request):
     if end_date:
         events_qs = events_qs.filter(end_date__lte=end_date)
 
-    # Query seminars
-    sessions_qs = ProgrammeSession.objects.all().select_related('event_location', 'speaker')
-    if query:
-        sessions_qs = sessions_qs.filter(Q(title__icontains=query) | Q(description__icontains=query) | Q(speaker__name__icontains=query) | Q(event_location__city__icontains=query) | Q(hall_name__icontains=query))
-    if start_date:
-        sessions_qs = sessions_qs.filter(date__gte=start_date)
-    if end_date:
-        sessions_qs = sessions_qs.filter(date__lte=end_date)
     items = []
-
-    # Include expos if filter is 'all' or 'expo'
-    if filter_type in ['all', 'expo']:
-        for ev in events_qs:
-            start_fmt = ev.start_date.strftime('%b %d') if ev.start_date else ''
-            end_fmt = ev.end_date.strftime('%b %d, %Y') if ev.end_date else ''
-            date_display = f"{start_fmt} - {end_fmt}" if start_fmt and end_fmt else (start_fmt or end_fmt)
-            time_display = ev.timings or '10:00 AM - 07:00 PM Daily'
-            items.append({
-                'id': ev.id,
-                'item_type': 'Expo',
-                'type_key': 'expo',
-                'title': ev.name,
-                'city': ev.city or 'Dubai',
-                'venue': ev.venue or 'Convention Centre',
-                'date_display': date_display,
-                'time_display': time_display,
-                'speaker': None,
-                'is_active': ev.is_active,
-                'edit_url': reverse('event_update', args=[ev.id]),
-                'delete_url': reverse('event_delete', args=[ev.id]),
-                'sort_date': ev.start_date,
-                'sort_title': ev.name.lower(),
-            })
-
-    # Include seminars if filter is 'all' or 'seminar'
-    if filter_type in ['all', 'seminar']:
-        for sm in sessions_qs:
-            date_fmt = sm.date.strftime('%b %d, %Y') if sm.date else ''
-            start_time_fmt = sm.start_time.strftime('%I:%M %p') if sm.start_time else ''
-            end_time_fmt = sm.end_time.strftime('%I:%M %p') if sm.end_time else ''
-            time_display = f"{start_time_fmt} - {end_time_fmt}" if start_time_fmt and end_time_fmt else (start_time_fmt or 'TBA')
-            city_name = sm.event_location.city if sm.event_location else 'Dubai'
-            items.append({
-                'id': sm.id,
-                'item_type': 'Seminar',
-                'type_key': 'seminar',
-                'title': sm.title,
-                'city': city_name,
-                'venue': sm.hall_name or 'Main Auditorium',
-                'date_display': date_fmt,
-                'time_display': time_display,
-                'speaker': sm.speaker.name if sm.speaker else None,
-                'is_active': True,
-                'login_username': sm.login_username or f"seminar_{sm.id}",
-                'login_password': sm.login_password or 'seminar123',
-                'attendance_count': sm.attendances_count,
-                'scanner_url': f"{reverse('seminar_attendance_scanner')}?session_id={sm.id}",
-                'roster_url': f"{reverse('seminar_attendance_roster')}?session_id={sm.id}",
-                'edit_url': reverse('programme_update', args=[sm.id]),
-                'delete_url': reverse('programme_delete', args=[sm.id]),
-                'sort_date': sm.date,
-                'sort_title': sm.title.lower(),
-            })
+    for ev in events_qs:
+        start_fmt = ev.start_date.strftime('%b %d') if ev.start_date else ''
+        end_fmt = ev.end_date.strftime('%b %d, %Y') if ev.end_date else ''
+        date_display = f"{start_fmt} - {end_fmt}" if start_fmt and end_fmt else (start_fmt or end_fmt)
+        time_display = ev.timings or '10:00 AM - 07:00 PM Daily'
+        items.append({
+            'id': ev.id,
+            'item_type': 'Expo',
+            'type_key': 'expo',
+            'title': ev.name,
+            'city': ev.city or 'Dubai',
+            'venue': ev.venue or 'Convention Centre',
+            'date_display': date_display,
+            'time_display': time_display,
+            'speaker': None,
+            'is_active': ev.is_active,
+            'is_upcoming': getattr(ev, 'is_upcoming', True),
+            'edit_url': reverse('event_update', args=[ev.id]),
+            'delete_url': reverse('event_delete', args=[ev.id]),
+            'sort_date': ev.start_date,
+            'sort_title': ev.name.lower(),
+        })
 
     # Sorting
     if sort_by in ['name', 'title']:
@@ -951,18 +915,19 @@ def dashboard_events(request):
         items.sort(key=lambda x: x['sort_title'], reverse=True)
     elif sort_by == '-date':
         items.sort(key=lambda x: (x['sort_date'] is None, x['sort_date']), reverse=True)
-    else:  # default 'date' or 'start_date'
+    else:
         items.sort(key=lambda x: (x['sort_date'] is None, x['sort_date']))
+
     total_expos_count = EventLocation.objects.count()
-    total_seminars_count = ProgrammeSession.objects.count()
-    total_all_count = total_expos_count + total_seminars_count
+    upcoming_expos_count = EventLocation.objects.filter(is_upcoming=True).count()
+    cities_count = EventLocation.objects.exclude(city='').values('city').distinct().count()
+
     context = {
         'items': items,
         'events': events_qs,
-        'total_all_count': total_all_count,
         'total_expos_count': total_expos_count,
-        'total_seminars_count': total_seminars_count,
-        'filter_type': filter_type,
+        'upcoming_expos_count': upcoming_expos_count,
+        'cities_count': cities_count,
         'start_date': start_date,
         'end_date': end_date,
         'sort_by': sort_by,
@@ -1502,11 +1467,59 @@ def speaker_delete(request, pk):
 
 
 @login_required(login_url='/portal/login/')
-def dashboard_programme(request):
-    from django.shortcuts import redirect
-    from django.urls import reverse
+def dashboard_seminars(request):
+    from .models import ProgrammeSession, Speaker, EventLocation
+    from django.db.models import Q
 
-    return redirect(reverse('dashboard_events') + '?type=seminar')
+    query = request.GET.get('q', '').strip()
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    sort_by = request.GET.get('sort_by', 'date')
+
+    sessions_qs = ProgrammeSession.objects.all().select_related('event_location', 'speaker')
+    if query:
+        sessions_qs = sessions_qs.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query) |
+            Q(speaker__name__icontains=query) |
+            Q(event_location__city__icontains=query) |
+            Q(hall_name__icontains=query)
+        )
+    if start_date:
+        sessions_qs = sessions_qs.filter(date__gte=start_date)
+    if end_date:
+        sessions_qs = sessions_qs.filter(date__lte=end_date)
+
+    if sort_by in ['title', 'name']:
+        sessions_qs = sessions_qs.order_by('title')
+    elif sort_by in ['-title', '-name']:
+        sessions_qs = sessions_qs.order_by('-title')
+    elif sort_by == '-date':
+        sessions_qs = sessions_qs.order_by('-date', '-start_time')
+    else:
+        sessions_qs = sessions_qs.order_by('date', 'start_time')
+
+    total_sessions_count = ProgrammeSession.objects.count()
+    speakers_count = Speaker.objects.count()
+    stages_count = ProgrammeSession.objects.exclude(hall_name='').values('hall_name').distinct().count()
+
+    context = {
+        'sessions': sessions_qs,
+        'total_sessions_count': total_sessions_count,
+        'speakers_count': speakers_count,
+        'stages_count': stages_count,
+        'start_date': start_date,
+        'end_date': end_date,
+        'sort_by': sort_by,
+        'query': query,
+    }
+
+    return render(request, 'dashboard/programme.html', context)
+
+
+@login_required(login_url='/portal/login/')
+def dashboard_programme(request):
+    return dashboard_seminars(request)
 
 
 @login_required(login_url='/portal/login/')
@@ -1519,8 +1532,7 @@ def programme_create(request):
         form = ProgrammeSessionForm(request.POST)
         if form.is_valid():
             form.save()
-
-            return redirect('/dashboard/events/?type=seminar')
+            return redirect('dashboard_seminars')
     else:
         form = ProgrammeSessionForm()
 
@@ -1540,8 +1552,7 @@ def programme_update(request, pk):
         form = ProgrammeSessionForm(request.POST, instance=session)
         if form.is_valid():
             form.save()
-
-            return redirect('/dashboard/events/?type=seminar')
+            return redirect('dashboard_seminars')
     else:
         form = ProgrammeSessionForm(instance=session)
 
@@ -1558,8 +1569,7 @@ def programme_delete(request, pk):
     session = get_object_or_404(ProgrammeSession, pk=pk)
     if request.method == 'POST':
         session.delete()
-
-        return redirect('/dashboard/events/?type=seminar')
+        return redirect('dashboard_seminars')
 
     return render(request, 'dashboard/programme_confirm_delete.html', {'session': session})
 

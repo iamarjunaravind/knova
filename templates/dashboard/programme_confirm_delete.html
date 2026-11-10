@@ -14,7 +14,7 @@
   
   <form method="POST" style="display:flex; justify-content:center; gap:16px;">
     {% csrf_token %}
-    <a href="{% url 'dashboard_events' %}?type=seminar" class="btn" style="background:#f1f5f9; color:#fff;">Cancel</a>
+    <a href="{% url 'dashboard_seminars' %}" class="btn" style="background:#f1f5f9; color:#fff;">Cancel</a>
     <button type="submit" class="btn" style="background:#ef4444; color:#fff;">Yes, Delete Session</button>
   </form>
 </div>

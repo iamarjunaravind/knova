@@ -48,6 +48,7 @@ urlpatterns = [
     path('exhibitor/leads/', dashboard_views.dashboard_exhibitor_leads, name='dashboard_exhibitor_leads'),
     path('exhibitor/scheduler/', dashboard_views.dashboard_exhibitor_scheduler, name='dashboard_exhibitor_scheduler'),
     path('events/', dashboard_views.dashboard_events, name='dashboard_events'),
+    path('expos/', dashboard_views.dashboard_events, name='dashboard_expos'),
     path('events/new/', dashboard_views.event_create, name='event_create'),
     path('events/<int:pk>/edit/', dashboard_views.event_update, name='event_update'),
     path('events/<int:pk>/delete/', dashboard_views.event_delete, name='event_delete'),
@@ -115,10 +116,14 @@ urlpatterns = [
     path('speakers/<int:pk>/edit/', dashboard_views.speaker_update, name='speaker_update'),
     path('speakers/<int:pk>/delete/', dashboard_views.speaker_delete, name='speaker_delete'),
 
-    path('programme/', dashboard_views.dashboard_programme, name='dashboard_programme'),
+    path('seminars/', dashboard_views.dashboard_seminars, name='dashboard_seminars'),
+    path('programme/', dashboard_views.dashboard_seminars, name='dashboard_programme'),
     path('programme/new/', dashboard_views.programme_create, name='programme_create'),
+    path('seminars/new/', dashboard_views.programme_create, name='seminar_create'),
     path('programme/<int:pk>/edit/', dashboard_views.programme_update, name='programme_update'),
+    path('seminars/<int:pk>/edit/', dashboard_views.programme_update, name='seminar_update'),
     path('programme/<int:pk>/delete/', dashboard_views.programme_delete, name='programme_delete'),
+    path('seminars/<int:pk>/delete/', dashboard_views.programme_delete, name='seminar_delete'),
 
     path('registrations/', dashboard_views.dashboard_registrations, name='dashboard_registrations'),
     path('registrations/export/', dashboard_views.dashboard_export_registrations, name='dashboard_export_registrations'),
