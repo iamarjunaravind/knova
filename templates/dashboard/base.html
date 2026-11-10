@@ -1528,15 +1528,27 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      overflow: hidden;
     }
 
     .page-title {
-      font-size: 14px;
-      font-weight: 750;
+      font-size: 13px !important;
+      font-weight: 750 !important;
       max-width: 100% !important;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      min-width: 0 !important;
+    }
+
+    .page-title-main {
+      font-size: 13px !important;
+      font-weight: 750 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      display: block !important;
+      min-width: 0 !important;
     }
 
     /* Breadcrumbs hidden via .page-crumb-parent */

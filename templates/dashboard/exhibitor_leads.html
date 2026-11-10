@@ -12,18 +12,33 @@
     box-shadow: 0 4px 12px rgba(23,104,255,0.28) !important;
     transform: translateY(-1px);
 }
+@media (max-width: 640px) {
+  .leads-header-actions {
+    width: 100% !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .leads-header-actions .btn,
+  .leads-header-actions form,
+  .leads-header-actions select {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+}
 </style>
 
 <div class="glass-card">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
-        <div>
+        <div style="flex:1; min-width:0;">
             <h3 style="margin:0; color:var(--text-main); font-size:18px; font-weight:800;">
                 Attended Students & Captured Leads 
                 {% if profile %}<span style="font-size:13px; font-weight:600; color:#1768ff; margin-left:6px;">({{ profile.company_name }})</span>{% endif %}
             </h3>
             <p style="margin:4px 0 0; font-size:13px; color:var(--text-muted);">Verified students who checked in, punched attendance, or booked courses with your institution.</p>
         </div>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <div class="leads-header-actions" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
             {% if all_exhibitors %}
             <form method="GET" style="display:inline-flex; align-items:center; gap:6px;">
                 <label style="font-size:12px; font-weight:600; color:var(--text-muted);">Exhibitor:</label>
