@@ -1127,6 +1127,373 @@
     display: inline-flex;
   }
 
+  /* ==========================================================
+     FLOOR ZONES DIRECTORY & DUAL TABS
+     ========================================================== */
+
+  .map-sidebar-tabs {
+    display: flex;
+    gap: 4px;
+    background: #f1f5f9;
+    padding: 4px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-tab-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 8px 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #64748b;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .sidebar-tab-btn:hover {
+    color: #0f172a;
+  }
+
+  .sidebar-tab-btn.active {
+    background: #ffffff;
+    color: #1768ff;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  }
+
+  .zone-list-scroll {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+  }
+
+  .zone-list-scroll::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .zone-list-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  .zone-item {
+    padding: 10px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    background: #f8fafc;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .zone-item:hover {
+    border-color: #1768ff;
+    background: #ffffff;
+    transform: translateX(2px);
+    box-shadow: 0 4px 12px rgba(23, 104, 255, 0.08);
+  }
+
+  .zone-item.is-selected {
+    border-color: #1768ff;
+    background: #f0f7ff;
+    box-shadow: 0 0 0 2px rgba(23, 104, 255, 0.25), 0 4px 12px rgba(23, 104, 255, 0.12);
+    transform: translateX(3px);
+  }
+
+  .zone-item.is-selected::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #1768ff;
+    border-radius: 10px 0 0 10px;
+  }
+
+  .zone-item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .zone-item-details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .zone-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 2px;
+  }
+
+  .zone-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #0a1936;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .zone-badge {
+    font-size: 9.5px;
+    font-weight: 750;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .zone-item-sub {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #64748b;
+    gap: 4px;
+  }
+
+  .zone-located-tag {
+    display: none;
+    align-items: center;
+    gap: 3px;
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #1768ff;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .zone-item.is-selected .zone-located-tag {
+    display: inline-flex;
+  }
+
+  /* Docked Zone Details Card */
+  .map-zone-card {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1.5px solid #93c5fd;
+    border-radius: 12px;
+    box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(15, 23, 42, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 14px 16px;
+    z-index: 80;
+    animation: slideUpCard 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: auto;
+  }
+
+  .zone-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .zone-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .zone-header-tags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .zone-card-badge-pill {
+    background: #1768ff;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 5px;
+    letter-spacing: 0.3px;
+  }
+
+  .zone-card-hall {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #475569;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .zone-card-live-dot {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #10b981;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 6px #10b981;
+    animation: indicatorPulse 1.4s infinite;
+  }
+
+  .zone-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .zone-card-info {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .zone-card-title {
+    margin: 0 0 2px 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: #0a1936;
+    letter-spacing: -0.2px;
+    line-height: 1.25;
+  }
+
+  .zone-card-tagline {
+    margin: 0 0 4px 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1768ff;
+  }
+
+  .zone-card-desc {
+    margin: 0 0 6px 0;
+    font-size: 11.5px;
+    color: #475569;
+    line-height: 1.4;
+    max-width: 680px;
+  }
+
+  .zone-card-activities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .zone-act-tag {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #334155;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+
+  .zone-card-cta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+
+  .zone-card-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    background: #1768ff;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(23, 104, 255, 0.25);
+    transition: all 0.15s ease;
+  }
+
+  .zone-card-btn-primary:hover {
+    background: #0f52cc;
+    transform: translateY(-1px);
+  }
+
+  .zone-card-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1.5px solid #cbd5e1;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .zone-card-btn-outline:hover {
+    border-color: #1768ff;
+    color: #1768ff;
+    background: #eff6ff;
+  }
+
+  /* SVG interactive zone highlights */
+  .svg-zone-interactive {
+    cursor: pointer;
+    transition: filter 0.2s ease, opacity 0.2s ease;
+  }
+
+  .svg-zone-interactive:hover {
+    filter: drop-shadow(0 0 10px rgba(23, 104, 255, 0.45));
+  }
+
+  .svg-zone-interactive.is-active-zone {
+    filter: drop-shadow(0 0 16px rgba(2, 132, 199, 0.8));
+  }
+
+  #svgZoneHighlightBox {
+    animation: zoneDash 1.2s linear infinite;
+  }
+
+  @keyframes zoneDash {
+    to { stroke-dashoffset: -28; }
+  }
+
   @media (max-width: 900px) {
     .map-hero {
       padding: 16px 0 22px 0;
@@ -1298,19 +1665,16 @@
     <!-- Map Viewer Container -->
 
     {% if site_config.show_map_viewer %}
-<div class="expo-map-viewer" id="expoMapViewer">
-<!-- Map Viewer Content -->
-<div class="expo-map-viewer" id="expoMapViewer">
+    <div class="expo-map-viewer" id="expoMapViewer">
 
       <!-- Viewer Top Bar Controls -->
-
       <div class="map-viewer-topbar">
 
         <div class="map-status-pill" id="mapStatusPill">
 
           <span class="status-indicator-dot"></span>
 
-          <span id="mapStatusText">Click any booth in directory to view location</span>
+          <span id="mapStatusText">Explore the venue: Select any Activity Zone or Booth to locate</span>
 
         </div>
 
@@ -1394,7 +1758,8 @@
   <text x="765" y="478" text-anchor="middle" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="2">◀ ━━ SOUTH AISLE &amp; AMENITIES CROSSWAY ━━ ▶</text>
   <text x="345" y="420" text-anchor="middle" font-size="9" font-weight="700" fill="#94a3b8" transform="rotate(-90 345 420)" letter-spacing="2">◀ ━ WEST CONCOURSE PASSAGE ━ ▶</text>
 
-  <!-- AUDITORIUM WING (LEFT) -->
+  <!-- AUDITORIUM WING (LEFT) (Zone 8: Keynote & Leadership Auditorium) -->
+  <g class="svg-zone-interactive" id="svg-zone-8" onclick="handleZoneClick(8)" title="Zone 8: Keynote &amp; Leadership Auditorium">
   <rect x="30" y="30" width="290" height="740" rx="12" fill="#faf5ff" stroke="#e9d5ff" stroke-width="2" />
   <rect x="30" y="30" width="290" height="34" rx="12" fill="#f3e8ff" />
   <text x="175" y="52" text-anchor="middle" font-size="12" font-weight="800" fill="#7e22ce" letter-spacing="0.5">KEYNOTE AUDITORIUM A</text>
@@ -1556,10 +1921,13 @@
   <text x="85" y="735" text-anchor="middle" font-size="9" font-weight="700" fill="#047857">EXIT A</text>
   <rect x="190" y="720" width="70" height="22" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" />
   <text x="225" y="735" text-anchor="middle" font-size="9" font-weight="700" fill="#047857">EXIT B</text>
+  </g>
 
-  <!-- HALL 1: GLOBAL UNIVERSITY PAVILION -->
+  <!-- HALL 1: GLOBAL UNIVERSITY PAVILION (Zone 7) -->
+  <g class="svg-zone-interactive" id="svg-zone-7" onclick="handleZoneClick(7)" title="Zone 7: Global University Pavilion">
   <rect x="370" y="30" width="800" height="24" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
-  <text x="770" y="46" text-anchor="middle" font-size="11" font-weight="800" fill="#1d4ed8" letter-spacing="1.5">★ MAIN EXHIBITION HALL: UNIVERSITY PAVILIONS & NETWORKING ★</text>
+  <text x="770" y="46" text-anchor="middle" font-size="11" font-weight="800" fill="#1d4ed8" letter-spacing="1.5">★ MAIN EXHIBITION HALL: UNIVERSITY PAVILIONS &amp; NETWORKING ★</text>
+  </g>
 
   <g class="svg-booth-node" id="svg-booth-9" data-booth="Booth A-01" data-id="9" onclick="handleBoothClick('Booth A-01', '9')">
     <rect x="380" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
@@ -1719,7 +2087,7 @@
   <text x="845" y="350" text-anchor="middle" font-size="9" font-weight="700" fill="#cbd5e1" transform="rotate(-90 845 350)">AISLE 3</text>
 
   <!-- STEM & AI Exploration Arena (Zone 9) -->
-  <g class="svg-zone-arena">
+  <g class="svg-zone-arena svg-zone-interactive" id="svg-zone-9" onclick="handleZoneClick(9)" title="Zone 9: STEM &amp; AI Arena">
     <rect x="865" y="260" width="140" height="175" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" />
     <rect x="865" y="260" width="140" height="26" rx="8" fill="#16a34a" />
     <text x="935" y="277" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">STEM &amp; AI ARENA</text>
@@ -1732,7 +2100,7 @@
   </g>
 
   <!-- Scholarship & Financial Aid Atrium (Zone 10) -->
-  <g class="svg-zone-arena">
+  <g class="svg-zone-arena svg-zone-interactive" id="svg-zone-10" onclick="handleZoneClick(10)" title="Zone 10: Scholarship &amp; Financial Aid Atrium">
     <rect x="1020" y="260" width="145" height="175" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2" />
     <rect x="1020" y="260" width="145" height="26" rx="8" fill="#d97706" />
     <text x="1092" y="277" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">SCHOLARSHIP ATRIUM</text>
@@ -1746,7 +2114,7 @@
 
   <!-- BOTTOM FACILITIES & LOUNGES -->
   <!-- One-on-One Dean Counselling Lounge (Zone 11) -->
-  <g class="svg-zone-lounge">
+  <g class="svg-zone-lounge svg-zone-interactive" id="svg-zone-11" onclick="handleZoneClick(11)" title="Zone 11: One-on-One Dean Counselling Lounge">
     <rect x="370" y="515" width="235" height="110" rx="10" fill="#fefce8" stroke="#ca8a04" stroke-width="1.5" />
     <rect x="370" y="515" width="235" height="24" rx="8" fill="#ca8a04" />
     <text x="487" y="531" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">ONE-ON-ONE DEAN COUNSELLING LOUNGE</text>
@@ -1756,7 +2124,7 @@
   </g>
 
   <!-- Executive VIP Suite & Networking Hub (Zone 14) -->
-  <g class="svg-zone-lounge">
+  <g class="svg-zone-lounge svg-zone-interactive" id="svg-zone-14" onclick="handleZoneClick(14)" title="Zone 14: Graduate &amp; MBA Executive Suite">
     <rect x="620" y="515" width="240" height="110" rx="10" fill="#faf5ff" stroke="#9333ea" stroke-width="1.5" />
     <rect x="620" y="515" width="240" height="24" rx="8" fill="#9333ea" />
     <text x="740" y="531" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">GRADUATE &amp; MBA EXECUTIVE SUITE</text>
@@ -1766,7 +2134,7 @@
   </g>
 
   <!-- Registration Foyer & Document Vault (Zone 15) -->
-  <g class="svg-zone-lounge">
+  <g class="svg-zone-lounge svg-zone-interactive" id="svg-zone-15" onclick="handleZoneClick(15)" title="Zone 15: Document Vault &amp; Fast-Track Verification">
     <rect x="875" y="515" width="290" height="110" rx="10" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.5" />
     <rect x="875" y="515" width="290" height="24" rx="8" fill="#0d9488" />
     <text x="1020" y="531" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">REGISTRATION FOYER &amp; DOCUMENT VAULT</text>
@@ -1775,12 +2143,14 @@
     <text x="1020" y="605" text-anchor="middle" font-size="8.5" font-weight="700" fill="#0d9488">ENTRY TURNSTILES 01–08</text>
   </g>
 
-  <!-- Bottom Strip: Networking Cafe & Main Entrance -->
-  <rect x="370" y="640" width="490" height="110" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
-  <rect x="370" y="640" width="490" height="22" rx="8" fill="#64748b" />
-  <text x="615" y="655" text-anchor="middle" font-size="9.5" font-weight="800" fill="#ffffff">KNOVA NETWORKING CAFE &amp; STUDENT LOUNGE</text>
-  <text x="615" y="690" text-anchor="middle" font-size="11" font-weight="750" fill="#0f172a">Food Court, Seating Lounge &amp; Phone Charging Stations</text>
-  <text x="615" y="710" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Central Concourse South • Restrooms &amp; First Aid</text>
+  <!-- Bottom Strip: Networking Cafe & Pitch Arena (Zone 16) -->
+  <g class="svg-zone-interactive" id="svg-zone-16" onclick="handleZoneClick(16)" title="Zone 16: Student Innovation &amp; Pitch Arena">
+    <rect x="370" y="640" width="490" height="110" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+    <rect x="370" y="640" width="490" height="22" rx="8" fill="#ea580c" />
+    <text x="615" y="655" text-anchor="middle" font-size="9.5" font-weight="800" fill="#ffffff">STUDENT INNOVATION &amp; PITCH ARENA • NETWORKING</text>
+    <text x="615" y="690" text-anchor="middle" font-size="11" font-weight="750" fill="#0f172a">Startup Pitches, Live Demos &amp; Student Collaboration Stage</text>
+    <text x="615" y="710" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Central Plaza South • Charging Station &amp; Amenities</text>
+  </g>
 
   <!-- Entrance Hall & Gates -->
   <rect x="875" y="640" width="290" height="110" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2" />
@@ -1789,6 +2159,11 @@
   <text x="1020" y="688" text-anchor="middle" font-size="12" font-weight="800" fill="#1e40af">WELCOME TO KNOVA 2027</text>
   <text x="1020" y="706" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Main Concourse Gates • Security Screening</text>
   <text x="1020" y="730" text-anchor="middle" font-size="9" font-weight="800" fill="#2563eb">▲ ENTER EXPO FLOOR HERE ▲</text>
+
+  <!-- Dynamic SVG Zone Highlight Rectangle -->
+  <rect id="svgZoneHighlightBox" x="0" y="0" width="0" height="0" rx="10"
+        fill="rgba(56, 189, 248, 0.12)" stroke="#0284c7" stroke-width="3.5"
+        stroke-dasharray="8 6" style="display:none; pointer-events:none; transition: all 0.35s ease-out; filter: drop-shadow(0 0 12px rgba(2, 132, 199, 0.55));" />
 
 </svg>
 
@@ -1834,6 +2209,40 @@
 
         </div>
 
+      </div>
+
+      <!-- Docked Zone Details Card -->
+      <div class="map-zone-card" id="mapZoneCard" style="display: none;">
+        <div class="zone-card-body">
+          <div class="zone-card-header">
+            <div class="zone-header-tags">
+              <span class="zone-card-badge-pill" id="zoneCardBadge">Zone Hub</span>
+              <span class="zone-card-hall" id="zoneCardHall"><i class="ti ti-map-pin"></i> Main Hall</span>
+              <span class="zone-card-live-dot"><span class="pulse-dot"></span> Live Activity Hub</span>
+            </div>
+            <button type="button" class="uni-card-close-btn" onclick="closeZoneDetails(event)" aria-label="Close" title="Close Details">
+              <i class="ti ti-x"></i>
+            </button>
+          </div>
+          <div class="zone-card-content">
+            <div class="zone-card-info">
+              <h3 class="zone-card-title" id="zoneCardTitle">Activity Zone Title</h3>
+              <p class="zone-card-tagline" id="zoneCardTagline">Tagline</p>
+              <p class="zone-card-desc" id="zoneCardDesc">Description</p>
+              <div class="zone-card-activities" id="zoneCardActivities"></div>
+            </div>
+            <div class="zone-card-cta">
+              <button type="button" class="zone-card-btn-primary" onclick="switchSidebarTab('booths')">
+                <i class="ti ti-layout-grid"></i>
+                <span>Explore Booths</span>
+              </button>
+              <button type="button" class="zone-card-btn-outline" onclick="resetMapZoom()">
+                <i class="ti ti-arrows-maximize"></i>
+                <span>Full Floor</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Docked University Details Card (Never Clipped) -->
@@ -1919,125 +2328,167 @@
 
     <div class="expo-map-sidebar">
 
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
 
-        <h3 style="margin: 0; font-size: 15px; font-weight: 800; color: #0a1936;">Booth Directory</h3>
+        <h3 style="margin: 0; font-size: 15px; font-weight: 800; color: #0a1936;">Venue Directory</h3>
 
         <a href="{% static 'assets/KNOVA_2027_FLOORPLAN.pdf' %}" target="_blank" style="font-size: 11px; font-weight: 700; color: #1768ff; text-decoration: none;">PDF &darr;</a>
 
       </div>
 
-      <div class="booth-search-wrap">
-
-        <i class="ti ti-search"></i>
-
-        <input
-
-          type="text"
-
-          id="boothSearch"
-
-          placeholder="Filter university or booth..."
-
-          oninput="filterBooths(this.value)"
-
-        >
-
+      <!-- Dual Sidebar Tabs: Zones vs Booths -->
+      <div class="map-sidebar-tabs">
+        <button type="button" class="sidebar-tab-btn active" id="tabBtnZones" onclick="switchSidebarTab('zones')">
+          <i class="ti ti-compass"></i> Floor Zones ({{ floor_zones|length }})
+        </button>
+        <button type="button" class="sidebar-tab-btn" id="tabBtnBooths" onclick="switchSidebarTab('booths')">
+          <i class="ti ti-layout-grid"></i> Booths ({{ booths|length }})
+        </button>
       </div>
 
-      <div id="noResults" style="display: none; text-align: center; padding: 25px 0; color: #94a3b8; font-size: 13px;">
-
-        <i class="ti ti-search-off" style="font-size: 24px; display: block; margin-bottom: 6px;"></i>
-
-        No booths found
-
+      <!-- Activity Zones Directory Panel -->
+      <div id="zonesPanel" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+        <div class="zone-list-scroll" id="zoneList">
+          {% for zone in floor_zones %}
+          <div class="zone-item"
+               id="zone-item-{{ zone.id }}"
+               data-id="{{ zone.id }}"
+               onclick="handleZoneClick({{ zone.id }})">
+            <div class="zone-item-icon" style="background: {{ zone.color_accent }}18; color: {{ zone.color_accent }}; border: 1px solid {{ zone.color_accent }}40;">
+              <i class="ti {{ zone.icon_class|default:'ti-map-pin' }}"></i>
+            </div>
+            <div class="zone-item-details">
+              <div class="zone-item-top">
+                <span class="zone-name">{{ zone.name }}</span>
+                <span class="zone-badge" style="background: {{ zone.color_accent }}20; color: {{ zone.color_accent }};">{{ zone.badge_label|default:"Active Hub" }}</span>
+              </div>
+              <div class="zone-item-sub">
+                <span><i class="ti ti-map-pin"></i> {{ zone.hall_location }}</span>
+                <span class="zone-located-tag"><i class="ti ti-eye"></i> VIEWING</span>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <div style="text-align: center; padding: 30px 15px; color: #94a3b8; font-size: 13px;">
+            No activity zones registered yet.
+          </div>
+          {% endfor %}
+        </div>
       </div>
 
-      <div class="booth-list-scroll" id="boothList">
+      <!-- Booths Directory Panel -->
+      <div id="boothsPanel" style="display: none; flex-direction: column; flex: 1; overflow: hidden;">
 
-        <!-- Dynamic booths from DB -->
+        <div class="booth-search-wrap">
 
-        {% for booth in booths %}
+          <i class="ti ti-search"></i>
 
-        <div class="booth-item"
-
-             id="booth-item-{{ booth.id }}"
-
-             data-id="{{ booth.id }}"
-
-             data-name="{{ booth.get_assigned_organization|lower }}"
-
-             data-title="{% if booth.university %}{{ booth.university.name }}{% elif booth.exhibitor %}{{ booth.exhibitor.company_name }}{% else %}Available Booth{% endif %}"
-
-             data-org="{{ booth.get_assigned_organization }}"
-
-             data-booth="{{ booth.booth_number|default:booth.id }}"
-
-             data-hall="{{ booth.hall|default:'Main Hall' }}"
-
-             data-url="{% if booth.university %}{% url 'university_detail' booth.university.slug %}{% endif %}"
-
-             data-country="{% if booth.university %}{{ booth.university.country|default:booth.university.profile.location_state_country|default:'Global Partner' }}{% endif %}"
-
-             data-city="{% if booth.university %}{{ booth.university.profile.location_city|default:'' }}{% endif %}"
-
-             data-type="{% if booth.university %}{{ booth.university.profile.university_type|default:'Higher Education Institution' }}{% elif booth.exhibitor %}Industry & Education Partner{% else %}Available Space{% endif %}"
-
-             data-desc="{% if booth.university %}{{ booth.university.profile.short_description|default:'Visit booth for direct admissions counseling, faculty discussions, and scholarship evaluations.'|truncatewords:28 }}{% elif booth.exhibitor %}{{ booth.exhibitor.description|default:'Official exhibitor representation at KNOVA 2027 Expo.'|truncatewords:28 }}{% else %}Booth space ready for expo exhibitor.{% endif %}"
-
-             onclick="handleBoothClick('{{ booth.booth_number|default:booth.id }}', {{ booth.id }})">
-
-          <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px;">
-
-            <strong style="color: #0a1936; font-size: 13px; flex: 1; line-height: 1.35;">
-
-              {% if booth.university %}
-
-                  <a href="{% url 'university_detail' booth.university.slug %}" style="color: inherit; text-decoration: none;" onclick="event.stopPropagation()">{{ booth.university.name }}</a>
-
-              {% elif booth.exhibitor %}
-
-                  {{ booth.exhibitor.company_name }}
-
-              {% else %}
-
-                  Available Booth
-
-              {% endif %}
-
-            </strong>
-
-            <span class="booth-badge-pill">{{ booth.booth_number|default:"TBD" }}</span>
-
-          </div>
-
-          <div style="font-size: 11px; color: #64748b; display: flex; align-items: center; justify-content: space-between;">
-
-            <span>📍 {{ booth.hall|default:"Main Hall" }}</span>
-
-            <span class="booth-located-tag"><i class="ti ti-map-pin"></i> ON MAP</span>
-
-          </div>
+          <input
+            type="text"
+            id="boothSearch"
+            placeholder="Filter university or booth..."
+            oninput="filterBooths(this.value)"
+          >
 
         </div>
 
-        {% empty %}
+        <div id="noResults" style="display: none; text-align: center; padding: 25px 0; color: #94a3b8; font-size: 13px;">
 
-        <div style="text-align: center; padding: 30px 15px; color: #94a3b8; font-size: 13px;">
+          <i class="ti ti-search-off" style="font-size: 24px; display: block; margin-bottom: 6px;"></i>
 
-          <i class="ti ti-layout-grid" style="font-size: 24px; display: block; margin-bottom: 8px; opacity: 0.6;"></i>
-
-          No floor booths allocated yet.
+          No booths found
 
         </div>
 
-        {% endfor %}
+        <div class="booth-list-scroll" id="boothList">
+
+          <!-- Dynamic booths from DB -->
+
+          {% for booth in booths %}
+
+          <div class="booth-item"
+
+               id="booth-item-{{ booth.id }}"
+
+               data-id="{{ booth.id }}"
+
+               data-name="{{ booth.get_assigned_organization|lower }}"
+
+               data-title="{% if booth.university %}{{ booth.university.name }}{% elif booth.exhibitor %}{{ booth.exhibitor.company_name }}{% else %}Available Booth{% endif %}"
+
+               data-org="{{ booth.get_assigned_organization }}"
+
+               data-booth="{{ booth.booth_number|default:booth.id }}"
+
+               data-hall="{{ booth.hall|default:'Main Hall' }}"
+
+               data-url="{% if booth.university %}{% url 'university_detail' booth.university.slug %}{% endif %}"
+
+               data-country="{% if booth.university %}{{ booth.university.country|default:booth.university.profile.location_state_country|default:'Global Partner' }}{% endif %}"
+
+               data-city="{% if booth.university %}{{ booth.university.profile.location_city|default:'' }}{% endif %}"
+
+               data-type="{% if booth.university %}{{ booth.university.profile.university_type|default:'Higher Education Institution' }}{% elif booth.exhibitor %}Industry & Education Partner{% else %}Available Space{% endif %}"
+
+               data-desc="{% if booth.university %}{{ booth.university.profile.short_description|default:'Visit booth for direct admissions counseling, faculty discussions, and scholarship evaluations.'|truncatewords:28 }}{% elif booth.exhibitor %}{{ booth.exhibitor.description|default:'Official exhibitor representation at KNOVA 2027 Expo.'|truncatewords:28 }}{% else %}Booth space ready for expo exhibitor.{% endif %}"
+
+               onclick="handleBoothClick('{{ booth.booth_number|default:booth.id }}', {{ booth.id }})">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px;">
+
+              <strong style="color: #0a1936; font-size: 13px; flex: 1; line-height: 1.35;">
+
+                {% if booth.university %}
+
+                    <a href="{% url 'university_detail' booth.university.slug %}" style="color: inherit; text-decoration: none;" onclick="event.stopPropagation()">{{ booth.university.name }}</a>
+
+                {% elif booth.exhibitor %}
+
+                    {{ booth.exhibitor.company_name }}
+
+                {% else %}
+
+                    Available Booth
+
+                {% endif %}
+
+              </strong>
+
+              <span class="booth-badge-pill">{{ booth.booth_number|default:"TBD" }}</span>
+
+            </div>
+
+            <div style="font-size: 11px; color: #64748b; display: flex; align-items: center; justify-content: space-between;">
+
+              <span>📍 {{ booth.hall|default:"Main Hall" }}</span>
+
+              <span class="booth-located-tag"><i class="ti ti-map-pin"></i> ON MAP</span>
+
+            </div>
+
+          </div>
+
+          {% empty %}
+
+          <div style="text-align: center; padding: 30px 15px; color: #94a3b8; font-size: 13px;">
+
+            <i class="ti ti-layout-grid" style="font-size: 24px; display: block; margin-bottom: 8px; opacity: 0.6;"></i>
+
+            No floor booths allocated yet.
+
+          </div>
+
+          {% endfor %}
+
+        </div>
 
       </div>
 
-      <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #f1f5f9; font-size: 11.5px; color: #94a3b8; text-align: center;">
+      <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #f1f5f9; font-size: 11.5px; color: #94a3b8; text-align: center; display: flex; align-items: center; justify-content: space-between;">
 
-        Interactive floor plan &bull; Click any booth to locate
+        <span>Interactive floor plan</span>
+
+        <button type="button" onclick="resetMapZoom()" style="background: none; border: none; color: #1768ff; font-weight: 700; font-size: 11px; cursor: pointer;">Reset View</button>
 
       </div>
 
@@ -2069,6 +2520,172 @@
     'Booth U-182': { x: 50.6, y: 37.5, color: '#059669' },
     'U-180':       { x: 63.9, y: 37.5, color: '#059669' }
   };
+
+  // Activity Zones Data Dictionary from DB
+  const FLOOR_ZONES_DATA = {
+    {% for zone in floor_zones %}
+    "{{ zone.id }}": {
+      id: {{ zone.id }},
+      name: "{{ zone.name|escapejs }}",
+      tagline: "{{ zone.tagline|escapejs }}",
+      hall: "{{ zone.hall_location|escapejs }}",
+      badge: "{{ zone.badge_label|escapejs }}",
+      color: "{{ zone.color_accent|default:'#1768ff' }}",
+      description: "{{ zone.description|escapejs }}",
+      activities: "{{ zone.activities|escapejs }}",
+      icon: "{{ zone.icon_class|default:'ti-map-pin' }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  };
+
+  // Activity Zones Coordinates & Viewport Bounds (viewBox 1200 x 800)
+  const ZONE_COORDINATES = {
+    7:  { cx: 770,  cy: 102, pctX: 64.1, pctY: 12.8, zoom: 1.4,  bbox: { x: 370, y: 30,  w: 800, h: 145 } },
+    8:  { cx: 175,  cy: 380, pctX: 14.6, pctY: 47.5, zoom: 1.3,  bbox: { x: 30,  y: 30,  w: 290, h: 740 } },
+    9:  { cx: 935,  cy: 345, pctX: 77.9, pctY: 43.1, zoom: 1.8,  bbox: { x: 865, y: 260, w: 140, h: 175 } },
+    10: { cx: 1092, cy: 345, pctX: 91.0, pctY: 43.1, zoom: 1.8,  bbox: { x: 1020,y: 260, w: 145, h: 175 } },
+    11: { cx: 487,  cy: 570, pctX: 40.6, pctY: 71.2, zoom: 1.8,  bbox: { x: 370, y: 515, w: 235, h: 110 } },
+    12: { cx: 452,  cy: 345, pctX: 37.7, pctY: 43.1, zoom: 1.85, bbox: { x: 395, y: 255, w: 115, h: 185 } },
+    13: { cx: 607,  cy: 345, pctX: 50.6, pctY: 43.1, zoom: 1.85, bbox: { x: 550, y: 255, w: 115, h: 185 } },
+    14: { cx: 740,  cy: 570, pctX: 61.7, pctY: 71.2, zoom: 1.8,  bbox: { x: 620, y: 515, w: 240, h: 110 } },
+    15: { cx: 1020, cy: 570, pctX: 85.0, pctY: 71.2, zoom: 1.8,  bbox: { x: 875, y: 515, w: 290, h: 110 } },
+    16: { cx: 615,  cy: 695, pctX: 51.2, pctY: 86.9, zoom: 1.6,  bbox: { x: 370, y: 640, w: 490, h: 110 } }
+  };
+
+  let activeZoneId = null;
+
+  function switchSidebarTab(tab) {
+    const tabBtnZones = document.getElementById('tabBtnZones');
+    const tabBtnBooths = document.getElementById('tabBtnBooths');
+    const zonesPanel = document.getElementById('zonesPanel');
+    const boothsPanel = document.getElementById('boothsPanel');
+
+    if (tab === 'zones') {
+      if (tabBtnZones) tabBtnZones.classList.add('active');
+      if (tabBtnBooths) tabBtnBooths.classList.remove('active');
+      if (zonesPanel) zonesPanel.style.display = 'flex';
+      if (boothsPanel) boothsPanel.style.display = 'none';
+    } else {
+      if (tabBtnBooths) tabBtnBooths.classList.add('active');
+      if (tabBtnZones) tabBtnZones.classList.remove('active');
+      if (boothsPanel) boothsPanel.style.display = 'flex';
+      if (zonesPanel) zonesPanel.style.display = 'none';
+    }
+  }
+
+  function handleZoneClick(zoneId) {
+    zoneId = String(zoneId);
+    activeZoneId = zoneId;
+
+    // 1. Close any open booth details
+    closeBoothDetails();
+
+    // 2. Lookup data
+    const zone = FLOOR_ZONES_DATA[zoneId];
+    if (!zone) return;
+
+    // 3. Highlight sidebar zone item
+    document.querySelectorAll('.zone-item').forEach(el => el.classList.remove('is-selected'));
+    const item = document.getElementById('zone-item-' + zoneId);
+    if (item) {
+      item.classList.add('is-selected');
+      item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // 4. Update SVG zone interactive highlights
+    document.querySelectorAll('.svg-zone-interactive').forEach(el => el.classList.remove('is-active-zone'));
+    const svgZone = document.getElementById('svg-zone-' + zoneId);
+    if (svgZone) {
+      svgZone.classList.add('is-active-zone');
+    }
+
+    // 5. Update Highlight Box on SVG
+    const box = document.getElementById('svgZoneHighlightBox');
+    const coords = ZONE_COORDINATES[zoneId] || { pctX: 50, pctY: 50, zoom: 1.35, bbox: { x: 200, y: 200, w: 300, h: 200 } };
+    if (box && coords.bbox) {
+      box.setAttribute('x', coords.bbox.x - 6);
+      box.setAttribute('y', coords.bbox.y - 6);
+      box.setAttribute('width', coords.bbox.w + 12);
+      box.setAttribute('height', coords.bbox.h + 12);
+      box.setAttribute('stroke', zone.color || '#0284c7');
+      box.style.display = 'block';
+    }
+
+    // 6. Populate Docked Zone Card
+    const zoneCard = document.getElementById('mapZoneCard');
+    const badgeEl = document.getElementById('zoneCardBadge');
+    const hallEl = document.getElementById('zoneCardHall');
+    const titleEl = document.getElementById('zoneCardTitle');
+    const taglineEl = document.getElementById('zoneCardTagline');
+    const descEl = document.getElementById('zoneCardDesc');
+    const actContainer = document.getElementById('zoneCardActivities');
+
+    if (badgeEl) {
+      badgeEl.textContent = zone.badge || 'Zone Hub';
+      badgeEl.style.backgroundColor = zone.color || '#1768ff';
+    }
+    if (hallEl) {
+      hallEl.innerHTML = '<i class="ti ti-map-pin"></i> ' + zone.hall;
+    }
+    if (titleEl) {
+      titleEl.textContent = zone.name;
+    }
+    if (taglineEl) {
+      taglineEl.textContent = zone.tagline || '';
+      taglineEl.style.display = zone.tagline ? 'block' : 'none';
+    }
+    if (descEl) {
+      descEl.textContent = zone.description || '';
+    }
+    if (actContainer) {
+      actContainer.innerHTML = '';
+      if (zone.activities) {
+        const parts = zone.activities.split(/[,•\n]+/).map(s => s.trim()).filter(Boolean);
+        parts.forEach(p => {
+          const pill = document.createElement('span');
+          pill.className = 'zone-act-tag';
+          pill.textContent = p;
+          actContainer.appendChild(pill);
+        });
+      }
+    }
+    if (zoneCard) {
+      zoneCard.style.display = 'block';
+    }
+
+    // 7. Update Status Pill
+    const statusPill = document.getElementById('mapStatusPill');
+    const statusText = document.getElementById('mapStatusText');
+    if (statusText) {
+      statusText.innerHTML = 'Viewing Zone: <strong>' + zone.name + '</strong> &bull; ' + zone.hall;
+    }
+    if (statusPill) {
+      statusPill.classList.add('is-active');
+    }
+
+    // 8. Pan and Zoom smoothly
+    currentScale = coords.zoom || 1.5;
+    panToCoordinate(coords.pctX, coords.pctY);
+    applyMapTransform();
+  }
+
+  function closeZoneDetails(e) {
+    if (e) e.stopPropagation();
+    const zoneCard = document.getElementById('mapZoneCard');
+    const box = document.getElementById('svgZoneHighlightBox');
+    const statusPill = document.getElementById('mapStatusPill');
+    const statusText = document.getElementById('mapStatusText');
+
+    if (zoneCard) zoneCard.style.display = 'none';
+    if (box) box.style.display = 'none';
+    document.querySelectorAll('.zone-item').forEach(el => el.classList.remove('is-selected'));
+    document.querySelectorAll('.svg-zone-interactive').forEach(el => el.classList.remove('is-active-zone'));
+
+    if (statusText) statusText.textContent = 'Explore the venue: Select any Activity Zone or Booth to locate';
+    if (statusPill) statusPill.classList.remove('is-active');
+    activeZoneId = null;
+  }
+
   // Fallback coordinate generator for dynamically created booths
 
   function getCoordinateForBooth(boothNum, index) {
@@ -2174,9 +2791,19 @@
 
   // Handle Booth Selection
   function handleBoothClick(boothNum, boothId) {
+    // 0. Close zone details if open
+    closeZoneDetails();
+
     activeBoothId = boothId;
     const item = document.getElementById('booth-item-' + boothId);
     if (!item) return;
+
+    // If booths tab isn't active, switch to it
+    const tabBtnBooths = document.getElementById('tabBtnBooths');
+    if (tabBtnBooths && !tabBtnBooths.classList.contains('active')) {
+      switchSidebarTab('booths');
+    }
+
     // 1. Update Sidebar Active State
     document.querySelectorAll('.booth-item').forEach(el => el.classList.remove('is-selected'));
     item.classList.add('is-selected');
@@ -2295,8 +2922,8 @@
     if (spotlight) spotlight.style.display = 'none';
     document.querySelectorAll('.booth-pin').forEach(el => el.classList.remove('is-active'));
     document.querySelectorAll('.booth-item').forEach(el => el.classList.remove('is-selected'));
-    if (statusText) statusText.textContent = 'Click any booth in directory to view location';
-    if (statusPill) statusPill.classList.remove('is-active');
+    if (statusText && !activeZoneId) statusText.textContent = 'Explore the venue: Select any Activity Zone or Booth to locate';
+    if (statusPill && !activeZoneId) statusPill.classList.remove('is-active');
     activeBoothId = null;
   }
 
@@ -2334,6 +2961,8 @@
     currentTranslateX = 0;
     currentTranslateY = 0;
     applyMapTransform();
+    closeZoneDetails();
+    closeBoothDetails();
   }
 
   function toggleAllPins() {
@@ -2452,35 +3081,38 @@
 
   document.addEventListener('DOMContentLoaded', function() {
     initMapPins();
-    // Check URL parameters for explicit booth selection (e.g. ?booth=Booth A-02)
 
     var urlParams = new URLSearchParams(window.location.search);
+    var targetZone = urlParams.get('zone');
     var targetBooth = urlParams.get('booth');
-    var matchedItem = null;
-    if (targetBooth) {
-      var items = document.querySelectorAll('.booth-item');
-      items.forEach(function(item) {
-        var bNum = item.getAttribute('data-booth') || '';
-        var bTitle = item.getAttribute('data-title') || '';
-        if (bNum.toLowerCase() === targetBooth.toLowerCase() || bTitle.toLowerCase().indexOf(targetBooth.toLowerCase()) !== -1) {
-          matchedItem = item;
-        }
 
-      });
-    }
-
-    if (!matchedItem) {
-      matchedItem = document.querySelector('.booth-item');
-    }
-
-    if (matchedItem) {
-      var bNum = matchedItem.getAttribute('data-booth');
-      var bId = matchedItem.getAttribute('data-id');
+    if (targetZone) {
       setTimeout(function() {
-        handleBoothClick(bNum, bId);
-      }, 300);
+        switchSidebarTab('zones');
+        handleZoneClick(targetZone);
+      }, 250);
+    } else if (targetBooth) {
+      setTimeout(function() {
+        switchSidebarTab('booths');
+        var items = document.querySelectorAll('.booth-item');
+        var matchedItem = null;
+        items.forEach(function(item) {
+          var bNum = item.getAttribute('data-booth') || '';
+          var bTitle = item.getAttribute('data-title') || '';
+          if (bNum.toLowerCase() === targetBooth.toLowerCase() || bTitle.toLowerCase().indexOf(targetBooth.toLowerCase()) !== -1) {
+            matchedItem = item;
+          }
+        });
+        if (matchedItem) {
+          var bNum = matchedItem.getAttribute('data-booth');
+          var bId = matchedItem.getAttribute('data-id');
+          handleBoothClick(bNum, bId);
+        }
+      }, 250);
+    } else {
+      // Clean full-floor overview mode: no forced auto-selection!
+      resetMapZoom();
     }
-
   });
 </script>
 

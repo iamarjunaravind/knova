@@ -1177,7 +1177,7 @@
 
           <div class="faz-grid">
             {% for zone in floor_zones %}
-              <a href="{% url 'public_expo_map' %}" class="faz-card" style="--zone-color: {{ zone.color_accent|default:'#1768ff' }};" title="Click to view {{ zone.name }} on floor map">
+              <a href="{% url 'public_expo_map' %}?zone={{ zone.id }}" class="faz-card" style="--zone-color: {{ zone.color_accent|default:'#1768ff' }};" title="Click to view {{ zone.name }} on floor map">
                 <div class="faz-icon-box">
                   <i class="ti ti-{{ zone.icon_class|cut:'ti-'|default:'compass' }}"></i>
                 </div>
