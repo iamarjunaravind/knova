@@ -2116,30 +2116,86 @@ def dashboard_student_profile(request):
     if not profile:
         return redirect('dashboard_index')
     if request.method == 'POST':
+        # 1. Full Name update on User model (Mandatory)
+        full_name = request.POST.get('full_name', '').strip()
+        if full_name:
+            parts = full_name.split(' ', 1)
+            request.user.first_name = parts[0]
+            request.user.last_name = parts[1] if len(parts) > 1 else ''
 
-        # Personal Details
-        profile.mobile = request.POST.get('mobile', profile.mobile)
-        profile.gender = request.POST.get('gender', profile.gender)
+        # Optional Email update on User model
+        user_email = request.POST.get('email', '').strip()
+        if user_email and user_email != request.user.email:
+            # Check unique email
+            if not User.objects.filter(email__iexact=user_email).exclude(pk=request.user.pk).exists():
+                request.user.email = user_email
 
-        # Contact Details
-        profile.address = request.POST.get('address', profile.address)
-        profile.city = request.POST.get('city', profile.city)
-        profile.country_of_residence = request.POST.get('country_of_residence', profile.country_of_residence)
+        request.user.save()
 
-        # Education
-        profile.current_education = request.POST.get('current_education', profile.current_education)
-        profile.school_college = request.POST.get('school_college', profile.school_college)
-        profile.class_year = request.POST.get('class_year', profile.class_year)
-        profile.grades = request.POST.get('grades', profile.grades)
-        profile.english_proficiency = request.POST.get('english_proficiency', profile.english_proficiency)
+        # 2. Personal & Contact Details
+        profile.mobile = request.POST.get('mobile', profile.mobile).strip()
+        profile.whatsapp_number = request.POST.get('whatsapp_number', profile.whatsapp_number or '').strip()
+        profile.gender = request.POST.get('gender', profile.gender or '').strip()
+        
+        dob_str = request.POST.get('date_of_birth', '').strip()
+        if dob_str:
+            try:
+                from datetime import datetime
+                profile.date_of_birth = datetime.strptime(dob_str, '%Y-%m-%d').date()
+            except Exception:
+                pass
 
-        # Experience
-        profile.work_experience = request.POST.get('work_experience', profile.work_experience)
+        profile.nationality = request.POST.get('nationality', profile.nationality or '').strip()
+        profile.country_of_residence = request.POST.get('country_of_residence', profile.country_of_residence or '').strip()
+        profile.city = request.POST.get('city', profile.city or '').strip()
+        profile.address = request.POST.get('address', profile.address or '').strip()
 
-        # It asks for preferred degree as part of complete profile requirement
-        profile.preferred_degree = request.POST.get('preferred_degree', profile.preferred_degree)
+        # 3. Academic Background
+        profile.current_education = request.POST.get('current_education', profile.current_education or '').strip()
+        profile.school_college = request.POST.get('school_college', profile.school_college or '').strip()
+        profile.curriculum = request.POST.get('curriculum', profile.curriculum or '').strip()
+        profile.current_grade = request.POST.get('current_grade', profile.current_grade or '').strip()
+        profile.class_year = request.POST.get('class_year', profile.class_year or '').strip()
+        profile.academic_stream = request.POST.get('academic_stream', profile.academic_stream or '').strip()
+        profile.grades = request.POST.get('grades', profile.grades or '').strip()
+        profile.english_proficiency = request.POST.get('english_proficiency', profile.english_proficiency or '').strip()
+        profile.work_experience = request.POST.get('work_experience', profile.work_experience or '').strip()
+
+        # 4. Higher Education & AI Matchmaking Preferences
+        profile.preferred_destinations = request.POST.get('preferred_destinations', profile.preferred_destinations or '').strip()
+        if profile.preferred_destinations:
+            profile.preferred_country = profile.preferred_destinations
+
+        courses_list = request.POST.getlist('preferred_courses')
+        if courses_list:
+            profile.preferred_courses = ", ".join([c.strip() for c in courses_list if c.strip()])
+        elif 'preferred_courses_text' in request.POST:
+            profile.preferred_courses = request.POST.get('preferred_courses_text', '').strip()
+
+        profile.preferred_degree = request.POST.get('preferred_degree', profile.preferred_degree or '').strip()
+        profile.budget_range = request.POST.get('budget_range', profile.budget_range or '').strip()
+
+        # 5. Scholarships, Counselling & Shortlisting
+        profile.interested_in_scholarships = request.POST.get('interested_in_scholarships', profile.interested_in_scholarships or '').strip()
+        profile.interested_in_counselling = request.POST.get('interested_in_counselling', profile.interested_in_counselling or '').strip()
+        profile.has_shortlisted_universities = request.POST.get('has_shortlisted_universities', profile.has_shortlisted_universities or '').strip()
+        profile.shortlisted_universities_text = request.POST.get('shortlisted_universities_text', profile.shortlisted_universities_text or '').strip()
+
+        # 6. Expo Attendance & Survey
+        profile.attending_with = request.POST.get('attending_with', profile.attending_with or '').strip()
+        profile.accompanying_members_count = request.POST.get('accompanying_members_count', profile.accompanying_members_count or '0').strip()
+        profile.hear_about_knova = request.POST.get('hear_about_knova', profile.hear_about_knova or '').strip()
+
+        explore_list = request.POST.getlist('explore_interests')
+        if explore_list:
+            profile.explore_interests = ", ".join([e.strip() for e in explore_list if e.strip()])
+        elif 'explore_interests_text' in request.POST:
+            profile.explore_interests = request.POST.get('explore_interests_text', '').strip()
+
+        profile.hobbies = request.POST.get('hobbies', profile.hobbies or '').strip()
+
         profile.save()
-        messages.success(request, "Profile updated successfully.")
+        messages.success(request, "Student Profile updated successfully.")
         next_url = request.GET.get('next')
         if next_url:
             return redirect(next_url)

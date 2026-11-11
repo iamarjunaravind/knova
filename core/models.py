@@ -1302,19 +1302,21 @@ class CustomSection(models.Model):
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
-    mobile = models.CharField(max_length=20)
+    mobile = models.CharField(max_length=30)
+    whatsapp_number = models.CharField(max_length=30, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    gender = models.CharField(max_length=20, choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], blank=True)
+    gender = models.CharField(max_length=50, blank=True)
+    nationality = models.CharField(max_length=100, blank=True)
 
     # Contact Details
     address = models.TextField(blank=True)
     city = models.CharField(max_length=100, blank=True)
     country_of_residence = models.CharField(max_length=100, blank=True)
 
-    # Education & Experience
+    # Education & Academic Details
     EDUCATION_LEVEL_CHOICES = [
-        ('High School (Grade 9-11)', 'High School (Grade 9-11)'),
-        ('High School Senior (Grade 12)', 'High School Senior (Grade 12)'),
+        ('High School (Grade 8-10)', 'High School (Grade 8-10)'),
+        ('High School Senior (Grade 11-12)', 'High School Senior (Grade 11-12)'),
         ('High School Graduate', 'High School Graduate'),
         ('Diploma / Vocational', 'Diploma / Vocational'),
         ("Undergraduate (Bachelor's Student)", "Undergraduate (Bachelor's Student)"),
@@ -1325,21 +1327,49 @@ class StudentProfile(models.Model):
         ('Working Professional', 'Working Professional'),
         ('Other', 'Other'),
     ]
-    current_education = models.CharField(max_length=100, blank=True, choices=EDUCATION_LEVEL_CHOICES)
+    current_education = models.CharField(max_length=100, blank=True)
     school_college = models.CharField(max_length=255, blank=True)
+    curriculum = models.CharField(max_length=50, blank=True)
+    current_grade = models.CharField(max_length=50, blank=True)
     class_year = models.CharField(max_length=50, blank=True)
+    academic_stream = models.CharField(max_length=100, blank=True)
     grades = models.CharField(max_length=100, blank=True, help_text="e.g., GPA 3.8, 95%, A-Levels")
     work_experience = models.TextField(blank=True, help_text="Briefly describe any relevant work experience or internships.")
-    english_proficiency = models.CharField(max_length=50, blank=True, choices=[('IELTS', 'IELTS'), ('TOEFL', 'TOEFL'), ('Duolingo', 'Duolingo'), ('None', 'Not taken yet')])
+    english_proficiency = models.CharField(max_length=50, blank=True)
 
     qr_identifier = models.CharField(max_length=100, unique=True, blank=True, null=True)
 
-    # AI Matchmaking Preferences
-    preferred_country = models.CharField(max_length=100, blank=True, help_text="Comma separated e.g. USA, UK, Canada", db_index=True)
-    budget_range = models.CharField(max_length=50, blank=True, choices=[('Low', 'Under $10k'), ('Medium', '$10k-$30k'), ('High', 'Over $30k')])
+    # Higher Education & AI Matchmaking Preferences
+    preferred_country = models.CharField(max_length=255, blank=True, help_text="Comma separated e.g. USA, UK, Canada", db_index=True)
+    preferred_destinations = models.CharField(max_length=255, blank=True)
+    preferred_courses = models.TextField(blank=True)
+    budget_range = models.CharField(max_length=50, blank=True)
     preferred_program = models.CharField(max_length=100, blank=True, help_text="e.g. Computer Science, Business")
-    preferred_degree = models.CharField(max_length=50, blank=True, choices=[('UG', 'Undergraduate (Bachelor)'), ('PG', 'Postgraduate (Master)'), ('PHD', 'PhD / Doctorate')])
-    intake_year = models.CharField(max_length=4, blank=True, help_text="e.g. 2027")
+    preferred_degree = models.CharField(max_length=50, blank=True)
+    intake_year = models.CharField(max_length=10, blank=True, help_text="e.g. 2027")
+
+    # Expo Attendance & Profile Survey Details
+    interested_in_scholarships = models.CharField(max_length=50, blank=True)
+    interested_in_counselling = models.CharField(max_length=10, blank=True)
+    has_shortlisted_universities = models.CharField(max_length=10, blank=True)
+    shortlisted_universities_text = models.TextField(blank=True)
+    attending_with = models.CharField(max_length=50, blank=True)
+    accompanying_members_count = models.CharField(max_length=10, default='0', blank=True)
+    hear_about_knova = models.CharField(max_length=50, blank=True)
+    explore_interests = models.TextField(blank=True)
+    hobbies = models.TextField(blank=True)
+
+    @property
+    def preferred_courses_list(self):
+        if not self.preferred_courses:
+            return []
+        return [c.strip() for c in self.preferred_courses.split(',') if c.strip()]
+
+    @property
+    def explore_interests_list(self):
+        if not self.explore_interests:
+            return []
+        return [c.strip() for c in self.explore_interests.split(',') if c.strip()]
 
     @property
     def is_profile_complete(self):

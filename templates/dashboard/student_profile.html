@@ -9,18 +9,18 @@
 {% block content %}
 <style>
   .profile-container {
-    max-width: 1200px;
+    max-width: 1240px;
     margin: 0 auto;
-    padding-bottom: 24px;
+    padding-bottom: 30px;
   }
 
   /* Profile Hero Card */
   .profile-hero {
     background: linear-gradient(135deg, #0a1936 0%, #173877 50%, #1768ff 100%);
     border-radius: 18px;
-    padding: 24px 28px;
+    padding: 26px 30px;
     color: #ffffff;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
     position: relative;
     overflow: hidden;
     box-shadow: 0 10px 25px -5px rgba(10, 25, 54, 0.25);
@@ -30,9 +30,9 @@
     position: absolute;
     right: -40px;
     top: -40px;
-    width: 220px;
-    height: 220px;
-    background: radial-gradient(circle, rgba(27,216,223,0.2) 0%, transparent 70%);
+    width: 240px;
+    height: 240px;
+    background: radial-gradient(circle, rgba(27,216,223,0.22) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
   }
@@ -48,27 +48,27 @@
   .profile-hero-left {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 20px;
     flex-wrap: wrap;
   }
   .profile-avatar-large {
-    width: 68px;
-    height: 68px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     background: linear-gradient(135deg, #1bd8df 0%, #1768ff 100%);
     color: #0a1936;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 900;
-    border: 3px solid rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    border: 3.5px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
     flex-shrink: 0;
   }
   .profile-hero-name {
-    margin: 0 0 4px 0;
-    font-size: 22px;
+    margin: 0 0 5px 0;
+    font-size: 23px;
     font-weight: 850;
     letter-spacing: -0.4px;
     color: #ffffff;
@@ -76,7 +76,7 @@
   .profile-hero-meta {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     flex-wrap: wrap;
     font-size: 13px;
     color: #cbd5e1;
@@ -85,7 +85,7 @@
   .profile-hero-meta span {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
   }
   .profile-hero-pills {
     display: flex;
@@ -97,25 +97,25 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 4px 10px;
+    padding: 4px 11px;
     border-radius: 20px;
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 700;
     letter-spacing: 0.3px;
   }
   .profile-pill-badge {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     color: #ffffff;
   }
   .profile-pill-verified {
-    background: rgba(16, 185, 129, 0.2);
-    border: 1px solid rgba(16, 185, 129, 0.4);
+    background: rgba(16, 185, 129, 0.22);
+    border: 1px solid rgba(16, 185, 129, 0.45);
     color: #6ee7b7;
   }
   .profile-pill-id {
-    background: rgba(27, 216, 223, 0.2);
-    border: 1px solid rgba(27, 216, 223, 0.4);
+    background: rgba(27, 216, 223, 0.22);
+    border: 1px solid rgba(27, 216, 223, 0.45);
     color: #a5f3fc;
   }
   .profile-hero-actions {
@@ -125,9 +125,9 @@
     flex-wrap: wrap;
   }
   .btn-hero-action {
-    padding: 8px 16px;
+    padding: 9px 18px;
     border-radius: 8px;
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 700;
     text-decoration: none;
     display: inline-flex;
@@ -152,18 +152,18 @@
     color: #ffffff;
   }
   .btn-hero-badge:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.22);
     transform: translateY(-1px);
   }
 
   /* Two Column Profile Grid */
   .profile-grid {
     display: grid;
-    grid-template-columns: 2fr 1.25fr;
+    grid-template-columns: 2.1fr 1.15fr;
     gap: 20px;
     align-items: start;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 950px) {
     .profile-grid {
       grid-template-columns: 1fr;
     }
@@ -174,9 +174,9 @@
     background: #ffffff;
     border: 1px solid var(--card-border, #e2e8f0);
     border-radius: 14px;
-    padding: 18px 22px;
-    margin-bottom: 18px;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
   }
   .profile-card-header {
     display: flex;
@@ -190,15 +190,15 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 15px;
+    font-size: 15.5px;
     font-weight: 750;
     color: #0f172a;
     margin: 0;
   }
   .profile-icon-box {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -210,6 +210,7 @@
   .profile-icon-box.green { background: #ecfdf5; color: #10b981; }
   .profile-icon-box.amber { background: #fffbeb; color: #d97706; }
   .profile-icon-box.indigo { background: #eef2ff; color: #4f46e5; }
+  .profile-icon-box.rose { background: #fff1f2; color: #e11d48; }
 
   /* Info Fields Grid */
   .info-fields-grid {
@@ -229,7 +230,7 @@
   }
   .info-field-label {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 750;
     color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -246,14 +247,60 @@
     font-style: italic;
   }
 
+  /* Tag Badges */
+  .tag-pills-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 6px;
+  }
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 650;
+  }
+  .tag-pill-blue {
+    background: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+  }
+  .tag-pill-purple {
+    background: #f5f3ff;
+    color: #5b21b6;
+    border: 1px solid #ddd6fe;
+  }
+  .tag-pill-green {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+  }
+
   /* Form Styling */
+  .form-card {
+    background: #ffffff;
+    border: 1px solid var(--card-border, #e2e8f0);
+    border-radius: 14px;
+    padding: 24px 28px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  }
+  .form-section-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 22px;
+  }
   .form-section-title {
-    font-size: 14px;
+    font-size: 14.5px;
     font-weight: 750;
     color: #0f172a;
-    margin: 0 0 14px 0;
+    margin: 0 0 16px 0;
     padding-bottom: 8px;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -262,9 +309,8 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
-    margin-bottom: 18px;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 650px) {
     .edit-form-grid {
       grid-template-columns: 1fr;
     }
@@ -276,19 +322,23 @@
   }
   .form-group label {
     font-size: 11.5px;
-    font-weight: 700;
-    color: #475569;
+    font-weight: 750;
+    color: #334155;
     text-transform: uppercase;
     letter-spacing: 0.4px;
+  }
+  .form-group label .required-star {
+    color: #e11d48;
+    margin-left: 2px;
   }
   .form-group input,
   .form-group select,
   .form-group textarea {
-    padding: 8px 12px;
+    padding: 9px 12px;
     border: 1px solid #cbd5e1;
     border-radius: 8px;
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    font-family: inherit;
     color: #0f172a;
     background: #ffffff;
     box-sizing: border-box;
@@ -301,38 +351,95 @@
     border-color: #1768ff;
     box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.12);
   }
+  .form-group .form-help {
+    font-size: 11px;
+    color: #64748b;
+  }
+
+  /* Multi-Select Pills Selectable */
+  .pill-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .pill-check-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    color: #334155;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s ease;
+  }
+  .pill-check-label input[type="checkbox"] {
+    display: none;
+  }
+  .pill-check-label:hover {
+    border-color: #94a3b8;
+    background: #f1f5f9;
+  }
+  .pill-check-label.selected {
+    background: #eff6ff;
+    border-color: #1768ff;
+    color: #1768ff;
+    font-weight: 700;
+  }
+  .pill-check-label.selected .pill-check-icon {
+    display: inline-block;
+  }
+  .pill-check-icon {
+    display: none;
+    width: 13px;
+    height: 13px;
+  }
+
   .form-actions {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 10px;
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid #f1f5f9;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid #e2e8f0;
   }
   .btn-save-profile {
     background: #1768ff;
     color: #ffffff;
     border: none;
-    padding: 9px 20px;
+    padding: 10px 22px;
     border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 13.5px;
+    font-weight: 750;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    box-shadow: 0 3px 10px rgba(23, 104, 255, 0.25);
+    gap: 7px;
+    box-shadow: 0 4px 12px rgba(23, 104, 255, 0.28);
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-save-profile:hover {
+    background: #0f52db;
+    transform: translateY(-1px);
   }
   .btn-cancel-edit {
     background: #f1f5f9;
     color: #475569;
     border: none;
-    padding: 9px 18px;
+    padding: 10px 18px;
     border-radius: 8px;
     font-size: 13px;
     font-weight: 650;
     cursor: pointer;
+  }
+  .btn-cancel-edit:hover {
+    background: #e2e8f0;
   }
 </style>
 
@@ -354,14 +461,17 @@
             {% if profile.mobile %}
               <span><i data-feather="phone" style="width: 14px; height: 14px;"></i> {{ profile.mobile }}</span>
             {% endif %}
-            {% if profile.city or profile.country_of_residence %}
-              <span><i data-feather="map-pin" style="width: 14px; height: 14px;"></i> {{ profile.city|default:"" }}{% if profile.city and profile.country_of_residence %}, {% endif %}{{ profile.country_of_residence|default:"" }}</span>
+            {% if profile.country_of_residence or profile.nationality %}
+              <span><i data-feather="globe" style="width: 14px; height: 14px;"></i> {{ profile.nationality|default:profile.country_of_residence }}</span>
+            {% endif %}
+            {% if profile.current_education %}
+              <span><i data-feather="award" style="width: 14px; height: 14px;"></i> {{ profile.current_education }}</span>
             {% endif %}
           </div>
           <div class="profile-hero-pills">
             <span class="profile-pill profile-pill-badge"><i data-feather="user-check" style="width: 12px; height: 12px;"></i> Attendee</span>
-            <span class="profile-pill profile-pill-verified"><i data-feather="check-circle" style="width: 12px; height: 12px;"></i> Verified Student</span>
-            <span class="profile-pill profile-pill-id"><i data-feather="tag" style="width: 12px; height: 12px;"></i> Pass: KNOVA-STU-{{ profile.user.id|stringformat:"03d" }}</span>
+            <span class="profile-pill profile-pill-verified"><i data-feather="check-circle" style="width: 12px; height: 12px;"></i> Verified Profile</span>
+            <span class="profile-pill profile-pill-id"><i data-feather="tag" style="width: 12px; height: 12px;"></i> ID: {{ profile.qr_identifier|default:profile.user.username }}</span>
           </div>
         </div>
       </div>
@@ -378,12 +488,12 @@
     </div>
   </div>
 
-  <!-- Messages Feedback -->
+  <!-- Feedback Messages -->
   {% if messages %}
-    <div style="margin-bottom: 16px;">
+    <div style="margin-bottom: 20px;">
       {% for msg in messages %}
-        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-          <i data-feather="check-circle" style="width: 16px; height: 16px; color: #10b981;"></i> {{ msg }}
+        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; font-weight: 650; display: flex; align-items: center; gap: 8px;">
+          <i data-feather="check-circle" style="width: 18px; height: 18px; color: #10b981;"></i> {{ msg }}
         </div>
       {% endfor %}
     </div>
@@ -398,15 +508,15 @@
       <!-- LEFT MAIN COLUMN -->
       <div>
         
-        <!-- Personal & Contact Information -->
+        <!-- Card 1: Personal & Contact Information -->
         <div class="profile-card">
           <div class="profile-card-header">
             <h3 class="profile-card-title">
               <span class="profile-icon-box blue"><i data-feather="user" style="width: 16px; height: 16px;"></i></span>
               Personal &amp; Contact Details
             </h3>
-            <button type="button" onclick="toggleEditMode()" style="background:none; border:none; color:#1768ff; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;">
-              <i data-feather="edit" style="width:12px; height:12px;"></i> Edit
+            <button type="button" onclick="toggleEditMode()" style="background:none; border:none; color:#1768ff; font-size:12.5px; font-weight:750; cursor:pointer; display:flex; align-items:center; gap:4px;">
+              <i data-feather="edit" style="width:13px; height:13px;"></i> Edit
             </button>
           </div>
 
@@ -416,86 +526,209 @@
               <span class="info-field-value">{{ profile.user.get_full_name|default:profile.user.username }}</span>
             </div>
             <div class="info-field-item">
-              <span class="info-field-label">Email Address</span>
-              <span class="info-field-value">{{ profile.user.email }}</span>
-            </div>
-            <div class="info-field-item">
-              <span class="info-field-label">Mobile / WhatsApp</span>
-              <span class="info-field-value">{{ profile.mobile|default:"Not specified" }}</span>
-            </div>
-            <div class="info-field-item">
               <span class="info-field-label">Gender</span>
               <span class="info-field-value">{{ profile.gender|default:"Not specified" }}</span>
             </div>
             <div class="info-field-item">
+              <span class="info-field-label">Date of Birth</span>
+              <span class="info-field-value">{{ profile.date_of_birth|date:"M d, Y"|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Nationality</span>
+              <span class="info-field-value">{{ profile.nationality|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
               <span class="info-field-label">Country of Residence</span>
-              <span class="info-field-value">{{ profile.country_of_residence|title|default:"Not specified" }}</span>
+              <span class="info-field-value">{{ profile.country_of_residence|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Mobile Number</span>
+              <span class="info-field-value">{{ profile.mobile|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">WhatsApp Number</span>
+              <span class="info-field-value">{{ profile.whatsapp_number|default:"Same as Mobile / None" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Email Address</span>
+              <span class="info-field-value">{{ profile.user.email|default:"Not specified" }}</span>
             </div>
             <div class="info-field-item">
               <span class="info-field-label">City</span>
-              <span class="info-field-value">{{ profile.city|title|default:"Not specified" }}</span>
+              <span class="info-field-value">{{ profile.city|default:"Not specified" }}</span>
             </div>
-            <div class="info-field-item" style="grid-column: span 2;">
-              <span class="info-field-label">Address</span>
+            <div class="info-field-item">
+              <span class="info-field-label">Residential Address</span>
               <span class="info-field-value">{{ profile.address|default:"Not specified" }}</span>
             </div>
           </div>
         </div>
 
-        <!-- Academic & Education Details -->
+        <!-- Card 2: Academic & Education Details -->
         <div class="profile-card">
           <div class="profile-card-header">
             <h3 class="profile-card-title">
               <span class="profile-icon-box purple"><i data-feather="book-open" style="width: 16px; height: 16px;"></i></span>
-              Education &amp; Academic Background
+              Academic Background
             </h3>
-            <button type="button" onclick="toggleEditMode()" style="background:none; border:none; color:#1768ff; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;">
-              <i data-feather="edit" style="width:12px; height:12px;"></i> Edit
+            <button type="button" onclick="toggleEditMode()" style="background:none; border:none; color:#1768ff; font-size:12.5px; font-weight:750; cursor:pointer; display:flex; align-items:center; gap:4px;">
+              <i data-feather="edit" style="width:13px; height:13px;"></i> Edit
             </button>
           </div>
 
           <div class="info-fields-grid">
             <div class="info-field-item">
-              <span class="info-field-label">Current / Last Institution</span>
-              <span class="info-field-value">{{ profile.school_college|title|default:"Not specified" }}</span>
-            </div>
-            <div class="info-field-item">
               <span class="info-field-label">Current Education Level</span>
-              <span class="info-field-value">{{ profile.current_education|default:"Undergraduate" }}</span>
+              <span class="info-field-value">{{ profile.current_education|default:"Not specified" }}</span>
             </div>
             <div class="info-field-item">
-              <span class="info-field-label">Graduation Year / Class</span>
-              <span class="info-field-value">{{ profile.class_year|default:"2027" }}</span>
+              <span class="info-field-label">Name of School / Institution</span>
+              <span class="info-field-value">{{ profile.school_college|default:"Not specified" }}</span>
             </div>
             <div class="info-field-item">
-              <span class="info-field-label">Academic Grades / GPA</span>
-              <span class="info-field-value">{{ profile.grades|default:"3.8 GPA" }}</span>
+              <span class="info-field-label">Curriculum</span>
+              <span class="info-field-value">{{ profile.curriculum|default:"Not specified" }}</span>
             </div>
             <div class="info-field-item">
-              <span class="info-field-label">English Proficiency Test</span>
-              <span class="info-field-value">{{ profile.english_proficiency|default:"IELTS" }}</span>
+              <span class="info-field-label">Current Grade / Class</span>
+              <span class="info-field-value">{{ profile.current_grade|default:"Not specified" }}</span>
             </div>
             <div class="info-field-item">
-              <span class="info-field-label">Target Degree Program</span>
-              <span class="info-field-value">{{ profile.preferred_degree|default:"Undergraduate (UG)" }}</span>
+              <span class="info-field-label">Expected Year of Graduation</span>
+              <span class="info-field-value">{{ profile.class_year|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Academic Stream</span>
+              <span class="info-field-value">{{ profile.academic_stream|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Grades / GPA</span>
+              <span class="info-field-value">{{ profile.grades|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">English Proficiency</span>
+              <span class="info-field-value">{{ profile.english_proficiency|default:"Not taken yet" }}</span>
+            </div>
+            {% if profile.work_experience %}
+            <div class="info-field-item" style="grid-column: span 2;">
+              <span class="info-field-label">Work Experience &amp; Academic Projects</span>
+              <span class="info-field-value" style="white-space: pre-line;">{{ profile.work_experience }}</span>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Card 3: Higher Education Preferences -->
+        <div class="profile-card">
+          <div class="profile-card-header">
+            <h3 class="profile-card-title">
+              <span class="profile-icon-box green"><i data-feather="compass" style="width: 16px; height: 16px;"></i></span>
+              Higher Education Preferences
+            </h3>
+            <button type="button" onclick="toggleEditMode()" style="background:none; border:none; color:#1768ff; font-size:12.5px; font-weight:750; cursor:pointer; display:flex; align-items:center; gap:4px;">
+              <i data-feather="edit" style="width:13px; height:13px;"></i> Edit
+            </button>
+          </div>
+
+          <div class="info-fields-grid">
+            <div class="info-field-item">
+              <span class="info-field-label">Preferred Study Destination</span>
+              <span class="info-field-value">{{ profile.preferred_destinations|default:profile.preferred_country|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Preferred Degree</span>
+              <span class="info-field-value">{{ profile.preferred_degree|default:"Not Decided" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Interested in Scholarships?</span>
+              <span class="info-field-value">
+                {% if profile.interested_in_scholarships %}
+                  <span style="color:#059669; font-weight:700;"><i data-feather="check" style="width:13px; height:13px;"></i> {{ profile.interested_in_scholarships }}</span>
+                {% else %}
+                  <span class="muted">Not specified</span>
+                {% endif %}
+              </span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Interested in Career Counselling?</span>
+              <span class="info-field-value">
+                {% if profile.interested_in_counselling == 'Yes' %}
+                  <span style="color:#1768ff; font-weight:700;">Yes</span>
+                {% elif profile.interested_in_counselling == 'No' %}
+                  <span>No</span>
+                {% else %}
+                  <span class="muted">Not specified</span>
+                {% endif %}
+              </span>
+            </div>
+            <div class="info-field-item" style="grid-column: span 2;">
+              <span class="info-field-label">Have You Shortlisted Universities?</span>
+              <span class="info-field-value">
+                {% if profile.has_shortlisted_universities == 'Yes' %}
+                  <strong>Yes:</strong> {{ profile.shortlisted_universities_text|default:"Shortlist pending" }}
+                {% elif profile.has_shortlisted_universities == 'No' %}
+                  <span>No universities shortlisted yet</span>
+                {% else %}
+                  <span class="muted">Not specified</span>
+                {% endif %}
+              </span>
+            </div>
+            <div class="info-field-item" style="grid-column: span 2;">
+              <span class="info-field-label">Preferred Course / Field of Study</span>
+              {% if profile.preferred_courses_list %}
+                <div class="tag-pills-wrap">
+                  {% for course in profile.preferred_courses_list %}
+                    <span class="tag-pill tag-pill-blue"><i data-feather="book" style="width:11px; height:11px;"></i> {{ course }}</span>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <span class="info-field-value muted">No specific courses selected yet</span>
+              {% endif %}
             </div>
           </div>
         </div>
 
-        <!-- Work Experience & Projects -->
+        <!-- Card 4: KNOVA Expo Attendance & Personal Details -->
         <div class="profile-card">
           <div class="profile-card-header">
             <h3 class="profile-card-title">
-              <span class="profile-icon-box amber"><i data-feather="briefcase" style="width: 16px; height: 16px;"></i></span>
-              Work Experience &amp; Academic Projects
+              <span class="profile-icon-box amber"><i data-feather="calendar" style="width: 16px; height: 16px;"></i></span>
+              KNOVA Expo Attendance &amp; Discovery
             </h3>
+            <button type="button" onclick="toggleEditMode()" style="background:none; border:none; color:#1768ff; font-size:12.5px; font-weight:750; cursor:pointer; display:flex; align-items:center; gap:4px;">
+              <i data-feather="edit" style="width:13px; height:13px;"></i> Edit
+            </button>
           </div>
-          <div>
-            {% if profile.work_experience %}
-              <p style="margin:0; font-size:13px; color:#334155; line-height:1.5;">{{ profile.work_experience }}</p>
-            {% else %}
-              <p style="margin:0; font-size:13px; color:#94a3b8; font-style:italic;">No work experience or internships added yet. Click Edit Profile to add project details.</p>
-            {% endif %}
+
+          <div class="info-fields-grid">
+            <div class="info-field-item">
+              <span class="info-field-label">Who Are You Attending With?</span>
+              <span class="info-field-value">{{ profile.attending_with|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Accompanying Family Members</span>
+              <span class="info-field-value">{{ profile.accompanying_members_count|default:"0" }} Members</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">How Did You Hear About KNOVA?</span>
+              <span class="info-field-value">{{ profile.hear_about_knova|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item">
+              <span class="info-field-label">Hobbies &amp; Interests</span>
+              <span class="info-field-value">{{ profile.hobbies|default:"Not specified" }}</span>
+            </div>
+            <div class="info-field-item" style="grid-column: span 2;">
+              <span class="info-field-label">What Would You Like to Explore at KNOVA?</span>
+              {% if profile.explore_interests_list %}
+                <div class="tag-pills-wrap">
+                  {% for item in profile.explore_interests_list %}
+                    <span class="tag-pill tag-pill-purple"><i data-feather="check-circle" style="width:11px; height:11px;"></i> {{ item }}</span>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <span class="info-field-value muted">No specific exploration areas selected yet</span>
+              {% endif %}
+            </div>
           </div>
         </div>
 
@@ -503,6 +736,32 @@
 
       <!-- RIGHT SIDEBAR COLUMN -->
       <div>
+
+        <!-- Quick Summary Badge Pass -->
+        <div class="profile-card" style="border-top: 4px solid #1768ff; text-align: center; padding: 22px 20px;">
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px;">
+            Digital Expo Pass
+          </div>
+          <div style="font-size: 18px; font-weight: 850; color: #0f172a; margin-bottom: 2px;">
+            {{ profile.user.get_full_name|default:profile.user.username }}
+          </div>
+          <div style="font-size: 12px; color: #1768ff; font-weight: 700; margin-bottom: 16px;">
+            {{ profile.qr_identifier|default:profile.user.username }}
+          </div>
+
+          <div style="background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 16px; margin-bottom: 16px; display: inline-block;">
+            <div style="font-size: 40px; color: #0a1936;">
+              <i data-feather="qr-code" style="width: 56px; height: 56px; color: #1768ff;"></i>
+            </div>
+            <div style="font-size: 11px; color: #64748b; font-weight: 600; margin-top: 4px;">Verified Attendee Badge</div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <a href="{% url 'dashboard_index' %}" class="btn-save-profile" style="justify-content: center; text-decoration: none; font-size: 12.5px;">
+              <i data-feather="external-link" style="width: 14px; height: 14px;"></i> Open in Expo Hub
+            </a>
+          </div>
+        </div>
 
         <!-- Connected Parent / Guardian -->
         <div class="profile-card" style="border-left: 4px solid #10b981;">
@@ -536,40 +795,12 @@
           </div>
         </div>
 
-        <!-- Expo & Study Preferences -->
-        <div class="profile-card" style="border-left: 4px solid #1768ff;">
-          <div class="profile-card-header">
-            <h3 class="profile-card-title">
-              <span class="profile-icon-box blue"><i data-feather="target" style="width: 16px; height: 16px;"></i></span>
-              Study Abroad Preferences
-            </h3>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:12px; color:#64748b; font-weight:600;">Preferred Countries</span>
-              <span style="font-size:12.5px; font-weight:700; color:#0f172a;">{{ profile.preferred_country|default:"USA, UK" }}</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:12px; color:#64748b; font-weight:600;">Preferred Program</span>
-              <span style="font-size:12.5px; font-weight:700; color:#0f172a;">{{ profile.preferred_program|default:"Computer Science" }}</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:12px; color:#64748b; font-weight:600;">Target Degree</span>
-              <span style="font-size:12.5px; font-weight:700; color:#0f172a;">{{ profile.preferred_degree|default:"Undergraduate" }}</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:12px; color:#64748b; font-weight:600;">Annual Budget Range</span>
-              <span style="font-size:12.5px; font-weight:700; color:#0f172a;">{{ profile.budget_range|default:"Medium ($10k-$30k)" }}</span>
-            </div>
-          </div>
-        </div>
-
         <!-- Quick Platform Shortcuts -->
         <div class="profile-card">
           <div class="profile-card-header">
             <h3 class="profile-card-title">
               <span class="profile-icon-box indigo"><i data-feather="grid" style="width: 16px; height: 16px;"></i></span>
-              Quick Shortcuts
+              Quick Navigation
             </h3>
           </div>
           <div style="display:flex; flex-direction:column; gap:8px;">
@@ -597,114 +828,526 @@
   <!-- 3. PROFILE EDIT MODE (EXPANDED EDIT FORM) -->
   <!-- ========================================== -->
   <div id="profileEditSection" {% if not edit_mode %}style="display: none;"{% endif %}>
-    <div class="profile-card" style="padding: 24px 28px;">
-      <div class="profile-card-header">
+    <div class="form-card">
+      <div class="profile-card-header" style="margin-bottom: 22px;">
         <h3 class="profile-card-title">
           <span class="profile-icon-box blue"><i data-feather="edit-3" style="width: 16px; height: 16px;"></i></span>
           Edit Student Profile &amp; Preferences
         </h3>
         <button type="button" onclick="toggleEditMode()" class="btn-cancel-edit" style="padding: 6px 12px; font-size: 12px;">
-          <i data-feather="x" style="width: 12px; height: 12px;"></i> Close
+          <i data-feather="x" style="width: 12px; height: 12px;"></i> Close Form
         </button>
       </div>
 
-      <form method="POST" action="{% url 'dashboard_student_profile' %}">
+      <form method="POST" action="{% url 'dashboard_student_profile' %}" id="profileForm">
         {% csrf_token %}
 
-        <!-- Contact Section -->
-        <div class="form-section-title"><i data-feather="user" style="width:14px; height:14px; color:#1768ff;"></i> Personal &amp; Contact Details</div>
-        <div class="edit-form-grid">
-          <div class="form-group">
-            <label>Mobile / WhatsApp Number *</label>
-            <input type="text" name="mobile" value="{{ profile.mobile|default:'' }}" required placeholder="e.g. +971 50 123 4567">
+        <!-- SECTION 1: Personal & Contact Details -->
+        <div class="form-section-card">
+          <div class="form-section-title">
+            <i data-feather="user" style="width:15px; height:15px; color:#1768ff;"></i>
+            1. Personal &amp; Contact Details
           </div>
-          <div class="form-group">
-            <label>Gender</label>
-            <select name="gender">
-              <option value="">Select Gender</option>
-              <option value="Male" {% if profile.gender == 'Male' %}selected{% endif %}>Male</option>
-              <option value="Female" {% if profile.gender == 'Female' %}selected{% endif %}>Female</option>
-              <option value="Other" {% if profile.gender == 'Other' %}selected{% endif %}>Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>City</label>
-            <input type="text" name="city" value="{{ profile.city|default:'' }}" placeholder="e.g. Dubai, London, Kozhikode">
-          </div>
-          <div class="form-group">
-            <label>Country of Residence</label>
-            <input type="text" name="country_of_residence" value="{{ profile.country_of_residence|default:'' }}" placeholder="e.g. UAE, India, UK">
-          </div>
-          <div class="form-group" style="grid-column: span 2;">
-            <label>Residential Address</label>
-            <input type="text" name="address" value="{{ profile.address|default:'' }}" placeholder="Street address or community">
+          <div class="edit-form-grid">
+            
+            <div class="form-group">
+              <label>Full Name <span class="required-star">*</span> (Mandatory)</label>
+              <input type="text" name="full_name" value="{{ profile.user.get_full_name|default:profile.user.username }}" required placeholder="e.g. Athulya Ramesh">
+            </div>
+
+            <div class="form-group">
+              <label>Gender <span class="required-star">*</span></label>
+              <select name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male" {% if profile.gender == 'Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if profile.gender == 'Female' %}selected{% endif %}>Female</option>
+                <option value="Prefer not to say" {% if profile.gender == 'Prefer not to say' %}selected{% endif %}>Prefer not to say</option>
+                {% if profile.gender and profile.gender != 'Male' and profile.gender != 'Female' and profile.gender != 'Prefer not to say' %}
+                  <option value="{{ profile.gender }}" selected>{{ profile.gender }}</option>
+                {% endif %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Date of Birth (Date Picker)</label>
+              <input type="date" name="date_of_birth" value="{{ profile.date_of_birth|date:'Y-m-d' }}">
+            </div>
+
+            <div class="form-group">
+              <label>Nationality (Dropdown)</label>
+              <select name="nationality">
+                <option value="">Select Nationality</option>
+                {% for nat in "Indian,Emirati (UAE),Bahraini,Saudi Arabian,Omani,Qatari,Kuwaiti,British,American,Canadian,Australian,German,French,Pakistani,Bangladeshi,Nepalese,Sri Lankan,Filipino,Egyptian,Jordanian,Other"|make_list %}
+                {% endfor %}
+                <option value="Indian" {% if profile.nationality == 'Indian' or profile.nationality == 'India' %}selected{% endif %}>Indian</option>
+                <option value="Emirati (UAE)" {% if profile.nationality == 'Emirati (UAE)' or profile.nationality == 'Emirati' %}selected{% endif %}>Emirati (UAE)</option>
+                <option value="Bahraini" {% if profile.nationality == 'Bahraini' %}selected{% endif %}>Bahraini</option>
+                <option value="Saudi Arabian" {% if profile.nationality == 'Saudi Arabian' or profile.nationality == 'Saudi' %}selected{% endif %}>Saudi Arabian</option>
+                <option value="Omani" {% if profile.nationality == 'Omani' %}selected{% endif %}>Omani</option>
+                <option value="Qatari" {% if profile.nationality == 'Qatari' %}selected{% endif %}>Qatari</option>
+                <option value="Kuwaiti" {% if profile.nationality == 'Kuwaiti' %}selected{% endif %}>Kuwaiti</option>
+                <option value="British" {% if profile.nationality == 'British' %}selected{% endif %}>British</option>
+                <option value="American" {% if profile.nationality == 'American' %}selected{% endif %}>American</option>
+                <option value="Canadian" {% if profile.nationality == 'Canadian' %}selected{% endif %}>Canadian</option>
+                <option value="Australian" {% if profile.nationality == 'Australian' %}selected{% endif %}>Australian</option>
+                <option value="German" {% if profile.nationality == 'German' %}selected{% endif %}>German</option>
+                <option value="Pakistani" {% if profile.nationality == 'Pakistani' %}selected{% endif %}>Pakistani</option>
+                <option value="Bangladeshi" {% if profile.nationality == 'Bangladeshi' %}selected{% endif %}>Bangladeshi</option>
+                <option value="Filipino" {% if profile.nationality == 'Filipino' %}selected{% endif %}>Filipino</option>
+                <option value="Egyptian" {% if profile.nationality == 'Egyptian' %}selected{% endif %}>Egyptian</option>
+                <option value="Other" {% if profile.nationality == 'Other' %}selected{% endif %}>Other</option>
+                {% if profile.nationality and profile.nationality != 'Indian' and profile.nationality != 'Emirati (UAE)' and profile.nationality != 'Bahraini' and profile.nationality != 'Saudi Arabian' and profile.nationality != 'Omani' and profile.nationality != 'Qatari' and profile.nationality != 'Kuwaiti' and profile.nationality != 'British' and profile.nationality != 'American' and profile.nationality != 'Canadian' and profile.nationality != 'Australian' and profile.nationality != 'German' and profile.nationality != 'Pakistani' and profile.nationality != 'Bangladeshi' and profile.nationality != 'Filipino' and profile.nationality != 'Egyptian' and profile.nationality != 'Other' %}
+                  <option value="{{ profile.nationality }}" selected>{{ profile.nationality }}</option>
+                {% endif %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Country of Residence (Dropdown)</label>
+              <select name="country_of_residence">
+                <option value="">Select Country</option>
+                <option value="India" {% if profile.country_of_residence|lower == 'india' %}selected{% endif %}>India</option>
+                <option value="United Arab Emirates" {% if profile.country_of_residence|lower == 'united arab emirates' or profile.country_of_residence|lower == 'uae' %}selected{% endif %}>United Arab Emirates</option>
+                <option value="Bahrain" {% if profile.country_of_residence|lower == 'bahrain' %}selected{% endif %}>Bahrain</option>
+                <option value="Saudi Arabia" {% if profile.country_of_residence|lower == 'saudi arabia' %}selected{% endif %}>Saudi Arabia</option>
+                <option value="Oman" {% if profile.country_of_residence|lower == 'oman' %}selected{% endif %}>Oman</option>
+                <option value="Qatar" {% if profile.country_of_residence|lower == 'qatar' %}selected{% endif %}>Qatar</option>
+                <option value="Kuwait" {% if profile.country_of_residence|lower == 'kuwait' %}selected{% endif %}>Kuwait</option>
+                <option value="United Kingdom" {% if profile.country_of_residence|lower == 'united kingdom' or profile.country_of_residence|lower == 'uk' %}selected{% endif %}>United Kingdom</option>
+                <option value="United States" {% if profile.country_of_residence|lower == 'united states' or profile.country_of_residence|lower == 'usa' %}selected{% endif %}>United States</option>
+                <option value="Canada" {% if profile.country_of_residence|lower == 'canada' %}selected{% endif %}>Canada</option>
+                <option value="Australia" {% if profile.country_of_residence|lower == 'australia' %}selected{% endif %}>Australia</option>
+                <option value="Germany" {% if profile.country_of_residence|lower == 'germany' %}selected{% endif %}>Germany</option>
+                <option value="Singapore" {% if profile.country_of_residence|lower == 'singapore' %}selected{% endif %}>Singapore</option>
+                <option value="Malaysia" {% if profile.country_of_residence|lower == 'malaysia' %}selected{% endif %}>Malaysia</option>
+                <option value="Other" {% if profile.country_of_residence|lower == 'other' %}selected{% endif %}>Other</option>
+                {% if profile.country_of_residence and profile.country_of_residence|lower != 'india' and profile.country_of_residence|lower != 'united arab emirates' and profile.country_of_residence|lower != 'uae' and profile.country_of_residence|lower != 'bahrain' and profile.country_of_residence|lower != 'saudi arabia' and profile.country_of_residence|lower != 'oman' and profile.country_of_residence|lower != 'qatar' and profile.country_of_residence|lower != 'kuwait' and profile.country_of_residence|lower != 'united kingdom' and profile.country_of_residence|lower != 'uk' and profile.country_of_residence|lower != 'united states' and profile.country_of_residence|lower != 'usa' and profile.country_of_residence|lower != 'canada' and profile.country_of_residence|lower != 'australia' and profile.country_of_residence|lower != 'germany' and profile.country_of_residence|lower != 'singapore' and profile.country_of_residence|lower != 'malaysia' and profile.country_of_residence|lower != 'other' %}
+                  <option value="{{ profile.country_of_residence }}" selected>{{ profile.country_of_residence }}</option>
+                {% endif %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Mobile Number With Country Code <span class="required-star">*</span></label>
+              <input type="text" name="mobile" value="{{ profile.mobile|default:'' }}" required placeholder="e.g. +91 98765 43210 or +971 50 123 4567">
+            </div>
+
+            <div class="form-group">
+              <label>WhatsApp Number (Optional)</label>
+              <input type="text" name="whatsapp_number" value="{{ profile.whatsapp_number|default:'' }}" placeholder="e.g. +91 98765 43210 (Leave blank if same as mobile)">
+            </div>
+
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" name="email" value="{{ profile.user.email|default:'' }}" placeholder="name@example.com">
+            </div>
+
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" name="city" value="{{ profile.city|default:'' }}" placeholder="e.g. Kozhikode, Dubai, Manama, London">
+            </div>
+
+            <div class="form-group">
+              <label>Residential Address</label>
+              <input type="text" name="address" value="{{ profile.address|default:'' }}" placeholder="House, Street, Area">
+            </div>
+
           </div>
         </div>
 
-        <!-- Academic Section -->
-        <div class="form-section-title" style="margin-top: 24px;"><i data-feather="book-open" style="width:14px; height:14px; color:#7c3aed;"></i> Academic Background</div>
-        <div class="edit-form-grid">
-          <div class="form-group">
-            <label>Current / Last School or University</label>
-            <input type="text" name="school_college" value="{{ profile.school_college|default:'' }}" placeholder="Institution name">
+        <!-- SECTION 2: Academic Background -->
+        <div class="form-section-card">
+          <div class="form-section-title">
+            <i data-feather="book-open" style="width:15px; height:15px; color:#7c3aed;"></i>
+            2. Academic Background
           </div>
-          <div class="form-group">
-            <label>Current Education Level</label>
-            <select name="current_education">
-              <option value="">Select Education Level</option>
-              <option value="High School (Grade 9-11)" {% if profile.current_education == 'High School (Grade 9-11)' %}selected{% endif %}>High School (Grade 9-11)</option>
-              <option value="High School Senior (Grade 12)" {% if profile.current_education == 'High School Senior (Grade 12)' or profile.current_education == 'High School Senior' %}selected{% endif %}>High School Senior (Grade 12)</option>
-              <option value="High School Graduate" {% if profile.current_education == 'High School Graduate' %}selected{% endif %}>High School Graduate</option>
-              <option value="Diploma / Vocational" {% if profile.current_education == 'Diploma / Vocational' %}selected{% endif %}>Diploma / Vocational</option>
-              <option value="Undergraduate (Bachelor's Student)" {% if profile.current_education == "Undergraduate (Bachelor's Student)" or profile.current_education == 'Undergraduate' or profile.current_education|lower == 'undergraduate' %}selected{% endif %}>Undergraduate (Bachelor's Student)</option>
-              <option value="Graduate / Bachelor's Completed" {% if profile.current_education == "Graduate / Bachelor's Completed" or profile.current_education|upper == 'GRADUATE' or profile.current_education|lower == 'graduate' %}selected{% endif %}>Graduate / Bachelor's Completed</option>
-              <option value="Postgraduate (Master's Student)" {% if profile.current_education == "Postgraduate (Master's Student)" or profile.current_education == 'Postgraduate' or profile.current_education|lower == 'postgraduate' %}selected{% endif %}>Postgraduate (Master's Student)</option>
-              <option value="Master's Degree Completed" {% if profile.current_education == "Master's Degree Completed" %}selected{% endif %}>Master's Degree Completed</option>
-              <option value="Doctorate / Ph.D." {% if profile.current_education == 'Doctorate / Ph.D.' or profile.current_education == 'PhD' or profile.current_education == 'Doctorate' %}selected{% endif %}>Doctorate / Ph.D.</option>
-              <option value="Working Professional" {% if profile.current_education == 'Working Professional' %}selected{% endif %}>Working Professional</option>
-              <option value="Other" {% if profile.current_education == 'Other' %}selected{% endif %}>Other</option>
-              {% if profile.current_education and profile.current_education != "High School (Grade 9-11)" and profile.current_education != "High School Senior (Grade 12)" and profile.current_education != "High School Senior" and profile.current_education != "High School Graduate" and profile.current_education != "Diploma / Vocational" and profile.current_education != "Undergraduate (Bachelor's Student)" and profile.current_education != "Undergraduate" and profile.current_education != "Graduate / Bachelor's Completed" and profile.current_education != "Graduate" and profile.current_education != "GRADUATE" and profile.current_education != "Postgraduate (Master's Student)" and profile.current_education != "Postgraduate" and profile.current_education != "Master's Degree Completed" and profile.current_education != "Doctorate / Ph.D." and profile.current_education != "PhD" and profile.current_education != "Working Professional" and profile.current_education != "Other" %}
-                <option value="{{ profile.current_education }}" selected>{{ profile.current_education }}</option>
-              {% endif %}
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Expected Graduation Year / Class</label>
-            <input type="text" name="class_year" value="{{ profile.class_year|default:'' }}" placeholder="e.g. 2027">
-          </div>
-          <div class="form-group">
-            <label>Grades / GPA</label>
-            <input type="text" name="grades" value="{{ profile.grades|default:'' }}" placeholder="e.g. 3.8 GPA, 90%">
-          </div>
-          <div class="form-group">
-            <label>English Proficiency</label>
-            <select name="english_proficiency">
-              <option value="">Select Test Status</option>
-              <option value="IELTS" {% if profile.english_proficiency == 'IELTS' %}selected{% endif %}>IELTS</option>
-              <option value="TOEFL" {% if profile.english_proficiency == 'TOEFL' %}selected{% endif %}>TOEFL</option>
-              <option value="Duolingo" {% if profile.english_proficiency == 'Duolingo' %}selected{% endif %}>Duolingo</option>
-              <option value="None" {% if profile.english_proficiency == 'None' %}selected{% endif %}>Not taken yet</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Target Degree Program</label>
-            <select name="preferred_degree">
-              <option value="">Select Target Degree</option>
-              <option value="UG" {% if profile.preferred_degree == 'UG' %}selected{% endif %}>Undergraduate (Bachelor)</option>
-              <option value="PG" {% if profile.preferred_degree == 'PG' %}selected{% endif %}>Postgraduate (Master)</option>
-              <option value="PHD" {% if profile.preferred_degree == 'PHD' %}selected{% endif %}>PhD / Doctorate</option>
-            </select>
-          </div>
-          <div class="form-group" style="grid-column: span 2;">
-            <label>Work Experience &amp; Projects</label>
-            <textarea name="work_experience" rows="3" placeholder="Briefly describe internships, projects, or achievements...">{{ profile.work_experience|default:'' }}</textarea>
+          <div class="edit-form-grid">
+
+            <div class="form-group">
+              <label>Current Education Level (Dropdown)</label>
+              <select name="current_education">
+                <option value="">Select Education Level</option>
+                <option value="High School (Grade 8-10)" {% if profile.current_education == 'High School (Grade 8-10)' or profile.current_education == 'High School (Grade 9-11)' %}selected{% endif %}>High School (Grade 8-10)</option>
+                <option value="Senior Secondary / High School (Grade 11-12)" {% if profile.current_education == 'Senior Secondary / High School (Grade 11-12)' or profile.current_education == 'High School Senior (Grade 12)' or profile.current_education == 'High School Senior' %}selected{% endif %}>Senior Secondary / High School (Grade 11-12)</option>
+                <option value="High School Graduate" {% if profile.current_education == 'High School Graduate' %}selected{% endif %}>High School Graduate</option>
+                <option value="Diploma / Vocational" {% if profile.current_education == 'Diploma / Vocational' %}selected{% endif %}>Diploma / Vocational</option>
+                <option value="Undergraduate (Bachelor's Student)" {% if profile.current_education == "Undergraduate (Bachelor's Student)" or profile.current_education == 'Undergraduate' %}selected{% endif %}>Undergraduate (Bachelor's Student)</option>
+                <option value="Graduate / Bachelor's Completed" {% if profile.current_education == "Graduate / Bachelor's Completed" or profile.current_education|lower == 'graduate' %}selected{% endif %}>Graduate / Bachelor's Completed</option>
+                <option value="Postgraduate (Master's Student)" {% if profile.current_education == "Postgraduate (Master's Student)" or profile.current_education == 'Postgraduate' %}selected{% endif %}>Postgraduate (Master's Student)</option>
+                <option value="Master's Degree Completed" {% if profile.current_education == "Master's Degree Completed" %}selected{% endif %}>Master's Degree Completed</option>
+                <option value="Doctorate / Ph.D." {% if profile.current_education == 'Doctorate / Ph.D.' or profile.current_education == 'PhD' %}selected{% endif %}>Doctorate / Ph.D.</option>
+                <option value="Working Professional" {% if profile.current_education == 'Working Professional' %}selected{% endif %}>Working Professional</option>
+                <option value="Other" {% if profile.current_education == 'Other' %}selected{% endif %}>Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Name of School / Institution (Text)</label>
+              <input type="text" name="school_college" value="{{ profile.school_college|default:'' }}" placeholder="e.g. IHRD College, GEMS Academy, Indian School">
+            </div>
+
+            <div class="form-group">
+              <label>Curriculum (Dropdown)</label>
+              <select name="curriculum">
+                <option value="">Select Curriculum</option>
+                <option value="CBSE" {% if profile.curriculum == 'CBSE' %}selected{% endif %}>CBSE</option>
+                <option value="ICSE" {% if profile.curriculum == 'ICSE' %}selected{% endif %}>ICSE</option>
+                <option value="ISC" {% if profile.curriculum == 'ISC' %}selected{% endif %}>ISC</option>
+                <option value="British" {% if profile.curriculum == 'British' or profile.curriculum == 'British (IGCSE / A-Levels)' %}selected{% endif %}>British (IGCSE / A-Levels)</option>
+                <option value="American" {% if profile.curriculum == 'American' or profile.curriculum == 'American High School' %}selected{% endif %}>American</option>
+                <option value="IB" {% if profile.curriculum == 'IB' or profile.curriculum == 'IB (International Baccalaureate)' %}selected{% endif %}>IB (International Baccalaureate)</option>
+                <option value="State Board" {% if profile.curriculum == 'State Board' %}selected{% endif %}>State Board</option>
+                <option value="Other" {% if profile.curriculum == 'Other' %}selected{% endif %}>Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Current Grade (Class Dropdown)</label>
+              <select name="current_grade">
+                <option value="">Select Class / Grade</option>
+                <option value="Grade 8" {% if profile.current_grade == 'Grade 8' %}selected{% endif %}>Grade 8</option>
+                <option value="Grade 9" {% if profile.current_grade == 'Grade 9' %}selected{% endif %}>Grade 9</option>
+                <option value="Grade 10" {% if profile.current_grade == 'Grade 10' %}selected{% endif %}>Grade 10</option>
+                <option value="Grade 11" {% if profile.current_grade == 'Grade 11' %}selected{% endif %}>Grade 11</option>
+                <option value="Grade 12" {% if profile.current_grade == 'Grade 12' %}selected{% endif %}>Grade 12</option>
+                <option value="Undergraduate Year 1" {% if profile.current_grade == 'Undergraduate Year 1' %}selected{% endif %}>Undergraduate Year 1</option>
+                <option value="Undergraduate Year 2" {% if profile.current_grade == 'Undergraduate Year 2' %}selected{% endif %}>Undergraduate Year 2</option>
+                <option value="Undergraduate Year 3" {% if profile.current_grade == 'Undergraduate Year 3' %}selected{% endif %}>Undergraduate Year 3</option>
+                <option value="Undergraduate Final Year" {% if profile.current_grade == 'Undergraduate Final Year' %}selected{% endif %}>Undergraduate Final Year</option>
+                <option value="Postgraduate" {% if profile.current_grade == 'Postgraduate' %}selected{% endif %}>Postgraduate</option>
+                <option value="Working / Graduated" {% if profile.current_grade == 'Working / Graduated' %}selected{% endif %}>Working / Graduated</option>
+                <option value="Other" {% if profile.current_grade == 'Other' %}selected{% endif %}>Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Expected Year of Graduation (Dropdown)</label>
+              <select name="class_year">
+                <option value="">Select Expected Year</option>
+                {% for year in "2024,2025,2026,2027,2028,2029,2030,2031,2032"|make_list %}
+                {% endfor %}
+                <option value="2024" {% if profile.class_year == '2024' %}selected{% endif %}>2024</option>
+                <option value="2025" {% if profile.class_year == '2025' %}selected{% endif %}>2025</option>
+                <option value="2026" {% if profile.class_year == '2026' %}selected{% endif %}>2026</option>
+                <option value="2027" {% if profile.class_year == '2027' %}selected{% endif %}>2027</option>
+                <option value="2028" {% if profile.class_year == '2028' %}selected{% endif %}>2028</option>
+                <option value="2029" {% if profile.class_year == '2029' %}selected{% endif %}>2029</option>
+                <option value="2030" {% if profile.class_year == '2030' %}selected{% endif %}>2030</option>
+                <option value="2031+" {% if profile.class_year == '2031+' or profile.class_year == '2031' %}selected{% endif %}>2031+</option>
+                {% if profile.class_year and profile.class_year != '2024' and profile.class_year != '2025' and profile.class_year != '2026' and profile.class_year != '2027' and profile.class_year != '2028' and profile.class_year != '2029' and profile.class_year != '2030' and profile.class_year != '2031+' and profile.class_year != '2031' %}
+                  <option value="{{ profile.class_year }}" selected>{{ profile.class_year }}</option>
+                {% endif %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Academic Stream</label>
+              <select name="academic_stream">
+                <option value="">Select Stream</option>
+                <option value="Science (PCM - Physics, Chemistry, Math)" {% if profile.academic_stream == 'Science (PCM - Physics, Chemistry, Math)' or profile.academic_stream == 'Science (PCM)' %}selected{% endif %}>Science (PCM - Physics, Chemistry, Math)</option>
+                <option value="Science (PCB - Physics, Chemistry, Biology)" {% if profile.academic_stream == 'Science (PCB - Physics, Chemistry, Biology)' or profile.academic_stream == 'Science (PCB)' %}selected{% endif %}>Science (PCB - Physics, Chemistry, Biology)</option>
+                <option value="Science (PCMB - Math & Biology)" {% if profile.academic_stream == 'Science (PCMB - Math & Biology)' or profile.academic_stream == 'Science (PCMB)' %}selected{% endif %}>Science (PCMB - Math & Biology)</option>
+                <option value="Commerce with Mathematics" {% if profile.academic_stream == 'Commerce with Mathematics' or profile.academic_stream == 'Commerce' %}selected{% endif %}>Commerce with Mathematics</option>
+                <option value="Commerce without Mathematics" {% if profile.academic_stream == 'Commerce without Mathematics' %}selected{% endif %}>Commerce without Mathematics</option>
+                <option value="Humanities / Arts" {% if profile.academic_stream == 'Humanities / Arts' or profile.academic_stream == 'Humanities' %}selected{% endif %}>Humanities / Arts</option>
+                <option value="Computer Science / IT" {% if profile.academic_stream == 'Computer Science / IT' or profile.academic_stream == 'Computer Science' %}selected{% endif %}>Computer Science / IT</option>
+                <option value="Engineering & Technology" {% if profile.academic_stream == 'Engineering & Technology' or profile.academic_stream == 'Engineering' %}selected{% endif %}>Engineering & Technology</option>
+                <option value="Medicine & Healthcare" {% if profile.academic_stream == 'Medicine & Healthcare' %}selected{% endif %}>Medicine & Healthcare</option>
+                <option value="Other" {% if profile.academic_stream == 'Other' %}selected{% endif %}>Other</option>
+                {% if profile.academic_stream and profile.academic_stream != 'Science (PCM - Physics, Chemistry, Math)' and profile.academic_stream != 'Science (PCM)' and profile.academic_stream != 'Science (PCB - Physics, Chemistry, Biology)' and profile.academic_stream != 'Science (PCB)' and profile.academic_stream != 'Science (PCMB - Math & Biology)' and profile.academic_stream != 'Science (PCMB)' and profile.academic_stream != 'Commerce with Mathematics' and profile.academic_stream != 'Commerce' and profile.academic_stream != 'Commerce without Mathematics' and profile.academic_stream != 'Humanities / Arts' and profile.academic_stream != 'Humanities' and profile.academic_stream != 'Computer Science / IT' and profile.academic_stream != 'Computer Science' and profile.academic_stream != 'Engineering & Technology' and profile.academic_stream != 'Engineering' and profile.academic_stream != 'Medicine & Healthcare' and profile.academic_stream != 'Other' %}
+                  <option value="{{ profile.academic_stream }}" selected>{{ profile.academic_stream }}</option>
+                {% endif %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Grades / GPA</label>
+              <input type="text" name="grades" value="{{ profile.grades|default:'' }}" placeholder="e.g. 3.8 GPA, 92%, A*AA">
+            </div>
+
+            <div class="form-group">
+              <label>English Proficiency</label>
+              <select name="english_proficiency">
+                <option value="">Select Status</option>
+                <option value="IELTS" {% if profile.english_proficiency == 'IELTS' %}selected{% endif %}>IELTS</option>
+                <option value="TOEFL" {% if profile.english_proficiency == 'TOEFL' %}selected{% endif %}>TOEFL</option>
+                <option value="Duolingo" {% if profile.english_proficiency == 'Duolingo' %}selected{% endif %}>Duolingo</option>
+                <option value="PTE" {% if profile.english_proficiency == 'PTE' %}selected{% endif %}>PTE Academic</option>
+                <option value="None" {% if profile.english_proficiency == 'None' or not profile.english_proficiency %}selected{% endif %}>Not taken yet</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="grid-column: span 2;">
+              <label>Work Experience / Internships / Projects</label>
+              <textarea name="work_experience" rows="2" placeholder="Briefly describe internships, academic projects, or extracurricular achievements...">{{ profile.work_experience|default:'' }}</textarea>
+            </div>
+
           </div>
         </div>
 
+        <!-- SECTION 3: Higher Education Preferences -->
+        <div class="form-section-card">
+          <div class="form-section-title">
+            <i data-feather="compass" style="width:15px; height:15px; color:#10b981;"></i>
+            3. Higher Education Preferences
+          </div>
+          <div class="edit-form-grid">
+
+            <div class="form-group">
+              <label>Preferred Study Destination (Country)</label>
+              <select name="preferred_destinations">
+                <option value="">Select Destination</option>
+                <option value="United Arab Emirates" {% if profile.preferred_destinations == 'United Arab Emirates' or profile.preferred_country == 'United Arab Emirates' or profile.preferred_country == 'UAE' %}selected{% endif %}>United Arab Emirates (UAE)</option>
+                <option value="United Kingdom" {% if profile.preferred_destinations == 'United Kingdom' or profile.preferred_country == 'United Kingdom' or profile.preferred_country == 'UK' %}selected{% endif %}>United Kingdom (UK)</option>
+                <option value="United States" {% if profile.preferred_destinations == 'United States' or profile.preferred_country == 'United States' or profile.preferred_country == 'USA' %}selected{% endif %}>United States (USA)</option>
+                <option value="Canada" {% if profile.preferred_destinations == 'Canada' or profile.preferred_country == 'Canada' %}selected{% endif %}>Canada</option>
+                <option value="Australia" {% if profile.preferred_destinations == 'Australia' or profile.preferred_country == 'Australia' %}selected{% endif %}>Australia</option>
+                <option value="Germany" {% if profile.preferred_destinations == 'Germany' or profile.preferred_country == 'Germany' %}selected{% endif %}>Germany / Europe</option>
+                <option value="Ireland" {% if profile.preferred_destinations == 'Ireland' or profile.preferred_country == 'Ireland' %}selected{% endif %}>Ireland</option>
+                <option value="Singapore" {% if profile.preferred_destinations == 'Singapore' or profile.preferred_country == 'Singapore' %}selected{% endif %}>Singapore</option>
+                <option value="Malaysia" {% if profile.preferred_destinations == 'Malaysia' or profile.preferred_country == 'Malaysia' %}selected{% endif %}>Malaysia</option>
+                <option value="India" {% if profile.preferred_destinations == 'India' or profile.preferred_country == 'India' %}selected{% endif %}>India</option>
+                <option value="Other" {% if profile.preferred_destinations == 'Other' or profile.preferred_country == 'Other' %}selected{% endif %}>Other Destinations</option>
+                {% if profile.preferred_destinations and profile.preferred_destinations != 'United Arab Emirates' and profile.preferred_destinations != 'United Kingdom' and profile.preferred_destinations != 'United States' and profile.preferred_destinations != 'Canada' and profile.preferred_destinations != 'Australia' and profile.preferred_destinations != 'Germany' and profile.preferred_destinations != 'Ireland' and profile.preferred_destinations != 'Singapore' and profile.preferred_destinations != 'Malaysia' and profile.preferred_destinations != 'India' and profile.preferred_destinations != 'Other' %}
+                  <option value="{{ profile.preferred_destinations }}" selected>{{ profile.preferred_destinations }}</option>
+                {% endif %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Preferred Degree (Dropdown)</label>
+              <select name="preferred_degree">
+                <option value="">Select Preferred Degree</option>
+                <option value="Diploma" {% if profile.preferred_degree == 'Diploma' %}selected{% endif %}>Diploma</option>
+                <option value="Bachelor's" {% if profile.preferred_degree == "Bachelor's" or profile.preferred_degree == 'UG' %}selected{% endif %}>Bachelor's</option>
+                <option value="Master's" {% if profile.preferred_degree == "Master's" or profile.preferred_degree == 'PG' %}selected{% endif %}>Master's</option>
+                <option value="PhD" {% if profile.preferred_degree == 'PhD' or profile.preferred_degree == 'PHD' %}selected{% endif %}>PhD</option>
+                <option value="Not Decided" {% if profile.preferred_degree == 'Not Decided' or not profile.preferred_degree %}selected{% endif %}>Not Decided</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Interested in Scholarships?</label>
+              <select name="interested_in_scholarships">
+                <option value="">Select Option</option>
+                <option value="Yes" {% if profile.interested_in_scholarships == 'Yes' %}selected{% endif %}>Yes</option>
+                <option value="No" {% if profile.interested_in_scholarships == 'No' %}selected{% endif %}>No</option>
+                <option value="Would like to know more" {% if profile.interested_in_scholarships == 'Would like to know more' %}selected{% endif %}>Would like to know more</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Interested in Career Counselling?</label>
+              <select name="interested_in_counselling">
+                <option value="">Select Option</option>
+                <option value="Yes" {% if profile.interested_in_counselling == 'Yes' %}selected{% endif %}>Yes</option>
+                <option value="No" {% if profile.interested_in_counselling == 'No' %}selected{% endif %}>No</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Have You Shortlisted Any Universities?</label>
+              <select name="has_shortlisted_universities" id="shortlistSelect" onchange="toggleShortlistInput()">
+                <option value="No" {% if profile.has_shortlisted_universities == 'No' or not profile.has_shortlisted_universities %}selected{% endif %}>No</option>
+                <option value="Yes" {% if profile.has_shortlisted_universities == 'Yes' %}selected{% endif %}>Yes</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="shortlistTextGroup" style="{% if profile.has_shortlisted_universities != 'Yes' %}display: none;{% endif %}">
+              <label>If Yes, Which Universities?</label>
+              <input type="text" name="shortlisted_universities_text" id="shortlistTextInput" value="{{ profile.shortlisted_universities_text|default:'' }}" placeholder="e.g. Oxford, Stanford, University of Birmingham Dubai, Bahrain Univ">
+            </div>
+
+            <!-- Multi-select Preferred Course / Field of Study -->
+            <div class="form-group" style="grid-column: span 2;">
+              <label>Preferred Course / Field of Study (Multiple Selection - Click to Toggle)</label>
+              <div class="pill-checkbox-group">
+                {% for course in "Computer Science & AI,Information Technology & Cyber,Engineering (Mechanical/Civil/Electrical),Medicine & MBBS Healthcare,Business Administration & Management,Finance & Accounting & Economics,Data Science & Analytics,Law & Legal Studies,Architecture & Design,Biotechnology & Life Sciences,Psychology & Social Sciences,Aviation & Aeronautical,Media & Communications,Hospitality & Tourism,Fine Arts & Design,Other"|make_list %}
+                {% endfor %}
+
+                {% with cur_courses=profile.preferred_courses_list %}
+                <label class="pill-check-label {% if 'Computer Science & AI' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Computer Science & AI" {% if 'Computer Science & AI' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Computer Science &amp; AI
+                </label>
+
+                <label class="pill-check-label {% if 'Engineering' in cur_courses or 'Engineering (Mechanical/Civil/Electrical)' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Engineering" {% if 'Engineering' in cur_courses or 'Engineering (Mechanical/Civil/Electrical)' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Engineering (Robotics / Mech / Civil)
+                </label>
+
+                <label class="pill-check-label {% if 'Medicine & MBBS Healthcare' in cur_courses or 'Medicine & Healthcare' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Medicine & Healthcare" {% if 'Medicine & MBBS Healthcare' in cur_courses or 'Medicine & Healthcare' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Medicine &amp; Healthcare
+                </label>
+
+                <label class="pill-check-label {% if 'Business Administration & Management' in cur_courses or 'Business Administration' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Business Administration & Management" {% if 'Business Administration & Management' in cur_courses or 'Business Administration' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Business Administration &amp; Management
+                </label>
+
+                <label class="pill-check-label {% if 'Finance & Accounting' in cur_courses or 'Finance & Accounting & Economics' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Finance & Accounting" {% if 'Finance & Accounting' in cur_courses or 'Finance & Accounting & Economics' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Finance &amp; Accounting
+                </label>
+
+                <label class="pill-check-label {% if 'Data Science & Analytics' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Data Science & Analytics" {% if 'Data Science & Analytics' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Data Science &amp; Analytics
+                </label>
+
+                <label class="pill-check-label {% if 'Law & Legal Studies' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Law & Legal Studies" {% if 'Law & Legal Studies' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Law &amp; Legal Studies
+                </label>
+
+                <label class="pill-check-label {% if 'Architecture & Design' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Architecture & Design" {% if 'Architecture & Design' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Architecture &amp; Design
+                </label>
+
+                <label class="pill-check-label {% if 'Biotechnology & Life Sciences' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Biotechnology & Life Sciences" {% if 'Biotechnology & Life Sciences' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Biotechnology &amp; Life Sciences
+                </label>
+
+                <label class="pill-check-label {% if 'Psychology & Social Sciences' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Psychology & Social Sciences" {% if 'Psychology & Social Sciences' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Psychology &amp; Social Sciences
+                </label>
+
+                <label class="pill-check-label {% if 'Aviation & Aeronautical' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Aviation & Aeronautical" {% if 'Aviation & Aeronautical' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Aviation &amp; Pilot Training
+                </label>
+
+                <label class="pill-check-label {% if 'Media & Communications' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Media & Communications" {% if 'Media & Communications' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Media &amp; Communications
+                </label>
+
+                <label class="pill-check-label {% if 'Hospitality & Tourism' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Hospitality & Tourism" {% if 'Hospitality & Tourism' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Hospitality &amp; Culinary
+                </label>
+
+                <label class="pill-check-label {% if 'Fine Arts & Design' in cur_courses %}selected{% endif %}">
+                  <input type="checkbox" name="preferred_courses" value="Fine Arts & Design" {% if 'Fine Arts & Design' in cur_courses %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Fine Arts &amp; Fashion
+                </label>
+                {% endwith %}
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SECTION 4: KNOVA Attendance & Survey -->
+        <div class="form-section-card">
+          <div class="form-section-title">
+            <i data-feather="users" style="width:15px; height:15px; color:#d97706;"></i>
+            4. KNOVA Expo Attendance &amp; Discovery
+          </div>
+          <div class="edit-form-grid">
+
+            <div class="form-group">
+              <label>Who Are You Attending With? (Dropdown)</label>
+              <select name="attending_with">
+                <option value="">Select Option</option>
+                <option value="Parent" {% if profile.attending_with == 'Parent' %}selected{% endif %}>Parent</option>
+                <option value="Guardian" {% if profile.attending_with == 'Guardian' %}selected{% endif %}>Guardian</option>
+                <option value="School" {% if profile.attending_with == 'School' %}selected{% endif %}>School</option>
+                <option value="Friends" {% if profile.attending_with == 'Friends' %}selected{% endif %}>Friends</option>
+                <option value="Alone" {% if profile.attending_with == 'Alone' %}selected{% endif %}>Alone</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Number of Accompanying Family Members (Dropdown)</label>
+              <select name="accompanying_members_count">
+                <option value="0" {% if profile.accompanying_members_count == '0' or not profile.accompanying_members_count %}selected{% endif %}>0</option>
+                <option value="1" {% if profile.accompanying_members_count == '1' %}selected{% endif %}>1</option>
+                <option value="2" {% if profile.accompanying_members_count == '2' %}selected{% endif %}>2</option>
+                <option value="3" {% if profile.accompanying_members_count == '3' %}selected{% endif %}>3</option>
+                <option value="4" {% if profile.accompanying_members_count == '4' %}selected{% endif %}>4</option>
+                <option value="5+" {% if profile.accompanying_members_count == '5+' or profile.accompanying_members_count == '5' %}selected{% endif %}>5+</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>How Did You Hear About KNOVA? (Dropdown)</label>
+              <select name="hear_about_knova">
+                <option value="">Select Channel</option>
+                <option value="Social Media" {% if profile.hear_about_knova == 'Social Media' %}selected{% endif %}>Social Media</option>
+                <option value="School" {% if profile.hear_about_knova == 'School' %}selected{% endif %}>School</option>
+                <option value="Friends" {% if profile.hear_about_knova == 'Friends' %}selected{% endif %}>Friends</option>
+                <option value="Website" {% if profile.hear_about_knova == 'Website' %}selected{% endif %}>Website</option>
+                <option value="Radio" {% if profile.hear_about_knova == 'Radio' %}selected{% endif %}>Radio</option>
+                <option value="Other" {% if profile.hear_about_knova == 'Other' %}selected{% endif %}>Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>What is Your Hobbies (Text)</label>
+              <input type="text" name="hobbies" value="{{ profile.hobbies|default:'' }}" placeholder="e.g. Coding, Football, Music, Robotics, Debate, Chess, Reading">
+            </div>
+
+            <!-- Multi-select What would you like to explore -->
+            <div class="form-group" style="grid-column: span 2;">
+              <label>What Would You Like to Explore at KNOVA? (Multiple Selection - Click to Toggle)</label>
+              <div class="pill-checkbox-group">
+                {% with cur_explore=profile.explore_interests_list %}
+                <label class="pill-check-label {% if 'University Admissions & Programs' in cur_explore or 'University Admissions' in cur_explore %}selected{% endif %}">
+                  <input type="checkbox" name="explore_interests" value="University Admissions & Programs" {% if 'University Admissions & Programs' in cur_explore or 'University Admissions' in cur_explore %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> University Admissions &amp; Programs
+                </label>
+
+                <label class="pill-check-label {% if 'Scholarships & Grants' in cur_explore or 'Scholarships' in cur_explore %}selected{% endif %}">
+                  <input type="checkbox" name="explore_interests" value="Scholarships & Grants" {% if 'Scholarships & Grants' in cur_explore or 'Scholarships' in cur_explore %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Scholarships &amp; Financial Grants
+                </label>
+
+                <label class="pill-check-label {% if '1-on-1 Dean & Faculty Guidance' in cur_explore or '1-on-1 Dean' in cur_explore %}selected{% endif %}">
+                  <input type="checkbox" name="explore_interests" value="1-on-1 Dean & Faculty Guidance" {% if '1-on-1 Dean & Faculty Guidance' in cur_explore or '1-on-1 Dean' in cur_explore %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> 1-on-1 Dean &amp; Faculty Guidance
+                </label>
+
+                <label class="pill-check-label {% if 'Career Counselling & Aptitude' in cur_explore or 'Career Counselling' in cur_explore %}selected{% endif %}">
+                  <input type="checkbox" name="explore_interests" value="Career Counselling & Aptitude" {% if 'Career Counselling & Aptitude' in cur_explore or 'Career Counselling' in cur_explore %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Career Counselling &amp; Aptitude
+                </label>
+
+                <label class="pill-check-label {% if 'Visa & Student Mobility Advice' in cur_explore or 'Visa' in cur_explore %}selected{% endif %}">
+                  <input type="checkbox" name="explore_interests" value="Visa & Student Mobility Advice" {% if 'Visa & Student Mobility Advice' in cur_explore or 'Visa' in cur_explore %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Visa &amp; Student Mobility Advice
+                </label>
+
+                <label class="pill-check-label {% if 'KNOVA Tech & AI Competitions' in cur_explore or 'Tech Contests' in cur_explore %}selected{% endif %}">
+                  <input type="checkbox" name="explore_interests" value="KNOVA Tech & AI Competitions" {% if 'KNOVA Tech & AI Competitions' in cur_explore or 'Tech Contests' in cur_explore %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> KNOVA Tech &amp; AI Competitions
+                </label>
+
+                <label class="pill-check-label {% if 'Spot Application & Offers' in cur_explore or 'Spot Assessment' in cur_explore %}selected{% endif %}">
+                  <input type="checkbox" name="explore_interests" value="Spot Application & Offers" {% if 'Spot Application & Offers' in cur_explore or 'Spot Assessment' in cur_explore %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Spot Application &amp; Offers
+                </label>
+
+                <label class="pill-check-label {% if 'Campus Life & Housing' in cur_explore %}selected{% endif %}">
+                  <input type="checkbox" name="explore_interests" value="Campus Life & Housing" {% if 'Campus Life & Housing' in cur_explore %}checked{% endif %} onchange="togglePill(this)">
+                  <i data-feather="check" class="pill-check-icon"></i> Campus Life &amp; Accommodation
+                </label>
+                {% endwith %}
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Form Submit & Cancel Actions -->
         <div class="form-actions">
           <button type="button" class="btn-cancel-edit" onclick="toggleEditMode()">Cancel</button>
           <button type="submit" class="btn-save-profile">
-            <i data-feather="check" style="width: 14px; height: 14px;"></i> Save Profile Changes
+            <i data-feather="check" style="width: 15px; height: 15px;"></i> Save &amp; Update Profile
           </button>
         </div>
       </form>
@@ -730,6 +1373,32 @@ function toggleEditMode() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
+}
+
+function toggleShortlistInput() {
+  const select = document.getElementById('shortlistSelect');
+  const group = document.getElementById('shortlistTextGroup');
+  if (select && group) {
+    if (select.value === 'Yes') {
+      group.style.display = 'flex';
+      const input = document.getElementById('shortlistTextInput');
+      if (input) input.focus();
+    } else {
+      group.style.display = 'none';
+    }
+  }
+}
+
+function togglePill(checkbox) {
+  const label = checkbox.closest('.pill-check-label');
+  if (checkbox.checked) {
+    label.classList.add('selected');
+  } else {
+    label.classList.remove('selected');
+  }
   if (typeof feather !== 'undefined') {
     feather.replace();
   }
