@@ -2335,7 +2335,7 @@
               <h3 style="margin: 0 0 4px 0;">1. Visit 3 Universities</h3>
 
               <p class="mission-desc" style="display: block; margin: 6px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.45;">
-                Visit university booths at the expo. Show your Student ID to the university representative who will check you in at their dashboard. (3 university visits needed).
+                Visit university booths at the expo. Show your Student Badge QR code to the university representative who will scan and check you in at their booth. (3 university visits needed).
               </p>
 
             </div>
@@ -2362,22 +2362,22 @@
                 <span class="status-pill status-ready" style="background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe;" id="uniVisitedStatus">
                   &#10004; Unlimited (Elite)
                 </span>
-                <button type="button" onclick="openSimulateCheckinModal()" class="btn-card-action" style="background: linear-gradient(135deg, #7c3aed, #6366f1);" id="cardMission1Btn">
-                  <i class="ti ti-plus"></i> Visit More Booths
+                <button type="button" onclick="openBadgeQrModal()" class="btn-card-action" style="background: linear-gradient(135deg, #7c3aed, #6366f1);" id="cardMission1Btn">
+                  <i class="ti ti-qrcode"></i> View QR
                 </button>
               {% elif passport.universities_visited_count >= 3 %}
                 <span class="status-pill status-ready" id="uniVisitedStatus">
                   &#10004; 3/3 Visited
                 </span>
-                <button type="button" onclick="openVisitedUniversitiesModal()" class="btn-card-action btn-completed" id="cardMission1Btn" title="Standard 3-booth limit reached. Complete remaining tasks to unlock Elite Pass for unlimited visits!">
-                  <i class="ti ti-check"></i> Standard Limit (3/3)
+                <button type="button" onclick="openBadgeQrModal()" class="btn-card-action btn-completed" id="cardMission1Btn" title="View your Badge QR code">
+                  <i class="ti ti-qrcode"></i> View QR
                 </button>
               {% else %}
                 <span class="status-pill status-ready" id="uniVisitedStatus">
                   {{ passport.universities_visited_count }}/3 Visited
                 </span>
-                <button type="button" onclick="openSimulateCheckinModal()" class="btn-card-action" id="cardMission1Btn">
-                  <i class="ti ti-layout-grid"></i> Check In (+10)
+                <button type="button" onclick="openBadgeQrModal()" class="btn-card-action" id="cardMission1Btn">
+                  <i class="ti ti-qrcode"></i> View QR
                 </button>
               {% endif %}
             </div>
@@ -3748,63 +3748,7 @@
 
 </div>
 
-<!-- Simulate University Check-in Modal (for Demo / Testers) -->
 
-<div id="simulateCheckinModal" class="ch-modal-overlay">
-
-  <div class="ch-modal-box" style="max-width: 440px;">
-
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-
-      <h3 style="margin: 0; font-size: 16px; font-weight: 850; color: #0f172a; display: flex; align-items: center; gap: 6px;">
-
-        <i class="ti ti-building-arch" style="color: #0f172a;"></i> Simulate Booth Check-In
-
-      </h3>
-
-      <button onclick="closeModal('simulateCheckinModal')" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #64748b;">&times;</button>
-
-    </div>
-
-    {% if not passport.is_elite_pass and passport.universities_visited_count >= 3 %}
-    <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 12px; color: #92400e; line-height: 1.4;">
-      <strong>⚠️ Standard Pass Limit Reached (3/3 Booths):</strong><br>
-      You have visited 3 university booths on your Standard Pass. Complete all remaining challenge missions (Aptitude Exam, Keynote Seminar, Expert Counselling, AI Quiz, Logic Puzzle) to upgrade to the <strong>Elite Pass</strong> and unlock unlimited booth visits!
-    </div>
-    {% endif %}
-
-    <p style="font-size: 12px; color: #64748b; margin: 0 0 12px 0; line-height: 1.4;">
-
-      Simulate a university representative checking in your badge (<strong>{{ passport.badge_id }}</strong>) at their booth dashboard:
-    </p>
-
-    <div style="margin-bottom: 12px;">
-
-      <label style="font-size: 11px; font-weight: 700; color: #334155; text-transform: uppercase; margin-bottom: 4px; display: block;">Select University Booth:</label>
-
-      <select id="simUniSelect" style="width: 100%; padding: 9px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 12.5px; color: #0f172a;">
-
-        {% for u in universities %}
-
-          <option value="{{ u.name }}">{{ u.name }}</option>
-
-        {% endfor %}
-
-      </select>
-
-    </div>
-
-    <div style="display: flex; justify-content: flex-end; gap: 8px;">
-
-      <button type="button" onclick="closeModal('simulateCheckinModal')" class="btn-quick-action btn-quick-ghost">Cancel</button>
-
-      <button type="button" onclick="submitSimulateCheckin()" class="btn-action-primary" style="width: auto; padding: 8px 16px;">Simulate Check-In (+10 Pts)</button>
-
-    </div>
-
-  </div>
-
-</div>
 
 <!-- 6. Seminar Attendance QR Punching Modal -->
 
@@ -4882,8 +4826,8 @@
       const m1Btn = document.getElementById('cardMission1Btn');
       if (m1Btn) {
         m1Btn.style.background = 'linear-gradient(135deg, #7c3aed, #6366f1)';
-        m1Btn.innerHTML = '<i class="ti ti-plus"></i> Visit More Booths';
-        m1Btn.onclick = openSimulateCheckinModal;
+        m1Btn.innerHTML = '<i class="ti ti-qrcode"></i> View QR';
+        m1Btn.onclick = openBadgeQrModal;
       }
     }
 
@@ -4910,13 +4854,14 @@
         if (uvStatus) uvStatus.innerHTML = '&#10004; Complete';
         const actionBox = document.getElementById('cardMission1Action');
         if (actionBox) {
-          actionBox.innerHTML = '<div class="btn-action-completed">&#10004; 3 University Visits Verified (+30 Pts)</div>';
+          actionBox.innerHTML = '<span class="status-pill status-ready" id="uniVisitedStatus">&#10004; 3/3 Visited</span><button type="button" onclick="openBadgeQrModal()" class="btn-card-action btn-completed" id="cardMission1Btn" title="View your Badge QR code"><i class="ti ti-qrcode"></i> View QR</button>';
         }
 
         const m1Btn = document.getElementById('cardMission1Btn');
         if (m1Btn) {
           m1Btn.className = 'btn-card-action btn-completed';
-          m1Btn.innerHTML = '<i class="ti ti-check"></i> 3 Visited (+30)';
+          m1Btn.innerHTML = '<i class="ti ti-qrcode"></i> View QR';
+          m1Btn.onclick = openBadgeQrModal;
         }
 
       } else {
@@ -5229,21 +5174,15 @@
   }
 
   function openSimulateCheckinModal() {
-    openModal('simulateCheckinModal');
+    openBadgeQrModal();
   }
 
   function submitSimulateCheckin() {
-    const uniSelect = document.getElementById('simUniSelect');
-    if (!uniSelect) return;
-    const uni = uniSelect.value;
-    closeModal('simulateCheckinModal');
-    triggerChallengeAction({ action: 'visit_university', university_name: uni });
+    openBadgeQrModal();
   }
 
   function logUniversityVisit() {
-    const uniSelect = document.getElementById('simUniSelect');
-    const uni = uniSelect ? uniSelect.value : 'University Booth';
-    triggerChallengeAction({ action: 'visit_university', university_name: uni });
+    openBadgeQrModal();
   }
 
   function submitQrScan(e) {
