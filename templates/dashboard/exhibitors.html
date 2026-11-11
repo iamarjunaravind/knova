@@ -188,21 +188,23 @@
 
           <!-- Column 2: Booth Allocation -->
           <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
-            {% if ex.booth %}
+            {% if ex.booth or ex.university.booth %}
+              {% with b=ex.booth|default:ex.university.booth %}
               <div style="display: flex; flex-direction: column; gap: 4px;">
                 <div style="display: inline-flex; align-items: center; gap: 6px;">
                   <span style="background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; font-weight: 800; font-size: 12px; padding: 3px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px;">
-                    <i data-feather="box" style="width: 12px; height: 12px; color: #4f46e5;"></i> {{ ex.booth.booth_number }}
+                    <i data-feather="box" style="width: 12px; height: 12px; color: #4f46e5;"></i> {{ b.booth_number }}
                   </span>
-                  <button type="button" onclick="openBoothModal('{{ ex.pk }}', '{{ ex.company_name|escapejs }}', '{{ ex.booth.booth_number|escapejs }}', '{{ ex.booth.hall|escapejs }}')" 
+                  <button type="button" onclick="openBoothModal('{{ ex.pk }}', '{{ ex.company_name|escapejs }}', '{{ b.booth_number|escapejs }}', '{{ b.hall|escapejs }}')" 
                           style="background: #ffffff; border: 1px solid #cbd5e1; color: #64748b; cursor: pointer; padding: 3px 6px; border-radius: 4px; display: inline-flex; align-items: center;" title="Change Booth">
                     <i data-feather="edit" style="width: 11px; height: 11px;"></i>
                   </button>
                 </div>
                 <div style="font-size: 11px; color: #64748b; font-weight: 500;">
-                  <i data-feather="map-pin" style="width: 10px; height: 10px; vertical-align: middle; color: #94a3b8;"></i> {{ ex.booth.hall|default:"Hall 1 - Global Pavilion" }}
+                  <i data-feather="map-pin" style="width: 10px; height: 10px; vertical-align: middle; color: #94a3b8;"></i> {{ b.hall|default:"Hall 1 - Global Pavilion" }}
                 </div>
               </div>
+              {% endwith %}
             {% else %}
               <div style="display: inline-flex; align-items: center; gap: 8px;">
                 <span style="background: #f8fafc; color: #94a3b8; border: 1px solid #e2e8f0; font-weight: 600; font-size: 11px; padding: 3px 8px; border-radius: 6px;">
@@ -299,57 +301,200 @@
 </div>
 
 <!-- Modal for Quick Booth Allocation -->
-<div id="boothModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background:rgba(15, 23, 42, 0.6); align-items:center; justify-content:center; backdrop-filter:blur(3px);">
-  <div style="background:#ffffff; border-radius:14px; width:90%; max-width:440px; box-shadow:0 20px 25px -5px rgba(0, 0, 0, 0.2); border:1px solid #e2e8f0; overflow:hidden;">
-    <div style="padding:18px 20px; border-bottom:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center; background:#f8fafc;">
-      <div style="display:flex; align-items:center; gap:8px;">
-        <i data-feather="box" style="width:18px; height:18px; color:#4f46e5;"></i>
-        <h4 style="margin:0; font-size:15px; font-weight:700; color:#0f172a;">Allocate Expo Booth</h4>
+<div id="boothModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background:rgba(15, 23, 42, 0.65); align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+  <div style="background:#ffffff; border-radius:16px; width:92%; max-width:480px; box-shadow:0 25px 50px -12px rgba(15, 23, 42, 0.25); border:1px solid #e2e8f0; overflow:hidden; animation: fadeInScale 0.15s ease-out;">
+    <div style="padding:18px 22px; border-bottom:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center; background:#f8fafc;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:34px; height:34px; border-radius:8px; background:#eff6ff; display:flex; align-items:center; justify-content:center; color:#2563eb;">
+          <i data-feather="box" style="width:18px; height:18px;"></i>
+        </div>
+        <div>
+          <h4 style="margin:0; font-size:15px; font-weight:800; color:#0f172a;">Allocate Expo Booth</h4>
+          <span style="font-size:11.5px; color:#64748b;">Floor space assignment & pavilion</span>
+        </div>
       </div>
-      <button type="button" onclick="closeBoothModal()" style="background:none; border:none; font-size:18px; color:#94a3b8; cursor:pointer; line-height:1;">&times;</button>
+      <button type="button" onclick="closeBoothModal()" style="background:none; border:none; font-size:22px; color:#94a3b8; cursor:pointer; line-height:1; padding:4px;" title="Close">&times;</button>
     </div>
     
-    <form id="boothAllocationForm" method="POST" action="" style="padding:20px; display:flex; flex-direction:column; gap:16px;">
+    <form id="boothAllocationForm" method="POST" action="" style="padding:22px; display:flex; flex-direction:column; gap:16px;">
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ request.get_full_path }}">
       
-      <div>
-        <label style="font-size:12px; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Institution</label>
-        <div id="modalExhibitorName" style="font-weight:700; font-size:14px; color:#0f172a; margin-top:4px;"></div>
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 14px;">
+        <label style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:2px;">Exhibiting Institution</label>
+        <div id="modalExhibitorName" style="font-weight:800; font-size:14.5px; color:#0f172a;"></div>
       </div>
 
+      <!-- Select Booth Dropdown -->
       <div style="display:flex; flex-direction:column; gap:6px;">
-        <label style="font-size:13px; font-weight:600; color:#334155;">Booth Number / Code</label>
-        <input type="text" id="modalBoothNumber" name="booth_number" placeholder="e.g. Booth A-04 or B-12" required
-               style="border:1px solid #cbd5e1; padding:9px 12px; border-radius:8px; font-size:13.5px; width:100%; box-sizing:border-box;">
-        <span style="font-size:11px; color:#64748b;">Leave empty to unassign.</span>
+        <label for="modalBoothSelect" style="font-size:13px; font-weight:700; color:#334155; display:flex; justify-content:space-between; align-items:center;">
+          <span>Choose Booth Number</span>
+          <span id="boothStatusPill" style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:12px; background:#eff6ff; color:#1d4ed8; display:none;"></span>
+        </label>
+        
+        <select id="modalBoothSelect" name="booth_number" onchange="handleBoothSelectionChange(this)"
+                style="border:1.5px solid #cbd5e1; padding:10px 12px; border-radius:8px; font-size:13.5px; width:100%; box-sizing:border-box; background:#ffffff; font-weight:600; color:#0f172a; outline:none; transition:border-color 0.15s ease;">
+          <option value="" data-hall="">-- No Booth (Unallocated / Release Booth) --</option>
+          {% regroup all_booths by hall as hall_groups %}
+          {% for hg in hall_groups %}
+            <optgroup label="{{ hg.grouper|default:'Main Exhibition Floor' }}">
+              {% for b in hg.list %}
+                <option value="{{ b.booth_number }}" 
+                        data-hall="{{ b.hall|default:'Main Expo Hall' }}" 
+                        data-status="{{ b.status }}" 
+                        data-raw-num="{{ b.booth_number }}"
+                        data-exhid="{{ b.exhibitor_id|default:'' }}" 
+                        data-exhname="{% if b.exhibitor %}{{ b.exhibitor.company_name }}{% elif b.university %}{{ b.university.name }}{% endif %}">
+                  {{ b.booth_number }} {% if b.status != 'AVAILABLE' %}(Assigned: {% if b.exhibitor %}{{ b.exhibitor.company_name }}{% elif b.university %}{{ b.university.name }}{% endif %}){% else %}(Available){% endif %}
+                </option>
+              {% endfor %}
+            </optgroup>
+          {% endfor %}
+          <option value="__custom__" data-hall="">+ Enter Custom Booth Code...</option>
+        </select>
+        <span style="font-size:11.5px; color:#64748b;">Pick any free booth from the list or select unallocated to release floor space.</span>
       </div>
 
+      <!-- Custom Booth Number Input (Hidden by default, shown when '__custom__' is selected) -->
+      <div id="customBoothWrapper" style="display:none; flex-direction:column; gap:6px; background:#f0fdf4; padding:12px 14px; border-radius:8px; border:1px solid #bbf7d0;">
+        <label for="modalCustomBoothNumber" style="font-size:12.5px; font-weight:700; color:#166534;">Custom Booth Code</label>
+        <input type="text" id="modalCustomBoothNumber" name="custom_booth_number" placeholder="e.g. Booth EXH-99 or T-01"
+               style="border:1px solid #86efac; padding:9px 12px; border-radius:6px; font-size:13px; width:100%; box-sizing:border-box; background:#ffffff; font-weight:600; color:#0f172a; outline:none;">
+        <span style="font-size:11px; color:#15803d;">This booth code will be newly created and assigned to this exhibitor.</span>
+      </div>
+
+      <!-- Floor Hall / Pavilion Input -->
       <div style="display:flex; flex-direction:column; gap:6px;">
-        <label style="font-size:13px; font-weight:600; color:#334155;">Floor Hall / Pavilion</label>
+        <label for="modalBoothHall" style="font-size:13px; font-weight:700; color:#334155;">Floor Hall / Pavilion</label>
         <input type="text" id="modalBoothHall" name="hall" placeholder="e.g. Hall 1 - Global Pavilion"
-               style="border:1px solid #cbd5e1; padding:9px 12px; border-radius:8px; font-size:13.5px; width:100%; box-sizing:border-box;">
+               style="border:1px solid #cbd5e1; padding:9px 12px; border-radius:8px; font-size:13.5px; width:100%; box-sizing:border-box; background:#ffffff; color:#334155; font-weight:500;">
+        <span style="font-size:11px; color:#64748b;">Auto-synced with the chosen booth's pavilion, or editable if custom.</span>
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px; border-top:1px solid #f1f5f9; padding-top:16px;">
-        <button type="button" onclick="closeBoothModal()" style="background:#f1f5f9; border:none; padding:8px 16px; border-radius:6px; font-weight:600; font-size:13px; color:#475569; cursor:pointer;">Cancel</button>
-        <button type="submit" style="background:#4f46e5; color:#ffffff; border:none; padding:8px 18px; border-radius:6px; font-size:13px; font-weight:700; cursor:pointer;">Save Allocation</button>
+        <button type="button" onclick="closeBoothModal()" style="background:#f1f5f9; border:none; padding:9px 16px; border-radius:7px; font-weight:600; font-size:13px; color:#475569; cursor:pointer;">Cancel</button>
+        <button type="submit" style="background:#4f46e5; color:#ffffff; border:none; padding:9px 20px; border-radius:7px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 3px rgba(79, 70, 229, 0.3);">
+          <i data-feather="check" style="width:14px; height:14px;"></i> Save Allocation
+        </button>
       </div>
     </form>
   </div>
 </div>
 
 <script>
-function openBoothModal(exhibitorId, exhibitorName, boothNumber, hall) {
+function openBoothModal(exhibitorId, exhibitorName, currentBoothNumber, currentHall) {
   const modal = document.getElementById('boothModal');
   const form = document.getElementById('boothAllocationForm');
   form.action = '/dashboard/exhibitors/' + exhibitorId + '/allocate-booth/';
   document.getElementById('modalExhibitorName').textContent = exhibitorName;
-  document.getElementById('modalBoothNumber').value = boothNumber;
-  document.getElementById('modalBoothHall').value = hall || 'Hall 1 - Global Pavilion';
+  
+  const select = document.getElementById('modalBoothSelect');
+  const customWrapper = document.getElementById('customBoothWrapper');
+  const customInput = document.getElementById('modalCustomBoothNumber');
+  const hallInput = document.getElementById('modalBoothHall');
+  const statusPill = document.getElementById('boothStatusPill');
+
+  customInput.value = '';
+  customWrapper.style.display = 'none';
+
+  // Iterate over options to label current allocation cleanly
+  let matchedIndex = -1;
+  const targetNum = (currentBoothNumber || '').trim().toLowerCase();
+
+  for (let i = 0; i < select.options.length; i++) {
+    const opt = select.options[i];
+    const rawNum = opt.getAttribute('data-raw-num') || opt.value;
+    const optExhId = opt.getAttribute('data-exhid');
+    const optExhName = opt.getAttribute('data-exhname');
+    const optStatus = opt.getAttribute('data-status');
+
+    if (!opt.value || opt.value === '__custom__') continue;
+
+    const isThisExhibitor = (optExhId && String(optExhId) === String(exhibitorId)) || (targetNum && rawNum.toLowerCase() === targetNum);
+
+    if (isThisExhibitor) {
+      opt.text = rawNum + ' (Current Allocation)';
+      opt.style.fontWeight = '700';
+      opt.style.color = '#4338ca';
+      if (matchedIndex === -1) matchedIndex = i;
+    } else if (optStatus === 'AVAILABLE') {
+      opt.text = rawNum + ' (Available)';
+      opt.style.fontWeight = 'normal';
+      opt.style.color = '#0f172a';
+    } else {
+      opt.text = rawNum + ' (Assigned: ' + (optExhName || 'Other') + ')';
+      opt.style.fontWeight = 'normal';
+      opt.style.color = '#94a3b8';
+    }
+  }
+
+  if (matchedIndex !== -1) {
+    select.selectedIndex = matchedIndex;
+    const chosen = select.options[matchedIndex];
+    hallInput.value = currentHall || chosen.getAttribute('data-hall') || 'Main Expo Hall';
+    statusPill.style.display = 'inline-block';
+    statusPill.textContent = 'Allocated';
+    statusPill.style.background = '#eef2ff';
+    statusPill.style.color = '#4338ca';
+  } else if (targetNum) {
+    // Current booth is custom or not in the predefined list
+    select.value = '__custom__';
+    customWrapper.style.display = 'flex';
+    customInput.value = currentBoothNumber;
+    hallInput.value = currentHall || 'Main Expo Hall';
+    statusPill.style.display = 'inline-block';
+    statusPill.textContent = 'Custom Code';
+    statusPill.style.background = '#f0fdf4';
+    statusPill.style.color = '#15803d';
+  } else {
+    // No booth currently allocated
+    select.value = '';
+    hallInput.value = currentHall || 'Hall 1 - Global Pavilion';
+    statusPill.style.display = 'none';
+  }
+
   modal.style.display = 'flex';
   if (typeof feather !== 'undefined') {
     feather.replace();
+  }
+}
+
+function handleBoothSelectionChange(selectElem) {
+  const customWrapper = document.getElementById('customBoothWrapper');
+  const customInput = document.getElementById('modalCustomBoothNumber');
+  const hallInput = document.getElementById('modalBoothHall');
+  const statusPill = document.getElementById('boothStatusPill');
+
+  if (selectElem.value === '__custom__') {
+    customWrapper.style.display = 'flex';
+    customInput.focus();
+    statusPill.style.display = 'inline-block';
+    statusPill.textContent = 'New Custom';
+    statusPill.style.background = '#f0fdf4';
+    statusPill.style.color = '#15803d';
+  } else if (!selectElem.value) {
+    customWrapper.style.display = 'none';
+    customInput.value = '';
+    statusPill.style.display = 'none';
+  } else {
+    customWrapper.style.display = 'none';
+    customInput.value = '';
+    const selectedOption = selectElem.options[selectElem.selectedIndex];
+    const hall = selectedOption.getAttribute('data-hall');
+    if (hall) {
+      hallInput.value = hall;
+    }
+    const status = selectedOption.getAttribute('data-status');
+    statusPill.style.display = 'inline-block';
+    if (status === 'AVAILABLE') {
+      statusPill.textContent = 'Available';
+      statusPill.style.background = '#ecfdf5';
+      statusPill.style.color = '#059669';
+    } else {
+      statusPill.textContent = 'Occupied (Will Reassign)';
+      statusPill.style.background = '#fffbeb';
+      statusPill.style.color = '#b45309';
+    }
   }
 }
 

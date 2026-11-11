@@ -1659,6 +1659,18 @@ class ExpoBooth(models.Model):
             if self.exhibitor.university:
                 self.university = self.exhibitor.university
 
+        # Ensure OneToOne integrity: clear other booths if they currently point to self.university or self.exhibitor
+        if self.pk:
+            if self.university:
+                ExpoBooth.objects.filter(university=self.university).exclude(pk=self.pk).update(university=None, status='AVAILABLE')
+            if self.exhibitor:
+                ExpoBooth.objects.filter(exhibitor=self.exhibitor).exclude(pk=self.pk).update(exhibitor=None, status='AVAILABLE')
+        else:
+            if self.university:
+                ExpoBooth.objects.filter(university=self.university).update(university=None, status='AVAILABLE')
+            if self.exhibitor:
+                ExpoBooth.objects.filter(exhibitor=self.exhibitor).update(exhibitor=None, status='AVAILABLE')
+
         if self.university or self.exhibitor:
             if self.status == 'AVAILABLE':
                 self.status = 'ASSIGNED'

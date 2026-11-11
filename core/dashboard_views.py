@@ -1001,7 +1001,17 @@ def event_delete(request, pk):
 @login_required(login_url='/portal/login/')
 def dashboard_exhibitors(request):
     from .models import Exhibitor, ExpoBooth
-    exhibitors = Exhibitor.objects.all().select_related('event_location', 'booth')
+    # Sync booth associations between university and exhibitor if needed
+    for b in ExpoBooth.objects.filter(university__isnull=False, exhibitor__isnull=True):
+        if hasattr(b.university, 'exhibitor') and b.university.exhibitor:
+            b.exhibitor = b.university.exhibitor
+            b.save(update_fields=['exhibitor'])
+    for b in ExpoBooth.objects.filter(exhibitor__isnull=False, university__isnull=True):
+        if b.exhibitor.university:
+            b.university = b.exhibitor.university
+            b.save(update_fields=['university'])
+
+    exhibitors = Exhibitor.objects.all().select_related('event_location', 'booth', 'university')
     sort_by = request.GET.get('sort_by', 'company_name')
     is_verified = request.GET.get('is_verified')
     booth_filter = request.GET.get('booth')
@@ -1031,8 +1041,10 @@ def dashboard_exhibitors(request):
     total_count = Exhibitor.objects.count()
     allocated_count = ExpoBooth.objects.filter(exhibitor__isnull=False).count()
     unallocated_count = max(0, total_count - allocated_count)
+    all_booths = ExpoBooth.objects.filter(is_active=True).select_related('exhibitor', 'university').order_by('hall', 'booth_number')
     context = {
         'exhibitors': exhibitors,
+        'all_booths': all_booths,
         'sort_by': sort_by,
         'is_verified': is_verified,
         'booth_filter': booth_filter,
@@ -1048,48 +1060,69 @@ def dashboard_exhibitors(request):
 
 @login_required(login_url='/portal/login/')
 def exhibitor_allocate_booth(request, pk):
-    if not request.user.is_superuser:
+    if not (request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['admin', 'manager']).exists()):
         from django.core.exceptions import PermissionDenied
         raise PermissionDenied("Admin access required")
-    from .models import Exhibitor, ExpoBooth
-    from django.shortcuts import get_object_or_404
+    from .models import Exhibitor, ExpoBooth, University
+    from django.shortcuts import get_object_or_404, redirect
     from django.contrib import messages
+    from django.db import transaction
+    from django.db.models import Q
+
     exhibitor = get_object_or_404(Exhibitor, pk=pk)
     if request.method == 'POST':
         booth_num = request.POST.get('booth_number', '').strip()
-        hall_name = request.POST.get('hall', '').strip() or 'Hall 1 - Global Pavilion'
-        if booth_num:
-            if hasattr(exhibitor, 'booth') and exhibitor.booth:
-                b = exhibitor.booth
-                b.booth_number = booth_num
-                b.hall = hall_name
-                b.status = 'ASSIGNED'
-                b.save()
-            else:
-                existing = ExpoBooth.objects.filter(booth_number__iexact=booth_num).first()
-                if existing:
-                    existing.exhibitor = exhibitor
-                    existing.hall = hall_name
-                    existing.status = 'ASSIGNED'
-                    existing.save()
-                else:
-                    ExpoBooth.objects.create(
-                        booth_number=booth_num,
-                        hall=hall_name,
-                        exhibitor=exhibitor,
-                        status='ASSIGNED'
-                    )
-            messages.success(request, f"Booth {booth_num} allocated to {exhibitor.company_name}.")
-        else:
-            if hasattr(exhibitor, 'booth') and exhibitor.booth:
-                b = exhibitor.booth
-                b.exhibitor = None
-                if not b.university:
-                    b.status = 'AVAILABLE'
-                b.save()
-                messages.info(request, f"Booth allocation removed for {exhibitor.company_name}.")
-    next_url = request.POST.get('next') or request.GET.get('next') or 'dashboard_exhibitors'
+        custom_booth = request.POST.get('custom_booth_number', '').strip()
+        if booth_num == '__custom__' and custom_booth:
+            booth_num = custom_booth
+        elif booth_num == '__custom__':
+            booth_num = ''
 
+        hall_name = request.POST.get('hall', '').strip()
+
+        with transaction.atomic():
+            # Ensure linked university is resolved
+            uni = exhibitor.university
+            if not uni:
+                uni = University.objects.filter(name__iexact=exhibitor.company_name).first()
+                if uni:
+                    exhibitor.university = uni
+                    exhibitor.save(update_fields=['university'])
+
+            # Unassign previous booth(s) for this exhibitor or university if different from target
+            old_booths_q = Q(exhibitor=exhibitor)
+            if uni:
+                old_booths_q |= Q(university=uni)
+            old_booths = ExpoBooth.objects.filter(old_booths_q)
+            for old_b in old_booths:
+                if not booth_num or old_b.booth_number.strip().lower() != booth_num.strip().lower():
+                    old_b.exhibitor = None
+                    old_b.university = None
+                    old_b.status = 'AVAILABLE'
+                    old_b.save()
+
+            if booth_num:
+                target_booth = ExpoBooth.objects.filter(booth_number__iexact=booth_num).first()
+                if not target_booth:
+                    import uuid
+                    target_booth = ExpoBooth.objects.create(
+                        booth_number=booth_num,
+                        hall=hall_name or 'Hall 1 - Global Pavilion',
+                        status='ASSIGNED',
+                        qr_code=f"BOOTH-{uuid.uuid4().hex[:8].upper()}"
+                    )
+
+                if hall_name:
+                    target_booth.hall = hall_name
+                target_booth.exhibitor = exhibitor
+                target_booth.university = uni
+                target_booth.status = 'ASSIGNED'
+                target_booth.save()
+                messages.success(request, f"Booth {target_booth.booth_number} ({target_booth.hall}) successfully allocated to {exhibitor.company_name}.")
+            else:
+                messages.info(request, f"Booth allocation removed for {exhibitor.company_name}.")
+
+    next_url = request.POST.get('next') or request.GET.get('next') or 'dashboard_exhibitors'
     return redirect(next_url)
 
 

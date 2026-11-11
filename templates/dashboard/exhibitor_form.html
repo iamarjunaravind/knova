@@ -24,7 +24,11 @@
         <div style="display:flex; flex-direction:column; gap:6px;">
           <label style="font-size:13px; font-weight:600; color:#475569;">Allocated Booth Number</label>
           {{ form.booth_number }}
-          <span style="font-size:11px; color:#64748b;">e.g., Booth A-04, Booth B-12, or Booth EXH-20</span>
+          <span style="font-size:11px; color:#64748b;">Select an available booth from the floor plan or choose unallocated.</span>
+        </div>
+        <div id="custom_booth_box" style="display:none; flex-direction:column; gap:6px;">
+          <label style="font-size:13px; font-weight:600; color:#166534;">Custom Booth Code</label>
+          {{ form.custom_booth_number }}
         </div>
         <div style="display:flex; flex-direction:column; gap:6px;">
           <label style="font-size:13px; font-weight:600; color:#475569;">Floor Hall / Pavilion</label>
@@ -87,4 +91,22 @@
   form select option { background: #fff; color:#0f172a; }
   form textarea { height: 100px; resize: vertical; }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const boothSelect = document.getElementById('id_booth_number');
+  const customBox = document.getElementById('custom_booth_box');
+  function toggleCustom() {
+    if (boothSelect && boothSelect.value === '__custom__') {
+      if (customBox) customBox.style.display = 'flex';
+    } else {
+      if (customBox) customBox.style.display = 'none';
+    }
+  }
+  if (boothSelect) {
+    boothSelect.addEventListener('change', toggleCustom);
+    toggleCustom();
+  }
+});
+</script>
 {% endblock %}

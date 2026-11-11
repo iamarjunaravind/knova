@@ -18,17 +18,22 @@ class EventLocationForm(forms.ModelForm):
 
 
 class ExhibitorForm(forms.ModelForm):
-    booth_number = forms.CharField(
-        max_length=50,
+    booth_number = forms.ChoiceField(
         required=False,
         label="Allocated Booth Number",
-        widget=forms.TextInput(attrs={'placeholder': 'e.g. Booth A-04 or B-12', 'class': 'form-control'})
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_booth_number'})
+    )
+    custom_booth_number = forms.CharField(
+        max_length=50,
+        required=False,
+        label="Or Custom Booth Number",
+        widget=forms.TextInput(attrs={'placeholder': 'e.g. Booth EXH-99 or T-01', 'class': 'form-control', 'id': 'id_custom_booth_number'})
     )
     booth_hall = forms.CharField(
         max_length=100,
         required=False,
         label="Floor Hall / Pavilion",
-        widget=forms.TextInput(attrs={'placeholder': 'e.g. Hall 1 - Global Pavilion', 'class': 'form-control'})
+        widget=forms.TextInput(attrs={'placeholder': 'e.g. Hall 1 - Global Pavilion', 'class': 'form-control', 'id': 'id_booth_hall'})
     )
 
     class Meta:
@@ -42,48 +47,86 @@ class ExhibitorForm(forms.ModelForm):
                 del self.fields['hero_priority']
             if 'is_approved' in self.fields:
                 del self.fields['is_approved']
+
+        from .models import ExpoBooth
+        current_booth = None
         if self.instance and self.instance.pk:
             if hasattr(self.instance, 'booth') and self.instance.booth:
-                self.fields['booth_number'].initial = self.instance.booth.booth_number
-                self.fields['booth_hall'].initial = self.instance.booth.hall
+                current_booth = self.instance.booth
+            elif self.instance.university and hasattr(self.instance.university, 'booth') and self.instance.university.booth:
+                current_booth = self.instance.university.booth
+
+        # Build dropdown choices
+        choices = [('', '-- No Booth (Unallocated) --')]
+        if current_booth:
+            choices.append((current_booth.booth_number, f"{current_booth.booth_number} (Current Allocation) - {current_booth.hall or 'Main Hall'}"))
+            self.fields['booth_number'].initial = current_booth.booth_number
+            self.fields['booth_hall'].initial = current_booth.hall
+
+        available_booths = ExpoBooth.objects.filter(status='AVAILABLE', is_active=True).order_by('hall', 'booth_number')
+        for b in available_booths:
+            if not current_booth or b.booth_number != current_booth.booth_number:
+                choices.append((b.booth_number, f"{b.booth_number} ({b.hall or 'Main Hall'})"))
+
+        choices.append(('__custom__', '+ Enter Custom Booth Code...'))
+        self.fields['booth_number'].choices = choices
 
     def save(self, commit=True):
         exhibitor = super().save(commit=commit)
         booth_num = self.cleaned_data.get('booth_number')
+        custom_booth = self.cleaned_data.get('custom_booth_number')
+        if booth_num == '__custom__' and custom_booth:
+            booth_num = custom_booth
+        elif booth_num == '__custom__':
+            booth_num = ''
+
         booth_hall = self.cleaned_data.get('booth_hall')
+        hall_name = booth_hall.strip() if booth_hall else 'Hall 1 - Global Pavilion'
 
         if commit:
-            from .models import ExpoBooth
-            if booth_num:
+            from .models import ExpoBooth, University
+            from django.db.models import Q
+            uni = exhibitor.university
+            if not uni:
+                uni = University.objects.filter(name__iexact=exhibitor.company_name).first()
+                if uni:
+                    exhibitor.university = uni
+                    exhibitor.save(update_fields=['university'])
+
+            # Clear old booths
+            old_booths_q = Q(exhibitor=exhibitor)
+            if uni:
+                old_booths_q |= Q(university=uni)
+            old_booths = ExpoBooth.objects.filter(old_booths_q)
+            for old_b in old_booths:
+                if not booth_num or old_b.booth_number.strip().lower() != booth_num.strip().lower():
+                    old_b.exhibitor = None
+                    old_b.university = None
+                    old_b.status = 'AVAILABLE'
+                    old_b.save()
+
+            if booth_num and booth_num.strip():
                 booth_num = booth_num.strip()
-                hall_name = booth_hall.strip() if booth_hall else 'Hall 1 - Global Pavilion'
-                if hasattr(exhibitor, 'booth') and exhibitor.booth:
-                    b = exhibitor.booth
-                    b.booth_number = booth_num
-                    b.hall = hall_name
-                    b.status = 'ASSIGNED'
-                    b.save()
-                else:
-                    existing = ExpoBooth.objects.filter(booth_number__iexact=booth_num).first()
-                    if existing:
-                        existing.exhibitor = exhibitor
-                        existing.hall = hall_name
-                        existing.status = 'ASSIGNED'
-                        existing.save()
-                    else:
-                        ExpoBooth.objects.create(
-                            booth_number=booth_num,
-                            hall=hall_name,
-                            exhibitor=exhibitor,
-                            status='ASSIGNED'
-                        )
-            else:
-                if hasattr(exhibitor, 'booth') and exhibitor.booth:
-                    b = exhibitor.booth
-                    b.exhibitor = None
-                    if not b.university:
-                        b.status = 'AVAILABLE'
-                    b.save()
+                target_booth = ExpoBooth.objects.filter(booth_number__iexact=booth_num).first()
+                if not target_booth:
+                    import uuid
+                    target_booth = ExpoBooth.objects.create(
+                        booth_number=booth_num,
+                        hall=hall_name,
+                        status='ASSIGNED',
+                        qr_code=f"BOOTH-{uuid.uuid4().hex[:8].upper()}"
+                    )
+                if target_booth.exhibitor and target_booth.exhibitor != exhibitor:
+                    target_booth.exhibitor = None
+                if target_booth.university and target_booth.university != uni:
+                    target_booth.university = None
+
+                if hall_name:
+                    target_booth.hall = hall_name
+                target_booth.exhibitor = exhibitor
+                target_booth.university = uni
+                target_booth.status = 'ASSIGNED'
+                target_booth.save()
         return exhibitor
 
 
