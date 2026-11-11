@@ -294,12 +294,36 @@ def dashboard_index(request):
         booth_interactions = BoothInteraction.objects.filter(booth__in=booths).select_related('student__user').order_by('-interaction_date') if booths.exists() else BoothInteraction.objects.none()
         leads = exhibitor.captured_leads.select_related('scanned_registration').all() if exhibitor else ExhibitorLead.objects.none()
         leads_count = leads.count() if exhibitor else booth_interactions.count()
+        # Lead quality breakdown
         hot_count = leads.filter(rating='Hot').count() if exhibitor else 0
         warm_count = leads.filter(rating='Warm').count() if exhibitor else 0
         cold_count = leads.filter(rating='Cold').count() if exhibitor else 0
         unrated_count = max(0, leads_count - (hot_count + warm_count + cold_count))
+        qualified_leads_count = hot_count + warm_count
         quality_labels = ["Hot", "Warm", "Cold", "Unrated"]
         quality_data = [hot_count, warm_count, cold_count, unrated_count]
+
+        # Real-time attendance and footfall statistics
+        from django.utils import timezone
+        today = timezone.now().date()
+        today_leads = leads.filter(scanned_at__date=today).count() if exhibitor else 0
+        today_interactions = booth_interactions.filter(interaction_date__date=today).count() if booths.exists() else 0
+        today_attended_count = max(today_leads, today_interactions)
+        total_attended_students = max(leads.count(), booth_interactions.count()) if (exhibitor or booths.exists()) else 0
+
+        # Overall Expo Registered Students
+        from .models import Registration
+        total_expo_students = Registration.objects.filter(role__iexact='Student').count()
+        if total_expo_students == 0:
+            total_expo_students = Registration.objects.count()
+
+        # Assigned booth display
+        allocated_booth = None
+        if exhibitor and hasattr(exhibitor, 'allocated_booth') and exhibitor.allocated_booth:
+            allocated_booth = exhibitor.allocated_booth
+        elif booths.exists():
+            allocated_booth = booths.first()
+
         from django.db.models import Count
         role_counts = list(leads.values('scanned_registration__role').annotate(count=Count('id'))) if exhibitor else []
         role_labels = [item['scanned_registration__role'] for item in role_counts]
@@ -316,6 +340,14 @@ def dashboard_index(request):
             'exhibitor': exhibitor,
             'event': getattr(exhibitor, 'event_location', None) or EventLocation.objects.filter(is_active=True).first(),
             'leads_count': leads_count,
+            'attended_students_count': total_attended_students,
+            'today_attended_count': today_attended_count,
+            'total_expo_students': total_expo_students,
+            'hot_count': hot_count,
+            'warm_count': warm_count,
+            'cold_count': cold_count,
+            'qualified_leads_count': qualified_leads_count,
+            'allocated_booth': allocated_booth,
             'courses': courses,
             'scholarships': scholarships,
             'categories': categories,
@@ -326,7 +358,6 @@ def dashboard_index(request):
             'enquiries_count': applications.count() + booth_interactions.count() if uni else leads_count,
             'applications_count': applications.count() if uni else 0,
             'booth_interactions_count': booth_interactions.count() if booths else leads_count,
-            'attended_students_count': leads_count,
             'recent_applications': applications[:5] if uni else [],
             'recent_attended_students': booth_interactions[:6] if booths else [],
             'recent_courses': courses[:5],

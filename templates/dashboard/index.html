@@ -1428,11 +1428,147 @@ window.addEventListener('click', function(e) {
 </style>
 <!-- TOP INSTITUTIONAL COMMAND BANNER -->
 <div class="glass-card stat-card" style="margin-bottom: 20px; padding: 22px 26px; border-left: 4px solid #1768ff; background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%); border-radius: 16px; box-shadow: 0 4px 16px rgba(10,25,54,0.04);">
-  <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-    <span style="background:#eff6ff; color:#1768ff; font-size:11px; font-weight:750; padding:3px 10px; border-radius:20px; text-transform:uppercase; border:1px solid #bfdbfe;">Institutional Hub</span>
-    <h3 style="margin:0; color:#0a1936; font-size:22px; font-weight:800; letter-spacing:-0.3px;">Welcome, {{ university.name|default:profile.company_name|default:request.user.get_full_name|default:"Exhibitor" }}!</h3>
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+    <div>
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+        <span style="background:#eff6ff; color:#1768ff; font-size:11px; font-weight:750; padding:3px 10px; border-radius:20px; text-transform:uppercase; border:1px solid #bfdbfe;">Institutional Hub</span>
+        <h3 style="margin:0; color:#0a1936; font-size:22px; font-weight:800; letter-spacing:-0.3px;">Welcome, {{ university.name|default:profile.company_name|default:request.user.get_full_name|default:"Exhibitor" }}!</h3>
+      </div>
+      <p style="color:#64748b; font-size:13.5px; margin:0;">Exhibitor Portal{% if event %} &bull; <strong>{{ event.name }}</strong>{% endif %}. Real-time student attendance monitoring, booth punches, and visitor lead management.</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      {% if allocated_booth %}
+        <span style="background:#f8fafc; border:1px solid #cbd5e1; color:#0f172a; font-size:12.5px; font-weight:750; padding:8px 14px; border-radius:8px; display:inline-flex; align-items:center; gap:6px;">
+          <i data-feather="map-pin" style="width:14px; height:14px; color:#1768ff;"></i> {{ allocated_booth.booth_number|default:"Booth" }}{% if allocated_booth.floor_hall %}, {{ allocated_booth.floor_hall }}{% endif %}
+        </span>
+      {% endif %}
+      <a href="{% url 'dashboard_exhibitor_scanner' %}" style="display:inline-flex; align-items:center; gap:6px; background:#10b981; color:#ffffff; font-size:12.5px; font-weight:750; padding:8px 15px; border-radius:8px; text-decoration:none; box-shadow:0 3px 10px rgba(16,185,129,0.25);">
+        <i data-feather="maximize" style="width:14px; height:14px;"></i> Booth Punch Scanner
+      </a>
+      <a href="{% url 'dashboard_exhibitor_leads' %}" style="display:inline-flex; align-items:center; gap:6px; background:#1768ff; color:#ffffff; font-size:12.5px; font-weight:750; padding:8px 15px; border-radius:8px; text-decoration:none; box-shadow:0 3px 10px rgba(23,104,255,0.25);">
+        <i data-feather="users" style="width:14px; height:14px;"></i> Attended Students Roster
+      </a>
+    </div>
   </div>
-  <p style="color:#64748b; font-size:13.5px; margin:0;">Exhibitor Portal{% if event %} &bull; <strong>{{ event.name }}</strong>{% endif %}. Complete your institutional profile, add degree courses, and setup scholarships for expo visitors.</p>
+</div>
+
+<!-- TOP LIVE ATTENDANCE & STUDENT FOOTFALL STATISTICS (PROMINENT AT TOP) -->
+<div style="margin-bottom: 24px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#10b981; box-shadow:0 0 0 3px rgba(16,185,129,0.25);"></span>
+      <h4 style="margin:0; font-size:15px; font-weight:800; color:#0f172a; text-transform:uppercase; letter-spacing:0.5px;">Live Student Attendance &amp; Footfall Overview</h4>
+    </div>
+    <span style="font-size:12px; color:#64748b; font-weight:600;">Real-time On-site Check-in Telemetry</span>
+  </div>
+
+  <div class="stats-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+    
+    <!-- 1. Total Attended Students at Booth -->
+    <div class="glass-card stat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:18px 20px; border-left:4px solid #10b981; border-radius:14px; background:#ffffff; box-shadow:0 4px 14px rgba(10,25,54,0.04);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Total Students Attended</div>
+          <div style="font-size:32px; font-weight:850; color:#10b981; margin:6px 0 2px 0; line-height:1;">{{ attended_students_count|default:0 }}</div>
+        </div>
+        <div style="width:40px; height:40px; border-radius:10px; background:#ecfdf5; color:#10b981; display:flex; align-items:center; justify-content:center;">
+          <i data-feather="user-check" style="width:20px; height:20px;"></i>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9;">
+        <span style="font-size:11.5px; color:#10b981; font-weight:650;">Verified Booth Check-ins</span>
+        <a href="{% url 'dashboard_exhibitor_leads' %}" style="font-size:12px; color:#1768ff; font-weight:750; text-decoration:none;">View Roster &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 2. Today's Student Footfall -->
+    <div class="glass-card stat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:18px 20px; border-left:4px solid #1768ff; border-radius:14px; background:#ffffff; box-shadow:0 4px 14px rgba(10,25,54,0.04);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Attended Today</div>
+          <div style="font-size:32px; font-weight:850; color:#1768ff; margin:6px 0 2px 0; line-height:1;">{{ today_attended_count|default:0 }}</div>
+        </div>
+        <div style="width:40px; height:40px; border-radius:10px; background:#eff6ff; color:#1768ff; display:flex; align-items:center; justify-content:center;">
+          <i data-feather="clock" style="width:20px; height:20px;"></i>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9;">
+        <span style="font-size:11.5px; color:#10b981; font-weight:650; display:inline-flex; align-items:center; gap:4px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:#10b981;"></span> Live Footfall
+        </span>
+        <span style="font-size:11.5px; color:#64748b; font-weight:600;">Day-of-Event</span>
+      </div>
+    </div>
+
+    <!-- 3. Total Registered Expo Audience -->
+    <div class="glass-card stat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:18px 20px; border-left:4px solid #7c3aed; border-radius:14px; background:#ffffff; box-shadow:0 4px 14px rgba(10,25,54,0.04);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Total Expo Students</div>
+          <div style="font-size:32px; font-weight:850; color:#7c3aed; margin:6px 0 2px 0; line-height:1;">{{ total_expo_students|default:0 }}</div>
+        </div>
+        <div style="width:40px; height:40px; border-radius:10px; background:#f5f3ff; color:#7c3aed; display:flex; align-items:center; justify-content:center;">
+          <i data-feather="users" style="width:20px; height:20px;"></i>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9;">
+        <span style="font-size:11.5px; color:#64748b; font-weight:600;">Overall Registrations</span>
+        <span style="font-size:11px; font-weight:700; background:#f3e8ff; color:#6b21a8; padding:2px 7px; border-radius:6px;">KNOVA 2027</span>
+      </div>
+    </div>
+
+    <!-- 4. Qualified Leads -->
+    <div class="glass-card stat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:18px 20px; border-left:4px solid #f59e0b; border-radius:14px; background:#ffffff; box-shadow:0 4px 14px rgba(10,25,54,0.04);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Qualified Student Leads</div>
+          <div style="font-size:32px; font-weight:850; color:#f59e0b; margin:6px 0 2px 0; line-height:1;">{{ qualified_leads_count|default:0 }}</div>
+        </div>
+        <div style="width:40px; height:40px; border-radius:10px; background:#fffbeb; color:#d97706; display:flex; align-items:center; justify-content:center;">
+          <i data-feather="award" style="width:20px; height:20px;"></i>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9;">
+        <span style="font-size:11.5px; color:#b45309; font-weight:600;">{{ hot_count|default:0 }} Hot &bull; {{ warm_count|default:0 }} Warm</span>
+        <a href="{% url 'dashboard_exhibitor_leads' %}" style="font-size:12px; color:#f59e0b; font-weight:750; text-decoration:none;">Filter &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 5. Active Courses & Degrees -->
+    <div class="glass-card stat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:18px 20px; border-left:4px solid #8b5cf6; border-radius:14px; background:#ffffff; box-shadow:0 4px 14px rgba(10,25,54,0.04);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Active Degree Courses</div>
+          <div style="font-size:32px; font-weight:850; color:#8b5cf6; margin:6px 0 2px 0; line-height:1;">{{ courses|length }}</div>
+        </div>
+        <div style="width:40px; height:40px; border-radius:10px; background:#f3e8ff; color:#7e22ce; display:flex; align-items:center; justify-content:center;">
+          <i data-feather="book-open" style="width:20px; height:20px;"></i>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9;">
+        <span style="font-size:11.5px; color:#64748b; font-weight:600;">In Expo Directory</span>
+        <a href="#coursesSection" style="font-size:12px; color:#8b5cf6; font-weight:750; text-decoration:none;">Manage &darr;</a>
+      </div>
+    </div>
+
+    <!-- 6. Scholarships & Grants -->
+    <div class="glass-card stat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:18px 20px; border-left:4px solid #06b6d4; border-radius:14px; background:#ffffff; box-shadow:0 4px 14px rgba(10,25,54,0.04);">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Scholarship Grants</div>
+          <div style="font-size:32px; font-weight:850; color:#06b6d4; margin:6px 0 2px 0; line-height:1;">{{ scholarships|length }}</div>
+        </div>
+        <div style="width:40px; height:40px; border-radius:10px; background:#ecfeff; color:#0891b2; display:flex; align-items:center; justify-content:center;">
+          <i data-feather="tag" style="width:20px; height:20px;"></i>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9;">
+        <span style="font-size:11.5px; color:#64748b; font-weight:600;">Financial Aid</span>
+        <a href="#scholarshipsSection" style="font-size:12px; color:#0891b2; font-weight:750; text-decoration:none;">Manage &darr;</a>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <!-- EXHIBITOR SETUP & PROFILE COMPLETION CHECKLIST -->
@@ -1510,46 +1646,7 @@ window.addEventListener('click', function(e) {
   </div>
 </div>
 
-<!-- 4 KPI CARDS IN A ROW -->
-<div class="stats-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:18px; margin-bottom: 24px;">
 
-  <!-- Card 1: Punches & Leads -->
-  <div class="glass-card stat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:20px; border-left: 4px solid #10b981; border-radius:14px; background:#ffffff; box-shadow:0 4px 12px rgba(10,25,54,0.03);">
-    <div>
-      <div style="font-size:11.5px; font-weight:750; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Booth Punches & Leads</div>
-      <div style="font-size:32px; font-weight:800; color:#10b981; margin:8px 0 4px 0; line-height:1;">{{ leads_count|default:0 }}</div>
-    </div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9;">
-      <span style="font-size:11.5px; color:#10b981; font-weight:600;">Verified Check-ins</span>
-      <a href="{% url 'dashboard_exhibitor_leads' %}" style="font-size:12px; color:#1768ff; font-weight:700; text-decoration:none;">View Leads &rarr;</a>
-    </div>
-  </div>
-
-  <!-- Card 2: Courses & Degrees -->
-  <div class="glass-card stat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:20px; border-left: 4px solid #8b5cf6; border-radius:14px; background:#ffffff; box-shadow:0 4px 12px rgba(10,25,54,0.03);">
-    <div>
-      <div style="font-size:11.5px; font-weight:750; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Active Courses & Degrees</div>
-      <div style="font-size:32px; font-weight:800; color:#8b5cf6; margin:8px 0 4px 0; line-height:1;">{{ courses|length }}</div>
-    </div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9;">
-      <span style="font-size:11.5px; color:#8b5cf6; font-weight:600;">In Expo Directory</span>
-      <a href="#coursesSection" style="font-size:12px; color:#8b5cf6; font-weight:700; text-decoration:none;">Manage &darr;</a>
-    </div>
-  </div>
-
-  <!-- Card 3: Scholarships & Grants -->
-  <div class="glass-card stat-card" style="display:flex; flex-direction:column; justify-content:space-between; padding:20px; border-left: 4px solid #f59e0b; border-radius:14px; background:#ffffff; box-shadow:0 4px 12px rgba(10,25,54,0.03);">
-    <div>
-      <div style="font-size:11.5px; font-weight:750; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Scholarships</div>
-      <div style="font-size:32px; font-weight:800; color:#f59e0b; margin:8px 0 4px 0; line-height:1;">{{ scholarships|length }}</div>
-    </div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9;">
-      <span style="font-size:11.5px; color:#f59e0b; font-weight:600;">Financial Aid Grants</span>
-      <a href="#scholarshipsSection" style="font-size:12px; color:#f59e0b; font-weight:700; text-decoration:none;">Manage &darr;</a>
-    </div>
-  </div>
-
-</div>
 
 <!-- ACADEMIC COURSES & DEGREE PROGRAMS SECTION -->
 <div id="coursesSection" class="glass-card" style="margin-bottom: 24px; padding: 24px;">
