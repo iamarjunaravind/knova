@@ -247,7 +247,140 @@ def dashboard_index(request):
                 continue
             date_idx = all_dates.index(item['date'])
             daywise_datasets[item['role']][date_idx] = item['count']
-        from .models import University, Course, Scholarship, Sponsor, Speaker, ProgrammeSession, ExamQuestion
+        from .models import University, Course, Scholarship, Sponsor, Speaker, ProgrammeSession, ExamQuestion, ExpoBooth, BoothInteraction, ExhibitorLead
+
+        # Comprehensive Booth & Exhibitor Footfall Analytics for Admin
+        today = timezone.now().date()
+        exhibitors_qs = Exhibitor.objects.select_related('event_location', 'university').prefetch_related('captured_leads').all()
+
+        booth_footfall_data = []
+        total_booth_visits = 0
+        today_booth_visits = 0
+        covered_booth_ids = set()
+
+        for exh in exhibitors_qs:
+            booth = exh.allocated_booth
+            if booth:
+                covered_booth_ids.add(booth.id)
+
+            leads_qs = exh.captured_leads.select_related('scanned_registration')
+            interactions_qs = BoothInteraction.objects.filter(booth=booth).select_related('student__user') if booth else BoothInteraction.objects.none()
+
+            leads_count = leads_qs.count()
+            interactions_count = interactions_qs.count()
+            visits_count = max(leads_count, interactions_count)
+
+            today_leads = leads_qs.filter(scanned_at__date=today).count()
+            today_interactions = interactions_qs.filter(interaction_date__date=today).count()
+            today_count = max(today_leads, today_interactions)
+
+            total_booth_visits += visits_count
+            today_booth_visits += today_count
+
+            hot_count = leads_qs.filter(rating='Hot').count()
+            warm_count = leads_qs.filter(rating='Warm').count()
+            cold_count = leads_qs.filter(rating='Cold').count()
+
+            recent_visitors = []
+            for lead in leads_qs.order_by('-scanned_at')[:8]:
+                reg = lead.scanned_registration
+                recent_visitors.append({
+                    'name': reg.full_name,
+                    'email': reg.email,
+                    'phone': reg.phone or 'Not provided',
+                    'time': lead.scanned_at.strftime('%b %d, %H:%M') if lead.scanned_at else '',
+                    'rating': lead.rating or 'Unrated',
+                    'source': lead.display_source
+                })
+            if not recent_visitors and interactions_qs.exists():
+                for inter in interactions_qs.order_by('-interaction_date')[:8]:
+                    u = inter.student.user if inter.student else None
+                    recent_visitors.append({
+                        'name': u.get_full_name() if u else 'Student Attendee',
+                        'email': u.email if u else '',
+                        'phone': inter.student.mobile if inter.student else 'Not provided',
+                        'time': inter.interaction_date.strftime('%b %d, %H:%M') if inter.interaction_date else '',
+                        'rating': inter.status,
+                        'source': inter.interaction_type
+                    })
+
+            last_activity = None
+            if recent_visitors:
+                last_activity = recent_visitors[0]['time']
+
+            courses_count = exh.university.courses.count() if exh.university else 0
+            scholarships_count = exh.university.scholarships.count() if exh.university else 0
+
+            booth_footfall_data.append({
+                'id': exh.id,
+                'name': exh.company_name,
+                'university_name': exh.university.name if exh.university else None,
+                'is_university': bool(exh.university),
+                'city': exh.event_location.city if exh.event_location else 'Main Expo',
+                'booth_number': booth.booth_number if booth else 'Unallocated',
+                'booth_hall': booth.hall if (booth and booth.hall) else 'Main Hall',
+                'booth_status': booth.status if booth else 'Pending Allocation',
+                'total_visits': visits_count,
+                'today_visits': today_count,
+                'hot_leads': hot_count,
+                'warm_leads': warm_count,
+                'cold_leads': cold_count,
+                'courses_count': courses_count,
+                'scholarships_count': scholarships_count,
+                'last_activity': last_activity,
+                'recent_visitors': recent_visitors,
+                'leads_url': f"/dashboard/exhibitor/leads/?exhibitor_id={exh.id}"
+            })
+
+        # Include other booths allocated to Universities without an Exhibitor record
+        other_booths = ExpoBooth.objects.exclude(id__in=covered_booth_ids).filter(status__in=['ASSIGNED', 'ACTIVE'])
+        for b in other_booths:
+            org_name = b.get_assigned_organization()
+            interactions_qs = b.interactions.select_related('student__user')
+            v_count = interactions_qs.count()
+            t_count = interactions_qs.filter(interaction_date__date=today).count()
+            total_booth_visits += v_count
+            today_booth_visits += t_count
+
+            recent_visitors = []
+            for inter in interactions_qs.order_by('-interaction_date')[:8]:
+                u = inter.student.user if inter.student else None
+                recent_visitors.append({
+                    'name': u.get_full_name() if u else 'Student Attendee',
+                    'email': u.email if u else '',
+                    'phone': inter.student.mobile if inter.student else 'Not provided',
+                    'time': inter.interaction_date.strftime('%b %d, %H:%M') if inter.interaction_date else '',
+                    'rating': inter.status,
+                    'source': inter.interaction_type
+                })
+            last_activity = recent_visitors[0]['time'] if recent_visitors else None
+
+            booth_footfall_data.append({
+                'id': f"booth-{b.id}",
+                'name': org_name,
+                'university_name': b.university.name if b.university else None,
+                'is_university': bool(b.university),
+                'city': 'Main Expo',
+                'booth_number': b.booth_number or f"Booth #{b.id}",
+                'booth_hall': b.hall or 'Main Hall',
+                'booth_status': b.status,
+                'total_visits': v_count,
+                'today_visits': t_count,
+                'hot_leads': 0,
+                'warm_leads': 0,
+                'cold_leads': 0,
+                'courses_count': b.university.courses.count() if b.university else 0,
+                'scholarships_count': b.university.scholarships.count() if b.university else 0,
+                'last_activity': last_activity,
+                'recent_visitors': recent_visitors,
+                'leads_url': f"/dashboard/university/attended-students/?uni_id={b.university.id}" if b.university else '#'
+            })
+
+        booth_footfall_data.sort(key=lambda x: x['total_visits'], reverse=True)
+        top_visited_booth = booth_footfall_data[0] if booth_footfall_data else None
+        active_booths_count = sum(1 for b in booth_footfall_data if b['booth_number'] != 'Unallocated')
+        avg_visits_per_booth = round(total_booth_visits / len(booth_footfall_data), 1) if booth_footfall_data else 0
+
         context = {
             'role': 'admin',
             'total_events': EventLocation.objects.count(),
@@ -261,6 +394,12 @@ def dashboard_index(request):
             'total_sponsors': Sponsor.objects.count(),
             'total_questions': ExamQuestion.objects.count(),
             'total_scholarships': Scholarship.objects.count(),
+            'booth_footfall_data': booth_footfall_data,
+            'total_booth_visits': total_booth_visits,
+            'today_booth_visits': today_booth_visits,
+            'active_booths_count': active_booths_count,
+            'top_visited_booth': top_visited_booth,
+            'avg_visits_per_booth': avg_visits_per_booth,
             'upcoming_events': EventLocation.objects.filter(is_upcoming=True).order_by('start_date')[:6],
             'recent_registrations': Registration.objects.select_related('event_location').order_by('-registered_at')[:8],
             'recent_exhibitors': Exhibitor.objects.select_related('event_location').order_by('-id')[:8],
