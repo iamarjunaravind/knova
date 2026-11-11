@@ -2723,7 +2723,7 @@
               <h3 style="margin: 0 0 4px 0;">6. KNOVA 8-Puzzle Game</h3>
 
               <p class="mission-desc" style="display: block; margin: 6px 0 0 0; font-size: 12px; color: #64748b; line-height: 1.45;">
-                Classic 3&times;3 sliding tile logic. Slide numbers 1 to 8 into numerical order to synchronize core.
+                Classic 3&times;3 sliding tile logic. Complete all 3 levels (Easy, Normal, Hard) to synchronize the core and earn +50 points.
               </p>
 
             </div>
@@ -3390,23 +3390,17 @@
 
         </div>
 
-        <div style="display: flex; justify-content: space-between; gap: 6px; width: 100%; margin-top: 10px;">
+        <div style="display: flex; justify-content: space-between; gap: 8px; width: 100%; margin-top: 10px;">
 
-          <button type="button" onclick="showSlidingHint()" class="btn-quick-action btn-quick-ghost" style="flex: 1; justify-content: center; padding: 7px 8px; font-size: 11.5px;">
+          <button type="button" onclick="showSlidingHint()" class="btn-quick-action btn-quick-ghost" style="flex: 1; justify-content: center; padding: 8px 10px; font-size: 12px; font-weight: 700;">
 
             💡 Hint
 
           </button>
 
-          <button type="button" onclick="autoSolvePuzzle()" class="btn-quick-action btn-quick-ghost" style="flex: 1; justify-content: center; padding: 7px 8px; font-size: 11.5px;">
+          <button type="button" onclick="restartCurrentPuzzleLevel()" class="btn-quick-action btn-quick-ghost" style="flex: 1; justify-content: center; padding: 8px 10px; font-size: 12px; font-weight: 700;">
 
-            ⚡ Auto-Solve
-
-          </button>
-
-          <button type="button" onclick="resetToSolvedPuzzle()" class="btn-quick-action btn-quick-ghost" style="justify-content: center; padding: 7px 10px; font-size: 11.5px;">
-
-            🔄 Reset
+            🔄 Restart Level
 
           </button>
 
@@ -3432,13 +3426,13 @@
 
             <div style="display: flex; align-items: center; gap: 5px; font-weight: 800; font-size: 12.5px; color: #0f172a;">
 
-              <span>🎯</span> Target Goal: Put numbers 1 to 8 in order!
+              <span>🎯</span> Complete All 3 Levels (1 to 8 in Order)
 
             </div>
 
             <div style="font-size: 11.5px; color: #64748b; line-height: 1.35; margin-top: 2px;">
 
-              Slide tiles until numbers 1 through 8 are arranged in numerical sequence.
+              Solve <strong>Easy</strong>, <strong>Normal</strong>, and <strong>Hard</strong> levels sequentially to earn +50 Points!
 
             </div>
 
@@ -3510,22 +3504,45 @@
 
         </div>
 
-        <!-- Difficulty Controls -->
+        <!-- Level Progress & Difficulty Controls -->
 
         <div>
 
-          <div style="font-size: 10.5px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
 
-            Choose Scramble Difficulty:
+            <span style="font-size: 10.5px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">
+
+              3 Levels Required (Complete All):
+
+            </span>
+
+            <span id="puzzleLevelProgressBadge" style="font-size: 10.5px; font-weight: 800; color: #0f172a; background: #e2e8f0; padding: 2px 8px; border-radius: 10px;">
+
+              Level 1 / 3
+
+            </span>
+
           </div>
 
-          <div style="display: flex; gap: 6px;">
+          <div style="display: flex; gap: 6px;" id="puzzleLevelButtons">
 
-            <button type="button" onclick="scrambleSlidingPuzzle(4)" style="flex: 1; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; font-size: 11px; font-weight: 800; border-radius: 8px; padding: 7px 6px; cursor: pointer; transition: transform 0.15s;">🌱 Easy</button>
+            <button type="button" id="btnLevel1" onclick="selectPuzzleLevel(1)" style="flex: 1; background: #ecfdf5; color: #059669; border: 2px solid #10b981; font-size: 11px; font-weight: 800; border-radius: 8px; padding: 8px 6px; cursor: pointer; transition: all 0.15s;">
 
-            <button type="button" onclick="scrambleSlidingPuzzle(16)" style="flex: 1; background: #f1f5f9; color: #0f172a; border: 1px solid #e2e8f0; font-size: 11px; font-weight: 800; border-radius: 8px; padding: 7px 6px; cursor: pointer; transition: transform 0.15s;">⚡ Normal</button>
+              🌱 Level 1: Easy
 
-            <button type="button" onclick="scrambleSlidingPuzzle(32)" style="flex: 1; background: #fff7ed; color: #b45309; border: 1px solid #fed7aa; font-size: 11px; font-weight: 800; border-radius: 8px; padding: 7px 6px; cursor: pointer; transition: transform 0.15s;">🔥 Hard</button>
+            </button>
+
+            <button type="button" id="btnLevel2" onclick="selectPuzzleLevel(2)" style="flex: 1; background: #f8fafc; color: #64748b; border: 1px dashed #cbd5e1; font-size: 11px; font-weight: 800; border-radius: 8px; padding: 8px 6px; cursor: not-allowed; transition: all 0.15s; opacity: 0.65;">
+
+              🔒 Level 2: Normal
+
+            </button>
+
+            <button type="button" id="btnLevel3" onclick="selectPuzzleLevel(3)" style="flex: 1; background: #f8fafc; color: #64748b; border: 1px dashed #cbd5e1; font-size: 11px; font-weight: 800; border-radius: 8px; padding: 8px 6px; cursor: not-allowed; transition: all 0.15s; opacity: 0.65;">
+
+              🔒 Level 3: Hard
+
+            </button>
 
           </div>
 
@@ -4054,7 +4071,7 @@
               <span>Step 6: KNOVA 8-Puzzle Game</span>
               <span style="font-size: 11px; font-weight: 700; color: #d97706; background: #fef3c7; padding: 2px 7px; border-radius: 10px;">+50 XP</span>
             </div>
-            <div style="font-size: 11.5px; color: #64748b; margin-top: 2px;">Slide numbers 1 to 8 into numerical order to synchronize core</div>
+            <div style="font-size: 11.5px; color: #64748b; margin-top: 2px;">Solve all 3 levels (Easy, Normal, Hard) to synchronize core</div>
           </div>
         </div>
         <div id="preExpoTask6Status" class="pre-expo-action-col">
@@ -4175,9 +4192,8 @@
     document.body.style.overflow = 'hidden';
     if (id === 'puzzleModal') {
       if (!slidingBoardInitialized) {
-        initSlidingPuzzle(18);
+        initSlidingPuzzleForLevel(1);
       }
-
     }
 
   }
@@ -4511,7 +4527,21 @@
   let slidingStarted = false;
   let slidingSolved = false;
   let slidingBoardInitialized = false;
-  function initSlidingPuzzle(scrambleMoves = 18) {
+
+  let currentPuzzleLevel = 1;
+  const completedPuzzleLevels = {
+    1: false,
+    2: false,
+    3: false
+  };
+
+  const PUZZLE_LEVEL_CONFIG = {
+    1: { name: 'Easy', scramble: 4, label: '🌱 Level 1: Easy' },
+    2: { name: 'Normal', scramble: 14, label: '⚡ Level 2: Normal' },
+    3: { name: 'Hard', scramble: 26, label: '🔥 Level 3: Hard' }
+  };
+
+  function initSlidingPuzzle(scrambleMoves = 4) {
     slidingBoard = [1, 2, 3, 4, 5, 6, 7, 8, 0];
     slidingMoves = 0;
     slidingSeconds = 0;
@@ -4519,7 +4549,9 @@
     slidingSolved = false;
     clearInterval(slidingTimerInterval);
     slidingTimerInterval = null;
+    updateSlidingTimerDisplay();
     updateSlidingStats();
+
     let lastSwapped = -1;
     for (let i = 0; i < scrambleMoves; i++) {
       const emptyIdx = slidingBoard.indexOf(0);
@@ -4537,8 +4569,119 @@
       lastSwapped = emptyIdx;
     }
 
+    // Ensure board is not already in solved state
+    while (slidingBoard.slice(0, 8).every((val, idx) => val === idx + 1)) {
+      const emptyIdx = slidingBoard.indexOf(0);
+      const row = Math.floor(emptyIdx / 3);
+      const col = emptyIdx % 3;
+      const neighbors = [];
+      if (row > 0) neighbors.push(emptyIdx - 3);
+      if (row < 2) neighbors.push(emptyIdx + 3);
+      if (col > 0) neighbors.push(emptyIdx - 1);
+      if (col < 2) neighbors.push(emptyIdx + 1);
+      const chosen = neighbors[Math.floor(Math.random() * neighbors.length)];
+      slidingBoard[emptyIdx] = slidingBoard[chosen];
+      slidingBoard[chosen] = 0;
+    }
+
     slidingBoardInitialized = true;
     renderSlidingGrid();
+    updatePuzzleLevelUI();
+
+    const solveBtn = document.getElementById('puzzleSolveBtn');
+    if (solveBtn) {
+      solveBtn.disabled = true;
+      solveBtn.style.background = '#0f172a';
+      solveBtn.style.boxShadow = 'none';
+      solveBtn.style.cursor = 'not-allowed';
+      const homeSlots = document.getElementById('puzzleCorrectSlots') ? document.getElementById('puzzleCorrectSlots').textContent : 0;
+      const lvlName = PUZZLE_LEVEL_CONFIG[currentPuzzleLevel]?.name || 'Puzzle';
+      solveBtn.innerHTML = `Solve Level ${currentPuzzleLevel} (${lvlName}) &bull; ${homeSlots}/8 Home`;
+      solveBtn.onclick = null;
+    }
+    const footerNote = document.getElementById('puzzleFooterNote');
+    if (footerNote) {
+      footerNote.innerHTML = `👉 Playing Level ${currentPuzzleLevel} (${PUZZLE_LEVEL_CONFIG[currentPuzzleLevel].name}). Click adjacent tiles to slide.`;
+      footerNote.style.color = '#64748b';
+    }
+  }
+
+  function initSlidingPuzzleForLevel(level) {
+    currentPuzzleLevel = level;
+    const cfg = PUZZLE_LEVEL_CONFIG[level] || PUZZLE_LEVEL_CONFIG[1];
+    initSlidingPuzzle(cfg.scramble);
+  }
+
+  function selectPuzzleLevel(level) {
+    if (level > 1 && !completedPuzzleLevels[level - 1]) {
+      showChallengeToast('Level Locked', `Complete Level ${level - 1} first to unlock Level ${level}!`, false);
+      return;
+    }
+    initSlidingPuzzleForLevel(level);
+  }
+
+  function restartCurrentPuzzleLevel() {
+    initSlidingPuzzleForLevel(currentPuzzleLevel);
+    showChallengeToast('Level Restarted', `Scrambled a new challenge for Level ${currentPuzzleLevel} (${PUZZLE_LEVEL_CONFIG[currentPuzzleLevel].name}).`, true);
+  }
+
+  function updatePuzzleLevelUI() {
+    const badge = document.getElementById('puzzleLevelProgressBadge');
+    if (badge) {
+      const count = (completedPuzzleLevels[1] ? 1 : 0) + (completedPuzzleLevels[2] ? 1 : 0) + (completedPuzzleLevels[3] ? 1 : 0);
+      if (count === 3) {
+        badge.textContent = 'All 3 Cleared (3/3) ✓';
+        badge.style.background = '#dcfce7';
+        badge.style.color = '#15803d';
+      } else {
+        badge.textContent = `Level ${currentPuzzleLevel} / 3 (${count}/3 Done)`;
+        badge.style.background = '#e2e8f0';
+        badge.style.color = '#0f172a';
+      }
+    }
+
+    [1, 2, 3].forEach(lvl => {
+      const btn = document.getElementById(`btnLevel${lvl}`);
+      if (!btn) return;
+      const isDone = completedPuzzleLevels[lvl];
+      const isCurrent = currentPuzzleLevel === lvl;
+      const isUnlocked = lvl === 1 || completedPuzzleLevels[lvl - 1];
+
+      if (isCurrent) {
+        btn.style.border = '2px solid #10b981';
+        btn.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.4)';
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        if (isDone) {
+          btn.style.background = '#ecfdf5';
+          btn.style.color = '#059669';
+        }
+      } else if (isDone) {
+        btn.style.border = '1px solid #86efac';
+        btn.style.background = '#f0fdf4';
+        btn.style.color = '#16a34a';
+        btn.style.boxShadow = 'none';
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+      } else if (isUnlocked) {
+        btn.style.border = '1px solid #cbd5e1';
+        btn.style.background = '#ffffff';
+        btn.style.color = '#1e293b';
+        btn.style.boxShadow = 'none';
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+      } else {
+        btn.style.border = '1px dashed #cbd5e1';
+        btn.style.background = '#f8fafc';
+        btn.style.color = '#94a3b8';
+        btn.style.boxShadow = 'none';
+        btn.style.opacity = '0.65';
+        btn.style.cursor = 'not-allowed';
+      }
+
+      const cfg = PUZZLE_LEVEL_CONFIG[lvl];
+      btn.innerHTML = isDone ? `✓ ${cfg.name} (Done)` : (isUnlocked ? cfg.label : `🔒 ${cfg.name}`);
+    });
   }
 
   function renderSlidingGrid() {
@@ -4674,32 +4817,67 @@
     const isNowSolved = slidingBoard.slice(0, 8).every((val, idx) => val === idx + 1) && slidingBoard[8] === 0;
     const solveBtn = document.getElementById('puzzleSolveBtn');
     const footerNote = document.getElementById('puzzleFooterNote');
+
     if (isNowSolved && slidingStarted) {
       slidingSolved = true;
       clearInterval(slidingTimerInterval);
-      if (solveBtn) {
-        solveBtn.disabled = false;
-        solveBtn.style.background = '#059669';
-        solveBtn.style.boxShadow = '0 4px 18px rgba(16, 185, 129, 0.4)';
-        solveBtn.style.cursor = 'pointer';
-        solveBtn.innerHTML = '✨ 1-8 Aligned! Claim +50 Pts Now';
-      }
+      completedPuzzleLevels[currentPuzzleLevel] = true;
+      updatePuzzleLevelUI();
 
-      if (footerNote) {
-        footerNote.innerHTML = `🎉 Solved in <strong>${document.getElementById('puzzleTimer').textContent}</strong> and <strong>${slidingMoves} moves</strong>! Click button above to claim +50 points.`;
-        footerNote.style.color = '#10b981';
+      if (currentPuzzleLevel === 1) {
+        if (solveBtn) {
+          solveBtn.disabled = false;
+          solveBtn.style.background = '#0284c7';
+          solveBtn.style.boxShadow = '0 4px 18px rgba(2, 132, 199, 0.4)';
+          solveBtn.style.cursor = 'pointer';
+          solveBtn.innerHTML = '✨ Level 1 (Easy) Cleared! Next: Level 2 (Normal) ➔';
+          solveBtn.onclick = () => { selectPuzzleLevel(2); };
+        }
+        if (footerNote) {
+          footerNote.innerHTML = `🎉 Level 1 (Easy) solved in <strong>${document.getElementById('puzzleTimer').textContent}</strong>! Click above to start Level 2 (Normal).`;
+          footerNote.style.color = '#0284c7';
+        }
+        showChallengeToast('Level 1 Cleared!', 'Great! Level 2 (Normal) is now unlocked.', true);
+      } else if (currentPuzzleLevel === 2) {
+        if (solveBtn) {
+          solveBtn.disabled = false;
+          solveBtn.style.background = '#7c3aed';
+          solveBtn.style.boxShadow = '0 4px 18px rgba(124, 58, 237, 0.4)';
+          solveBtn.style.cursor = 'pointer';
+          solveBtn.innerHTML = '🔥 Level 2 (Normal) Cleared! Next: Level 3 (Hard) ➔';
+          solveBtn.onclick = () => { selectPuzzleLevel(3); };
+        }
+        if (footerNote) {
+          footerNote.innerHTML = `🎉 Level 2 (Normal) solved in <strong>${document.getElementById('puzzleTimer').textContent}</strong>! Click above to start Level 3 (Hard).`;
+          footerNote.style.color = '#7c3aed';
+        }
+        showChallengeToast('Level 2 Cleared!', 'Awesome! Final level (Hard) unlocked.', true);
+      } else if (currentPuzzleLevel === 3) {
+        if (solveBtn) {
+          solveBtn.disabled = false;
+          solveBtn.style.background = '#059669';
+          solveBtn.style.boxShadow = '0 4px 18px rgba(16, 185, 129, 0.4)';
+          solveBtn.style.cursor = 'pointer';
+          solveBtn.innerHTML = '🏆 All 3 Levels Solved! Claim +50 Pts Now';
+          solveBtn.onclick = solvePuzzleChallenge;
+        }
+        if (footerNote) {
+          footerNote.innerHTML = `🏆 All 3 levels mastered! Click button above to claim your +50 points.`;
+          footerNote.style.color = '#10b981';
+        }
+        showChallengeToast('All 3 Levels Solved!', 'You mastered Easy, Normal, and Hard! Claim your +50 points.', true, 50);
       }
-
-      showChallengeToast('Quantum Core Aligned!', `Solved in ${slidingMoves} moves! Click button above to claim +50 points.`, true, 50);
     } else if (isNowSolved && !slidingStarted) {
-      if (solveBtn) {
-        solveBtn.disabled = false;
-        solveBtn.style.background = '#059669';
-        solveBtn.style.boxShadow = '0 4px 18px rgba(16, 185, 129, 0.3)';
-        solveBtn.style.cursor = 'pointer';
-        solveBtn.innerHTML = '✨ 1-8 Aligned! Claim +50 Pts Now';
+      if (completedPuzzleLevels[1] && completedPuzzleLevels[2] && completedPuzzleLevels[3]) {
+        if (solveBtn) {
+          solveBtn.disabled = false;
+          solveBtn.style.background = '#059669';
+          solveBtn.style.boxShadow = '0 4px 18px rgba(16, 185, 129, 0.4)';
+          solveBtn.style.cursor = 'pointer';
+          solveBtn.innerHTML = '🏆 All 3 Levels Solved! Claim +50 Pts Now';
+          solveBtn.onclick = solvePuzzleChallenge;
+        }
       }
-
     } else {
       if (solveBtn) {
         solveBtn.disabled = true;
@@ -4707,16 +4885,16 @@
         solveBtn.style.boxShadow = 'none';
         solveBtn.style.cursor = 'not-allowed';
         const homeSlots = document.getElementById('puzzleCorrectSlots') ? document.getElementById('puzzleCorrectSlots').textContent : 0;
-        solveBtn.innerHTML = `Arrange 1-8 to Synchronize (${homeSlots}/8 Home)`;
+        const lvlName = PUZZLE_LEVEL_CONFIG[currentPuzzleLevel]?.name || 'Puzzle';
+        solveBtn.innerHTML = `Solve Level ${currentPuzzleLevel} (${lvlName}) &bull; ${homeSlots}/8 Home`;
+        solveBtn.onclick = null;
       }
-
     }
-
   }
 
-  function scrambleSlidingPuzzle(difficulty = 16) {
+  function scrambleSlidingPuzzle(difficulty = 14) {
     initSlidingPuzzle(difficulty);
-    let desc = difficulty <= 4 ? 'Easy practice (solve in 4 moves)' : (difficulty <= 16 ? 'Normal challenge' : 'Hard challenge');
+    let desc = difficulty <= 6 ? 'Easy level' : (difficulty <= 16 ? 'Normal level' : 'Hard level');
     showChallengeToast('New Puzzle Ready', desc, true);
   }
 
@@ -4742,30 +4920,6 @@
       }, 700);
       showChallengeToast('💡 Move Hint', `Click tile ${movedVal} to slide it into the empty space.`, true);
     }
-
-  }
-
-  function autoSolvePuzzle() {
-    slidingBoard = [1, 2, 3, 4, 5, 6, 7, 8, 0];
-    slidingSolved = true;
-    clearInterval(slidingTimerInterval);
-    renderSlidingGrid();
-    checkSlidingSolved();
-    showChallengeToast('Auto-Solve Assist', 'Quantum Core aligned! You can now claim your +50 points.', true);
-  }
-
-  function resetToSolvedPuzzle() {
-    slidingBoard = [1, 2, 3, 4, 5, 6, 7, 8, 0];
-    slidingMoves = 0;
-    slidingSeconds = 0;
-    slidingStarted = false;
-    slidingSolved = false;
-    clearInterval(slidingTimerInterval);
-    slidingTimerInterval = null;
-    updateSlidingTimerDisplay();
-    renderSlidingGrid();
-    checkSlidingSolved();
-    showChallengeToast('Puzzle Reset', 'Tiles restored to order (1 to 8). Pick a difficulty to scramble and play!', true);
   }
 
   async function triggerChallengeAction(payload) {
@@ -5230,6 +5384,10 @@
   }
 
   function solvePuzzleChallenge() {
+    if (!completedPuzzleLevels[1] || !completedPuzzleLevels[2] || !completedPuzzleLevels[3]) {
+      alert("You must complete all 3 levels (Easy, Normal, and Hard) to earn +50 points!");
+      return;
+    }
     closeModal('puzzleModal');
     triggerChallengeAction({ action: 'solve_puzzle' });
   }
