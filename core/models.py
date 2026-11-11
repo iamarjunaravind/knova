@@ -86,16 +86,28 @@ class Exhibitor(models.Model):
         return 0
 
     @property
-    def booth_number(self):
-        if hasattr(self, 'booth') and self.booth:
-            return self.booth.booth_number
+    def allocated_booth(self):
+        try:
+            if hasattr(self, 'booth') and self.booth:
+                return self.booth
+        except Exception:
+            pass
+        try:
+            if self.university_id and self.university and hasattr(self.university, 'booth') and self.university.booth:
+                return self.university.booth
+        except Exception:
+            pass
         return None
 
     @property
+    def booth_number(self):
+        b = self.allocated_booth
+        return b.booth_number if b else None
+
+    @property
     def booth_hall(self):
-        if hasattr(self, 'booth') and self.booth:
-            return self.booth.hall
-        return None
+        b = self.allocated_booth
+        return b.hall if b else None
 
     def __str__(self):
         return self.company_name
