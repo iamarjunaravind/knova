@@ -371,6 +371,8 @@
     overflow: hidden;
     position: relative;
     background: #f8fafc;
+    background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+    background-size: 20px 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -388,7 +390,7 @@
     align-items: center;
     justify-content: center;
     transform-origin: center center;
-    transition: transform 0.2s ease-out;
+    transition: transform 0.18s ease-out;
   }
 
   .map-image-wrapper {
@@ -399,15 +401,21 @@
     max-height: 100%;
   }
 
-  #expoFloorSvg {
-    width: 1060px;
-    max-width: 96vw;
+  #expoFloorMapImg {
+    max-width: 92vw;
     max-height: 68vh;
+    width: auto;
     height: auto;
-    aspect-ratio: 1200 / 800;
+    aspect-ratio: 8420 / 5955;
     display: block;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+    border-radius: 10px;
+    background: #ffffff;
+    padding: 10px;
+    border: 1.5px solid #e2e8f0;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+    user-select: none;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
   }
 
   /* Vector Floor Plan SVG Interactivity */
@@ -1693,479 +1701,21 @@
           </button>
 
           <button type="button" class="map-btn" id="btnZoomReset" title="Reset View" onclick="resetMapZoom()">
-
-            <i class="ti ti-arrows-maximize"></i>
-
+            <i class="ti ti-rotate-2"></i>
           </button>
-
-          <button type="button" class="map-btn is-toggled" id="btnTogglePins" title="Toggle Booth Markers" onclick="toggleAllPins()">
-
+          <button type="button" class="map-btn" id="btnTogglePins" title="Toggle Booth Markers" onclick="toggleAllPins()">
             <i class="ti ti-map-pin"></i> <span>Pins</span>
-
           </button>
-
+          <button type="button" class="map-btn" id="btnToggleFs" title="Toggle Fullscreen" onclick="toggleMapFullscreen()">
+            <i class="ti ti-arrows-maximize"></i>
+          </button>
         </div>
-
       </div>
-
       <!-- Scrollable / Draggable Viewport -->
-
       <div class="map-viewport" id="mapViewport">
-
         <div class="map-canvas" id="mapCanvas">
-
           <div class="map-image-wrapper" id="mapImageWrapper">
-
-            <svg id="expoFloorSvg" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" class="expo-floor-svg">
-  <defs>
-    <linearGradient id="hallBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" />
-      <stop offset="100%" stop-color="#f8fafc" />
-    </linearGradient>
-    <linearGradient id="stageGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f43f5e" />
-      <stop offset="100%" stop-color="#e11d48" />
-    </linearGradient>
-    <linearGradient id="tierAGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#eff6ff" />
-      <stop offset="100%" stop-color="#dbeafe" />
-    </linearGradient>
-    <linearGradient id="tierTGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#f0f9ff" />
-      <stop offset="100%" stop-color="#e0f2fe" />
-    </linearGradient>
-    <linearGradient id="tierUGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#f0fdf4" />
-      <stop offset="100%" stop-color="#dcfce7" />
-    </linearGradient>
-    <pattern id="concourseGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f1f5f9" stroke-width="1" />
-    </pattern>
-    <filter id="boothHoverGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#1e40af" flood-opacity="0.25" />
-    </filter>
-  </defs>
-  <!-- Floor Ground & Walls -->
-  <rect x="15" y="15" width="1170" height="770" rx="14" fill="url(#hallBgGrad)" stroke="#cbd5e1" stroke-width="3" />
-
-  <!-- Walkway Tile Patterns -->
-  <rect x="360" y="180" width="810" height="70" fill="url(#concourseGrid)" />
-  <rect x="360" y="445" width="810" height="55" fill="url(#concourseGrid)" />
-  <rect x="325" y="25" width="40" height="750" fill="url(#concourseGrid)" />
-
-  <!-- Directional Labels on Walkways -->
-  <text x="765" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="#94a3b8" letter-spacing="3">◀ ━━ MAIN EXPO CONCOURSE • WALKWAY ALPHA ━━ ▶</text>
-  <text x="765" y="478" text-anchor="middle" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="2">◀ ━━ SOUTH AISLE &amp; AMENITIES CROSSWAY ━━ ▶</text>
-  <text x="345" y="420" text-anchor="middle" font-size="9" font-weight="700" fill="#94a3b8" transform="rotate(-90 345 420)" letter-spacing="2">◀ ━ WEST CONCOURSE PASSAGE ━ ▶</text>
-
-  <!-- AUDITORIUM WING (LEFT) (Zone 8: Keynote & Leadership Auditorium) -->
-  <g class="svg-zone-interactive" id="svg-zone-8" onclick="handleZoneClick(8)" title="Zone 8: Keynote &amp; Leadership Auditorium">
-  <rect x="30" y="30" width="290" height="740" rx="12" fill="#faf5ff" stroke="#e9d5ff" stroke-width="2" />
-  <rect x="30" y="30" width="290" height="34" rx="12" fill="#f3e8ff" />
-  <text x="175" y="52" text-anchor="middle" font-size="12" font-weight="800" fill="#7e22ce" letter-spacing="0.5">KEYNOTE AUDITORIUM A</text>
-  <text x="175" y="80" text-anchor="middle" font-size="9.5" font-weight="600" fill="#9333ea">Main Stage • 300 Capacity • Live Broadcast</text>
-
-  <!-- Keynote Stage -->
-  <rect x="50" y="95" width="250" height="75" rx="8" fill="url(#stageGrad)" stroke="#be123c" stroke-width="2" />
-  <!-- Stage Steps -->
-  <rect x="42" y="112" width="8" height="40" rx="2" fill="#fda4af" />
-  <rect x="300" y="112" width="8" height="40" rx="2" fill="#fda4af" />
-  <!-- Stage Podium -->
-  <rect x="155" y="103" width="40" height="16" rx="3" fill="#ffffff" opacity="0.9" />
-  <text x="175" y="115" text-anchor="middle" font-size="8" font-weight="800" fill="#be123c">PODIUM</text>
-  <text x="175" y="142" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff" letter-spacing="0.5">MAIN AUDITORIUM STAGE</text>
-  <text x="175" y="157" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ffe4e6">GLOBAL HIGHER ED KEYNOTES &amp; PANELS</text>
-
-  <!-- Auditorium Seating Rows -->
-  <g class="auditorium-seats">
-
-    <text x="45" y="204" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">A</text>
-    <rect x="60" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="196" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="195" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="204" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">A</text>
-    <text x="45" y="238" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">B</text>
-    <rect x="60" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="230" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="229" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="238" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">B</text>
-    <text x="45" y="272" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">C</text>
-    <rect x="60" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="264" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="263" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="272" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">C</text>
-    <text x="45" y="306" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">D</text>
-    <rect x="60" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="298" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="297" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="306" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">D</text>
-    <text x="45" y="340" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">E</text>
-    <rect x="60" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="332" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="331" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="340" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">E</text>
-    <text x="45" y="374" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">F</text>
-    <rect x="60" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="366" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="365" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="374" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">F</text>
-    <text x="45" y="408" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">G</text>
-    <rect x="60" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="400" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="399" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="408" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">G</text>
-    <text x="45" y="442" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">H</text>
-    <rect x="60" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="434" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="433" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="442" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">H</text>
-    <text x="45" y="476" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">I</text>
-    <rect x="60" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="468" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="467" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="476" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">I</text>
-    <text x="45" y="510" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">J</text>
-    <rect x="60" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="502" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="501" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="510" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">J</text>
-    <text x="45" y="544" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">K</text>
-    <rect x="60" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="536" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="535" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="544" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">K</text>
-    <text x="45" y="578" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">L</text>
-    <rect x="60" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="84" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="108" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="132" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="163" y="570" width="24" height="10" rx="2" fill="none" />
-    <rect x="193" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="217" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="241" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <rect x="265" y="569" width="20" height="12" rx="3" fill="#e9d5ff" stroke="#c084fc" stroke-width="1" />
-    <text x="295" y="578" text-anchor="middle" font-size="8" font-weight="700" fill="#a855f7">L</text>
-  </g>
-  <!-- AV Sound Console -->
-  <rect x="75" y="625" width="200" height="36" rx="6" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5" />
-  <text x="175" y="647" text-anchor="middle" font-size="9" font-weight="700" fill="#6b21a8">AV Broadcast &amp; Interpretation Console</text>
-
-  <!-- Auditorium Exits -->
-  <rect x="50" y="720" width="70" height="22" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" />
-  <text x="85" y="735" text-anchor="middle" font-size="9" font-weight="700" fill="#047857">EXIT A</text>
-  <rect x="190" y="720" width="70" height="22" rx="4" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" />
-  <text x="225" y="735" text-anchor="middle" font-size="9" font-weight="700" fill="#047857">EXIT B</text>
-  </g>
-
-  <!-- HALL 1: GLOBAL UNIVERSITY PAVILION (Zone 7) -->
-  <g class="svg-zone-interactive" id="svg-zone-7" onclick="handleZoneClick(7)" title="Zone 7: Global University Pavilion">
-  <rect x="370" y="30" width="800" height="24" rx="4" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
-  <text x="770" y="46" text-anchor="middle" font-size="11" font-weight="800" fill="#1d4ed8" letter-spacing="1.5">★ MAIN EXHIBITION HALL: UNIVERSITY PAVILIONS &amp; NETWORKING ★</text>
-  </g>
-
-  <g class="svg-booth-node" id="svg-booth-9" data-booth="Booth A-01" data-id="9" onclick="handleBoothClick('Booth A-01', '9')">
-    <rect x="380" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
-    <rect x="380" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
-    <text x="412.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-01</text>
-    <text x="412.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">MIT</text>
-    <text x="412.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">USA</text>
-    <rect x="386" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
-    <text x="412.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-10" data-booth="Booth A-02" data-id="10" onclick="handleBoothClick('Booth A-02', '10')">
-    <rect x="452" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
-    <rect x="452" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
-    <text x="484.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-02</text>
-    <text x="484.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Stanford</text>
-    <text x="484.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">USA</text>
-    <rect x="458" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
-    <text x="484.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-11" data-booth="Booth A-03" data-id="11" onclick="handleBoothClick('Booth A-03', '11')">
-    <rect x="524" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
-    <rect x="524" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
-    <text x="556.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-03</text>
-    <text x="556.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Oxford</text>
-    <text x="556.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">UK</text>
-    <rect x="530" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
-    <text x="556.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-12" data-booth="Booth A-04" data-id="12" onclick="handleBoothClick('Booth A-04', '12')">
-    <rect x="596" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
-    <rect x="596" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
-    <text x="628.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-04</text>
-    <text x="628.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Cambridge</text>
-    <text x="628.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">UK</text>
-    <rect x="602" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
-    <text x="628.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-13" data-booth="Booth A-05" data-id="13" onclick="handleBoothClick('Booth A-05', '13')">
-    <rect x="668" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
-    <rect x="668" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
-    <text x="700.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-05</text>
-    <text x="700.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Harvard</text>
-    <text x="700.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">USA</text>
-    <rect x="674" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
-    <text x="700.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-14" data-booth="Booth A-06" data-id="14" onclick="handleBoothClick('Booth A-06', '14')">
-    <rect x="740" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
-    <rect x="740" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
-    <text x="772.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-06</text>
-    <text x="772.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Imperial</text>
-    <text x="772.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">UK</text>
-    <rect x="746" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
-    <text x="772.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-15" data-booth="Booth A-07" data-id="15" onclick="handleBoothClick('Booth A-07', '15')">
-    <rect x="812" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
-    <rect x="812" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
-    <text x="844.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-07</text>
-    <text x="844.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">NUS</text>
-    <text x="844.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Singapore</text>
-    <rect x="818" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
-    <text x="844.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-16" data-booth="Booth A-08" data-id="16" onclick="handleBoothClick('Booth A-08', '16')">
-    <rect x="884" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
-    <rect x="884" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
-    <text x="916.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-08</text>
-    <text x="916.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">ETH Zurich</text>
-    <text x="916.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Switzerland</text>
-    <rect x="890" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
-    <text x="916.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-17" data-booth="Booth A-09" data-id="17" onclick="handleBoothClick('Booth A-09', '17')">
-    <rect x="956" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
-    <rect x="956" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
-    <text x="988.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-09</text>
-    <text x="988.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Toronto</text>
-    <text x="988.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Canada</text>
-    <rect x="962" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
-    <text x="988.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-18" data-booth="Booth A-10" data-id="18" onclick="handleBoothClick('Booth A-10', '18')">
-    <rect x="1028" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
-    <rect x="1028" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
-    <text x="1060.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-10</text>
-    <text x="1060.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">TUM Munich</text>
-    <text x="1060.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Germany</text>
-    <rect x="1034" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
-    <text x="1060.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-22" data-booth="Booth A-11" data-id="22" onclick="handleBoothClick('Booth A-11', '22')">
-    <rect x="1100" y="60" width="65" height="105" rx="8" fill="url(#tierAGrad)" stroke="#3b82f6" stroke-width="2" class="booth-rect" />
-    <rect x="1100" y="60" width="65" height="24" rx="6" fill="#1d4ed8" class="booth-badge-rect" />
-    <text x="1132.5" y="76" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" letter-spacing="0.5">A-11</text>
-    <text x="1132.5" y="112" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">MIT Exh 2</text>
-    <text x="1132.5" y="128" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">USA</text>
-    <rect x="1106" y="142" width="53" height="16" rx="4" fill="#ffffff" stroke="#bfdbfe" stroke-width="1" />
-    <text x="1132.5" y="153" text-anchor="middle" font-size="8" font-weight="700" fill="#2563eb">COUNSEL</text>
-  </g>
-  <!-- CENTRAL EXHIBITION ISLANDS & HUBS -->
-  <!-- Block 1: Counselling Desk 1 & Tech Corp -->
-  <g class="svg-booth-node" id="svg-booth-23" data-booth="Booth U-181" data-id="23" onclick="handleBoothClick('Booth U-181', '23')">
-    <rect x="400" y="260" width="105" height="80" rx="8" fill="url(#tierUGrad)" stroke="#059669" stroke-width="2" class="booth-rect" />
-    <rect x="400" y="260" width="105" height="22" rx="6" fill="#059669" class="booth-badge-rect" />
-    <text x="452" y="275" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">U-181</text>
-    <text x="452" y="303" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Academic Desk 1</text>
-    <text x="452" y="318" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Counselling Station</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-21" data-booth="Booth T-01" data-id="21" onclick="handleBoothClick('Booth T-01', '21')">
-    <rect x="400" y="355" width="105" height="80" rx="8" fill="url(#tierTGrad)" stroke="#0284c7" stroke-width="2" class="booth-rect" />
-    <rect x="400" y="355" width="105" height="22" rx="6" fill="#0284c7" class="booth-badge-rect" />
-    <text x="452" y="370" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">T-01</text>
-    <text x="452" y="398" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Tech Corp Global</text>
-    <text x="452" y="413" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Innovation Pavilion</text>
-  </g>
-
-  <!-- Passage 1 -->
-  <text x="530" y="350" text-anchor="middle" font-size="9" font-weight="700" fill="#cbd5e1" transform="rotate(-90 530 350)">AISLE 1</text>
-
-  <!-- Block 2: Counselling Desk 2 & Kerala Univ Exh -->
-  <g class="svg-booth-node" id="svg-booth-24" data-booth="Booth U-182" data-id="24" onclick="handleBoothClick('Booth U-182', '24')">
-    <rect x="555" y="260" width="105" height="80" rx="8" fill="url(#tierUGrad)" stroke="#059669" stroke-width="2" class="booth-rect" />
-    <rect x="555" y="260" width="105" height="22" rx="6" fill="#059669" class="booth-badge-rect" />
-    <text x="607" y="275" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">U-182</text>
-    <text x="607" y="303" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Academic Desk 2</text>
-    <text x="607" y="318" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Advisory Hub</text>
-  </g>
-  <g class="svg-booth-node" id="svg-booth-20" data-booth="Booth EXH-20" data-id="20" onclick="handleBoothClick('Booth EXH-20', '20')">
-    <rect x="555" y="355" width="105" height="80" rx="8" fill="url(#tierTGrad)" stroke="#0284c7" stroke-width="2" class="booth-rect" />
-    <rect x="555" y="355" width="105" height="22" rx="6" fill="#0284c7" class="booth-badge-rect" />
-    <text x="607" y="370" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">EXH-20</text>
-    <text x="607" y="398" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Kerala University</text>
-    <text x="607" y="413" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Regional Pavilion</text>
-  </g>
-
-  <!-- Passage 2 -->
-  <text x="685" y="350" text-anchor="middle" font-size="9" font-weight="700" fill="#cbd5e1" transform="rotate(-90 685 350)">AISLE 2</text>
-
-  <!-- Block 3: Kerala Univ Hub (U-180) & Info Station -->
-  <g class="svg-booth-node" id="svg-booth-19" data-booth="U-180" data-id="19" onclick="handleBoothClick('U-180', '19')">
-    <rect x="710" y="260" width="115" height="80" rx="8" fill="url(#tierUGrad)" stroke="#059669" stroke-width="2" class="booth-rect" />
-    <rect x="710" y="260" width="115" height="22" rx="6" fill="#059669" class="booth-badge-rect" />
-    <text x="767" y="275" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">U-180</text>
-    <text x="767" y="303" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Kerala University</text>
-    <text x="767" y="318" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Central University Hub</text>
-  </g>
-  <g class="svg-landmark-node">
-    <rect x="710" y="355" width="115" height="80" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" />
-    <rect x="710" y="355" width="115" height="22" rx="6" fill="#64748b" />
-    <text x="767" y="370" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">HELP DESK</text>
-    <text x="767" y="398" text-anchor="middle" font-size="10" font-weight="750" fill="#0f172a">Visitor Information</text>
-    <text x="767" y="413" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Lost &amp; Found • Maps</text>
-  </g>
-
-  <!-- Passage 3 -->
-  <text x="845" y="350" text-anchor="middle" font-size="9" font-weight="700" fill="#cbd5e1" transform="rotate(-90 845 350)">AISLE 3</text>
-
-  <!-- STEM & AI Exploration Arena (Zone 9) -->
-  <g class="svg-zone-arena svg-zone-interactive" id="svg-zone-9" onclick="handleZoneClick(9)" title="Zone 9: STEM &amp; AI Arena">
-    <rect x="865" y="260" width="140" height="175" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" />
-    <rect x="865" y="260" width="140" height="26" rx="8" fill="#16a34a" />
-    <text x="935" y="277" text-anchor="middle" font-size="10.5" font-weight="800" fill="#ffffff">STEM &amp; AI ARENA</text>
-    <circle cx="935" cy="325" r="22" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" />
-    <text x="935" y="330" text-anchor="middle" font-size="14" font-weight="800" fill="#15803d">AI</text>
-    <text x="935" y="370" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Robotics &amp; Tech Demo</text>
-    <text x="935" y="388" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">East Wing • Hands-on Lab</text>
-    <rect x="885" y="405" width="100" height="18" rx="4" fill="#16a34a" />
-    <text x="935" y="417" text-anchor="middle" font-size="8.5" font-weight="750" fill="#ffffff">ACTIVITY ZONE 3</text>
-  </g>
-
-  <!-- Scholarship & Financial Aid Atrium (Zone 10) -->
-  <g class="svg-zone-arena svg-zone-interactive" id="svg-zone-10" onclick="handleZoneClick(10)" title="Zone 10: Scholarship &amp; Financial Aid Atrium">
-    <rect x="1020" y="260" width="145" height="175" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2" />
-    <rect x="1020" y="260" width="145" height="26" rx="8" fill="#d97706" />
-    <text x="1092" y="277" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">SCHOLARSHIP ATRIUM</text>
-    <circle cx="1092" cy="325" r="22" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
-    <text x="1092" y="331" text-anchor="middle" font-size="14" font-weight="800" fill="#b45309">$</text>
-    <text x="1092" y="370" text-anchor="middle" font-size="10.5" font-weight="750" fill="#0f172a">Global Grant Advisory</text>
-    <text x="1092" y="388" text-anchor="middle" font-size="8.5" font-weight="600" fill="#64748b">Central Concourse Desk</text>
-    <rect x="1042" y="405" width="100" height="18" rx="4" fill="#d97706" />
-    <text x="1092" y="417" text-anchor="middle" font-size="8.5" font-weight="750" fill="#ffffff">ACTIVITY ZONE 4</text>
-  </g>
-
-  <!-- BOTTOM FACILITIES & LOUNGES -->
-  <!-- One-on-One Dean Counselling Lounge (Zone 11) -->
-  <g class="svg-zone-lounge svg-zone-interactive" id="svg-zone-11" onclick="handleZoneClick(11)" title="Zone 11: One-on-One Dean Counselling Lounge">
-    <rect x="370" y="515" width="235" height="110" rx="10" fill="#fefce8" stroke="#ca8a04" stroke-width="1.5" />
-    <rect x="370" y="515" width="235" height="24" rx="8" fill="#ca8a04" />
-    <text x="487" y="531" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">ONE-ON-ONE DEAN COUNSELLING LOUNGE</text>
-    <text x="487" y="565" text-anchor="middle" font-size="11" font-weight="750" fill="#0f172a">Academic Advisory Hub</text>
-    <text x="487" y="583" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">North Suite • Station Desks 1–10</text>
-    <text x="487" y="605" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ca8a04">EXPERT CONSULTATIONS</text>
-  </g>
-
-  <!-- Executive VIP Suite & Networking Hub (Zone 14) -->
-  <g class="svg-zone-lounge svg-zone-interactive" id="svg-zone-14" onclick="handleZoneClick(14)" title="Zone 14: Graduate &amp; MBA Executive Suite">
-    <rect x="620" y="515" width="240" height="110" rx="10" fill="#faf5ff" stroke="#9333ea" stroke-width="1.5" />
-    <rect x="620" y="515" width="240" height="24" rx="8" fill="#9333ea" />
-    <text x="740" y="531" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">GRADUATE &amp; MBA EXECUTIVE SUITE</text>
-    <text x="740" y="565" text-anchor="middle" font-size="11" font-weight="750" fill="#0f172a">VIP Executive Lounge</text>
-    <text x="740" y="583" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">University Deans &amp; Corporate Sponsors</text>
-    <text x="740" y="605" text-anchor="middle" font-size="8.5" font-weight="700" fill="#9333ea">NETWORKING &amp; BRIEFINGS</text>
-  </g>
-
-  <!-- Registration Foyer & Document Vault (Zone 15) -->
-  <g class="svg-zone-lounge svg-zone-interactive" id="svg-zone-15" onclick="handleZoneClick(15)" title="Zone 15: Document Vault &amp; Fast-Track Verification">
-    <rect x="875" y="515" width="290" height="110" rx="10" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.5" />
-    <rect x="875" y="515" width="290" height="24" rx="8" fill="#0d9488" />
-    <text x="1020" y="531" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">REGISTRATION FOYER &amp; DOCUMENT VAULT</text>
-    <text x="1020" y="565" text-anchor="middle" font-size="11" font-weight="750" fill="#0f172a">Digital Attendee Badge Verification</text>
-    <text x="1020" y="583" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Express QR Check-In • Credentials Desk</text>
-    <text x="1020" y="605" text-anchor="middle" font-size="8.5" font-weight="700" fill="#0d9488">ENTRY TURNSTILES 01–08</text>
-  </g>
-
-  <!-- Bottom Strip: Networking Cafe & Pitch Arena (Zone 16) -->
-  <g class="svg-zone-interactive" id="svg-zone-16" onclick="handleZoneClick(16)" title="Zone 16: Student Innovation &amp; Pitch Arena">
-    <rect x="370" y="640" width="490" height="110" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
-    <rect x="370" y="640" width="490" height="22" rx="8" fill="#ea580c" />
-    <text x="615" y="655" text-anchor="middle" font-size="9.5" font-weight="800" fill="#ffffff">STUDENT INNOVATION &amp; PITCH ARENA • NETWORKING</text>
-    <text x="615" y="690" text-anchor="middle" font-size="11" font-weight="750" fill="#0f172a">Startup Pitches, Live Demos &amp; Student Collaboration Stage</text>
-    <text x="615" y="710" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Central Plaza South • Charging Station &amp; Amenities</text>
-  </g>
-
-  <!-- Entrance Hall & Gates -->
-  <rect x="875" y="640" width="290" height="110" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2" />
-  <rect x="875" y="640" width="290" height="22" rx="8" fill="#2563eb" />
-  <text x="1020" y="655" text-anchor="middle" font-size="10" font-weight="800" fill="#ffffff">MAIN EXPO HALL ENTRANCE</text>
-  <text x="1020" y="688" text-anchor="middle" font-size="12" font-weight="800" fill="#1e40af">WELCOME TO KNOVA 2027</text>
-  <text x="1020" y="706" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">Main Concourse Gates • Security Screening</text>
-  <text x="1020" y="730" text-anchor="middle" font-size="9" font-weight="800" fill="#2563eb">▲ ENTER EXPO FLOOR HERE ▲</text>
-
-  <!-- Dynamic SVG Zone Highlight Rectangle -->
-  <rect id="svgZoneHighlightBox" x="0" y="0" width="0" height="0" rx="10"
-        fill="rgba(56, 189, 248, 0.12)" stroke="#0284c7" stroke-width="3.5"
-        stroke-dasharray="8 6" style="display:none; pointer-events:none; transition: all 0.35s ease-out; filter: drop-shadow(0 0 12px rgba(2, 132, 199, 0.55));" />
-
-</svg>
+            <img id="expoFloorMapImg" src="{% if site_config.map_image %}{{ site_config.map_image.url }}{% else %}{% static 'assets/expo_map.svg' %}{% endif %}" onerror="this.onerror=null;this.src='{% static 'assets/expo_map.webp' %}';" alt="KNOVA Exhibition Floor Plan" width="8420" height="5955" loading="eager" decoding="async">
 
             <!-- Active Pulsing Target Ring (Spotlight) -->
 
@@ -2311,13 +1861,15 @@
 
       <div class="map-viewer-bottombar">
 
-        <div class="legend-item"><span class="legend-color-dot" style="background:#ef4444;"></span> Global Kiosks (Row A)</div>
+        <div class="legend-item"><span class="legend-color-dot" style="background:#ef4444;"></span> Shell Scheme (2.5 &times; 2.5m)</div>
 
-        <div class="legend-item"><span class="legend-color-dot" style="background:#2563eb;"></span> Flagship Pavilions</div>
+        <div class="legend-item"><span class="legend-color-dot" style="background:#16a34a;"></span> Standard Booth (3 &times; 3m)</div>
 
-        <div class="legend-item"><span class="legend-color-dot" style="background:#16a34a;"></span> Academic Booths</div>
+        <div class="legend-item"><span class="legend-color-dot" style="background:#2563eb;"></span> Premium Island &amp; Pavilions</div>
 
-        <div class="legend-item"><span class="legend-color-dot" style="background:#ec4899;"></span> Keynote Stages</div>
+        <div class="legend-item"><span class="legend-color-dot" style="background:#8b5cf6;"></span> Keynote &amp; Leadership Arena</div>
+
+        <div class="legend-item"><span class="legend-color-dot" style="background:#0284c7;"></span> Registration &amp; Concourse</div>
 
       </div>
 
@@ -2538,18 +2090,18 @@
     {% endfor %}
   };
 
-  // Activity Zones Coordinates & Viewport Bounds (viewBox 1200 x 800)
+  // Activity Zones Coordinates & Viewport Bounds on official layout
   const ZONE_COORDINATES = {
-    7:  { cx: 770,  cy: 102, pctX: 64.1, pctY: 12.8, zoom: 1.4,  bbox: { x: 370, y: 30,  w: 800, h: 145 } },
-    8:  { cx: 175,  cy: 380, pctX: 14.6, pctY: 47.5, zoom: 1.3,  bbox: { x: 30,  y: 30,  w: 290, h: 740 } },
-    9:  { cx: 935,  cy: 345, pctX: 77.9, pctY: 43.1, zoom: 1.8,  bbox: { x: 865, y: 260, w: 140, h: 175 } },
-    10: { cx: 1092, cy: 345, pctX: 91.0, pctY: 43.1, zoom: 1.8,  bbox: { x: 1020,y: 260, w: 145, h: 175 } },
-    11: { cx: 487,  cy: 570, pctX: 40.6, pctY: 71.2, zoom: 1.8,  bbox: { x: 370, y: 515, w: 235, h: 110 } },
-    12: { cx: 452,  cy: 345, pctX: 37.7, pctY: 43.1, zoom: 1.85, bbox: { x: 395, y: 255, w: 115, h: 185 } },
-    13: { cx: 607,  cy: 345, pctX: 50.6, pctY: 43.1, zoom: 1.85, bbox: { x: 550, y: 255, w: 115, h: 185 } },
-    14: { cx: 740,  cy: 570, pctX: 61.7, pctY: 71.2, zoom: 1.8,  bbox: { x: 620, y: 515, w: 240, h: 110 } },
-    15: { cx: 1020, cy: 570, pctX: 85.0, pctY: 71.2, zoom: 1.8,  bbox: { x: 875, y: 515, w: 290, h: 110 } },
-    16: { cx: 615,  cy: 695, pctX: 51.2, pctY: 86.9, zoom: 1.6,  bbox: { x: 370, y: 640, w: 490, h: 110 } }
+    7:  { pctX: 50.0, pctY: 42.0, zoom: 1.45 },
+    8:  { pctX: 20.0, pctY: 50.0, zoom: 1.55 },
+    9:  { pctX: 72.0, pctY: 38.0, zoom: 1.55 },
+    10: { pctX: 50.0, pctY: 28.0, zoom: 1.55 },
+    11: { pctX: 35.0, pctY: 25.0, zoom: 1.55 },
+    12: { pctX: 28.0, pctY: 48.0, zoom: 1.55 },
+    13: { pctX: 65.0, pctY: 62.0, zoom: 1.55 },
+    14: { pctX: 22.0, pctY: 22.0, zoom: 1.6 },
+    15: { pctX: 50.0, pctY: 82.0, zoom: 1.55 },
+    16: { pctX: 50.0, pctY: 65.0, zoom: 1.55 }
   };
 
   let activeZoneId = null;
@@ -2592,24 +2144,7 @@
       item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
-    // 4. Update SVG zone interactive highlights
-    document.querySelectorAll('.svg-zone-interactive').forEach(el => el.classList.remove('is-active-zone'));
-    const svgZone = document.getElementById('svg-zone-' + zoneId);
-    if (svgZone) {
-      svgZone.classList.add('is-active-zone');
-    }
-
-    // 5. Update Highlight Box on SVG
-    const box = document.getElementById('svgZoneHighlightBox');
-    const coords = ZONE_COORDINATES[zoneId] || { pctX: 50, pctY: 50, zoom: 1.35, bbox: { x: 200, y: 200, w: 300, h: 200 } };
-    if (box && coords.bbox) {
-      box.setAttribute('x', coords.bbox.x - 6);
-      box.setAttribute('y', coords.bbox.y - 6);
-      box.setAttribute('width', coords.bbox.w + 12);
-      box.setAttribute('height', coords.bbox.h + 12);
-      box.setAttribute('stroke', zone.color || '#0284c7');
-      box.style.display = 'block';
-    }
+    const coords = ZONE_COORDINATES[zoneId] || { pctX: 50, pctY: 50, zoom: 1.35 };
 
     // 6. Populate Docked Zone Card
     const zoneCard = document.getElementById('mapZoneCard');
@@ -2734,7 +2269,7 @@
   let isDragging = false;
   let startX = 0;
   let startY = 0;
-  let pinsVisible = true;
+  let pinsVisible = false;
   let activeBoothId = null;
   // Initialize Map Pins
   function getShortBoothCode(boothNum) {
@@ -2755,6 +2290,7 @@
     const layer = document.getElementById('mapPinsLayer');
     if (!layer) return;
     layer.innerHTML = '';
+    layer.style.display = pinsVisible ? 'block' : 'none';
     const boothItems = document.querySelectorAll('.booth-item');
     boothItems.forEach((item, idx) => {
       const boothNum = item.getAttribute('data-booth');
@@ -2822,6 +2358,8 @@
     const itemIndex = allItems.indexOf(item);
     const coords = getCoordinateForBooth(boothNum, itemIndex);
     // 3. Highlight Pin on Map
+    const pinsLayer = document.getElementById('mapPinsLayer');
+    if (pinsLayer) pinsLayer.style.display = 'block';
     document.querySelectorAll('.booth-pin').forEach(el => el.classList.remove('is-active'));
     const activePin = document.getElementById('pin-' + boothId);
     if (activePin) {
@@ -2916,6 +2454,8 @@
     const spotlight = document.getElementById('boothSpotlight');
     const statusPill = document.getElementById('mapStatusPill');
     const statusText = document.getElementById('mapStatusText');
+    const pinsLayer = document.getElementById('mapPinsLayer');
+    if (pinsLayer && !pinsVisible) pinsLayer.style.display = 'none';
     if (tooltip) tooltip.style.display = 'none';
     document.querySelectorAll('.svg-booth-node').forEach(el => el.classList.remove('is-active'));
     if (uniCard) uniCard.style.display = 'none';
@@ -2970,13 +2510,28 @@
     const btn = document.getElementById('btnTogglePins');
     pinsVisible = !pinsVisible;
     if (layer) {
-      layer.style.display = pinsVisible ? 'block' : 'none';
+      layer.style.display = (pinsVisible || activeBoothId) ? 'block' : 'none';
     }
 
     if (btn) {
       btn.classList.toggle('is-toggled', pinsVisible);
     }
 
+  }
+
+  function toggleMapFullscreen() {
+    const card = document.querySelector('.expo-map-card') || document.getElementById('mapViewport');
+    if (!document.fullscreenElement) {
+      if (card && card.requestFullscreen) {
+        card.requestFullscreen();
+      } else if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
   }
 
   function applyMapTransform() {
