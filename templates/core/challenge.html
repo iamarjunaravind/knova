@@ -3222,9 +3222,9 @@
 
           <label class="tech-option-card">
 
-            <input type="radio" name="techQ1" value="ai" checked>
+            <input type="radio" name="techQ1" value="ai" required>
 
-            <span><strong>Artificial Intelligence</strong> (Smart computer systems that learn &amp; solve tasks)</span>
+            <span>Artificial Intelligence</span>
 
           </label>
 
@@ -3232,7 +3232,7 @@
 
             <input type="radio" name="techQ1" value="automated">
 
-            <span>Automated Internet (High-speed broadband network connections)</span>
+            <span>Automated Internet</span>
 
           </label>
 
@@ -3240,7 +3240,7 @@
 
             <input type="radio" name="techQ1" value="interface">
 
-            <span>Advanced Interface (Touchscreen glass displays)</span>
+            <span>Advanced Interface</span>
 
           </label>
 
@@ -3264,9 +3264,9 @@
 
           <label class="tech-option-card">
 
-            <input type="radio" name="techQ2" value="python" checked>
+            <input type="radio" name="techQ2" value="python" required>
 
-            <span><strong>Python</strong> (Known for clean syntax, versatility, and machine learning)</span>
+            <span>Python</span>
 
           </label>
 
@@ -3274,7 +3274,7 @@
 
             <input type="radio" name="techQ2" value="html">
 
-            <span>HTML (Markup language used for web formatting)</span>
+            <span>HTML</span>
 
           </label>
 
@@ -3282,7 +3282,7 @@
 
             <input type="radio" name="techQ2" value="assembly">
 
-            <span>Assembly Code (Direct hardware electrical instructions)</span>
+            <span>Assembly Code</span>
 
           </label>
 
@@ -3306,9 +3306,9 @@
 
           <label class="tech-option-card">
 
-            <input type="radio" name="techQ3" value="32" checked>
+            <input type="radio" name="techQ3" value="32" required>
 
-            <span><strong>32</strong> (Each step doubles: 16 &times; 2 = 32)</span>
+            <span>32</span>
 
           </label>
 
@@ -5212,6 +5212,19 @@
 
   function submitTechChallenge(e) {
     e.preventDefault();
+    const form = document.getElementById('techForm');
+    const q1 = form ? form.querySelector('input[name="techQ1"]:checked')?.value : null;
+    const q2 = form ? form.querySelector('input[name="techQ2"]:checked')?.value : null;
+    const q3 = form ? form.querySelector('input[name="techQ3"]:checked')?.value : null;
+
+    if (!q1 || !q2 || !q3) {
+      alert('Please answer all 3 questions.');
+      return;
+    }
+    if (q1 !== 'ai' || q2 !== 'python' || q3 !== '32') {
+      alert('Some answers are incorrect! Please review your answers and try again.');
+      return;
+    }
     closeModal('techModal');
     triggerChallengeAction({ action: 'submit_tech' });
   }
