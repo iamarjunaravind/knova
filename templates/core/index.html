@@ -2209,37 +2209,41 @@
         <!-- Quick Stats - Metrics row exactly like reference UI -->
 
         {% if site_config.show_stats_bar %}
-<div class="hero-quick-stats" style="pointer-events: auto;">
-          <a href="{% url 'public_exhibitors' %}" class="quick-stat-card">
-            <i class="ti ti-building-bank" style="font-size: clamp(15px, 2vh, 19px); color: rgba(255,255,255,0.75); flex-shrink: 0;"></i>
+        <div class="hero-quick-stats" style="pointer-events: auto;">
+          <!-- 1. Courses -->
+          <a href="{{ site_config.stat_1_url|default:'/courses/' }}" class="quick-stat-card" title="Browse Verified Degree Courses & Programs">
+            <i class="ti ti-book" style="font-size: clamp(15px, 2vh, 19px); color: rgba(255,255,255,0.85); flex-shrink: 0;"></i>
             <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
-              <span class="stat-number">{{ site_config.stat_1_number|default:total_exhibitors|default:0 }}</span>
-              <span class="stat-label">{{ site_config.stat_1_label|default:"Global Exhibitors" }}</span>
+              <span class="stat-number">{{ site_config.stat_1_number|default:"1000+" }}</span>
+              <span class="stat-label">{{ site_config.stat_1_label|default:"COURSES" }}</span>
             </div>
           </a>
-          <a href="{% url 'courses_list' %}" class="quick-stat-card">
-            <i class="ti ti-book" style="font-size: clamp(15px, 2vh, 19px); color: rgba(255,255,255,0.75); flex-shrink: 0;"></i>
+          <!-- 2. Universities -->
+          <a href="{{ site_config.stat_2_url|default:'/universities/' }}" class="quick-stat-card" title="Meet Participating Universities & Exhibitors">
+            <i class="ti ti-building-bank" style="font-size: clamp(15px, 2vh, 19px); color: rgba(255,255,255,0.85); flex-shrink: 0;"></i>
             <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
-              <span class="stat-number">{{ site_config.stat_2_number|default:total_courses|default:0 }}</span>
-              <span class="stat-label">{{ site_config.stat_2_label|default:"Verified Courses" }}</span>
+              <span class="stat-number">{{ site_config.stat_2_number|default:"50+" }}</span>
+              <span class="stat-label">{{ site_config.stat_2_label|default:"UNIVERSITY" }}</span>
             </div>
           </a>
-          <a href="{% url 'public_exhibitors' %}" class="quick-stat-card">
-            <i class="ti ti-world" style="font-size: clamp(15px, 2vh, 19px); color: rgba(255,255,255,0.75); flex-shrink: 0;"></i>
+          <!-- 3. 1-on-1 Sessions / Programme -->
+          <a href="{{ site_config.stat_3_url|default:'/programme/' }}" class="quick-stat-card" title="Keynote Masterclasses & 1-on-1 Sessions">
+            <i class="ti ti-calendar-event" style="font-size: clamp(15px, 2vh, 19px); color: rgba(255,255,255,0.85); flex-shrink: 0;"></i>
             <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
-              <span class="stat-number">{{ site_config.stat_3_number|default:total_countries|default:0 }}</span>
-              <span class="stat-label">{{ site_config.stat_3_label|default:"Study Countries" }}</span>
+              <span class="stat-number">{{ site_config.stat_3_number|default:"1-ON-1" }}</span>
+              <span class="stat-label">{{ site_config.stat_3_label|default:"SESSIONS" }}</span>
             </div>
           </a>
-          <a href="{% url 'courses_list' %}?scholarship=true" class="quick-stat-card">
-            <i class="ti ti-shield-check" style="font-size: clamp(15px, 2vh, 19px); color: #38bdf8; flex-shrink: 0;"></i>
+          <!-- 4. Scholarships -->
+          <a href="{{ site_config.stat_4_url|default:'/scholarships/' }}" class="quick-stat-card" title="Explore Scholarships & Financial Aid Grants">
+            <i class="ti ti-award" style="font-size: clamp(15px, 2vh, 19px); color: #38bdf8; flex-shrink: 0;"></i>
             <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
-              <span class="stat-number">{{ site_config.stat_4_number|default:total_scholarships|default:0 }}</span>
-              <span class="stat-label">{{ site_config.stat_4_label|default:"Scholarships & Aid" }}</span>
+              <span class="stat-number">{{ site_config.stat_4_number|default:"Unlock 50+" }}</span>
+              <span class="stat-label">{{ site_config.stat_4_label|default:"SCHOLARSHIP" }}</span>
             </div>
           </a>
         </div>
-{% endif %}
+        {% endif %}
 
       </div>
     </div>

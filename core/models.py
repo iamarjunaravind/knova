@@ -584,12 +584,16 @@ class SiteConfiguration(models.Model):
     # Quick Stats Bar
     stat_1_number = models.CharField(max_length=50, default="1000+", blank=True)
     stat_1_label = models.CharField(max_length=100, default="COURSES", blank=True)
+    stat_1_url = models.CharField(max_length=255, default="/courses/", blank=True)
     stat_2_number = models.CharField(max_length=50, default="50+", blank=True)
     stat_2_label = models.CharField(max_length=100, default="UNIVERSITY", blank=True)
+    stat_2_url = models.CharField(max_length=255, default="/universities/", blank=True)
     stat_3_number = models.CharField(max_length=50, default="1-ON-1", blank=True)
     stat_3_label = models.CharField(max_length=100, default="SESSIONS", blank=True)
+    stat_3_url = models.CharField(max_length=255, default="/programme/", blank=True)
     stat_4_number = models.CharField(max_length=50, default="Unlock 50+", blank=True)
     stat_4_label = models.CharField(max_length=100, default="SCHOLARSHIP", blank=True)
+    stat_4_url = models.CharField(max_length=255, default="/scholarships/", blank=True)
 
     # Why KNOVA Section
     why_badge = models.CharField(max_length=100, default="WHY KNOVA EXPO", blank=True)

@@ -2553,31 +2553,43 @@
         <h4 style="font-size:12px; font-weight:700; color:#64748b; margin:14px 0 8px 0; text-transform:uppercase;">Hero Card Quick Metric Badges (4 Mini Pills Inside Master Card):</h4>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Pill 1 Count &amp; Label</label>
+            <label class="form-label">Pill 1 (Count, Label &amp; URL)</label>
             <div style="display:flex; gap:8px;">
-              <input type="text" name="stat_1_number" class="form-control" style="width:90px;" value="{{ config.stat_1_number }}">
-              <input type="text" name="stat_1_label" class="form-control" value="{{ config.stat_1_label }}">
+              <input type="text" name="stat_1_number" class="form-control" style="width:90px;" value="{{ config.stat_1_number }}" placeholder="1000+">
+              <input type="text" name="stat_1_label" class="form-control" value="{{ config.stat_1_label }}" placeholder="COURSES">
+            </div>
+            <div style="margin-top:6px;">
+              <input type="text" name="stat_1_url" class="form-control" style="font-size:12px; padding:6px 10px;" value="{{ config.stat_1_url|default:'/courses/' }}" placeholder="Destination URL (e.g. /courses/)">
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">Pill 2 Count &amp; Label</label>
+            <label class="form-label">Pill 2 (Count, Label &amp; URL)</label>
             <div style="display:flex; gap:8px;">
-              <input type="text" name="stat_2_number" class="form-control" style="width:90px;" value="{{ config.stat_2_number }}">
-              <input type="text" name="stat_2_label" class="form-control" value="{{ config.stat_2_label }}">
+              <input type="text" name="stat_2_number" class="form-control" style="width:90px;" value="{{ config.stat_2_number }}" placeholder="50+">
+              <input type="text" name="stat_2_label" class="form-control" value="{{ config.stat_2_label }}" placeholder="UNIVERSITY">
+            </div>
+            <div style="margin-top:6px;">
+              <input type="text" name="stat_2_url" class="form-control" style="font-size:12px; padding:6px 10px;" value="{{ config.stat_2_url|default:'/universities/' }}" placeholder="Destination URL (e.g. /universities/)">
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">Pill 3 Count &amp; Label</label>
+            <label class="form-label">Pill 3 (Count, Label &amp; URL)</label>
             <div style="display:flex; gap:8px;">
-              <input type="text" name="stat_3_number" class="form-control" style="width:90px;" value="{{ config.stat_3_number }}">
-              <input type="text" name="stat_3_label" class="form-control" value="{{ config.stat_3_label }}">
+              <input type="text" name="stat_3_number" class="form-control" style="width:90px;" value="{{ config.stat_3_number }}" placeholder="1-ON-1">
+              <input type="text" name="stat_3_label" class="form-control" value="{{ config.stat_3_label }}" placeholder="SESSIONS">
+            </div>
+            <div style="margin-top:6px;">
+              <input type="text" name="stat_3_url" class="form-control" style="font-size:12px; padding:6px 10px;" value="{{ config.stat_3_url|default:'/programme/' }}" placeholder="Destination URL (e.g. /programme/ or #programme)">
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">Pill 4 Count &amp; Label</label>
+            <label class="form-label">Pill 4 (Count, Label &amp; URL)</label>
             <div style="display:flex; gap:8px;">
-              <input type="text" name="stat_4_number" class="form-control" style="width:90px;" value="{{ config.stat_4_number }}">
-              <input type="text" name="stat_4_label" class="form-control" value="{{ config.stat_4_label }}">
+              <input type="text" name="stat_4_number" class="form-control" style="width:90px;" value="{{ config.stat_4_number }}" placeholder="Unlock 50+">
+              <input type="text" name="stat_4_label" class="form-control" value="{{ config.stat_4_label }}" placeholder="SCHOLARSHIP">
+            </div>
+            <div style="margin-top:6px;">
+              <input type="text" name="stat_4_url" class="form-control" style="font-size:12px; padding:6px 10px;" value="{{ config.stat_4_url|default:'/scholarships/' }}" placeholder="Destination URL (e.g. /scholarships/)">
             </div>
           </div>
         </div>
