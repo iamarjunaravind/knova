@@ -2351,8 +2351,66 @@ class Country(models.Model):
 # ==========================================
 # Signals: Automatic University Card & Placement Creation
 # ==========================================
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+
+
+def allocate_booth_for_university(uni):
+    """
+    Automatically allocates the next available official architectural ExpoBooth
+    (C-01..C-24, D-01..D-20, B-01..B-06, A-01, S-01..S-05) to a university.
+    """
+    if hasattr(uni, 'booth') and uni.booth:
+        return uni.booth
+
+    priority_booths = (
+        [f"Booth C-{i:02d}" for i in range(1, 25)] +
+        [f"Booth D-{i:02d}" for i in range(1, 21)] +
+        [f"Booth B-{i:02d}" for i in range(1, 7)] +
+        ["Booth A-01"] +
+        [f"Booth S-{i:02d}" for i in range(1, 6)]
+    )
+
+    for b_code in priority_booths:
+        booth = ExpoBooth.objects.filter(
+            booth_number__iexact=b_code,
+            university__isnull=True,
+            exhibitor__isnull=True,
+            is_active=True
+        ).first()
+        if booth:
+            booth.university = uni
+            if hasattr(uni, 'exhibitor') and uni.exhibitor:
+                booth.exhibitor = uni.exhibitor
+            booth.status = 'ASSIGNED'
+            booth.save()
+            return booth
+
+    any_avail = ExpoBooth.objects.filter(
+        status='AVAILABLE',
+        university__isnull=True,
+        exhibitor__isnull=True,
+        is_active=True
+    ).order_by('booth_number').first()
+    if any_avail:
+        any_avail.university = uni
+        if hasattr(uni, 'exhibitor') and uni.exhibitor:
+            any_avail.exhibitor = uni.exhibitor
+        any_avail.status = 'ASSIGNED'
+        any_avail.save()
+        return any_avail
+
+    # Fallback if all 56 booths are filled: allocate next sequential booth
+    count = ExpoBooth.objects.count() + 1
+    new_code = f"Booth C-{count:02d}"
+    return ExpoBooth.objects.create(
+        booth_number=new_code,
+        hall="Main Expo Hall",
+        university=uni,
+        exhibitor=getattr(uni, 'exhibitor', None),
+        status='ASSIGNED',
+        is_active=True
+    )
 
 
 @receiver(post_save, sender=University)
@@ -2360,14 +2418,14 @@ def auto_create_university_card(sender, instance, created, **kwargs):
     """
     Whenever a University is added (via admin, dashboard, API or script),
     automatically create its university card (UniversityProfile), assign
-    next hero banner card placement, mark as approved, and allocate a booth.
+    next hero banner card placement, mark as approved, and allocate an official floor booth.
     """
     if kwargs.get('raw', False):
         return
 
-    if created:
-        from django.db.models import Max
+    from django.db.models import Max
 
+    if created:
         # 1. Automatically create UniversityProfile (University Card)
         UniversityProfile.objects.get_or_create(
             university=instance,
@@ -2397,16 +2455,14 @@ def auto_create_university_card(sender, instance, created, **kwargs):
         if updates:
             University.objects.filter(pk=instance.pk).update(**updates)
 
-        # 3. Automatically allocate an Expo Booth for this university
-        if not hasattr(instance, 'booth') or not instance.booth:
-            booth_code = f"Booth U-{instance.id}"
-            if not ExpoBooth.objects.filter(booth_number=booth_code).exists():
-                ExpoBooth.objects.create(
-                    booth_number=booth_code,
-                    hall="Main Expo Hall",
-                    university=instance,
-                    status='ASSIGNED'
-                )
+    # 3. Automatically allocate an official architectural Expo Booth for this university
+    if not hasattr(instance, 'booth') or not instance.booth:
+        allocate_booth_for_university(instance)
+
+
+@receiver(post_delete, sender=University)
+def release_booth_on_university_delete(sender, instance, **kwargs):
+    ExpoBooth.objects.filter(university__isnull=True, exhibitor__isnull=True, status='ASSIGNED').update(status='AVAILABLE')
 
 
 @receiver(post_save, sender=ProgrammeSession)
