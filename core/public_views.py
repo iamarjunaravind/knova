@@ -1977,17 +1977,20 @@ def public_scholarships(request):
 
 def public_expo_map(request):
     from .models import ExpoBooth, FloorActivityZone
-    from django.db.models import Case, When, Value, IntegerField
-    booths = ExpoBooth.objects.filter(is_active=True).exclude(status='INACTIVE').select_related(
+    from django.db.models import Q
+    # Only show allocated booths to the public (hide unallocated/available empty booths)
+    booths = ExpoBooth.objects.filter(
+        is_active=True
+    ).filter(
+        Q(university__isnull=False) | Q(exhibitor__isnull=False)
+    ).exclude(
+        status='INACTIVE'
+    ).exclude(
+        status='AVAILABLE'
+    ).select_related(
         'university', 'university__profile', 'exhibitor'
-    ).annotate(
-        assigned_prio=Case(
-            When(university__isnull=False, then=Value(1)),
-            When(exhibitor__isnull=False, then=Value(2)),
-            default=Value(3),
-            output_field=IntegerField()
-        )
-    ).order_by('assigned_prio', 'booth_number')
+    ).order_by('booth_number')
+
     floor_zones = FloorActivityZone.objects.filter(is_active=True).order_by('order')
     return render(request, 'core/expo_map.html', {
         'booths': booths,

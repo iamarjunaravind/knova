@@ -1966,7 +1966,7 @@
 
                data-name="{{ booth.get_assigned_organization|lower }}"
 
-               data-title="{% if booth.university %}{{ booth.university.name }}{% elif booth.exhibitor %}{{ booth.exhibitor.company_name }}{% else %}Available Booth{% endif %}"
+               data-title="{% if booth.university %}{{ booth.university.name }}{% elif booth.exhibitor %}{{ booth.exhibitor.company_name }}{% else %}{{ booth.booth_number }}{% endif %}"
 
                data-org="{{ booth.get_assigned_organization }}"
 
@@ -1980,7 +1980,7 @@
 
                data-city="{% if booth.university %}{{ booth.university.profile.location_city|default:'' }}{% endif %}"
 
-               data-type="{% if booth.university %}{{ booth.university.profile.university_type|default:'Higher Education Institution' }}{% elif booth.exhibitor %}Industry & Education Partner{% else %}Available Space{% endif %}"
+               data-type="{% if booth.university %}{{ booth.university.profile.university_type|default:'Higher Education Institution' }}{% elif booth.exhibitor %}Industry & Education Partner{% else %}Exhibitor Booth{% endif %}"
 
                data-desc="{% if booth.university %}{{ booth.university.profile.short_description|default:'Visit booth for direct admissions counseling, faculty discussions, and scholarship evaluations.'|truncatewords:28 }}{% elif booth.exhibitor %}{{ booth.exhibitor.description|default:'Official exhibitor representation at KNOVA 2027 Expo.'|truncatewords:28 }}{% else %}Booth space ready for expo exhibitor.{% endif %}"
 
@@ -1994,10 +1994,10 @@
                 {% elif booth.exhibitor %}
                     <span style="color: #0369a1; font-weight: 600;">{{ booth.exhibitor.company_name }}</span>
                 {% else %}
-                    <span style="color: #64748b; font-weight: 500;">Available Booth</span>
+                    <span style="color: #0a1936; font-weight: 600;">{{ booth.booth_number }}</span>
                 {% endif %}
               </strong>
-              <span class="booth-badge-pill" style="{% if booth.university %}background: #16a34a;{% elif booth.exhibitor %}background: #0284c7;{% else %}background: #94a3b8;{% endif %}">{{ booth.booth_number|default:"TBD" }}</span>
+              <span class="booth-badge-pill" style="{% if booth.university %}background: #16a34a;{% elif booth.exhibitor %}background: #0284c7;{% else %}background: #1768ff;{% endif %}">{{ booth.booth_number|default:"TBD" }}</span>
 
             </div>
 
