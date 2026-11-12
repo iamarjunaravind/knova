@@ -1372,8 +1372,49 @@ class StudentProfile(models.Model):
         return [c.strip() for c in self.explore_interests.split(',') if c.strip()]
 
     @property
+    def profile_completion_details(self):
+        """
+        Calculates student profile completion breakdown across all mandated admission & expo fields.
+        All details must be filled in order to unlock and display the student ID badge.
+        """
+        has_name = bool(self.user and (self.user.get_full_name().strip() or self.user.first_name.strip()))
+        checks = [
+            ('Full Name', has_name),
+            ('Gender', bool(self.gender and self.gender.strip())),
+            ('Date of Birth', bool(self.date_of_birth)),
+            ('Nationality', bool(self.nationality and self.nationality.strip())),
+            ('Country of Residence', bool(self.country_of_residence and self.country_of_residence.strip())),
+            ('Mobile Number', bool(self.mobile and self.mobile.strip())),
+            ('Current Education Level', bool(self.current_education and self.current_education.strip())),
+            ('School / Institution Name', bool(self.school_college and self.school_college.strip())),
+            ('Curriculum', bool(self.curriculum and self.curriculum.strip())),
+            ('Current Grade / Class', bool(self.current_grade and self.current_grade.strip())),
+            ('Expected Graduation Year', bool(self.class_year and self.class_year.strip())),
+            ('Preferred Study Destination', bool(self.preferred_destinations or self.preferred_country)),
+            ('Preferred Degree', bool(self.preferred_degree and self.preferred_degree.strip())),
+            ('Interested in Scholarships', bool(self.interested_in_scholarships and self.interested_in_scholarships.strip())),
+            ('Interested in Career Counselling', bool(self.interested_in_counselling and self.interested_in_counselling.strip())),
+            ('Attending With', bool(self.attending_with and self.attending_with.strip())),
+            ('How Did You Hear About KNOVA', bool(self.hear_about_knova and self.hear_about_knova.strip())),
+            ('Explore Interests', bool(self.explore_interests and self.explore_interests.strip())),
+            ('Hobbies', bool(self.hobbies and self.hobbies.strip())),
+        ]
+        total = len(checks)
+        completed = sum(1 for _, ok in checks if ok)
+        pct = int((completed / total) * 100) if total else 0
+        missing = [name for name, ok in checks if not ok]
+        return {
+            'total': total,
+            'completed': completed,
+            'percentage': pct,
+            'is_complete': (completed == total),
+            'missing': missing,
+            'checks': checks,
+        }
+
+    @property
     def is_profile_complete(self):
-        return bool(self.mobile and self.country_of_residence and (self.current_education or self.school_college))
+        return self.profile_completion_details['is_complete']
 
     def save(self, *args, **kwargs):
         if not self.qr_identifier:

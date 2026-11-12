@@ -903,12 +903,12 @@
             <i class="ti ti-lock"></i>
           </div>
           <div>
-            <div style="font-weight: 800; font-size: 13.5px; color: #92400e;">Complete Your Student Profile to Unlock Your Official ID Badge</div>
-            <div style="font-size: 12px; color: #b45309; margin-top: 2px;">Your official attendee digital badge &amp; fast-track entry QR code will be generated once your profile is completed.</div>
+            <div style="font-weight: 800; font-size: 13.5px; color: #92400e;">Fill All Details to Show &amp; Unlock Your Student ID Card ({{ profile.profile_completion_details.completed }}/{{ profile.profile_completion_details.total }} Filled &bull; {{ profile.profile_completion_details.percentage }}%)</div>
+            <div style="font-size: 12px; color: #b45309; margin-top: 2px;">Your official attendee digital ID card &amp; fast-track entry QR code will only be displayed after filling all mandatory profile details.</div>
           </div>
         </div>
-        <a href="{% url 'dashboard_student_profile' %}" style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: #ffffff; font-weight: 700; font-size: 12.5px; padding: 8px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.25);">
-          <i class="ti ti-user-edit"></i> Complete Profile &rarr;
+        <a href="{% url 'dashboard_student_profile' %}?edit=1" style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: #ffffff; font-weight: 700; font-size: 12.5px; padding: 8px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.25);">
+          <i class="ti ti-user-edit"></i> Fill All Details &rarr;
         </a>
       </div>
     {% endif %}
@@ -1014,46 +1014,44 @@
                 </h3>
 
                 <p style="font-size: 11.5px; color: #64748b; line-height: 1.45; margin: 0 0 14px 0;">
-                  Your official attendee digital badge &amp; QR entry code will be generated once your profile is completed.
+                  Your official attendee digital ID card &amp; QR entry code will be generated once all details are filled.
                 </p>
 
-                <!-- Profile Checklist -->
-                <div style="width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px; margin-bottom: 16px; text-align: left; box-sizing: border-box;">
-                  <div style="font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
-                    Required Fields
+                <!-- Profile Checklist with Dynamic Completion Progress -->
+                <div style="width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; margin-bottom: 16px; text-align: left; box-sizing: border-box;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-size: 10.5px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">Profile Completion</span>
+                    <span style="font-size: 11px; font-weight: 800; color: #d97706;">{{ profile.profile_completion_details.completed }}/{{ profile.profile_completion_details.total }} Filled ({{ profile.profile_completion_details.percentage }}%)</span>
                   </div>
                   
-                  <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding: 2.5px 0; color: #334155;">
-                    <span>Mobile / WhatsApp</span>
-                    {% if profile.mobile %}
-                      <span style="color: #10b981; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-check"></i> Done</span>
-                    {% else %}
-                      <span style="color: #f59e0b; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-alert-circle"></i> Pending</span>
-                    {% endif %}
+                  <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-bottom: 10px;">
+                    <div style="width: {{ profile.profile_completion_details.percentage }}%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); border-radius: 4px; transition: width 0.3s ease;"></div>
                   </div>
 
-                  <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding: 2.5px 0; color: #334155;">
-                    <span>Country of Residence</span>
-                    {% if profile.country_of_residence %}
-                      <span style="color: #10b981; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-check"></i> Done</span>
-                    {% else %}
-                      <span style="color: #f59e0b; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-alert-circle"></i> Pending</span>
-                    {% endif %}
+                  <div style="font-size: 10.5px; color: #64748b; line-height: 1.4; margin-bottom: 8px;">
+                    All details must be filled to unlock and display your student ID:
                   </div>
 
-                  <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding: 2.5px 0; color: #334155;">
-                    <span>School &amp; Education</span>
-                    {% if profile.current_education or profile.school_college %}
-                      <span style="color: #10b981; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-check"></i> Done</span>
-                    {% else %}
-                      <span style="color: #f59e0b; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;"><i class="ti ti-alert-circle"></i> Pending</span>
-                    {% endif %}
-                  </div>
+                  {% if profile.profile_completion_details.missing %}
+                    <div style="max-height: 120px; overflow-y: auto; padding-right: 4px; display: flex; flex-direction: column; gap: 3px;">
+                      {% for field in profile.profile_completion_details.missing|slice:":5" %}
+                        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding: 2px 0; color: #475569;">
+                          <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px;">&bull; {{ field }}</span>
+                          <span style="color: #ef4444; font-weight: 700; font-size: 10px;">Pending</span>
+                        </div>
+                      {% endfor %}
+                      {% if profile.profile_completion_details.missing|length > 5 %}
+                        <div style="font-size: 10.5px; color: #b45309; font-weight: 600; margin-top: 4px;">
+                          + {{ profile.profile_completion_details.missing|length|add:"-5" }} more pending...
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
                 </div>
 
                 <!-- Complete Profile CTA Button -->
-                <a href="{% url 'dashboard_student_profile' %}" class="btn-card-action btn-card-primary" style="width: 100%; justify-content: center; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-sizing: border-box; background: linear-gradient(135deg, #1768ff 0%, #0d58e8 100%); color: #ffffff; padding: 10px 14px; border-radius: 8px; font-weight: 750; font-size: 12px; box-shadow: 0 4px 14px rgba(23, 104, 255, 0.35);">
-                  <i class="ti ti-user-edit"></i> Complete Profile Now &rarr;
+                <a href="{% url 'dashboard_student_profile' %}?edit=1" class="btn-card-action btn-card-primary" style="width: 100%; justify-content: center; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-sizing: border-box; background: linear-gradient(135deg, #1768ff 0%, #0d58e8 100%); color: #ffffff; padding: 10px 14px; border-radius: 8px; font-weight: 750; font-size: 12px; box-shadow: 0 4px 14px rgba(23, 104, 255, 0.35);">
+                  <i class="ti ti-user-edit"></i> Fill All Details &rarr;
                 </a>
 
               </div>

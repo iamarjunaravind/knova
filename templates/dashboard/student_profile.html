@@ -488,6 +488,45 @@
     </div>
   </div>
 
+  <!-- Profile Completion Required to Show Student ID Banner -->
+  {% if profile.is_profile_complete %}
+    <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-left: 5px solid #10b981; border-radius: 14px; padding: 14px 20px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 38px; height: 38px; border-radius: 50%; background: #d1fae5; color: #059669; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 19px;">
+          <i data-feather="check-circle" style="width: 20px; height: 20px;"></i>
+        </div>
+        <div>
+          <div style="font-weight: 800; font-size: 14px; color: #065f46;">Profile 100% Completed &bull; Student ID Card Active</div>
+          <div style="font-size: 12px; color: #047857; margin-top: 2px;">All mandatory admission details are filled. Your official Student ID Card and QR entry badge are active and verified.</div>
+        </div>
+      </div>
+      <a href="{% url 'dashboard_index' %}" style="background: #10b981; color: #ffffff; font-weight: 700; font-size: 12.5px; padding: 8px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+        <i data-feather="credit-card" style="width: 14px; height: 14px;"></i> View Student ID Card &rarr;
+      </a>
+    </div>
+  {% else %}
+    <div style="background: #fffbeb; border: 1px solid #fde68a; border-left: 5px solid #f59e0b; border-radius: 14px; padding: 16px 20px; margin-bottom: 22px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 38px; height: 38px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 19px;">
+            <i data-feather="lock" style="width: 20px; height: 20px;"></i>
+          </div>
+          <div>
+            <div style="font-weight: 800; font-size: 14px; color: #92400e;">Fill All Details to Show &amp; Unlock Student ID Card</div>
+            <div style="font-size: 12px; color: #b45309; margin-top: 2px;">Profile Completion: <strong>{{ profile.profile_completion_details.completed }} of {{ profile.profile_completion_details.total }} fields filled ({{ profile.profile_completion_details.percentage }}%)</strong>. All details must be filled to generate and show your official Student ID card.</div>
+          </div>
+        </div>
+        <button type="button" onclick="toggleEditMode(true)" style="background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: #ffffff; font-weight: 750; font-size: 12.5px; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+          <i data-feather="edit-3" style="width: 14px; height: 14px;"></i> Complete Missing Details &rarr;
+        </button>
+      </div>
+      <!-- Progress bar -->
+      <div style="width: 100%; height: 7px; background: #e2e8f0; border-radius: 9999px; overflow: hidden;">
+        <div style="width: {{ profile.profile_completion_details.percentage }}%; height: 100%; background: linear-gradient(90deg, #f59e0b, #10b981); border-radius: 9999px; transition: width 0.3s ease;"></div>
+      </div>
+    </div>
+  {% endif %}
+
   <!-- Feedback Messages -->
   {% if messages %}
     <div style="margin-bottom: 20px;">
@@ -869,13 +908,13 @@
             </div>
 
             <div class="form-group">
-              <label>Date of Birth (Date Picker)</label>
-              <input type="date" name="date_of_birth" value="{{ profile.date_of_birth|date:'Y-m-d' }}">
+              <label>Date of Birth <span class="required-star">*</span> (Date Picker)</label>
+              <input type="date" name="date_of_birth" value="{{ profile.date_of_birth|date:'Y-m-d' }}" required>
             </div>
 
             <div class="form-group">
-              <label>Nationality (Dropdown)</label>
-              <select name="nationality">
+              <label>Nationality <span class="required-star">*</span> (Dropdown)</label>
+              <select name="nationality" required>
                 <option value="">Select Nationality</option>
                 {% for nat in "Indian,Emirati (UAE),Bahraini,Saudi Arabian,Omani,Qatari,Kuwaiti,British,American,Canadian,Australian,German,French,Pakistani,Bangladeshi,Nepalese,Sri Lankan,Filipino,Egyptian,Jordanian,Other"|make_list %}
                 {% endfor %}
@@ -903,8 +942,8 @@
             </div>
 
             <div class="form-group">
-              <label>Country of Residence (Dropdown)</label>
-              <select name="country_of_residence">
+              <label>Country of Residence <span class="required-star">*</span> (Dropdown)</label>
+              <select name="country_of_residence" required>
                 <option value="">Select Country</option>
                 <option value="India" {% if profile.country_of_residence|lower == 'india' %}selected{% endif %}>India</option>
                 <option value="United Arab Emirates" {% if profile.country_of_residence|lower == 'united arab emirates' or profile.country_of_residence|lower == 'uae' %}selected{% endif %}>United Arab Emirates</option>
@@ -964,8 +1003,8 @@
           <div class="edit-form-grid">
 
             <div class="form-group">
-              <label>Current Education Level (Dropdown)</label>
-              <select name="current_education">
+              <label>Current Education Level <span class="required-star">*</span> (Dropdown)</label>
+              <select name="current_education" required>
                 <option value="">Select Education Level</option>
                 <option value="High School (Grade 8-10)" {% if profile.current_education == 'High School (Grade 8-10)' or profile.current_education == 'High School (Grade 9-11)' %}selected{% endif %}>High School (Grade 8-10)</option>
                 <option value="Senior Secondary / High School (Grade 11-12)" {% if profile.current_education == 'Senior Secondary / High School (Grade 11-12)' or profile.current_education == 'High School Senior (Grade 12)' or profile.current_education == 'High School Senior' %}selected{% endif %}>Senior Secondary / High School (Grade 11-12)</option>
@@ -982,13 +1021,13 @@
             </div>
 
             <div class="form-group">
-              <label>Name of School / Institution (Text)</label>
-              <input type="text" name="school_college" value="{{ profile.school_college|default:'' }}" placeholder="e.g. IHRD College, GEMS Academy, Indian School">
+              <label>Name of School / Institution <span class="required-star">*</span> (Text)</label>
+              <input type="text" name="school_college" value="{{ profile.school_college|default:'' }}" required placeholder="e.g. IHRD College, GEMS Academy, Indian School">
             </div>
 
             <div class="form-group">
-              <label>Curriculum (Dropdown)</label>
-              <select name="curriculum">
+              <label>Curriculum <span class="required-star">*</span> (Dropdown)</label>
+              <select name="curriculum" required>
                 <option value="">Select Curriculum</option>
                 <option value="CBSE" {% if profile.curriculum == 'CBSE' %}selected{% endif %}>CBSE</option>
                 <option value="ICSE" {% if profile.curriculum == 'ICSE' %}selected{% endif %}>ICSE</option>
@@ -1002,8 +1041,8 @@
             </div>
 
             <div class="form-group">
-              <label>Current Grade (Class Dropdown)</label>
-              <select name="current_grade">
+              <label>Current Grade <span class="required-star">*</span> (Class Dropdown)</label>
+              <select name="current_grade" required>
                 <option value="">Select Class / Grade</option>
                 <option value="Grade 8" {% if profile.current_grade == 'Grade 8' %}selected{% endif %}>Grade 8</option>
                 <option value="Grade 9" {% if profile.current_grade == 'Grade 9' %}selected{% endif %}>Grade 9</option>
@@ -1021,8 +1060,8 @@
             </div>
 
             <div class="form-group">
-              <label>Expected Year of Graduation (Dropdown)</label>
-              <select name="class_year">
+              <label>Expected Year of Graduation <span class="required-star">*</span> (Dropdown)</label>
+              <select name="class_year" required>
                 <option value="">Select Expected Year</option>
                 {% for year in "2024,2025,2026,2027,2028,2029,2030,2031,2032"|make_list %}
                 {% endfor %}
@@ -1094,8 +1133,8 @@
           <div class="edit-form-grid">
 
             <div class="form-group">
-              <label>Preferred Study Destination (Country)</label>
-              <select name="preferred_destinations">
+              <label>Preferred Study Destination <span class="required-star">*</span> (Country)</label>
+              <select name="preferred_destinations" required>
                 <option value="">Select Destination</option>
                 <option value="United Arab Emirates" {% if profile.preferred_destinations == 'United Arab Emirates' or profile.preferred_country == 'United Arab Emirates' or profile.preferred_country == 'UAE' %}selected{% endif %}>United Arab Emirates (UAE)</option>
                 <option value="United Kingdom" {% if profile.preferred_destinations == 'United Kingdom' or profile.preferred_country == 'United Kingdom' or profile.preferred_country == 'UK' %}selected{% endif %}>United Kingdom (UK)</option>
@@ -1115,8 +1154,8 @@
             </div>
 
             <div class="form-group">
-              <label>Preferred Degree (Dropdown)</label>
-              <select name="preferred_degree">
+              <label>Preferred Degree <span class="required-star">*</span> (Dropdown)</label>
+              <select name="preferred_degree" required>
                 <option value="">Select Preferred Degree</option>
                 <option value="Diploma" {% if profile.preferred_degree == 'Diploma' %}selected{% endif %}>Diploma</option>
                 <option value="Bachelor's" {% if profile.preferred_degree == "Bachelor's" or profile.preferred_degree == 'UG' %}selected{% endif %}>Bachelor's</option>
@@ -1127,8 +1166,8 @@
             </div>
 
             <div class="form-group">
-              <label>Interested in Scholarships?</label>
-              <select name="interested_in_scholarships">
+              <label>Interested in Scholarships? <span class="required-star">*</span></label>
+              <select name="interested_in_scholarships" required>
                 <option value="">Select Option</option>
                 <option value="Yes" {% if profile.interested_in_scholarships == 'Yes' %}selected{% endif %}>Yes</option>
                 <option value="No" {% if profile.interested_in_scholarships == 'No' %}selected{% endif %}>No</option>
@@ -1137,8 +1176,8 @@
             </div>
 
             <div class="form-group">
-              <label>Interested in Career Counselling?</label>
-              <select name="interested_in_counselling">
+              <label>Interested in Career Counselling? <span class="required-star">*</span></label>
+              <select name="interested_in_counselling" required>
                 <option value="">Select Option</option>
                 <option value="Yes" {% if profile.interested_in_counselling == 'Yes' %}selected{% endif %}>Yes</option>
                 <option value="No" {% if profile.interested_in_counselling == 'No' %}selected{% endif %}>No</option>
@@ -1251,8 +1290,8 @@
           <div class="edit-form-grid">
 
             <div class="form-group">
-              <label>Who Are You Attending With? (Dropdown)</label>
-              <select name="attending_with">
+              <label>Who Are You Attending With? <span class="required-star">*</span> (Dropdown)</label>
+              <select name="attending_with" required>
                 <option value="">Select Option</option>
                 <option value="Parent" {% if profile.attending_with == 'Parent' %}selected{% endif %}>Parent</option>
                 <option value="Guardian" {% if profile.attending_with == 'Guardian' %}selected{% endif %}>Guardian</option>
@@ -1275,8 +1314,8 @@
             </div>
 
             <div class="form-group">
-              <label>How Did You Hear About KNOVA? (Dropdown)</label>
-              <select name="hear_about_knova">
+              <label>How Did You Hear About KNOVA? <span class="required-star">*</span> (Dropdown)</label>
+              <select name="hear_about_knova" required>
                 <option value="">Select Channel</option>
                 <option value="Social Media" {% if profile.hear_about_knova == 'Social Media' %}selected{% endif %}>Social Media</option>
                 <option value="School" {% if profile.hear_about_knova == 'School' %}selected{% endif %}>School</option>
@@ -1288,8 +1327,8 @@
             </div>
 
             <div class="form-group">
-              <label>What is Your Hobbies (Text)</label>
-              <input type="text" name="hobbies" value="{{ profile.hobbies|default:'' }}" placeholder="e.g. Coding, Football, Music, Robotics, Debate, Chess, Reading">
+              <label>What is Your Hobbies <span class="required-star">*</span> (Text)</label>
+              <input type="text" name="hobbies" value="{{ profile.hobbies|default:'' }}" required placeholder="e.g. Coding, Football, Music, Robotics, Debate, Chess, Reading">
             </div>
 
             <!-- Multi-select What would you like to explore -->

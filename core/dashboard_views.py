@@ -2365,7 +2365,12 @@ def dashboard_student_profile(request):
         profile.hobbies = request.POST.get('hobbies', profile.hobbies or '').strip()
 
         profile.save()
-        messages.success(request, "Student Profile updated successfully.")
+        if profile.is_profile_complete:
+            messages.success(request, "🎉 All profile details completed! Your official Student ID Card is now unlocked and active on My Expo Hub.")
+        else:
+            comp = profile.profile_completion_details
+            messages.warning(request, f"Profile updated ({comp['completed']}/{comp['total']} filled). Complete the remaining details to unlock your Student ID Card.")
+
         next_url = request.GET.get('next')
         if next_url:
             return redirect(next_url)
