@@ -1,0 +1,1489 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KNOVA Gate Check-In | Mobile Scanner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KNOVA Scan">
+  <meta name="theme-color" content="#070a12">
+  <link rel="manifest" href="/scanner/manifest.json">
+  <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #070a12;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-blue: #38bdf8;
+      --accent-indigo: #6366f1;
+      --success-green: #10b981;
+      --warning-amber: #f59e0b;
+      --error-red: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    #appContainer {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--bg);
+    }
+
+    /* TOP HEADER */
+    .app-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 30;
+      padding: calc(var(--safe-top) + 12px) 16px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(180deg, rgba(7, 10, 18, 0.95) 0%, rgba(7, 10, 18, 0.6) 75%, transparent 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 999px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--success-green);
+      animation: pulseDot 1.8s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .brand-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* STATS COUNTER */
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .stat-badge span.num {
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    .stat-badge span.total {
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* HEADER CONTROLS */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .icon-btn:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .icon-btn.active {
+      background: #f59e0b;
+      color: #070a12;
+      border-color: #f59e0b;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+    }
+
+    .icon-btn.muted {
+      color: #ef4444;
+    }
+
+    /* CAMERA VIEWPORT CONTAINER */
+    .scanner-viewport {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+
+    #reader {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      border: none !important;
+    }
+
+    #reader video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      transform: scale(1.02);
+    }
+
+    /* CAMERA OVERLAY RETICLE */
+    .reticle-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .reticle-box {
+      position: relative;
+      width: 270px;
+      height: 270px;
+      border-radius: 24px;
+      box-shadow: 0 0 0 9999px rgba(7, 10, 18, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 4 CORNER GLOW BRACKETS */
+    .corner {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border: 4px solid var(--accent-blue);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+      pointer-events: none;
+    }
+
+    .corner.tl {
+      top: 0;
+      left: 0;
+      border-right: none;
+      border-bottom: none;
+      border-top-left-radius: 20px;
+    }
+
+    .corner.tr {
+      top: 0;
+      right: 0;
+      border-left: none;
+      border-bottom: none;
+      border-top-right-radius: 20px;
+    }
+
+    .corner.bl {
+      bottom: 0;
+      left: 0;
+      border-right: none;
+      border-top: none;
+      border-bottom-left-radius: 20px;
+    }
+
+    .corner.br {
+      bottom: 0;
+      right: 0;
+      border-left: none;
+      border-top: none;
+      border-bottom-right-radius: 20px;
+    }
+
+    /* LASER LINE */
+    .laser-line {
+      position: absolute;
+      top: 10%;
+      left: 10px;
+      right: 10px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, #38bdf8 30%, #a855f7 50%, #38bdf8 70%, transparent 100%);
+      box-shadow: 0 0 14px #38bdf8, 0 0 25px rgba(168, 85, 247, 0.8);
+      border-radius: 50%;
+      animation: laserSweep 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes laserSweep {
+      0% { top: 8%; opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { top: 90%; opacity: 0.8; }
+    }
+
+    .reticle-hint {
+      margin-top: 24px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 16px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      letter-spacing: 0.02em;
+      text-align: center;
+    }
+
+    /* CAMERA PLACEHOLDER / PERMISSION */
+    .camera-placeholder {
+      position: absolute;
+      inset: 0;
+      background: #070a12;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+      z-index: 5;
+    }
+
+    .camera-placeholder i {
+      font-size: 3rem;
+      color: var(--accent-blue);
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));
+    }
+
+    .placeholder-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .placeholder-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 280px;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    .start-cam-btn {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+    }
+
+    /* BOTTOM CONTROLS FLOATING BAR */
+    .bottom-bar {
+      position: absolute;
+      bottom: calc(var(--safe-bottom) + 16px);
+      left: 16px;
+      right: 16px;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: auto;
+    }
+
+    .pill-btn {
+      flex: 1;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      font-weight: 700;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .pill-btn:active {
+      transform: scale(0.96);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .pill-btn i {
+      font-size: 1rem;
+      color: var(--accent-blue);
+    }
+
+    /* SLIDE-UP RESULT MODAL / BOTTOM SHEET */
+    .result-sheet {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: #0f172a;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      padding: 16px 20px calc(var(--safe-bottom) + 20px);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .result-sheet.open {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      width: 42px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      margin: 0 auto 16px;
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .result-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 800;
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+      flex-shrink: 0;
+    }
+
+    .result-avatar.amber {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
+    }
+
+    .result-avatar.red {
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+    }
+
+    .result-title-block {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .attendee-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .role-badge.student {
+      background: rgba(56, 189, 248, 0.18);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .role-badge.parent {
+      background: rgba(168, 85, 247, 0.18);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.35);
+    }
+
+    .role-badge.exhibitor {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .role-badge.other {
+      background: rgba(148, 163, 184, 0.18);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    /* STATUS BANNER */
+    .status-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .status-banner.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+    }
+
+    .status-banner.warning {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fbbf24;
+    }
+
+    .status-banner.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 12px;
+      border-radius: 14px;
+      margin-bottom: 16px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .meta-value {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #f1f5f9;
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    /* RESUME COUNTDOWN BAR */
+    .countdown-bar-wrap {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .countdown-bar-fill {
+      height: 100%;
+      width: 100%;
+      background: var(--accent-blue);
+      border-radius: 999px;
+      transition: width 1.8s linear;
+    }
+
+    /* ACTION BUTTON */
+    .action-btn-primary {
+      width: 100%;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .action-btn-primary:active {
+      transform: scale(0.97);
+    }
+
+    /* MANUAL ENTRY MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 500px;
+      background: #0f172a;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      padding: 20px 20px calc(var(--safe-bottom) + 24px);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+      animation: slideUpModal 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUpModal {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .modal-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .manual-input {
+      width: 100%;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0 16px;
+      outline: none;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      transition: border-color 0.2s;
+    }
+
+    .manual-input:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-btn-cancel {
+      flex: 1;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      border: none;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-btn-submit {
+      flex: 2;
+      height: 48px;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+    }
+
+    /* RECENT DRAWER */
+    .recent-list {
+      max-height: 50vh;
+      overflow-y: auto;
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .recent-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 10px 14px;
+      border-radius: 12px;
+    }
+
+    .recent-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.2);
+      color: #818cf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .recent-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .recent-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .recent-badge {
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+    }
+
+    .recent-time {
+      font-size: 0.75rem;
+      color: var(--accent-blue);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div id="appContainer">
+  <!-- TOP HEADER -->
+  <header class="app-header">
+    <div class="brand-pill">
+      <div class="live-dot"></div>
+      <span class="brand-title">KNOVA GATE SCAN</span>
+    </div>
+
+    <!-- STATS COUNTER -->
+    <div class="stat-badge">
+      <i class="fa-solid fa-users-viewfinder" style="color: #818cf8;"></i>
+      <span class="num" id="statCheckedIn">{{ total_checked_in }}</span>
+      <span class="total">/ <span id="statTotal">{{ total_registered }}</span></span>
+    </div>
+
+    <!-- HEADER CONTROLS -->
+    <div class="header-actions">
+      <!-- TORCH TOGGLE -->
+      <button class="icon-btn" id="btnTorch" title="Toggle Flashlight" onclick="toggleTorch()">
+        <i class="fa-solid fa-bolt"></i>
+      </button>
+
+      <!-- FLIP CAMERA -->
+      <button class="icon-btn" id="btnFlipCam" title="Flip Camera" onclick="flipCamera()">
+        <i class="fa-solid fa-camera-rotate"></i>
+      </button>
+
+      <!-- AUDIO TOGGLE -->
+      <button class="icon-btn" id="btnSound" title="Toggle Sound" onclick="toggleSound()">
+        <i class="fa-solid fa-volume-high"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- SCANNER VIEWPORT -->
+  <main class="scanner-viewport">
+    <div id="reader"></div>
+
+    <!-- SCANNER RETICLE OVERLAY -->
+    <div class="reticle-container" id="reticleOverlay">
+      <div class="reticle-box">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+        <div class="laser-line"></div>
+      </div>
+      <div class="reticle-hint">
+        <i class="fa-solid fa-qrcode" style="color: var(--accent-blue); margin-right: 6px;"></i>
+        Align attendee badge QR code inside frame
+      </div>
+    </div>
+
+    <!-- CAMERA PLACEHOLDER / PERMISSION REQUIRED -->
+    <div class="camera-placeholder" id="cameraPlaceholder" style="display: none;">
+      <i class="fa-solid fa-camera"></i>
+      <div class="placeholder-title">Camera Access Required</div>
+      <div class="placeholder-desc">Allow camera permission on your phone to scan attendee check-in badges.</div>
+      <button class="start-cam-btn" onclick="startScanner()">
+        <i class="fa-solid fa-play" style="margin-right: 6px;"></i> Enable Camera
+      </button>
+    </div>
+  </main>
+
+  <!-- BOTTOM FLOATING ACTION BAR -->
+  <footer class="bottom-bar">
+    <button class="pill-btn" onclick="openManualModal()">
+      <i class="fa-solid fa-keyboard"></i>
+      <span>Manual Entry</span>
+    </button>
+    <button class="pill-btn" onclick="openRecentModal()">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+      <span>Recent (<span id="recentCount">{{ recent_logs|length }}</span>)</span>
+    </button>
+  </footer>
+
+  <!-- SLIDE-UP SCAN RESULT MODAL -->
+  <div class="result-sheet" id="resultSheet">
+    <div class="sheet-handle"></div>
+
+    <!-- RESULT HEADER -->
+    <div class="result-header">
+      <div class="result-avatar" id="resAvatar">A</div>
+      <div class="result-title-block">
+        <div class="attendee-name" id="resName">Attendee Name</div>
+        <div class="role-badge student" id="resRole">STUDENT</div>
+      </div>
+    </div>
+
+    <!-- STATUS BANNER -->
+    <div class="status-banner success" id="resStatusBanner">
+      <i class="fa-solid fa-circle-check" id="resStatusIcon"></i>
+      <span id="resStatusText">CHECK-IN CONFIRMED</span>
+    </div>
+
+    <!-- ATTENDEE DETAILS METADATA -->
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Badge ID</span>
+        <span class="meta-value" id="resBadgeId">KNOVA-ST-00000</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">School / Org</span>
+        <span class="meta-value" id="resOrg">Institution</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Check-In Time</span>
+        <span class="meta-value" id="resTime">10:00 AM</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Email / Phone</span>
+        <span class="meta-value" id="resContact">-</span>
+      </div>
+    </div>
+
+    <!-- AUTO RESUME TIMER -->
+    <div class="countdown-bar-wrap">
+      <div class="countdown-bar-fill" id="countdownFill"></div>
+    </div>
+
+    <!-- DISMISS / SCAN NEXT IMMEDIATELY -->
+    <button class="action-btn-primary" id="btnScanNext" onclick="dismissResultAndScanNext()">
+      <i class="fa-solid fa-arrow-right"></i>
+      <span>Scan Next Attendee</span>
+    </button>
+  </div>
+
+  <!-- MANUAL ENTRY MODAL -->
+  <div class="modal-overlay" id="manualModal">
+    <div class="modal-sheet">
+      <div class="sheet-handle" onclick="closeManualModal()"></div>
+      <div class="modal-title">Manual Badge Check-In</div>
+      <div class="modal-subtitle">Enter attendee Badge ID (e.g. KNOVA-ST-38523), registration ID, email or phone number.</div>
+
+      <input type="text" id="manualCodeInput" class="manual-input" placeholder="e.g. KNOVA-ST-38523" autofocus>
+
+      <div class="modal-buttons">
+        <button class="modal-btn-cancel" onclick="closeManualModal()">Cancel</button>
+        <button class="modal-btn-submit" onclick="submitManualCode()">Check In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECENT SCANS MODAL -->
+  <div class="modal-overlay" id="recentModal">
+    <div class="modal-sheet">
+      <div class="sheet-handle" onclick="closeRecentModal()"></div>
+      <div class="modal-title">Recent Gate Check-Ins</div>
+      <div class="modal-subtitle">Latest attendees checked in today at KNOVA Expo.</div>
+
+      <div class="recent-list" id="recentListContainer">
+        {% for log in recent_logs %}
+        <div class="recent-item">
+          <div class="recent-avatar">{{ log.registration.full_name|slice:":2"|upper }}</div>
+          <div class="recent-info">
+            <div class="recent-name">{{ log.registration.full_name }}</div>
+            <div class="recent-badge">{{ log.registration.registration_id|default:"KNOVA-ATTENDEE" }} &bull; {{ log.registration.role }}</div>
+          </div>
+          <div class="recent-time">{{ log.checked_in_at|date:"h:i A" }}</div>
+        </div>
+        {% empty %}
+        <div style="text-align: center; color: var(--text-muted); padding: 24px 0; font-size: 0.85rem;">
+          No check-ins recorded yet today.
+        </div>
+        {% endfor %}
+      </div>
+
+      <div style="margin-top: 16px;">
+        <button class="action-btn-primary" style="background: rgba(255,255,255,0.08); box-shadow: none;" onclick="closeRecentModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =============================================================================
+// AUDIO CHIME SYNTHESIZER (WEB AUDIO API - 0 Latency, Offline Ready)
+// =============================================================================
+let audioCtx = null;
+let soundEnabled = true;
+
+function initAudio() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) {
+      audioCtx = new AudioContext();
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+function playSuccessChime() {
+  if (!soundEnabled) return;
+  try {
+    initAudio();
+    if (!audioCtx) return;
+
+    const now = audioCtx.currentTime;
+    const osc1 = audioCtx.createOscillator();
+    const osc2 = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc1.type = 'sine';
+    osc2.type = 'sine';
+
+    // Pleasant high-chime chord: D5 (587.33Hz) -> A5 (880Hz)
+    osc1.frequency.setValueAtTime(587.33, now);
+    osc1.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+
+    osc2.frequency.setValueAtTime(880, now);
+    osc2.frequency.exponentialRampToValueAtTime(1174.66, now + 0.08);
+
+    gain.gain.setValueAtTime(0.18, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 0.3);
+    osc2.stop(now + 0.3);
+  } catch (e) {
+    console.warn("Audio chime error:", e);
+  }
+}
+
+function playWarningChime() {
+  if (!soundEnabled) return;
+  try {
+    initAudio();
+    if (!audioCtx) return;
+
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.setValueAtTime(370, now + 0.1);
+
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.3);
+  } catch (e) {}
+}
+
+function playErrorChime() {
+  if (!soundEnabled) return;
+  try {
+    initAudio();
+    if (!audioCtx) return;
+
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(110, now + 0.25);
+
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.3);
+  } catch (e) {}
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  const btn = document.getElementById('btnSound');
+  if (soundEnabled) {
+    btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+    btn.classList.remove('muted');
+    playSuccessChime();
+  } else {
+    btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+    btn.classList.add('muted');
+  }
+}
+
+// =============================================================================
+// SCANNER LOGIC & HARDWARE CONTROLS
+// =============================================================================
+let html5QrCode = null;
+let isScanning = false;
+let currentFacingMode = "environment"; // default to rear camera
+let torchActive = false;
+let activeVideoTrack = null;
+let isProcessingScan = false;
+let autoResumeTimer = null;
+
+function startScanner() {
+  document.getElementById('cameraPlaceholder').style.display = 'none';
+
+  if (!html5QrCode) {
+    html5QrCode = new Html5Qrcode("reader", {
+      experimentalFeatures: {
+        useBarCodeDetectorIfSupported: true
+      }
+    });
+  }
+
+  const qrBoxSize = Math.min(window.innerWidth * 0.72, 270);
+  const config = {
+    fps: 25,
+    qrbox: { width: qrBoxSize, height: qrBoxSize },
+    aspectRatio: 1.0,
+    videoConstraints: {
+      facingMode: { ideal: currentFacingMode },
+      focusMode: "continuous"
+    }
+  };
+
+  html5QrCode.start(
+    { facingMode: currentFacingMode },
+    config,
+    onQrCodeDetected,
+    onScanFailure
+  ).then(() => {
+    isScanning = true;
+    captureActiveVideoTrack();
+  }).catch(err => {
+    console.error("Camera start failure:", err);
+    isScanning = false;
+    document.getElementById('cameraPlaceholder').style.display = 'flex';
+  });
+}
+
+function captureActiveVideoTrack() {
+  try {
+    const video = document.querySelector("#reader video");
+    if (video && video.srcObject) {
+      const stream = video.srcObject;
+      const tracks = stream.getVideoTracks();
+      if (tracks.length > 0) {
+        activeVideoTrack = tracks[0];
+      }
+    }
+  } catch (e) {
+    console.warn("Could not capture video track:", e);
+  }
+}
+
+function flipCamera() {
+  if (!isScanning) return;
+  currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
+  torchActive = false;
+  document.getElementById('btnTorch').classList.remove('active');
+
+  if (html5QrCode) {
+    html5QrCode.stop().then(() => {
+      startScanner();
+    }).catch(() => {
+      startScanner();
+    });
+  }
+}
+
+function toggleTorch() {
+  captureActiveVideoTrack();
+  if (!activeVideoTrack) {
+    alert("Flashlight/Torch is not supported on this camera device or mode.");
+    return;
+  }
+
+  const capabilities = activeVideoTrack.getCapabilities ? activeVideoTrack.getCapabilities() : {};
+  if (!capabilities.torch) {
+    alert("Flashlight/Torch not available on this camera.");
+    return;
+  }
+
+  torchActive = !torchActive;
+  activeVideoTrack.applyConstraints({
+    advanced: [{ torch: torchActive }]
+  }).then(() => {
+    const btn = document.getElementById('btnTorch');
+    if (torchActive) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  }).catch(err => {
+    console.warn("Torch apply failed:", err);
+    torchActive = false;
+    document.getElementById('btnTorch').classList.remove('active');
+  });
+}
+
+function onScanFailure(error) {
+  // Silent scan frame progression
+}
+
+function onQrCodeDetected(decodedText) {
+  if (isProcessingScan) return;
+  isProcessingScan = true;
+
+  // Trigger check-in verification
+  processCheckIn(decodedText);
+}
+
+// =============================================================================
+// CHECK-IN API DISPATCH & RESULT HANDLING
+// =============================================================================
+async function processCheckIn(code) {
+  if (!code || !code.trim()) {
+    isProcessingScan = false;
+    return;
+  }
+
+  try {
+    const resp = await fetch('/api/mobile-checkin/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken') || ''
+      },
+      body: JSON.stringify({ code: code.trim() })
+    });
+
+    const data = await resp.json();
+    renderCheckInResult(data, code);
+  } catch (err) {
+    console.error("Check-in network error:", err);
+    renderCheckInResult({
+      status: 'NETWORK_ERROR',
+      message: 'Network error communicating with check-in server.'
+    }, code);
+  }
+}
+
+function renderCheckInResult(data, rawCode) {
+  const sheet = document.getElementById('resultSheet');
+  const avatar = document.getElementById('resAvatar');
+  const nameEl = document.getElementById('resName');
+  const roleEl = document.getElementById('resRole');
+  const statusBanner = document.getElementById('resStatusBanner');
+  const statusIcon = document.getElementById('resStatusIcon');
+  const statusText = document.getElementById('resStatusText');
+  const badgeIdEl = document.getElementById('resBadgeId');
+  const orgEl = document.getElementById('resOrg');
+  const timeEl = document.getElementById('resTime');
+  const contactEl = document.getElementById('resContact');
+
+  // Reset classnames
+  statusBanner.className = 'status-banner';
+  avatar.className = 'result-avatar';
+
+  if (data.status === 'SUCCESS') {
+    // SUCCESS
+    playSuccessChime();
+    if (navigator.vibrate) navigator.vibrate([70]);
+
+    statusBanner.classList.add('success');
+    statusIcon.className = 'fa-solid fa-circle-check';
+    statusText.textContent = 'CHECK-IN CONFIRMED';
+
+    const att = data.attendee || {};
+    nameEl.textContent = att.full_name || 'Attendee';
+    avatar.textContent = att.initials || 'A';
+    badgeIdEl.textContent = att.badge_id || rawCode;
+    orgEl.textContent = att.school_or_org || 'KNOVA Bahrain 2027';
+    timeEl.textContent = att.checked_in_time || 'Just now';
+    contactEl.textContent = att.email || att.phone || '-';
+
+    setRoleBadge(roleEl, att.role);
+    updateStats(data.stats);
+    prependRecentItem(att);
+
+  } else if (data.status === 'ALREADY_CHECKED_IN') {
+    // DUPLICATE / ALREADY CHECKED IN
+    playWarningChime();
+    if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+
+    statusBanner.classList.add('warning');
+    avatar.classList.add('amber');
+    statusIcon.className = 'fa-solid fa-triangle-exclamation';
+    statusText.textContent = 'ALREADY CHECKED IN';
+
+    const att = data.attendee || {};
+    nameEl.textContent = att.full_name || 'Attendee';
+    avatar.textContent = att.initials || 'A';
+    badgeIdEl.textContent = att.badge_id || rawCode;
+    orgEl.textContent = att.school_or_org || 'KNOVA Bahrain 2027';
+    timeEl.textContent = att.checked_in_time ? `Prev at ${att.checked_in_time}` : 'Earlier today';
+    contactEl.textContent = att.email || att.phone || '-';
+
+    setRoleBadge(roleEl, att.role);
+    if (data.stats) updateStats(data.stats);
+
+  } else {
+    // ERROR / NOT FOUND
+    playErrorChime();
+    if (navigator.vibrate) navigator.vibrate([300]);
+
+    statusBanner.classList.add('error');
+    avatar.classList.add('red');
+    statusIcon.className = 'fa-solid fa-circle-xmark';
+    statusText.textContent = 'UNREGISTERED BADGE';
+
+    nameEl.textContent = 'Unknown Attendee';
+    avatar.textContent = '?';
+    badgeIdEl.textContent = rawCode || 'Invalid';
+    orgEl.textContent = 'No record found';
+    timeEl.textContent = '-';
+    contactEl.textContent = '-';
+    setRoleBadge(roleEl, 'UNKNOWN');
+  }
+
+  // Open Bottom Sheet
+  sheet.classList.add('open');
+
+  // Start auto-resume countdown (1.8s)
+  startCountdownBar();
+}
+
+function setRoleBadge(el, role) {
+  const r = (role || 'STUDENT').toUpperCase();
+  el.textContent = r;
+  el.className = 'role-badge';
+  if (r.includes('STUDENT')) {
+    el.classList.add('student');
+  } else if (r.includes('PARENT')) {
+    el.classList.add('parent');
+  } else if (r.includes('EXHIBITOR') || r.includes('UNI')) {
+    el.classList.add('exhibitor');
+  } else {
+    el.classList.add('other');
+  }
+}
+
+function updateStats(stats) {
+  if (!stats) return;
+  if (stats.total_checked_in !== undefined) {
+    document.getElementById('statCheckedIn').textContent = stats.total_checked_in;
+  }
+  if (stats.total_registered !== undefined) {
+    document.getElementById('statTotal').textContent = stats.total_registered;
+  }
+}
+
+function startCountdownBar() {
+  const fill = document.getElementById('countdownFill');
+  fill.style.transition = 'none';
+  fill.style.width = '100%';
+
+  // Force reflow
+  fill.offsetHeight;
+
+  fill.style.transition = 'width 1.8s linear';
+  fill.style.width = '0%';
+
+  clearTimeout(autoResumeTimer);
+  autoResumeTimer = setTimeout(() => {
+    dismissResultAndScanNext();
+  }, 1800);
+}
+
+function dismissResultAndScanNext() {
+  clearTimeout(autoResumeTimer);
+  document.getElementById('resultSheet').classList.remove('open');
+  // Small cooldown to prevent immediate re-scan of the same stationary badge
+  setTimeout(() => {
+    isProcessingScan = false;
+  }, 400);
+}
+
+// =============================================================================
+// MANUAL ENTRY MODAL
+// =============================================================================
+function openManualModal() {
+  document.getElementById('manualModal').classList.add('open');
+  const input = document.getElementById('manualCodeInput');
+  input.value = '';
+  setTimeout(() => input.focus(), 150);
+}
+
+function closeManualModal() {
+  document.getElementById('manualModal').classList.remove('open');
+}
+
+function submitManualCode() {
+  const code = document.getElementById('manualCodeInput').value.trim();
+  if (!code) return;
+  closeManualModal();
+  isProcessingScan = true;
+  processCheckIn(code);
+}
+
+document.getElementById('manualCodeInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    submitManualCode();
+  }
+});
+
+// =============================================================================
+// RECENT SCANS DRAWER
+// =============================================================================
+function openRecentModal() {
+  fetchRecentScans();
+  document.getElementById('recentModal').classList.add('open');
+}
+
+function closeRecentModal() {
+  document.getElementById('recentModal').classList.remove('open');
+}
+
+async function fetchRecentScans() {
+  try {
+    const res = await fetch('/api/mobile-checkin/recent/');
+    const data = await res.json();
+    if (data.status === 'SUCCESS' && data.items) {
+      renderRecentList(data.items);
+    }
+  } catch (e) {
+    console.warn("Could not fetch recent scans:", e);
+  }
+}
+
+function renderRecentList(items) {
+  const container = document.getElementById('recentListContainer');
+  document.getElementById('recentCount').textContent = items.length;
+
+  if (items.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; color: var(--text-muted); padding: 24px 0; font-size: 0.85rem;">
+        No check-ins recorded yet today.
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = items.map(it => `
+    <div class="recent-item">
+      <div class="recent-avatar">${it.initials || 'A'}</div>
+      <div class="recent-info">
+        <div class="recent-name">${escapeHtml(it.name)}</div>
+        <div class="recent-badge">${it.badge_id} &bull; ${it.role}</div>
+      </div>
+      <div class="recent-time">${it.time}</div>
+    </div>
+  `).join('');
+}
+
+function prependRecentItem(att) {
+  const countEl = document.getElementById('recentCount');
+  countEl.textContent = parseInt(countEl.textContent || '0') + 1;
+
+  const container = document.getElementById('recentListContainer');
+  const itemHtml = `
+    <div class="recent-item" style="border-color: rgba(16, 185, 129, 0.4);">
+      <div class="recent-avatar" style="background: rgba(16,185,129,0.2); color: #34d399;">${att.initials || 'A'}</div>
+      <div class="recent-info">
+        <div class="recent-name">${escapeHtml(att.full_name)}</div>
+        <div class="recent-badge">${att.badge_id} &bull; ${att.role}</div>
+      </div>
+      <div class="recent-time" style="color: #34d399;">${att.checked_in_time || 'Just now'}</div>
+    </div>
+  `;
+  container.insertAdjacentHTML('afterbegin', itemHtml);
+}
+
+function escapeHtml(str) {
+  return (str || '').replace(/[&<>"']/g, m => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[m]);
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+// =============================================================================
+// PWA SERVICE WORKER REGISTRATION
+// =============================================================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/scanner/sw.js').catch(err => {
+      console.warn("SW register fail:", err);
+    });
+  });
+}
+
+// Auto-start camera when page is ready
+window.addEventListener('DOMContentLoaded', () => {
+  startScanner();
+});
+</script>
+
+</body>
+</html>

@@ -523,38 +523,404 @@ def public_about(request):
     return render(request, 'core/about.html')
 
 
-@csrf_exempt
+# =============================================================================
+# MOBILE GATE CHECK-IN APP & SCANNER SYSTEM
+# =============================================================================
+
+def _get_attendee_extra_info(reg):
+    """
+    Returns school/institution or organization details for the attendee badge.
+    """
+    from .models import StudentProfile, Exhibitor
+    school_or_org = ""
+    target_program = reg.preferred_program or ""
+    if reg.role == 'Student':
+        sp = StudentProfile.objects.filter(user__email__iexact=reg.email).first()
+        if sp:
+            school_or_org = sp.school_or_institution or sp.current_education_level or ""
+            if not target_program and sp.target_degree_program:
+                target_program = sp.target_degree_program
+    elif reg.role == 'Exhibitor':
+        exh = Exhibitor.objects.filter(user__email__iexact=reg.email).first()
+        if exh:
+            school_or_org = exh.company_name or exh.institution_name or ""
+
+    if not school_or_org:
+        if reg.event_location:
+            school_or_org = reg.event_location.venue or reg.event_location.city
+        else:
+            school_or_org = "KNOVA Bahrain 2027"
+
+    return {
+        'school_or_org': school_or_org,
+        'target_program': target_program
+    }
 
 
-def check_in_api(request):
-    if request.method == 'POST':
+def _resolve_attendee(raw_code):
+    """
+    Ultra-robust attendee resolver for gate scanners.
+    Resolves an attendee Registration from raw QR text, badge ID, URL, UUID, email, or phone.
+    """
+    import re
+    from django.contrib.auth.models import User
+    from .models import Registration, StudentProfile, ParentProfile, StudentChallengePassport
+
+    if not raw_code:
+        return None, None
+
+    code = str(raw_code).strip()
+
+    # 1. URL parsing: if it's a URL, extract potential identifiers
+    if '://' in code or '/' in code:
+        cleaned_url = code.split('?')[0].rstrip('/')
+        parts = [p for p in cleaned_url.split('/') if p]
+        if parts:
+            candidate = parts[-1].strip()
+            if candidate != code:
+                reg, meta = _resolve_attendee(candidate)
+                if reg:
+                    return reg, meta
+
+    # 2. Direct match on Registration.registration_id
+    reg = Registration.objects.filter(registration_id__iexact=code).first()
+    if reg:
+        return reg, _get_attendee_extra_info(reg)
+
+    # 3. Match prefixes like KNOVA-REG-123, REG-123, KNV-123
+    clean_prefix = re.sub(r'^(KNOVA-REG-|REG-|KNV-)', '', code, flags=re.I).strip()
+    if clean_prefix and clean_prefix.isdigit():
+        reg = Registration.objects.filter(pk=int(clean_prefix)).first()
+        if reg:
+            return reg, _get_attendee_extra_info(reg)
+
+    # 4. Pure integer ID
+    if code.isdigit():
+        reg = Registration.objects.filter(pk=int(code)).first()
+        if reg:
+            return reg, _get_attendee_extra_info(reg)
+
+    # 5. Exact match on Registration.email
+    if '@' in code:
+        reg = Registration.objects.filter(email__iexact=code).first()
+        if reg:
+            return reg, _get_attendee_extra_info(reg)
+
+    # 6. Match on StudentChallengePassport.badge_id
+    passport = StudentChallengePassport.objects.filter(badge_id__iexact=code).select_related('registration', 'user').first()
+    if passport:
+        if passport.registration:
+            return passport.registration, _get_attendee_extra_info(passport.registration)
+        cand_email = (passport.student_email or (passport.user.email if passport.user else '')).strip()
+        reg = None
+        if cand_email:
+            reg = Registration.objects.filter(email__iexact=cand_email).first()
+        if not reg:
+            reg = Registration.objects.filter(registration_id__iexact=passport.badge_id).first()
+        if not reg:
+            reg = Registration.objects.create(
+                full_name=passport.student_name or (passport.user.get_full_name() if passport.user else '') or passport.badge_id,
+                email=cand_email or f"{passport.badge_id.lower().replace('-', '')}@knovaexpo.com",
+                role='Student',
+                registration_id=passport.badge_id
+            )
         try:
-            data = json.loads(request.body)
-            qr_data = data.get('qr_data')
-            if qr_data:
-                if qr_data.startswith("KNV-"):
-                    reg = Registration.objects.get(registration_id=qr_data)
-                elif qr_data.startswith("KNOVA-REG-"):
-                    parts = qr_data.split('-')
-                    if len(parts) >= 3:
-                        reg_id = parts[2]
-                        reg = Registration.objects.get(pk=reg_id)
-                else:
-                    reg = Registration.objects.get(registration_id=qr_data)
+            passport.registration = reg
+            passport.save(update_fields=['registration'])
+        except Exception:
+            pass
+        return reg, _get_attendee_extra_info(reg)
 
-                if reg.is_checked_in:
-                    return JsonResponse({'status': 'ALREADY_CHECKED_IN', 'message': f'{reg.full_name} is already checked in.'})
+    # 7. Match on StudentProfile.qr_identifier
+    student = StudentProfile.objects.filter(qr_identifier__iexact=code).select_related('user').first()
+    if student and student.user:
+        reg = Registration.objects.filter(email__iexact=student.user.email).first()
+        if not reg:
+            reg = Registration.objects.filter(registration_id__iexact=student.qr_identifier).first()
+        if not reg:
+            reg = Registration.objects.create(
+                full_name=student.user.get_full_name() or student.user.username,
+                email=student.user.email or f"{student.qr_identifier.lower()}@knovaexpo.com",
+                phone=student.mobile or '',
+                role='Student',
+                registration_id=student.qr_identifier
+            )
+        return reg, _get_attendee_extra_info(reg)
 
-                reg.is_checked_in = True
-                reg.status = 'Checked-in'
-                reg.save()
-                return JsonResponse({'status': 'SUCCESS', 'message': f'Checked in {reg.full_name}'})
-            return JsonResponse({'status': 'INVALID_QR', 'message': 'Invalid QR Data'}, status=400)
-        except Registration.DoesNotExist:
-            return JsonResponse({'status': 'REGISTRATION_NOT_FOUND', 'message': 'Registration not found'}, status=404)
+    # 8. Match on ParentProfile.qr_identifier
+    parent = ParentProfile.objects.filter(qr_identifier__iexact=code).select_related('user').first()
+    if parent:
+        reg = Registration.objects.filter(email__iexact=parent.user.email).first()
+        if not reg:
+            reg = Registration.objects.create(
+                full_name=parent.user.get_full_name() or parent.user.username,
+                email=parent.user.email,
+                phone=parent.phone or '',
+                role='Parent',
+                registration_id=parent.qr_identifier
+            )
+        return reg, _get_attendee_extra_info(reg)
+
+    # 9. Match by phone digits
+    cleaned_phone = re.sub(r'[^0-9]', '', code)
+    if len(cleaned_phone) >= 7:
+        reg = Registration.objects.filter(phone__icontains=cleaned_phone).first()
+        if reg:
+            return reg, _get_attendee_extra_info(reg)
+
+    return None, None
+
+
+def _perform_mobile_checkin(request, raw_code):
+    """
+    Executes check-in, logs action, updates counts, and returns rich payload.
+    """
+    from django.utils import timezone
+    from .models import Registration, ExpoCheckInLog
+
+    reg, extra = _resolve_attendee(raw_code)
+    if not reg:
+        return {
+            'status': 'NOT_FOUND',
+            'message': f"No attendee found matching '{raw_code}'. Please verify the QR code or badge ID.",
+            'scanned_code': raw_code
+        }
+
+    now = timezone.now()
+    is_duplicate = reg.is_checked_in
+    status_label = 'ALREADY_CHECKED_IN' if is_duplicate else 'SUCCESS'
+
+    if not is_duplicate:
+        reg.is_checked_in = True
+        reg.status = 'Checked-in'
+        reg.checked_in_at = now
+        reg.save(update_fields=['is_checked_in', 'status', 'checked_in_at'])
+        msg = f"Check-in verified: {reg.full_name}"
+    else:
+        prev_time = reg.checked_in_at.strftime("%I:%M %p") if reg.checked_in_at else "earlier"
+        msg = f"{reg.full_name} is already checked in (at {prev_time})."
+
+    # Log check-in event
+    device_agent = request.META.get('HTTP_USER_AGENT', '')[:255] if request else ''
+    try:
+        ExpoCheckInLog.objects.create(
+            registration=reg,
+            scanned_code=str(raw_code)[:255],
+            device_info=device_agent,
+            is_duplicate=is_duplicate
+        )
+    except Exception:
+        pass
+
+    total_checked_in = Registration.objects.filter(is_checked_in=True).count()
+    total_registered = Registration.objects.count()
+
+    parts = (reg.full_name or 'A').split()
+    initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+
+    return {
+        'status': status_label,
+        'message': msg,
+        'is_already_checked_in': is_duplicate,
+        'attendee': {
+            'id': reg.id,
+            'full_name': reg.full_name,
+            'role': reg.role or 'Student',
+            'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+            'email': reg.email,
+            'phone': reg.phone or '',
+            'school_or_org': extra.get('school_or_org', '') if extra else '',
+            'target_program': extra.get('target_program', '') if extra else '',
+            'initials': initials,
+            'checked_in_time': (reg.checked_in_at or now).strftime("%I:%M %p"),
+            'checked_in_date': (reg.checked_in_at or now).strftime("%d %b %Y"),
+        },
+        'stats': {
+            'total_checked_in': total_checked_in,
+            'total_registered': total_registered,
+        }
+    }
+
+
+@csrf_exempt
+def check_in_api(request):
+    """
+    Backwards-compatible check-in endpoint upgraded with unified multi-format resolver.
+    """
+    if request.method == 'POST':
+        raw_code = ''
+        try:
+            if request.content_type and 'application/json' in request.content_type:
+                data = json.loads(request.body.decode('utf-8'))
+                raw_code = data.get('qr_data') or data.get('code') or data.get('badge_id') or ''
+            else:
+                raw_code = request.POST.get('qr_data') or request.POST.get('code') or request.POST.get('badge_id') or ''
+
+            if not raw_code:
+                return JsonResponse({'status': 'INVALID_QR', 'message': 'Invalid QR Data'}, status=400)
+
+            result = _perform_mobile_checkin(request, raw_code)
+            http_code = 200 if result['status'] in ('SUCCESS', 'ALREADY_CHECKED_IN') else 404
+            return JsonResponse(result, status=http_code)
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     return JsonResponse({'status': 'invalid method'}, status=405)
+
+
+@csrf_exempt
+def mobile_checkin_api(request):
+    """
+    High-speed dedicated mobile scanner check-in API endpoint.
+    Accepts JSON or Form POST with { 'code': '...' }.
+    """
+    if request.method == 'POST':
+        raw_code = ''
+        if request.content_type and 'application/json' in request.content_type:
+            try:
+                data = json.loads(request.body.decode('utf-8'))
+                raw_code = data.get('code') or data.get('qr_data') or data.get('badge_id') or ''
+            except Exception:
+                pass
+        else:
+            raw_code = request.POST.get('code') or request.POST.get('qr_data') or request.POST.get('badge_id') or ''
+
+        if not raw_code:
+            return JsonResponse({'status': 'INVALID_QR', 'message': 'No QR code or badge ID provided.'}, status=400)
+
+        result = _perform_mobile_checkin(request, raw_code)
+        http_code = 200 if result['status'] in ('SUCCESS', 'ALREADY_CHECKED_IN') else 404
+        return JsonResponse(result, status=http_code)
+
+    return JsonResponse({'status': 'ERROR', 'message': 'Method not allowed'}, status=405)
+
+
+def mobile_checkin_stats_api(request):
+    """
+    Real-time stats polling endpoint for mobile scanners.
+    """
+    from .models import Registration
+    return JsonResponse({
+        'status': 'SUCCESS',
+        'total_checked_in': Registration.objects.filter(is_checked_in=True).count(),
+        'total_registered': Registration.objects.count()
+    })
+
+
+def mobile_checkin_recent_api(request):
+    """
+    Returns recent scans for the slide-up scans drawer.
+    """
+    from .models import ExpoCheckInLog
+    logs = ExpoCheckInLog.objects.filter(is_duplicate=False).select_related('registration').order_by('-checked_in_at')[:20]
+    items = []
+    for l in logs:
+        reg = l.registration
+        parts = (reg.full_name or 'A').split()
+        initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+        items.append({
+            'id': reg.id,
+            'name': reg.full_name,
+            'role': reg.role,
+            'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+            'time': l.checked_in_at.strftime("%I:%M %p"),
+            'date': l.checked_in_at.strftime("%d %b"),
+            'initials': initials
+        })
+    return JsonResponse({
+        'status': 'SUCCESS',
+        'items': items,
+        'count': len(items)
+    })
+
+
+def mobile_scanner_view(request):
+    """
+    Dedicated Mobile QR Check-In App view (PWA & smartphone optimized).
+    """
+    from .models import Registration, ExpoCheckInLog, EventLocation
+    total_checked_in = Registration.objects.filter(is_checked_in=True).count()
+    total_registered = Registration.objects.count()
+    recent_logs = ExpoCheckInLog.objects.filter(is_duplicate=False).select_related('registration').order_by('-checked_in_at')[:15]
+    upcoming_event = EventLocation.objects.filter(is_active=True, is_upcoming=True).first() or EventLocation.objects.first()
+
+    return render(request, 'core/mobile_scanner.html', {
+        'total_checked_in': total_checked_in,
+        'total_registered': total_registered,
+        'recent_logs': recent_logs,
+        'event': upcoming_event
+    })
+
+
+def scanner_manifest_view(request):
+    """
+    PWA Web App Manifest for mobile home screen installation.
+    """
+    manifest = {
+        "name": "KNOVA Gate Check-In",
+        "short_name": "KNOVA Scan",
+        "description": "Ultra-fast QR check-in mobile scanner for KNOVA Higher Education Expo",
+        "start_url": "/scanner/",
+        "scope": "/scanner/",
+        "display": "standalone",
+        "background_color": "#070a12",
+        "theme_color": "#4f46e5",
+        "orientation": "portrait-primary",
+        "icons": [
+            {
+                "src": "/static/images/logo.png",
+                "sizes": "192x192",
+                "type": "image/png",
+                "purpose": "any maskable"
+            },
+            {
+                "src": "/static/images/logo.png",
+                "sizes": "512x512",
+                "type": "image/png",
+                "purpose": "any maskable"
+            }
+        ]
+    }
+    return JsonResponse(manifest, content_type='application/manifest+json')
+
+
+def scanner_sw_view(request):
+    """
+    Service Worker for PWA offline capabilities and instant caching.
+    """
+    from django.http import HttpResponse
+    sw_code = """
+const CACHE_NAME = 'knova-scanner-v1';
+const STATIC_ASSETS = [
+    '/scanner/',
+    'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'
+];
+
+self.addEventListener('install', event => {
+    self.skipWaiting();
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.addAll(STATIC_ASSETS).catch(() => {});
+        })
+    );
+});
+
+self.addEventListener('activate', event => {
+    event.waitUntil(
+        caches.keys().then(keys => Promise.all(
+            keys.map(k => { if (k !== CACHE_NAME) return caches.delete(k); })
+        ))
+    );
+});
+
+self.addEventListener('fetch', event => {
+    if (event.request.method === 'GET' && !event.request.url.includes('/api/')) {
+        event.respondWith(
+            fetch(event.request).catch(() => caches.match(event.request))
+        );
+    }
+});
+"""
+    return HttpResponse(sw_code.strip(), content_type='application/javascript')
 
 
 @csrf_exempt

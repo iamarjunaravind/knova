@@ -300,6 +300,7 @@ class Registration(models.Model):
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='Pending', db_index=True)
     registered_at = models.DateTimeField(auto_now_add=True)
     is_checked_in = models.BooleanField(default=False)
+    checked_in_at = models.DateTimeField(null=True, blank=True)
     registration_id = models.CharField(max_length=50, unique=True, blank=True, null=True, db_index=True)
 
     def save(self, *args, **kwargs):
@@ -310,6 +311,20 @@ class Registration(models.Model):
 
     def __str__(self):
         return f"{self.full_name} ({self.role})"
+
+
+class ExpoCheckInLog(models.Model):
+    registration = models.ForeignKey(Registration, on_delete=models.CASCADE, related_name='checkin_logs')
+    checked_in_at = models.DateTimeField(auto_now_add=True)
+    scanned_code = models.CharField(max_length=255, blank=True)
+    device_info = models.CharField(max_length=255, blank=True)
+    is_duplicate = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-checked_in_at']
+
+    def __str__(self):
+        return f"{self.registration.full_name} ({self.registration.role}) - {self.checked_in_at:%Y-%m-%d %H:%M}"
 
 
 class BoothVisit(models.Model):

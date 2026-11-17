@@ -1,0 +1,21 @@
+{
+  "name": "knova-scanner-mobile",
+  "version": "1.0.0",
+  "description": "KNOVA Higher Education Expo Gate Check-In Mobile App",
+  "main": "index.js",
+  "scripts": {
+    "cap:sync": "npx cap sync",
+    "cap:open:android": "npx cap open android",
+    "cap:open:ios": "npx cap open ios",
+    "build": "echo 'Static web assets ready in www/'"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/haptics": "^6.0.0"
+  },
+  "keywords": ["knova", "qr-scanner", "check-in", "expo"],
+  "author": "KNOVA Team",
+  "license": "MIT"
+}
