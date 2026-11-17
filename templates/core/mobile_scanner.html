@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>KNOVA Gate Check-In | Mobile Scanner</title>
+  <title>KNOVA 4-in-1 Mobile Scanner</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,18 +21,25 @@
   <style>
     :root {
       --bg: #070a12;
-      --card-bg: rgba(15, 23, 42, 0.85);
+      --card-bg: rgba(15, 23, 42, 0.88);
       --card-border: rgba(255, 255, 255, 0.08);
+      --mode-color: #38bdf8;
+      --mode-glow: rgba(56, 189, 248, 0.4);
       --accent-blue: #38bdf8;
-      --accent-indigo: #6366f1;
-      --success-green: #10b981;
-      --warning-amber: #f59e0b;
-      --error-red: #ef4444;
+      --accent-amber: #f59e0b;
+      --accent-purple: #a855f7;
+      --accent-emerald: #10b981;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
+
+    /* THEME MODES */
+    body.mode-gate { --mode-color: #38bdf8; --mode-glow: rgba(56, 189, 248, 0.4); }
+    body.mode-booth { --mode-color: #f59e0b; --mode-glow: rgba(245, 158, 11, 0.4); }
+    body.mode-seminar { --mode-color: #c084fc; --mode-glow: rgba(192, 132, 252, 0.4); }
+    body.mode-counselling { --mode-color: #34d399; --mode-glow: rgba(52, 211, 153, 0.4); }
 
     * {
       box-sizing: border-box;
@@ -69,83 +76,89 @@
       left: 0;
       right: 0;
       z-index: 30;
-      padding: calc(var(--safe-top) + 12px) 16px 12px;
+      padding: calc(var(--safe-top) + 8px) 14px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: linear-gradient(180deg, rgba(7, 10, 18, 0.96) 0%, rgba(7, 10, 18, 0.85) 85%, transparent 100%);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .header-top-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(180deg, rgba(7, 10, 18, 0.95) 0%, rgba(7, 10, 18, 0.6) 75%, transparent 100%);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
     }
 
     .brand-pill {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 999px;
     }
 
     .live-dot {
       width: 8px;
       height: 8px;
-      background: var(--success-green);
+      background: var(--mode-color);
       border-radius: 50%;
-      box-shadow: 0 0 10px var(--success-green);
+      box-shadow: 0 0 10px var(--mode-color);
       animation: pulseDot 1.8s infinite;
+      transition: background 0.3s, box-shadow 0.3s;
     }
 
     @keyframes pulseDot {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+      50% { opacity: 0.35; transform: scale(0.85); }
     }
 
     .brand-title {
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       font-weight: 800;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #fff;
     }
 
-    /* STATS COUNTER */
+    /* STATS BADGE */
     .stat-badge {
       display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(99, 102, 241, 0.15);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      padding: 5px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 4px 10px;
       border-radius: 999px;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 600;
     }
 
     .stat-badge span.num {
-      color: #38bdf8;
+      color: var(--mode-color);
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
+      transition: color 0.3s;
     }
 
-    .stat-badge span.total {
+    .stat-badge span.label {
       color: var(--text-muted);
-      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
     }
 
     /* HEADER CONTROLS */
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .icon-btn {
-      width: 38px;
-      height: 38px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -153,26 +166,110 @@
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.12);
       color: var(--text-main);
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .icon-btn:active {
-      transform: scale(0.92);
-      background: rgba(255, 255, 255, 0.18);
-    }
-
+    .icon-btn:active { transform: scale(0.92); }
     .icon-btn.active {
       background: #f59e0b;
       color: #070a12;
       border-color: #f59e0b;
-      box-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
+    }
+    .icon-btn.muted { color: #ef4444; }
+
+    /* 4-ROLE SEGMENTED TABS */
+    .role-tabs-wrap {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 3px;
+      border-radius: 12px;
     }
 
-    .icon-btn.muted {
-      color: #ef4444;
+    .role-tab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 2px;
+      border-radius: 9px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      gap: 2px;
     }
+
+    .role-tab-btn i {
+      font-size: 0.85rem;
+    }
+
+    .role-tab-btn.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .role-tab-btn[data-mode="gate"].active {
+      background: rgba(56, 189, 248, 0.2);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .role-tab-btn[data-mode="booth"].active {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .role-tab-btn[data-mode="seminar"].active {
+      background: rgba(192, 132, 252, 0.2);
+      color: #c084fc;
+      border: 1px solid rgba(192, 132, 252, 0.35);
+    }
+
+    .role-tab-btn[data-mode="counselling"].active {
+      background: rgba(52, 211, 153, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.35);
+    }
+
+    /* STATION SELECTOR PILL */
+    .station-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .station-bar:active { background: rgba(255, 255, 255, 0.1); }
+    .station-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .station-info i { color: var(--mode-color); }
+    .station-title { overflow: hidden; text-overflow: ellipsis; }
+    .station-chevron { color: var(--text-muted); font-size: 0.7rem; flex-shrink: 0; }
 
     /* CAMERA VIEWPORT CONTAINER */
     .scanner-viewport {
@@ -204,10 +301,7 @@
     /* CAMERA OVERLAY RETICLE */
     .reticle-container {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
       pointer-events: none;
       display: flex;
       flex-direction: column;
@@ -218,10 +312,10 @@
 
     .reticle-box {
       position: relative;
-      width: 270px;
-      height: 270px;
+      width: 260px;
+      height: 260px;
       border-radius: 24px;
-      box-shadow: 0 0 0 9999px rgba(7, 10, 18, 0.55);
+      box-shadow: 0 0 0 9999px rgba(7, 10, 18, 0.58);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -232,42 +326,16 @@
       position: absolute;
       width: 32px;
       height: 32px;
-      border: 4px solid var(--accent-blue);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+      border: 4px solid var(--mode-color);
+      box-shadow: 0 0 12px var(--mode-glow);
       pointer-events: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
     }
 
-    .corner.tl {
-      top: 0;
-      left: 0;
-      border-right: none;
-      border-bottom: none;
-      border-top-left-radius: 20px;
-    }
-
-    .corner.tr {
-      top: 0;
-      right: 0;
-      border-left: none;
-      border-bottom: none;
-      border-top-right-radius: 20px;
-    }
-
-    .corner.bl {
-      bottom: 0;
-      left: 0;
-      border-right: none;
-      border-top: none;
-      border-bottom-left-radius: 20px;
-    }
-
-    .corner.br {
-      bottom: 0;
-      right: 0;
-      border-left: none;
-      border-top: none;
-      border-bottom-right-radius: 20px;
-    }
+    .corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; border-top-left-radius: 20px; }
+    .corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; border-top-right-radius: 20px; }
+    .corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; border-bottom-left-radius: 20px; }
+    .corner.br { bottom: 0; right: 0; border-left: none; border-top: none; border-bottom-right-radius: 20px; }
 
     /* LASER LINE */
     .laser-line {
@@ -276,10 +344,11 @@
       left: 10px;
       right: 10px;
       height: 3px;
-      background: linear-gradient(90deg, transparent 0%, #38bdf8 30%, #a855f7 50%, #38bdf8 70%, transparent 100%);
-      box-shadow: 0 0 14px #38bdf8, 0 0 25px rgba(168, 85, 247, 0.8);
+      background: linear-gradient(90deg, transparent 0%, var(--mode-color) 50%, transparent 100%);
+      box-shadow: 0 0 14px var(--mode-color);
       border-radius: 50%;
       animation: laserSweep 2s ease-in-out infinite alternate;
+      transition: background 0.3s, box-shadow 0.3s;
     }
 
     @keyframes laserSweep {
@@ -289,20 +358,21 @@
     }
 
     .reticle-hint {
-      margin-top: 24px;
-      font-size: 0.82rem;
+      margin-top: 22px;
+      font-size: 0.78rem;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.85);
-      background: rgba(15, 23, 42, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 6px 16px;
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 5px 14px;
       border-radius: 999px;
       backdrop-filter: blur(8px);
       letter-spacing: 0.02em;
       text-align: center;
+      max-width: 85%;
     }
 
-    /* CAMERA PLACEHOLDER / PERMISSION */
+    /* CAMERA PLACEHOLDER */
     .camera-placeholder {
       position: absolute;
       inset: 0;
@@ -317,24 +387,9 @@
     }
 
     .camera-placeholder i {
-      font-size: 3rem;
-      color: var(--accent-blue);
+      font-size: 2.8rem;
+      color: var(--mode-color);
       margin-bottom: 16px;
-      filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));
-    }
-
-    .placeholder-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .placeholder-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      max-width: 280px;
-      margin-bottom: 24px;
-      line-height: 1.4;
     }
 
     .start-cam-btn {
@@ -343,55 +398,45 @@
       border: none;
       padding: 12px 28px;
       border-radius: 999px;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
     }
 
     /* BOTTOM CONTROLS FLOATING BAR */
     .bottom-bar {
       position: absolute;
-      bottom: calc(var(--safe-bottom) + 16px);
-      left: 16px;
-      right: 16px;
+      bottom: calc(var(--safe-bottom) + 14px);
+      left: 14px;
+      right: 14px;
       z-index: 30;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      pointer-events: auto;
+      gap: 10px;
     }
 
     .pill-btn {
       flex: 1;
-      height: 48px;
+      height: 46px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.88);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 999px;
       color: var(--text-main);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 700;
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       cursor: pointer;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
       transition: all 0.2s ease;
     }
 
-    .pill-btn:active {
-      transform: scale(0.96);
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .pill-btn i {
-      font-size: 1rem;
-      color: var(--accent-blue);
-    }
+    .pill-btn:active { transform: scale(0.96); }
+    .pill-btn i { font-size: 0.95rem; color: var(--mode-color); }
 
     /* SLIDE-UP RESULT MODAL / BOTTOM SHEET */
     .result-sheet {
@@ -402,65 +447,54 @@
       z-index: 50;
       background: #0f172a;
       border-top: 1px solid rgba(255, 255, 255, 0.12);
-      border-top-left-radius: 28px;
-      border-top-right-radius: 28px;
-      padding: 16px 20px calc(var(--safe-bottom) + 20px);
-      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+      border-top-left-radius: 26px;
+      border-top-right-radius: 26px;
+      padding: 14px 18px calc(var(--safe-bottom) + 18px);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.85);
       transform: translateY(100%);
-      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .result-sheet.open {
-      transform: translateY(0);
-    }
+    .result-sheet.open { transform: translateY(0); }
 
     .sheet-handle {
-      width: 42px;
+      width: 38px;
       height: 4px;
       background: rgba(255, 255, 255, 0.25);
       border-radius: 999px;
-      margin: 0 auto 16px;
+      margin: 0 auto 12px;
     }
 
     .result-header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
     .result-avatar {
-      width: 56px;
-      height: 56px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
       background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 800;
-      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
       flex-shrink: 0;
     }
 
-    .result-avatar.amber {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
-    }
+    .result-avatar.amber { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+    .result-avatar.purple { background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%); }
+    .result-avatar.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .result-avatar.red { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); }
 
-    .result-avatar.red {
-      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
-    }
-
-    .result-title-block {
-      flex: 1;
-      overflow: hidden;
-    }
+    .result-title-block { flex: 1; overflow: hidden; }
 
     .attendee-name {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: #fff;
       white-space: nowrap;
@@ -473,126 +507,66 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 999px;
-      margin-top: 4px;
+      margin-top: 3px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
     }
 
-    .role-badge.student {
-      background: rgba(56, 189, 248, 0.18);
-      color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.35);
-    }
-
-    .role-badge.parent {
-      background: rgba(168, 85, 247, 0.18);
-      color: #c084fc;
-      border: 1px solid rgba(168, 85, 247, 0.35);
-    }
-
-    .role-badge.exhibitor {
-      background: rgba(245, 158, 11, 0.18);
-      color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.35);
-    }
-
-    .role-badge.other {
-      background: rgba(148, 163, 184, 0.18);
-      color: #cbd5e1;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-    }
+    .role-badge.student { background: rgba(56, 189, 248, 0.18); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); }
+    .role-badge.parent { background: rgba(168, 85, 247, 0.18); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); }
+    .role-badge.exhibitor { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+    .role-badge.other { background: rgba(148, 163, 184, 0.18); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.35); }
 
     /* STATUS BANNER */
     .status-banner {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
-      padding: 12px 14px;
-      border-radius: 16px;
-      font-size: 0.88rem;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 0.85rem;
       font-weight: 700;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
-    .status-banner.success {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      color: #34d399;
-    }
+    .status-banner.success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #34d399; }
+    .status-banner.warning { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24; }
+    .status-banner.error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #f87171; }
 
-    .status-banner.warning {
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      color: #fbbf24;
-    }
-
-    .status-banner.error {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      color: #f87171;
+    .reward-pill {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
     }
 
     .meta-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 12px;
-      border-radius: 14px;
-      margin-bottom: 16px;
-    }
-
-    .meta-item {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .meta-label {
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .meta-value {
-      font-size: 0.84rem;
-      font-weight: 600;
-      color: #f1f5f9;
-      font-family: 'JetBrains Mono', monospace;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-top: 2px;
-    }
-
-    /* RESUME COUNTDOWN BAR */
-    .countdown-bar-wrap {
-      width: 100%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 999px;
-      overflow: hidden;
+      padding: 10px 12px;
+      border-radius: 12px;
       margin-bottom: 14px;
     }
 
-    .countdown-bar-fill {
-      height: 100%;
-      width: 100%;
-      background: var(--accent-blue);
-      border-radius: 999px;
-      transition: width 1.8s linear;
-    }
+    .meta-item { display: flex; flex-direction: column; }
+    .meta-label { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+    .meta-value { font-size: 0.82rem; font-weight: 600; color: #f1f5f9; font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
 
-    /* ACTION BUTTON */
+    .countdown-bar-wrap { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.08); border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
+    .countdown-bar-fill { height: 100%; width: 100%; background: var(--mode-color); border-radius: 999px; transition: width 1.8s linear; }
+
     .action-btn-primary {
       width: 100%;
-      height: 50px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -601,22 +575,18 @@
       color: white;
       border: none;
       border-radius: 999px;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35);
-      transition: all 0.2s ease;
     }
 
-    .action-btn-primary:active {
-      transform: scale(0.97);
-    }
+    .action-btn-primary:active { transform: scale(0.97); }
 
-    /* MANUAL ENTRY MODAL */
+    /* MODAL SHEETS (Drawer for Station Picker & Manual Entry) */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.78);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       z-index: 100;
@@ -625,18 +595,19 @@
       justify-content: center;
     }
 
-    .modal-overlay.open {
-      display: flex;
-    }
+    .modal-overlay.open { display: flex; }
 
     .modal-sheet {
       width: 100%;
       max-width: 500px;
+      max-height: 80vh;
       background: #0f172a;
       border-top: 1px solid rgba(255, 255, 255, 0.12);
-      border-top-left-radius: 28px;
-      border-top-right-radius: 28px;
-      padding: 20px 20px calc(var(--safe-bottom) + 24px);
+      border-top-left-radius: 26px;
+      border-top-right-radius: 26px;
+      padding: 18px 18px calc(var(--safe-bottom) + 20px);
+      display: flex;
+      flex-direction: column;
       box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
       animation: slideUpModal 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -646,165 +617,131 @@
       to { transform: translateY(0); }
     }
 
-    .modal-title {
-      font-size: 1.15rem;
-      font-weight: 800;
-      margin-bottom: 6px;
+    .modal-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 4px; }
+    .modal-subtitle { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px; }
+
+    .filter-input {
+      width: 100%;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 0.9rem;
+      padding: 0 14px;
+      outline: none;
+      margin-bottom: 12px;
     }
 
-    .modal-subtitle {
-      font-size: 0.82rem;
+    .picker-list {
+      max-height: 45vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .picker-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .picker-item:active, .picker-item.selected {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--mode-color);
+    }
+
+    .picker-item-main {
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .picker-item-sub {
+      font-size: 0.74rem;
       color: var(--text-muted);
-      margin-bottom: 18px;
+      margin-top: 2px;
     }
 
     .manual-input {
       width: 100%;
-      height: 52px;
+      height: 50px;
       background: rgba(255, 255, 255, 0.05);
       border: 1.5px solid rgba(255, 255, 255, 0.15);
-      border-radius: 14px;
+      border-radius: 12px;
       color: #fff;
-      font-size: 1.05rem;
-      font-weight: 600;
+      font-size: 1rem;
       font-family: 'JetBrains Mono', monospace;
       padding: 0 16px;
       outline: none;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       text-transform: uppercase;
-      transition: border-color 0.2s;
     }
 
-    .manual-input:focus {
-      border-color: var(--accent-blue);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
-    }
-
-    .modal-buttons {
-      display: flex;
-      gap: 10px;
-    }
-
-    .modal-btn-cancel {
-      flex: 1;
-      height: 48px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-muted);
-      border: none;
-      border-radius: 999px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .modal-btn-submit {
-      flex: 2;
-      height: 48px;
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-      color: white;
-      border: none;
-      border-radius: 999px;
-      font-size: 0.95rem;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
-    }
-
-    /* RECENT DRAWER */
-    .recent-list {
-      max-height: 50vh;
-      overflow-y: auto;
-      margin-top: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .recent-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 10px 14px;
-      border-radius: 12px;
-    }
-
-    .recent-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: rgba(99, 102, 241, 0.2);
-      color: #818cf8;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
-
-    .recent-info {
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .recent-name {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .recent-badge {
-      font-size: 0.72rem;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-muted);
-    }
-
-    .recent-time {
-      font-size: 0.75rem;
-      color: var(--accent-blue);
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 600;
-    }
+    .modal-buttons { display: flex; gap: 10px; }
+    .modal-btn-cancel { flex: 1; height: 46px; background: rgba(255, 255, 255, 0.08); color: var(--text-muted); border: none; border-radius: 999px; font-weight: 700; cursor: pointer; }
+    .modal-btn-submit { flex: 2; height: 46px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 999px; font-weight: 800; cursor: pointer; }
   </style>
 </head>
-<body>
+<body class="mode-{{ default_mode }}">
 
 <div id="appContainer">
   <!-- TOP HEADER -->
   <header class="app-header">
-    <div class="brand-pill">
-      <div class="live-dot"></div>
-      <span class="brand-title">KNOVA GATE SCAN</span>
+    <div class="header-top-row">
+      <div class="brand-pill">
+        <div class="live-dot"></div>
+        <span class="brand-title" id="brandTitle">KNOVA GATE SCAN</span>
+      </div>
+
+      <!-- DYNAMIC STATS COUNTER -->
+      <div class="stat-badge">
+        <span class="label" id="statLabel">Checked In:</span>
+        <span class="num" id="statCount">{{ total_checked_in }}</span>
+      </div>
+
+      <!-- HEADER CONTROLS -->
+      <div class="header-actions">
+        <button class="icon-btn" id="btnTorch" title="Toggle Flashlight" onclick="toggleTorch()"><i class="fa-solid fa-bolt"></i></button>
+        <button class="icon-btn" id="btnFlipCam" title="Flip Camera" onclick="flipCamera()"><i class="fa-solid fa-camera-rotate"></i></button>
+        <button class="icon-btn" id="btnSound" title="Toggle Sound" onclick="toggleSound()"><i class="fa-solid fa-volume-high"></i></button>
+      </div>
     </div>
 
-    <!-- STATS COUNTER -->
-    <div class="stat-badge">
-      <i class="fa-solid fa-users-viewfinder" style="color: #818cf8;"></i>
-      <span class="num" id="statCheckedIn">{{ total_checked_in }}</span>
-      <span class="total">/ <span id="statTotal">{{ total_registered }}</span></span>
-    </div>
-
-    <!-- HEADER CONTROLS -->
-    <div class="header-actions">
-      <!-- TORCH TOGGLE -->
-      <button class="icon-btn" id="btnTorch" title="Toggle Flashlight" onclick="toggleTorch()">
-        <i class="fa-solid fa-bolt"></i>
+    <!-- 4-ROLE SEGMENTED TABS -->
+    <nav class="role-tabs-wrap" aria-label="Scanner Mode">
+      <button class="role-tab-btn {% if default_mode == 'gate' %}active{% endif %}" data-mode="gate" onclick="switchScannerMode('gate')">
+        <i class="fa-solid fa-door-open"></i>
+        <span>Gate Entry</span>
       </button>
-
-      <!-- FLIP CAMERA -->
-      <button class="icon-btn" id="btnFlipCam" title="Flip Camera" onclick="flipCamera()">
-        <i class="fa-solid fa-camera-rotate"></i>
+      <button class="role-tab-btn {% if default_mode == 'booth' %}active{% endif %}" data-mode="booth" onclick="switchScannerMode('booth')">
+        <i class="fa-solid fa-store"></i>
+        <span>Booth Visit</span>
       </button>
-
-      <!-- AUDIO TOGGLE -->
-      <button class="icon-btn" id="btnSound" title="Toggle Sound" onclick="toggleSound()">
-        <i class="fa-solid fa-volume-high"></i>
+      <button class="role-tab-btn {% if default_mode == 'seminar' %}active{% endif %}" data-mode="seminar" onclick="switchScannerMode('seminar')">
+        <i class="fa-solid fa-chalkboard-user"></i>
+        <span>Seminars</span>
       </button>
+      <button class="role-tab-btn {% if default_mode == 'counselling' %}active{% endif %}" data-mode="counselling" onclick="switchScannerMode('counselling')">
+        <i class="fa-solid fa-user-graduate"></i>
+        <span>Counselling</span>
+      </button>
+    </nav>
+
+    <!-- STATION / SESSION CONTEXT BAR -->
+    <div class="station-bar" id="stationBar" onclick="openStationPicker()" style="display: none;">
+      <div class="station-info">
+        <i class="fa-solid fa-location-dot" id="stationIcon"></i>
+        <span class="station-title" id="stationTitle">Select Active Station</span>
+      </div>
+      <i class="fa-solid fa-chevron-down station-chevron"></i>
     </div>
   </header>
 
@@ -812,8 +749,8 @@
   <main class="scanner-viewport">
     <div id="reader"></div>
 
-    <!-- SCANNER RETICLE OVERLAY -->
-    <div class="reticle-container" id="reticleOverlay">
+    <!-- RETICLE OVERLAY -->
+    <div class="reticle-container">
       <div class="reticle-box">
         <div class="corner tl"></div>
         <div class="corner tr"></div>
@@ -821,20 +758,18 @@
         <div class="corner br"></div>
         <div class="laser-line"></div>
       </div>
-      <div class="reticle-hint">
-        <i class="fa-solid fa-qrcode" style="color: var(--accent-blue); margin-right: 6px;"></i>
-        Align attendee badge QR code inside frame
+      <div class="reticle-hint" id="reticleHint">
+        <i class="fa-solid fa-qrcode" style="margin-right: 5px;"></i>
+        <span id="reticleHintText">Align attendee badge QR code inside frame</span>
       </div>
     </div>
 
-    <!-- CAMERA PLACEHOLDER / PERMISSION REQUIRED -->
+    <!-- CAMERA PLACEHOLDER -->
     <div class="camera-placeholder" id="cameraPlaceholder" style="display: none;">
       <i class="fa-solid fa-camera"></i>
-      <div class="placeholder-title">Camera Access Required</div>
-      <div class="placeholder-desc">Allow camera permission on your phone to scan attendee check-in badges.</div>
-      <button class="start-cam-btn" onclick="startScanner()">
-        <i class="fa-solid fa-play" style="margin-right: 6px;"></i> Enable Camera
-      </button>
+      <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;">Camera Access Required</div>
+      <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px;">Enable camera permission to scan attendee badges.</div>
+      <button class="start-cam-btn" onclick="startScanner()"><i class="fa-solid fa-play" style="margin-right: 5px;"></i> Enable Camera</button>
     </div>
   </main>
 
@@ -846,15 +781,14 @@
     </button>
     <button class="pill-btn" onclick="openRecentModal()">
       <i class="fa-solid fa-clock-rotate-left"></i>
-      <span>Recent (<span id="recentCount">{{ recent_logs|length }}</span>)</span>
+      <span>Recent Scans</span>
     </button>
   </footer>
 
-  <!-- SLIDE-UP SCAN RESULT MODAL -->
+  <!-- SLIDE-UP RESULT MODAL -->
   <div class="result-sheet" id="resultSheet">
     <div class="sheet-handle"></div>
 
-    <!-- RESULT HEADER -->
     <div class="result-header">
       <div class="result-avatar" id="resAvatar">A</div>
       <div class="result-title-block">
@@ -863,56 +797,66 @@
       </div>
     </div>
 
-    <!-- STATUS BANNER -->
+    <!-- STATUS BANNER & REWARD -->
     <div class="status-banner success" id="resStatusBanner">
-      <i class="fa-solid fa-circle-check" id="resStatusIcon"></i>
-      <span id="resStatusText">CHECK-IN CONFIRMED</span>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-circle-check" id="resStatusIcon"></i>
+        <span id="resStatusText">CHECK-IN CONFIRMED</span>
+      </div>
+      <span class="reward-pill" id="resRewardPill">+20 XP</span>
     </div>
 
-    <!-- ATTENDEE DETAILS METADATA -->
     <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Station / Room</span>
+        <span class="meta-value" id="resStation">Main Entrance</span>
+      </div>
       <div class="meta-item">
         <span class="meta-label">Badge ID</span>
         <span class="meta-value" id="resBadgeId">KNOVA-ST-00000</span>
       </div>
       <div class="meta-item">
         <span class="meta-label">School / Org</span>
-        <span class="meta-value" id="resOrg">Institution</span>
+        <span class="meta-value" id="resOrg">-</span>
       </div>
       <div class="meta-item">
-        <span class="meta-label">Check-In Time</span>
+        <span class="meta-label">Punch Time</span>
         <span class="meta-value" id="resTime">10:00 AM</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Email / Phone</span>
-        <span class="meta-value" id="resContact">-</span>
       </div>
     </div>
 
-    <!-- AUTO RESUME TIMER -->
     <div class="countdown-bar-wrap">
       <div class="countdown-bar-fill" id="countdownFill"></div>
     </div>
 
-    <!-- DISMISS / SCAN NEXT IMMEDIATELY -->
-    <button class="action-btn-primary" id="btnScanNext" onclick="dismissResultAndScanNext()">
+    <button class="action-btn-primary" onclick="dismissResultAndScanNext()">
       <i class="fa-solid fa-arrow-right"></i>
       <span>Scan Next Attendee</span>
     </button>
+  </div>
+
+  <!-- STATION PICKER MODAL (For Booth, Seminar, Counselling) -->
+  <div class="modal-overlay" id="stationPickerModal">
+    <div class="modal-sheet">
+      <div class="sheet-handle" onclick="closeStationPicker()"></div>
+      <div class="modal-title" id="pickerModalTitle">Select Station</div>
+      <div class="modal-subtitle" id="pickerModalSubtitle">Choose which station you are scanning for today.</div>
+      <input type="text" id="pickerSearch" class="filter-input" placeholder="Search..." oninput="filterPickerItems()">
+      <div class="picker-list" id="pickerList"></div>
+      <button class="modal-btn-cancel" style="margin-top: 12px; height: 44px; width: 100%;" onclick="closeStationPicker()">Close</button>
+    </div>
   </div>
 
   <!-- MANUAL ENTRY MODAL -->
   <div class="modal-overlay" id="manualModal">
     <div class="modal-sheet">
       <div class="sheet-handle" onclick="closeManualModal()"></div>
-      <div class="modal-title">Manual Badge Check-In</div>
-      <div class="modal-subtitle">Enter attendee Badge ID (e.g. KNOVA-ST-38523), registration ID, email or phone number.</div>
-
-      <input type="text" id="manualCodeInput" class="manual-input" placeholder="e.g. KNOVA-ST-38523" autofocus>
-
+      <div class="modal-title">Manual Badge Punch</div>
+      <div class="modal-subtitle">Enter attendee Badge ID (e.g. KNOVA-ST-83942), email, or registration number.</div>
+      <input type="text" id="manualCodeInput" class="manual-input" placeholder="e.g. KNOVA-ST-83942">
       <div class="modal-buttons">
         <button class="modal-btn-cancel" onclick="closeManualModal()">Cancel</button>
-        <button class="modal-btn-submit" onclick="submitManualCode()">Check In</button>
+        <button class="modal-btn-submit" onclick="submitManualCode()">Punch Badge</button>
       </div>
     </div>
   </div>
@@ -921,36 +865,196 @@
   <div class="modal-overlay" id="recentModal">
     <div class="modal-sheet">
       <div class="sheet-handle" onclick="closeRecentModal()"></div>
-      <div class="modal-title">Recent Gate Check-Ins</div>
-      <div class="modal-subtitle">Latest attendees checked in today at KNOVA Expo.</div>
-
-      <div class="recent-list" id="recentListContainer">
-        {% for log in recent_logs %}
-        <div class="recent-item">
-          <div class="recent-avatar">{{ log.registration.full_name|slice:":2"|upper }}</div>
-          <div class="recent-info">
-            <div class="recent-name">{{ log.registration.full_name }}</div>
-            <div class="recent-badge">{{ log.registration.registration_id|default:"KNOVA-ATTENDEE" }} &bull; {{ log.registration.role }}</div>
-          </div>
-          <div class="recent-time">{{ log.checked_in_at|date:"h:i A" }}</div>
-        </div>
-        {% empty %}
-        <div style="text-align: center; color: var(--text-muted); padding: 24px 0; font-size: 0.85rem;">
-          No check-ins recorded yet today.
-        </div>
-        {% endfor %}
-      </div>
-
-      <div style="margin-top: 16px;">
-        <button class="action-btn-primary" style="background: rgba(255,255,255,0.08); box-shadow: none;" onclick="closeRecentModal()">Close</button>
-      </div>
+      <div class="modal-title">Recent Scans</div>
+      <div class="modal-subtitle" id="recentSubtitle">Recent attendance punches for this station.</div>
+      <div class="picker-list" id="recentListContainer"></div>
+      <button class="modal-btn-cancel" style="margin-top: 12px; height: 44px; width: 100%;" onclick="closeRecentModal()">Close</button>
     </div>
   </div>
 </div>
 
+<!-- CLIENT STATE & 4-ROLE DATA INGESTION -->
 <script>
+const INITIAL_CONFIG = {
+  mode: "{{ default_mode|default:'gate' }}",
+  defaultExhibitorId: {{ default_exhibitor_id|default:"null" }},
+  defaultSessionId: {{ default_session_id|default:"null" }},
+  defaultExpertId: {{ default_expert_id|default:"null" }},
+  exhibitors: [
+    {% for exh in exhibitors %}
+    { id: {{ exh.id }}, name: "{{ exh.company_name|escapejs }}", sub: "{{ exh.hall_or_venue|default:'Exhibition Floor'|escapejs }}" },
+    {% endfor %}
+  ],
+  sessions: [
+    {% for s in sessions %}
+    { id: {{ s.id }}, name: "{{ s.title|escapejs }}", sub: "{{ s.hall_name|default:'Keynote Hall'|escapejs }} &bull; {{ s.start_time|time:'g:i A' }}" },
+    {% endfor %}
+  ],
+  experts: [
+    {% for e in experts %}
+    { id: {{ e.id }}, name: "{{ e.name|escapejs }}", sub: "{{ e.desk_name|default:'Counselling Desk'|escapejs }}" },
+    {% endfor %}
+  ]
+};
+
+let currentMode = localStorage.getItem('knova_scan_mode') || INITIAL_CONFIG.mode;
+let selectedExhibitorId = localStorage.getItem('knova_exhibitor_id') || INITIAL_CONFIG.defaultExhibitorId;
+let selectedSessionId = localStorage.getItem('knova_session_id') || INITIAL_CONFIG.defaultSessionId;
+let selectedExpertId = localStorage.getItem('knova_expert_id') || INITIAL_CONFIG.defaultExpertId;
+
+// Fallback to first if null
+if (!selectedExhibitorId && INITIAL_CONFIG.exhibitors.length) selectedExhibitorId = INITIAL_CONFIG.exhibitors[0].id;
+if (!selectedSessionId && INITIAL_CONFIG.sessions.length) selectedSessionId = INITIAL_CONFIG.sessions[0].id;
+if (!selectedExpertId && INITIAL_CONFIG.experts.length) selectedExpertId = INITIAL_CONFIG.experts[0].id;
+
 // =============================================================================
-// AUDIO CHIME SYNTHESIZER (WEB AUDIO API - 0 Latency, Offline Ready)
+// MODE SWITCHER ENGINE (Gate, Booth, Seminar, Counselling)
+// =============================================================================
+function switchScannerMode(mode) {
+  currentMode = mode;
+  localStorage.setItem('knova_scan_mode', mode);
+
+  // Update Body Theme
+  document.body.className = `mode-${mode}`;
+
+  // Update Tab Buttons
+  document.querySelectorAll('.role-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
+  });
+
+  const stationBar = document.getElementById('stationBar');
+  const brandTitle = document.getElementById('brandTitle');
+  const reticleHintText = document.getElementById('reticleHintText');
+
+  if (mode === 'gate') {
+    stationBar.style.display = 'none';
+    brandTitle.textContent = 'GATE ENTRY SCAN';
+    reticleHintText.textContent = 'Point at attendee pass to verify expo hall entry';
+  } else if (mode === 'booth') {
+    stationBar.style.display = 'flex';
+    brandTitle.textContent = 'BOOTH VISIT PUNCH';
+    reticleHintText.textContent = 'Point at student badge to record booth visit & lead';
+    updateStationBarDisplay();
+  } else if (mode === 'seminar') {
+    stationBar.style.display = 'flex';
+    brandTitle.textContent = 'SEMINAR ATTENDANCE';
+    reticleHintText.textContent = 'Point at student badge to mark seminar attendance';
+    updateStationBarDisplay();
+  } else if (mode === 'counselling') {
+    stationBar.style.display = 'flex';
+    brandTitle.textContent = 'COUNSELLING PUNCH';
+    reticleHintText.textContent = 'Point at student badge to punch 1-on-1 counseling';
+    updateStationBarDisplay();
+  }
+
+  fetchStats();
+}
+
+function updateStationBarDisplay() {
+  const icon = document.getElementById('stationIcon');
+  const title = document.getElementById('stationTitle');
+
+  if (currentMode === 'booth') {
+    icon.className = 'fa-solid fa-store';
+    const found = INITIAL_CONFIG.exhibitors.find(e => e.id == selectedExhibitorId);
+    title.textContent = found ? found.name : 'Select Booth';
+  } else if (currentMode === 'seminar') {
+    icon.className = 'fa-solid fa-chalkboard-user';
+    const found = INITIAL_CONFIG.sessions.find(s => s.id == selectedSessionId);
+    title.textContent = found ? found.name : 'Select Session';
+  } else if (currentMode === 'counselling') {
+    icon.className = 'fa-solid fa-user-graduate';
+    const found = INITIAL_CONFIG.experts.find(x => x.id == selectedExpertId);
+    title.textContent = found ? `${found.name} (${found.sub})` : 'Select Counsellor';
+  }
+}
+
+// =============================================================================
+// STATION PICKER MODAL
+// =============================================================================
+function openStationPicker() {
+  const modal = document.getElementById('stationPickerModal');
+  const title = document.getElementById('pickerModalTitle');
+  const sub = document.getElementById('pickerModalSubtitle');
+  const list = document.getElementById('pickerList');
+  document.getElementById('pickerSearch').value = '';
+
+  let items = [];
+  let selectedId = null;
+
+  if (currentMode === 'booth') {
+    title.textContent = 'Select University / Booth';
+    sub.textContent = 'Choose which exhibitor booth you are representing today.';
+    items = INITIAL_CONFIG.exhibitors;
+    selectedId = selectedExhibitorId;
+  } else if (currentMode === 'seminar') {
+    title.textContent = 'Select Seminar Session';
+    sub.textContent = 'Choose which keynote or seminar talk you are scanning for.';
+    items = INITIAL_CONFIG.sessions;
+    selectedId = selectedSessionId;
+  } else if (currentMode === 'counselling') {
+    title.textContent = 'Select Counsellor Desk';
+    sub.textContent = 'Choose which education expert station you are operating.';
+    items = INITIAL_CONFIG.experts;
+    selectedId = selectedExpertId;
+  }
+
+  renderPickerItems(items, selectedId);
+  modal.classList.add('open');
+}
+
+function closeStationPicker() {
+  document.getElementById('stationPickerModal').classList.remove('open');
+}
+
+function renderPickerItems(items, selectedId) {
+  const list = document.getElementById('pickerList');
+  if (!items || items.length === 0) {
+    list.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.85rem;">No items found.</div>`;
+    return;
+  }
+
+  list.innerHTML = items.map(it => `
+    <div class="picker-item ${it.id == selectedId ? 'selected' : ''}" onclick="selectStationItem(${it.id})">
+      <div>
+        <div class="picker-item-main">${it.name}</div>
+        <div class="picker-item-sub">${it.sub}</div>
+      </div>
+      ${it.id == selectedId ? '<i class="fa-solid fa-circle-check" style="color:var(--mode-color);"></i>' : ''}
+    </div>
+  `).join('');
+}
+
+function filterPickerItems() {
+  const q = document.getElementById('pickerSearch').value.toLowerCase().trim();
+  let pool = [];
+  let selectedId = null;
+  if (currentMode === 'booth') { pool = INITIAL_CONFIG.exhibitors; selectedId = selectedExhibitorId; }
+  else if (currentMode === 'seminar') { pool = INITIAL_CONFIG.sessions; selectedId = selectedSessionId; }
+  else if (currentMode === 'counselling') { pool = INITIAL_CONFIG.experts; selectedId = selectedExpertId; }
+
+  const filtered = pool.filter(p => p.name.toLowerCase().includes(q) || (p.sub && p.sub.toLowerCase().includes(q)));
+  renderPickerItems(filtered, selectedId);
+}
+
+function selectStationItem(id) {
+  if (currentMode === 'booth') {
+    selectedExhibitorId = id;
+    localStorage.setItem('knova_exhibitor_id', id);
+  } else if (currentMode === 'seminar') {
+    selectedSessionId = id;
+    localStorage.setItem('knova_session_id', id);
+  } else if (currentMode === 'counselling') {
+    selectedExpertId = id;
+    localStorage.setItem('knova_expert_id', id);
+  }
+  updateStationBarDisplay();
+  closeStationPicker();
+  fetchStats();
+}
+
+// =============================================================================
+// AUDIO CHIME SYNTHESIZER (WEB AUDIO API - 0ms Latency)
 // =============================================================================
 let audioCtx = null;
 let soundEnabled = true;
@@ -958,13 +1062,9 @@ let soundEnabled = true;
 function initAudio() {
   if (!audioCtx) {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (AudioContext) {
-      audioCtx = new AudioContext();
-    }
+    if (AudioContext) audioCtx = new AudioContext();
   }
-  if (audioCtx && audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 }
 
 function playSuccessChime() {
@@ -972,36 +1072,20 @@ function playSuccessChime() {
   try {
     initAudio();
     if (!audioCtx) return;
-
     const now = audioCtx.currentTime;
     const osc1 = audioCtx.createOscillator();
     const osc2 = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-
-    osc1.type = 'sine';
-    osc2.type = 'sine';
-
-    // Pleasant high-chime chord: D5 (587.33Hz) -> A5 (880Hz)
+    osc1.type = 'sine'; osc2.type = 'sine';
     osc1.frequency.setValueAtTime(587.33, now);
     osc1.frequency.exponentialRampToValueAtTime(880, now + 0.08);
-
     osc2.frequency.setValueAtTime(880, now);
     osc2.frequency.exponentialRampToValueAtTime(1174.66, now + 0.08);
-
     gain.gain.setValueAtTime(0.18, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-
-    osc1.connect(gain);
-    osc2.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc1.start(now);
-    osc2.start(now);
-    osc1.stop(now + 0.3);
-    osc2.stop(now + 0.3);
-  } catch (e) {
-    console.warn("Audio chime error:", e);
-  }
+    osc1.connect(gain); osc2.connect(gain); gain.connect(audioCtx.destination);
+    osc1.start(now); osc2.start(now); osc1.stop(now + 0.3); osc2.stop(now + 0.3);
+  } catch (e) {}
 }
 
 function playWarningChime() {
@@ -1009,23 +1093,16 @@ function playWarningChime() {
   try {
     initAudio();
     if (!audioCtx) return;
-
     const now = audioCtx.currentTime;
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-
     osc.type = 'triangle';
     osc.frequency.setValueAtTime(440, now);
     osc.frequency.setValueAtTime(370, now + 0.1);
-
     gain.gain.setValueAtTime(0.2, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.start(now);
-    osc.stop(now + 0.3);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(now); osc.stop(now + 0.3);
   } catch (e) {}
 }
 
@@ -1034,23 +1111,16 @@ function playErrorChime() {
   try {
     initAudio();
     if (!audioCtx) return;
-
     const now = audioCtx.currentTime;
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-
     osc.type = 'sawtooth';
     osc.frequency.setValueAtTime(220, now);
     osc.frequency.exponentialRampToValueAtTime(110, now + 0.25);
-
     gain.gain.setValueAtTime(0.2, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.start(now);
-    osc.stop(now + 0.3);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(now); osc.stop(now + 0.3);
   } catch (e) {}
 }
 
@@ -1068,11 +1138,11 @@ function toggleSound() {
 }
 
 // =============================================================================
-// SCANNER LOGIC & HARDWARE CONTROLS
+// CAMERA SCANNER ENGINE & HARDWARE
 // =============================================================================
 let html5QrCode = null;
 let isScanning = false;
-let currentFacingMode = "environment"; // default to rear camera
+let currentFacingMode = "environment";
 let torchActive = false;
 let activeVideoTrack = null;
 let isProcessingScan = false;
@@ -1080,36 +1150,27 @@ let autoResumeTimer = null;
 
 function startScanner() {
   document.getElementById('cameraPlaceholder').style.display = 'none';
-
   if (!html5QrCode) {
-    html5QrCode = new Html5Qrcode("reader", {
-      experimentalFeatures: {
-        useBarCodeDetectorIfSupported: true
-      }
-    });
+    html5QrCode = new Html5Qrcode("reader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } });
   }
 
-  const qrBoxSize = Math.min(window.innerWidth * 0.72, 270);
+  const qrBoxSize = Math.min(window.innerWidth * 0.72, 260);
   const config = {
     fps: 25,
     qrbox: { width: qrBoxSize, height: qrBoxSize },
     aspectRatio: 1.0,
-    videoConstraints: {
-      facingMode: { ideal: currentFacingMode },
-      focusMode: "continuous"
-    }
+    videoConstraints: { facingMode: { ideal: currentFacingMode }, focusMode: "continuous" }
   };
 
   html5QrCode.start(
     { facingMode: currentFacingMode },
     config,
-    onQrCodeDetected,
-    onScanFailure
+    (code) => { if (!isProcessingScan) { isProcessingScan = true; dispatchCheckIn(code); } },
+    () => {}
   ).then(() => {
     isScanning = true;
     captureActiveVideoTrack();
-  }).catch(err => {
-    console.error("Camera start failure:", err);
+  }).catch(() => {
     isScanning = false;
     document.getElementById('cameraPlaceholder').style.display = 'flex';
   });
@@ -1119,15 +1180,9 @@ function captureActiveVideoTrack() {
   try {
     const video = document.querySelector("#reader video");
     if (video && video.srcObject) {
-      const stream = video.srcObject;
-      const tracks = stream.getVideoTracks();
-      if (tracks.length > 0) {
-        activeVideoTrack = tracks[0];
-      }
+      activeVideoTrack = video.srcObject.getVideoTracks()[0];
     }
-  } catch (e) {
-    console.warn("Could not capture video track:", e);
-  }
+  } catch (e) {}
 }
 
 function flipCamera() {
@@ -1135,66 +1190,38 @@ function flipCamera() {
   currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
   torchActive = false;
   document.getElementById('btnTorch').classList.remove('active');
-
-  if (html5QrCode) {
-    html5QrCode.stop().then(() => {
-      startScanner();
-    }).catch(() => {
-      startScanner();
-    });
-  }
+  if (html5QrCode) html5QrCode.stop().then(startScanner).catch(startScanner);
 }
 
 function toggleTorch() {
   captureActiveVideoTrack();
-  if (!activeVideoTrack) {
-    alert("Flashlight/Torch is not supported on this camera device or mode.");
-    return;
-  }
-
-  const capabilities = activeVideoTrack.getCapabilities ? activeVideoTrack.getCapabilities() : {};
-  if (!capabilities.torch) {
-    alert("Flashlight/Torch not available on this camera.");
-    return;
-  }
-
+  if (!activeVideoTrack) { alert("Torch not supported on this camera device."); return; }
+  const caps = activeVideoTrack.getCapabilities ? activeVideoTrack.getCapabilities() : {};
+  if (!caps.torch) { alert("Torch not available on this camera."); return; }
   torchActive = !torchActive;
-  activeVideoTrack.applyConstraints({
-    advanced: [{ torch: torchActive }]
-  }).then(() => {
-    const btn = document.getElementById('btnTorch');
-    if (torchActive) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  }).catch(err => {
-    console.warn("Torch apply failed:", err);
-    torchActive = false;
-    document.getElementById('btnTorch').classList.remove('active');
-  });
-}
-
-function onScanFailure(error) {
-  // Silent scan frame progression
-}
-
-function onQrCodeDetected(decodedText) {
-  if (isProcessingScan) return;
-  isProcessingScan = true;
-
-  // Trigger check-in verification
-  processCheckIn(decodedText);
+  activeVideoTrack.applyConstraints({ advanced: [{ torch: torchActive }] }).then(() => {
+    document.getElementById('btnTorch').classList.toggle('active', torchActive);
+  }).catch(() => { torchActive = false; });
 }
 
 // =============================================================================
-// CHECK-IN API DISPATCH & RESULT HANDLING
+// UNIFIED 4-ROLE DISPATCH API
 // =============================================================================
-async function processCheckIn(code) {
-  if (!code || !code.trim()) {
-    isProcessingScan = false;
-    return;
-  }
+function getTargetIdForCurrentMode() {
+  if (currentMode === 'booth') return selectedExhibitorId;
+  if (currentMode === 'seminar') return selectedSessionId;
+  if (currentMode === 'counselling') return selectedExpertId;
+  return null;
+}
+
+async function dispatchCheckIn(code) {
+  if (!code || !code.trim()) { isProcessingScan = false; return; }
+
+  const payload = {
+    code: code.trim(),
+    mode: currentMode,
+    target_id: getTargetIdForCurrentMode()
+  };
 
   try {
     const resp = await fetch('/api/mobile-checkin/', {
@@ -1203,17 +1230,14 @@ async function processCheckIn(code) {
         'Content-Type': 'application/json',
         'X-CSRFToken': getCookie('csrftoken') || ''
       },
-      body: JSON.stringify({ code: code.trim() })
+      body: JSON.stringify(payload)
     });
 
     const data = await resp.json();
     renderCheckInResult(data, code);
   } catch (err) {
     console.error("Check-in network error:", err);
-    renderCheckInResult({
-      status: 'NETWORK_ERROR',
-      message: 'Network error communicating with check-in server.'
-    }, code);
+    renderCheckInResult({ status: 'NETWORK_ERROR', message: 'Connection to server failed.' }, code);
   }
 }
 
@@ -1225,59 +1249,61 @@ function renderCheckInResult(data, rawCode) {
   const statusBanner = document.getElementById('resStatusBanner');
   const statusIcon = document.getElementById('resStatusIcon');
   const statusText = document.getElementById('resStatusText');
+  const rewardPill = document.getElementById('resRewardPill');
+  const stationEl = document.getElementById('resStation');
   const badgeIdEl = document.getElementById('resBadgeId');
   const orgEl = document.getElementById('resOrg');
   const timeEl = document.getElementById('resTime');
-  const contactEl = document.getElementById('resContact');
 
-  // Reset classnames
   statusBanner.className = 'status-banner';
   avatar.className = 'result-avatar';
 
   if (data.status === 'SUCCESS') {
-    // SUCCESS
     playSuccessChime();
     if (navigator.vibrate) navigator.vibrate([70]);
 
     statusBanner.classList.add('success');
     statusIcon.className = 'fa-solid fa-circle-check';
-    statusText.textContent = 'CHECK-IN CONFIRMED';
+    statusText.textContent = data.message || 'PUNCH RECORDED';
+
+    rewardPill.style.display = 'inline-block';
+    rewardPill.textContent = data.badge_reward || 'Verified';
 
     const att = data.attendee || {};
     nameEl.textContent = att.full_name || 'Attendee';
     avatar.textContent = att.initials || 'A';
     badgeIdEl.textContent = att.badge_id || rawCode;
-    orgEl.textContent = att.school_or_org || 'KNOVA Bahrain 2027';
+    orgEl.textContent = att.school_or_org || '-';
     timeEl.textContent = att.checked_in_time || 'Just now';
-    contactEl.textContent = att.email || att.phone || '-';
+    stationEl.textContent = data.station_name || 'Checked In';
 
     setRoleBadge(roleEl, att.role);
     updateStats(data.stats);
-    prependRecentItem(att);
 
-  } else if (data.status === 'ALREADY_CHECKED_IN') {
-    // DUPLICATE / ALREADY CHECKED IN
+  } else if (data.status === 'ALREADY_CHECKED_IN' || data.status === 'ALREADY_PUNCHED') {
     playWarningChime();
     if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
 
     statusBanner.classList.add('warning');
     avatar.classList.add('amber');
     statusIcon.className = 'fa-solid fa-triangle-exclamation';
-    statusText.textContent = 'ALREADY CHECKED IN';
+    statusText.textContent = data.message || 'ALREADY PUNCHED';
+
+    rewardPill.style.display = 'inline-block';
+    rewardPill.textContent = 'Duplicate';
 
     const att = data.attendee || {};
     nameEl.textContent = att.full_name || 'Attendee';
     avatar.textContent = att.initials || 'A';
     badgeIdEl.textContent = att.badge_id || rawCode;
-    orgEl.textContent = att.school_or_org || 'KNOVA Bahrain 2027';
-    timeEl.textContent = att.checked_in_time ? `Prev at ${att.checked_in_time}` : 'Earlier today';
-    contactEl.textContent = att.email || att.phone || '-';
+    orgEl.textContent = att.school_or_org || '-';
+    timeEl.textContent = att.checked_in_time ? `At ${att.checked_in_time}` : 'Earlier';
+    stationEl.textContent = data.station_name || '-';
 
     setRoleBadge(roleEl, att.role);
     if (data.stats) updateStats(data.stats);
 
   } else {
-    // ERROR / NOT FOUND
     playErrorChime();
     if (navigator.vibrate) navigator.vibrate([300]);
 
@@ -1285,20 +1311,18 @@ function renderCheckInResult(data, rawCode) {
     avatar.classList.add('red');
     statusIcon.className = 'fa-solid fa-circle-xmark';
     statusText.textContent = 'UNREGISTERED BADGE';
+    rewardPill.style.display = 'none';
 
-    nameEl.textContent = 'Unknown Attendee';
+    nameEl.textContent = 'Unknown Badge';
     avatar.textContent = '?';
     badgeIdEl.textContent = rawCode || 'Invalid';
-    orgEl.textContent = 'No record found';
+    orgEl.textContent = 'No attendee found';
     timeEl.textContent = '-';
-    contactEl.textContent = '-';
+    stationEl.textContent = '-';
     setRoleBadge(roleEl, 'UNKNOWN');
   }
 
-  // Open Bottom Sheet
   sheet.classList.add('open');
-
-  // Start auto-resume countdown (1.8s)
   startCountdownBar();
 }
 
@@ -1306,51 +1330,47 @@ function setRoleBadge(el, role) {
   const r = (role || 'STUDENT').toUpperCase();
   el.textContent = r;
   el.className = 'role-badge';
-  if (r.includes('STUDENT')) {
-    el.classList.add('student');
-  } else if (r.includes('PARENT')) {
-    el.classList.add('parent');
-  } else if (r.includes('EXHIBITOR') || r.includes('UNI')) {
-    el.classList.add('exhibitor');
-  } else {
-    el.classList.add('other');
-  }
+  if (r.includes('STUDENT')) el.classList.add('student');
+  else if (r.includes('PARENT')) el.classList.add('parent');
+  else if (r.includes('EXHIBITOR') || r.includes('UNI')) el.classList.add('exhibitor');
+  else el.classList.add('other');
 }
 
 function updateStats(stats) {
   if (!stats) return;
-  if (stats.total_checked_in !== undefined) {
-    document.getElementById('statCheckedIn').textContent = stats.total_checked_in;
-  }
-  if (stats.total_registered !== undefined) {
-    document.getElementById('statTotal').textContent = stats.total_registered;
-  }
+  const labelEl = document.getElementById('statLabel');
+  const countEl = document.getElementById('statCount');
+  if (stats.station_label) labelEl.textContent = `${stats.station_label}:`;
+  if (stats.station_count !== undefined) countEl.textContent = stats.station_count;
+  else if (stats.total_checked_in !== undefined) countEl.textContent = stats.total_checked_in;
+}
+
+async function fetchStats() {
+  try {
+    const tid = getTargetIdForCurrentMode();
+    const url = `/api/mobile-checkin/stats/?mode=${currentMode}${tid ? `&target_id=${tid}` : ''}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.status === 'SUCCESS') updateStats(data);
+  } catch (e) {}
 }
 
 function startCountdownBar() {
   const fill = document.getElementById('countdownFill');
   fill.style.transition = 'none';
   fill.style.width = '100%';
-
-  // Force reflow
   fill.offsetHeight;
-
   fill.style.transition = 'width 1.8s linear';
   fill.style.width = '0%';
 
   clearTimeout(autoResumeTimer);
-  autoResumeTimer = setTimeout(() => {
-    dismissResultAndScanNext();
-  }, 1800);
+  autoResumeTimer = setTimeout(dismissResultAndScanNext, 1800);
 }
 
 function dismissResultAndScanNext() {
   clearTimeout(autoResumeTimer);
   document.getElementById('resultSheet').classList.remove('open');
-  // Small cooldown to prevent immediate re-scan of the same stationary badge
-  setTimeout(() => {
-    isProcessingScan = false;
-  }, 400);
+  setTimeout(() => { isProcessingScan = false; }, 400);
 }
 
 // =============================================================================
@@ -1372,17 +1392,15 @@ function submitManualCode() {
   if (!code) return;
   closeManualModal();
   isProcessingScan = true;
-  processCheckIn(code);
+  dispatchCheckIn(code);
 }
 
 document.getElementById('manualCodeInput').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    submitManualCode();
-  }
+  if (e.key === 'Enter') submitManualCode();
 });
 
 // =============================================================================
-// RECENT SCANS DRAWER
+// RECENT SCANS MODAL
 // =============================================================================
 function openRecentModal() {
   fetchRecentScans();
@@ -1394,57 +1412,34 @@ function closeRecentModal() {
 }
 
 async function fetchRecentScans() {
+  const sub = document.getElementById('recentSubtitle');
+  sub.textContent = `Recent scans for ${currentMode.toUpperCase()} mode.`;
+  const container = document.getElementById('recentListContainer');
+  container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Loading recent scans...</div>';
+
   try {
-    const res = await fetch('/api/mobile-checkin/recent/');
+    const tid = getTargetIdForCurrentMode();
+    const url = `/api/mobile-checkin/recent/?mode=${currentMode}${tid ? `&target_id=${tid}` : ''}`;
+    const res = await fetch(url);
     const data = await res.json();
     if (data.status === 'SUCCESS' && data.items) {
-      renderRecentList(data.items);
+      if (data.items.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:0.85rem;">No scans recorded yet.</div>';
+        return;
+      }
+      container.innerHTML = data.items.map(it => `
+        <div class="picker-item">
+          <div>
+            <div class="picker-item-main">${escapeHtml(it.name)}</div>
+            <div class="picker-item-sub">${it.badge_id} &bull; ${it.station || it.role}</div>
+          </div>
+          <div style="font-size:0.75rem; color:var(--mode-color); font-family:'JetBrains Mono',monospace;">${it.time}</div>
+        </div>
+      `).join('');
     }
   } catch (e) {
-    console.warn("Could not fetch recent scans:", e);
+    container.innerHTML = '<div style="text-align:center; padding:20px; color:#ef4444;">Could not load recent scans.</div>';
   }
-}
-
-function renderRecentList(items) {
-  const container = document.getElementById('recentListContainer');
-  document.getElementById('recentCount').textContent = items.length;
-
-  if (items.length === 0) {
-    container.innerHTML = `
-      <div style="text-align: center; color: var(--text-muted); padding: 24px 0; font-size: 0.85rem;">
-        No check-ins recorded yet today.
-      </div>`;
-    return;
-  }
-
-  container.innerHTML = items.map(it => `
-    <div class="recent-item">
-      <div class="recent-avatar">${it.initials || 'A'}</div>
-      <div class="recent-info">
-        <div class="recent-name">${escapeHtml(it.name)}</div>
-        <div class="recent-badge">${it.badge_id} &bull; ${it.role}</div>
-      </div>
-      <div class="recent-time">${it.time}</div>
-    </div>
-  `).join('');
-}
-
-function prependRecentItem(att) {
-  const countEl = document.getElementById('recentCount');
-  countEl.textContent = parseInt(countEl.textContent || '0') + 1;
-
-  const container = document.getElementById('recentListContainer');
-  const itemHtml = `
-    <div class="recent-item" style="border-color: rgba(16, 185, 129, 0.4);">
-      <div class="recent-avatar" style="background: rgba(16,185,129,0.2); color: #34d399;">${att.initials || 'A'}</div>
-      <div class="recent-info">
-        <div class="recent-name">${escapeHtml(att.full_name)}</div>
-        <div class="recent-badge">${att.badge_id} &bull; ${att.role}</div>
-      </div>
-      <div class="recent-time" style="color: #34d399;">${att.checked_in_time || 'Just now'}</div>
-    </div>
-  `;
-  container.insertAdjacentHTML('afterbegin', itemHtml);
 }
 
 function escapeHtml(str) {
@@ -1469,19 +1464,12 @@ function getCookie(name) {
 }
 
 // =============================================================================
-// PWA SERVICE WORKER REGISTRATION
+// INITIALIZATION
 // =============================================================================
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/scanner/sw.js').catch(err => {
-      console.warn("SW register fail:", err);
-    });
-  });
-}
-
-// Auto-start camera when page is ready
 window.addEventListener('DOMContentLoaded', () => {
+  switchScannerMode(currentMode);
   startScanner();
+  setInterval(fetchStats, 15000);
 });
 </script>
 

@@ -720,8 +720,11 @@ def _perform_mobile_checkin(request, raw_code):
 
     return {
         'status': status_label,
+        'mode': 'gate',
         'message': msg,
         'is_already_checked_in': is_duplicate,
+        'station_name': 'Expo Gate Turnstile',
+        'badge_reward': 'Expo Entry Verified',
         'attendee': {
             'id': reg.id,
             'full_name': reg.full_name,
@@ -736,8 +739,317 @@ def _perform_mobile_checkin(request, raw_code):
             'checked_in_date': (reg.checked_in_at or now).strftime("%d %b %Y"),
         },
         'stats': {
+            'station_count': total_checked_in,
+            'station_label': 'Checked In',
             'total_checked_in': total_checked_in,
             'total_registered': total_registered,
+        }
+    }
+
+
+def _get_or_create_default_experts():
+    """
+    Ensures default academic counsellor desk stations exist.
+    """
+    from django.contrib.auth.models import User
+    from .models import EducationExpert
+    experts = list(EducationExpert.objects.all())
+    if not experts:
+        experts_data = [
+            ("expert_sarah", "Dr. Sarah Jenkins", "Senior Academic Counsellor", "Academic Counselling Hub — Desk 1", "Global Admissions, Ivy League & Oxbridge Strategy"),
+            ("expert_tariq", "Dr. Tariq Al-Mansoor", "Director of Financial Aid", "Scholarships Advisory — Desk 2", "Full-Ride Merit Scholarships & Research Grants"),
+            ("expert_elena", "Prof. Elena Rostova", "STEM Degree Advisor", "Career & Industry Hub — Desk 3", "AI, Computing, Engineering & Emerging Careers")
+        ]
+        for username, name, title, desk, spec in experts_data:
+            u, _ = User.objects.get_or_create(username=username, defaults={'email': f"{username}@knovaexpo.com", 'first_name': name.split()[1] if len(name.split()) > 1 else name})
+            EducationExpert.objects.get_or_create(user=u, defaults={'name': name, 'title': title, 'desk_name': desk, 'specialization': spec})
+        experts = list(EducationExpert.objects.all())
+    return experts
+
+
+def _perform_booth_punch(request, raw_code, exhibitor_id=None, rating='Warm', notes=''):
+    """
+    Exhibitor Booth Visit punch & lead capture (+20 XP).
+    """
+    from django.utils import timezone
+    from django.db import models
+    from .models import Exhibitor, BoothVisit, ExhibitorLead, StudentChallengePassport
+
+    reg, extra = _resolve_attendee(raw_code)
+    if not reg:
+        return {
+            'status': 'NOT_FOUND',
+            'message': f"No attendee found matching '{raw_code}'.",
+            'scanned_code': raw_code
+        }
+
+    exhibitor = None
+    if exhibitor_id and str(exhibitor_id).isdigit():
+        exhibitor = Exhibitor.objects.filter(pk=int(exhibitor_id)).first()
+    if not exhibitor and request and request.user.is_authenticated:
+        if hasattr(request.user, 'exhibitor_profile'):
+            exhibitor = request.user.exhibitor_profile
+        elif hasattr(request.user, 'exhibitor_staff_profile'):
+            exhibitor = request.user.exhibitor_staff_profile.exhibitor
+    if not exhibitor:
+        exhibitor = Exhibitor.objects.first()
+    if not exhibitor:
+        return {'status': 'ERROR', 'message': 'No exhibitor booth configured.'}
+
+    existing_visit = BoothVisit.objects.filter(student=reg, exhibitor=exhibitor).first()
+    now = timezone.now()
+    is_duplicate = bool(existing_visit)
+
+    if not is_duplicate:
+        BoothVisit.objects.create(student=reg, exhibitor=exhibitor)
+        ExhibitorLead.objects.get_or_create(
+            exhibitor=exhibitor,
+            scanned_registration=reg,
+            defaults={'lead_source': 'Mobile Scanner', 'rating': rating or 'Warm', 'notes': notes or ''}
+        )
+
+        passport = StudentChallengePassport.objects.filter(
+            models.Q(registration=reg) | models.Q(student_email__iexact=reg.email) | models.Q(badge_id__iexact=reg.registration_id)
+        ).first()
+        pts_awarded = 0
+        if passport:
+            passport.universities_visited_count = (passport.universities_visited_count or 0) + 1
+            passport.total_points = (passport.total_points or 0) + 20
+            visited = passport.visited_universities or []
+            if exhibitor.company_name not in visited:
+                visited.append(exhibitor.company_name)
+                passport.visited_universities = visited
+            passport.save()
+            pts_awarded = 20
+
+        msg = f"Booth visit recorded for {reg.full_name} at {exhibitor.company_name}!"
+        status_label = 'SUCCESS'
+    else:
+        prev_time = existing_visit.visited_at.strftime("%I:%M %p") if existing_visit.visited_at else "earlier"
+        msg = f"{reg.full_name} already punched at {exhibitor.company_name} (at {prev_time})."
+        status_label = 'ALREADY_PUNCHED'
+        pts_awarded = 0
+
+    parts = (reg.full_name or 'A').split()
+    initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+    total_booth_visits = BoothVisit.objects.filter(exhibitor=exhibitor).count()
+
+    return {
+        'status': status_label,
+        'mode': 'booth',
+        'message': msg,
+        'is_already_checked_in': is_duplicate,
+        'station_name': exhibitor.company_name,
+        'badge_reward': f"+{pts_awarded} XP Booth Visit" if pts_awarded else "Booth Visit Recorded",
+        'attendee': {
+            'id': reg.id,
+            'full_name': reg.full_name,
+            'role': reg.role or 'Student',
+            'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+            'email': reg.email,
+            'phone': reg.phone or '',
+            'school_or_org': extra.get('school_or_org', '') if extra else '',
+            'target_program': extra.get('target_program', '') if extra else '',
+            'initials': initials,
+            'checked_in_time': now.strftime("%I:%M %p"),
+            'checked_in_date': now.strftime("%d %b %Y"),
+        },
+        'stats': {
+            'station_count': total_booth_visits,
+            'station_label': 'Booth Visits',
+            'total_checked_in': Registration.objects.filter(is_checked_in=True).count(),
+            'total_registered': Registration.objects.count()
+        }
+    }
+
+
+def _perform_seminar_punch(request, raw_code, session_id=None, notes=''):
+    """
+    Seminar & Keynote session attendance punch (+25 XP).
+    """
+    from django.utils import timezone
+    from django.db import models
+    from .models import ProgrammeSession, SeminarAttendance, StudentChallengePassport, StudentProfile
+
+    reg, extra = _resolve_attendee(raw_code)
+    if not reg:
+        return {
+            'status': 'NOT_FOUND',
+            'message': f"No attendee found matching '{raw_code}'.",
+            'scanned_code': raw_code
+        }
+
+    session = None
+    if session_id and str(session_id).isdigit():
+        session = ProgrammeSession.objects.filter(pk=int(session_id)).first()
+    if not session:
+        session = ProgrammeSession.objects.first()
+    if not session:
+        return {'status': 'ERROR', 'message': 'No seminar session configured.'}
+
+    existing = SeminarAttendance.objects.filter(session=session, registration=reg).first()
+    now = timezone.now()
+    is_duplicate = bool(existing)
+
+    if not is_duplicate:
+        sp = StudentProfile.objects.filter(user__email__iexact=reg.email).first()
+        SeminarAttendance.objects.create(
+            session=session,
+            registration=reg,
+            student=sp,
+            visitor_name=reg.full_name,
+            punch_method='Mobile Scanner',
+            notes=notes or 'Mobile Scanner Punch'
+        )
+
+        passport = StudentChallengePassport.objects.filter(
+            models.Q(registration=reg) | models.Q(student_email__iexact=reg.email) | models.Q(badge_id__iexact=reg.registration_id)
+        ).first()
+        pts_awarded = 0
+        if passport:
+            passport.seminars_attended_count = (passport.seminars_attended_count or 0) + 1
+            passport.total_points = (passport.total_points or 0) + 25
+            passport.seminar_completed = True
+            attended = passport.attended_seminars or []
+            if session.title not in attended:
+                attended.append(session.title)
+                passport.attended_seminars = attended
+            passport.save()
+            pts_awarded = 25
+
+        msg = f"Seminar attendance confirmed for {reg.full_name}!"
+        status_label = 'SUCCESS'
+    else:
+        prev_time = existing.attended_at.strftime("%I:%M %p") if existing.attended_at else "earlier"
+        msg = f"{reg.full_name} already checked into this seminar (at {prev_time})."
+        status_label = 'ALREADY_PUNCHED'
+        pts_awarded = 0
+
+    parts = (reg.full_name or 'A').split()
+    initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+    total_session_attendees = SeminarAttendance.objects.filter(session=session).count()
+
+    return {
+        'status': status_label,
+        'mode': 'seminar',
+        'message': msg,
+        'is_already_checked_in': is_duplicate,
+        'station_name': session.title,
+        'badge_reward': f"+{pts_awarded} XP Seminar Attendance" if pts_awarded else "Attendance Recorded",
+        'attendee': {
+            'id': reg.id,
+            'full_name': reg.full_name,
+            'role': reg.role or 'Student',
+            'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+            'email': reg.email,
+            'phone': reg.phone or '',
+            'school_or_org': extra.get('school_or_org', '') if extra else '',
+            'target_program': extra.get('target_program', '') if extra else '',
+            'initials': initials,
+            'checked_in_time': now.strftime("%I:%M %p"),
+            'checked_in_date': now.strftime("%d %b %Y"),
+        },
+        'stats': {
+            'station_count': total_session_attendees,
+            'station_label': 'Session Attendees',
+            'total_checked_in': Registration.objects.filter(is_checked_in=True).count(),
+            'total_registered': Registration.objects.count()
+        }
+    }
+
+
+def _perform_counselling_punch(request, raw_code, expert_id=None, notes=''):
+    """
+    Academic Counselling & Education Expert consultation punch (+40 XP).
+    """
+    from django.utils import timezone
+    from django.db import models
+    from .models import EducationExpert, ExpertConsultationAttendance, StudentChallengePassport, StudentProfile
+
+    reg, extra = _resolve_attendee(raw_code)
+    if not reg:
+        return {
+            'status': 'NOT_FOUND',
+            'message': f"No attendee found matching '{raw_code}'.",
+            'scanned_code': raw_code
+        }
+
+    expert = None
+    if expert_id and str(expert_id).isdigit():
+        expert = EducationExpert.objects.filter(pk=int(expert_id)).first()
+    if not expert and request and request.user.is_authenticated and hasattr(request.user, 'education_expert'):
+        expert = request.user.education_expert
+    if not expert:
+        experts = _get_or_create_default_experts()
+        expert = experts[0] if experts else None
+    if not expert:
+        return {'status': 'ERROR', 'message': 'No counsellor desk station available.'}
+
+    existing = ExpertConsultationAttendance.objects.filter(expert=expert, registration=reg).first()
+    now = timezone.now()
+    is_duplicate = bool(existing)
+
+    if not is_duplicate:
+        sp = StudentProfile.objects.filter(user__email__iexact=reg.email).first()
+        ExpertConsultationAttendance.objects.create(
+            expert=expert,
+            registration=reg,
+            student=sp,
+            badge_id=reg.registration_id or f"KNOVA-REG-{reg.id}",
+            student_name=reg.full_name,
+            punch_method='Mobile Scanner',
+            notes=notes or '1-on-1 Academic Counselling Consultation'
+        )
+
+        passport = StudentChallengePassport.objects.filter(
+            models.Q(registration=reg) | models.Q(student_email__iexact=reg.email) | models.Q(badge_id__iexact=reg.registration_id)
+        ).first()
+        pts_awarded = 0
+        if passport:
+            if not passport.expert_meeting_completed:
+                passport.expert_meeting_completed = True
+                passport.counselling_completed = True
+                passport.total_points = (passport.total_points or 0) + 40
+                passport.save()
+                pts_awarded = 40
+
+        msg = f"Counselling consultation verified for {reg.full_name}!"
+        status_label = 'SUCCESS'
+    else:
+        prev_time = existing.attended_at.strftime("%I:%M %p") if existing.attended_at else "earlier"
+        msg = f"{reg.full_name} already completed counselling with {expert.name} (at {prev_time})."
+        status_label = 'ALREADY_PUNCHED'
+        pts_awarded = 0
+
+    parts = (reg.full_name or 'A').split()
+    initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+    total_consulted = ExpertConsultationAttendance.objects.filter(expert=expert).count()
+
+    return {
+        'status': status_label,
+        'mode': 'counselling',
+        'message': msg,
+        'is_already_checked_in': is_duplicate,
+        'station_name': f"{expert.name} ({expert.desk_name or 'Desk 1'})",
+        'badge_reward': f"+{pts_awarded} XP Counselling Complete" if pts_awarded else "Consultation Recorded",
+        'attendee': {
+            'id': reg.id,
+            'full_name': reg.full_name,
+            'role': reg.role or 'Student',
+            'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+            'email': reg.email,
+            'phone': reg.phone or '',
+            'school_or_org': extra.get('school_or_org', '') if extra else '',
+            'target_program': extra.get('target_program', '') if extra else '',
+            'initials': initials,
+            'checked_in_time': now.strftime("%I:%M %p"),
+            'checked_in_date': now.strftime("%d %b %Y"),
+        },
+        'stats': {
+            'station_count': total_consulted,
+            'station_label': 'Students Consulted',
+            'total_checked_in': Registration.objects.filter(is_checked_in=True).count(),
+            'total_registered': Registration.objects.count()
         }
     }
 
@@ -764,7 +1076,7 @@ def check_in_api(request):
                 return JsonResponse({'status': 'INVALID_QR', 'message': 'Invalid QR Data'}, status=400)
 
             result = _perform_mobile_checkin(request, raw_code)
-            http_code = 200 if result['status'] in ('SUCCESS', 'ALREADY_CHECKED_IN') else 404
+            http_code = 200 if result['status'] in ('SUCCESS', 'ALREADY_CHECKED_IN', 'ALREADY_PUNCHED') else 404
             return JsonResponse(result, status=http_code)
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
@@ -774,30 +1086,58 @@ def check_in_api(request):
 @csrf_exempt
 def mobile_checkin_api(request):
     """
-    High-speed dedicated mobile scanner check-in API endpoint.
-    Accepts JSON or Form POST with { 'code': '...' }.
+    Unified 4-in-1 Mobile Scanner Check-In & Punch API.
+    Supports 4 User Roles:
+      1. mode='gate': Admin & Gate Staff Expo Entry check-in
+      2. mode='booth': Exhibitor Booth Visit punch & lead capture (+20 XP)
+      3. mode='seminar': Keynote & Seminar hall attendance (+25 XP)
+      4. mode='counselling': Education Expert & Academic Counsellor punch (+40 XP)
     """
     if request.method == 'POST':
         raw_code = ''
+        mode = 'gate'
+        target_id = None
+        notes = ''
+        rating = 'Warm'
+
         if request.body:
             try:
                 data = json.loads(request.body.decode('utf-8'))
                 if isinstance(data, dict):
                     raw_code = data.get('code') or data.get('qr_data') or data.get('badge_id') or ''
+                    mode = (data.get('mode') or 'gate').lower().strip()
+                    target_id = data.get('target_id')
+                    notes = data.get('notes', '')
+                    rating = data.get('rating', 'Warm')
             except Exception:
                 pass
 
         if not raw_code:
             raw_code = request.POST.get('code') or request.POST.get('qr_data') or request.POST.get('badge_id') or ''
+            mode = (request.POST.get('mode') or 'gate').lower().strip()
+            target_id = request.POST.get('target_id')
 
         if not raw_code:
             raw_code = request.GET.get('code') or request.GET.get('qr_data') or request.GET.get('badge_id') or ''
+            if request.GET.get('mode'):
+                mode = request.GET.get('mode', 'gate').lower().strip()
+            if request.GET.get('target_id'):
+                target_id = request.GET.get('target_id')
 
         if not raw_code:
             return JsonResponse({'status': 'INVALID_QR', 'message': 'No QR code or badge ID provided.'}, status=400)
 
-        result = _perform_mobile_checkin(request, raw_code)
-        http_code = 200 if result['status'] in ('SUCCESS', 'ALREADY_CHECKED_IN') else 404
+        # Route to appropriate 1 of 4 mode handlers
+        if mode == 'booth':
+            result = _perform_booth_punch(request, raw_code, target_id, rating=rating, notes=notes)
+        elif mode == 'seminar':
+            result = _perform_seminar_punch(request, raw_code, target_id, notes=notes)
+        elif mode in ('counselling', 'expert'):
+            result = _perform_counselling_punch(request, raw_code, target_id, notes=notes)
+        else: # 'gate'
+            result = _perform_mobile_checkin(request, raw_code)
+
+        http_code = 200 if result.get('status') in ('SUCCESS', 'ALREADY_CHECKED_IN', 'ALREADY_PUNCHED') else 404
         return JsonResponse(result, status=http_code)
 
     return JsonResponse({'status': 'ERROR', 'message': 'Method not allowed'}, status=405)
@@ -805,58 +1145,193 @@ def mobile_checkin_api(request):
 
 def mobile_checkin_stats_api(request):
     """
-    Real-time stats polling endpoint for mobile scanners.
+    Real-time stats polling endpoint supporting all 4 modes.
     """
-    from .models import Registration
-    return JsonResponse({
+    from .models import Registration, BoothVisit, SeminarAttendance, ExpertConsultationAttendance
+    mode = (request.GET.get('mode') or 'gate').lower()
+    target_id = request.GET.get('target_id')
+
+    total_checked_in = Registration.objects.filter(is_checked_in=True).count()
+    total_registered = Registration.objects.count()
+
+    data = {
         'status': 'SUCCESS',
-        'total_checked_in': Registration.objects.filter(is_checked_in=True).count(),
-        'total_registered': Registration.objects.count()
-    })
+        'total_checked_in': total_checked_in,
+        'total_registered': total_registered,
+        'mode': mode
+    }
+
+    if mode == 'booth':
+        if target_id and str(target_id).isdigit():
+            data['station_count'] = BoothVisit.objects.filter(exhibitor_id=int(target_id)).count()
+        else:
+            data['station_count'] = BoothVisit.objects.count()
+        data['station_label'] = 'Booth Visits'
+    elif mode == 'seminar':
+        if target_id and str(target_id).isdigit():
+            data['station_count'] = SeminarAttendance.objects.filter(session_id=int(target_id)).count()
+        else:
+            data['station_count'] = SeminarAttendance.objects.count()
+        data['station_label'] = 'Session Attendees'
+    elif mode in ('counselling', 'expert'):
+        if target_id and str(target_id).isdigit():
+            data['station_count'] = ExpertConsultationAttendance.objects.filter(expert_id=int(target_id)).count()
+        else:
+            data['station_count'] = ExpertConsultationAttendance.objects.count()
+        data['station_label'] = 'Students Consulted'
+    else:
+        data['station_count'] = total_checked_in
+        data['station_label'] = 'Checked In'
+
+    return JsonResponse(data)
 
 
 def mobile_checkin_recent_api(request):
     """
-    Returns recent scans for the slide-up scans drawer.
+    Returns recent scans for the slide-up scans drawer for the active mode.
     """
-    from .models import ExpoCheckInLog
-    logs = ExpoCheckInLog.objects.filter(is_duplicate=False).select_related('registration').order_by('-checked_in_at')[:20]
+    from .models import ExpoCheckInLog, BoothVisit, SeminarAttendance, ExpertConsultationAttendance
+    mode = (request.GET.get('mode') or 'gate').lower()
+    target_id = request.GET.get('target_id')
     items = []
-    for l in logs:
-        reg = l.registration
-        parts = (reg.full_name or 'A').split()
-        initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
-        items.append({
-            'id': reg.id,
-            'name': reg.full_name,
-            'role': reg.role,
-            'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
-            'time': l.checked_in_at.strftime("%I:%M %p"),
-            'date': l.checked_in_at.strftime("%d %b"),
-            'initials': initials
-        })
+
+    if mode == 'booth':
+        qs = BoothVisit.objects.select_related('student', 'exhibitor').order_by('-visited_at')
+        if target_id and str(target_id).isdigit():
+            qs = qs.filter(exhibitor_id=int(target_id))
+        for v in qs[:20]:
+            reg = v.student
+            parts = (reg.full_name or 'A').split()
+            initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+            items.append({
+                'id': reg.id,
+                'name': reg.full_name,
+                'role': reg.role,
+                'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+                'time': v.visited_at.strftime("%I:%M %p"),
+                'date': v.visited_at.strftime("%d %b"),
+                'initials': initials,
+                'station': v.exhibitor.company_name
+            })
+    elif mode == 'seminar':
+        qs = SeminarAttendance.objects.select_related('registration', 'session').order_by('-attended_at')
+        if target_id and str(target_id).isdigit():
+            qs = qs.filter(session_id=int(target_id))
+        for s in qs[:20]:
+            reg = s.registration
+            name = reg.full_name if reg else s.visitor_name
+            parts = (name or 'A').split()
+            initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+            items.append({
+                'id': reg.id if reg else s.id,
+                'name': name,
+                'role': reg.role if reg else 'Student',
+                'badge_id': reg.registration_id if reg else f"KNV-SEM-{s.id}",
+                'time': s.attended_at.strftime("%I:%M %p"),
+                'date': s.attended_at.strftime("%d %b"),
+                'initials': initials,
+                'station': s.session.title if s.session else 'Seminar'
+            })
+    elif mode in ('counselling', 'expert'):
+        qs = ExpertConsultationAttendance.objects.select_related('registration', 'expert').order_by('-attended_at')
+        if target_id and str(target_id).isdigit():
+            qs = qs.filter(expert_id=int(target_id))
+        for c in qs[:20]:
+            reg = c.registration
+            name = reg.full_name if reg else c.student_name
+            parts = (name or 'A').split()
+            initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+            items.append({
+                'id': reg.id if reg else c.id,
+                'name': name,
+                'role': reg.role if reg else 'Student',
+                'badge_id': c.badge_id or (reg.registration_id if reg else f"KNV-EXP-{c.id}"),
+                'time': c.attended_at.strftime("%I:%M %p"),
+                'date': c.attended_at.strftime("%d %b"),
+                'initials': initials,
+                'station': c.expert.name if c.expert else 'Counsellor'
+            })
+    else:
+        # Gate checkin logs
+        logs = ExpoCheckInLog.objects.filter(is_duplicate=False).select_related('registration').order_by('-checked_in_at')[:20]
+        for l in logs:
+            reg = l.registration
+            parts = (reg.full_name or 'A').split()
+            initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+            items.append({
+                'id': reg.id,
+                'name': reg.full_name,
+                'role': reg.role,
+                'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+                'time': l.checked_in_at.strftime("%I:%M %p"),
+                'date': l.checked_in_at.strftime("%d %b"),
+                'initials': initials,
+                'station': 'Expo Gate Turnstile'
+            })
+
     return JsonResponse({
         'status': 'SUCCESS',
         'items': items,
-        'count': len(items)
+        'count': len(items),
+        'mode': mode
     })
 
 
 def mobile_scanner_view(request):
     """
-    Dedicated Mobile QR Check-In App view (PWA & smartphone optimized).
+    Dedicated Mobile 4-in-1 QR Scanner & Check-In App (PWA & smartphone optimized).
+    Roles:
+      1. Admin / Gate Staff: Expo hall entrance verification.
+      2. Exhibitors: University booth visit punch & lead capture (+20 XP).
+      3. Seminars: Keynote & seminar session attendance (+25 XP).
+      4. Academic Counsellors: Education expert 1-on-1 counseling (+40 XP).
     """
-    from .models import Registration, ExpoCheckInLog, EventLocation
+    from .models import Registration, ExpoCheckInLog, EventLocation, Exhibitor, ProgrammeSession, EducationExpert
     total_checked_in = Registration.objects.filter(is_checked_in=True).count()
     total_registered = Registration.objects.count()
     recent_logs = ExpoCheckInLog.objects.filter(is_duplicate=False).select_related('registration').order_by('-checked_in_at')[:15]
     upcoming_event = EventLocation.objects.filter(is_active=True, is_upcoming=True).first() or EventLocation.objects.first()
 
+    exhibitors = Exhibitor.objects.all().order_by('company_name')
+    sessions = ProgrammeSession.objects.all().order_by('id')
+    experts = _get_or_create_default_experts()
+
+    default_mode = 'gate'
+    default_exhibitor_id = exhibitors.first().id if exhibitors.exists() else None
+    default_session_id = sessions.first().id if sessions.exists() else None
+    default_expert_id = experts[0].id if experts else None
+
+    if request.user.is_authenticated:
+        if hasattr(request.user, 'exhibitor_profile'):
+            default_mode = 'booth'
+            default_exhibitor_id = request.user.exhibitor_profile.id
+        elif hasattr(request.user, 'exhibitor_staff_profile'):
+            default_mode = 'booth'
+            default_exhibitor_id = request.user.exhibitor_staff_profile.exhibitor.id
+        elif hasattr(request.user, 'education_expert'):
+            default_mode = 'counselling'
+            default_expert_id = request.user.education_expert.id
+        elif hasattr(request.user, 'seminar_staff'):
+            default_mode = 'seminar'
+            default_session_id = getattr(request.user.seminar_staff, 'session_id', default_session_id)
+
+    # Query param override if present (e.g. ?mode=booth or ?mode=counselling)
+    param_mode = request.GET.get('mode', '').lower().strip()
+    if param_mode in ('gate', 'booth', 'seminar', 'counselling'):
+        default_mode = param_mode
+
     return render(request, 'core/mobile_scanner.html', {
         'total_checked_in': total_checked_in,
         'total_registered': total_registered,
         'recent_logs': recent_logs,
-        'event': upcoming_event
+        'event': upcoming_event,
+        'exhibitors': exhibitors,
+        'sessions': sessions,
+        'experts': experts,
+        'default_mode': default_mode,
+        'default_exhibitor_id': default_exhibitor_id,
+        'default_session_id': default_session_id,
+        'default_expert_id': default_expert_id,
     })
 
 
