@@ -533,21 +533,21 @@ def _get_attendee_extra_info(reg):
     """
     from .models import StudentProfile, Exhibitor
     school_or_org = ""
-    target_program = reg.preferred_program or ""
+    target_program = getattr(reg, 'preferred_program', '') or ""
     if reg.role == 'Student':
         sp = StudentProfile.objects.filter(user__email__iexact=reg.email).first()
         if sp:
-            school_or_org = sp.school_or_institution or sp.current_education_level or ""
-            if not target_program and sp.target_degree_program:
-                target_program = sp.target_degree_program
+            school_or_org = getattr(sp, 'school_college', '') or getattr(sp, 'current_education', '') or ""
+            if not target_program:
+                target_program = getattr(sp, 'preferred_degree', '') or getattr(sp, 'preferred_program', '') or ""
     elif reg.role == 'Exhibitor':
         exh = Exhibitor.objects.filter(user__email__iexact=reg.email).first()
         if exh:
-            school_or_org = exh.company_name or exh.institution_name or ""
+            school_or_org = getattr(exh, 'company_name', '') or getattr(exh, 'institution_name', '') or ""
 
     if not school_or_org:
         if reg.event_location:
-            school_or_org = reg.event_location.venue or reg.event_location.city
+            school_or_org = getattr(reg.event_location, 'venue', '') or getattr(reg.event_location, 'city', '') or ""
         else:
             school_or_org = "KNOVA Bahrain 2027"
 
@@ -750,10 +750,14 @@ def check_in_api(request):
     if request.method == 'POST':
         raw_code = ''
         try:
-            if request.content_type and 'application/json' in request.content_type:
-                data = json.loads(request.body.decode('utf-8'))
-                raw_code = data.get('qr_data') or data.get('code') or data.get('badge_id') or ''
-            else:
+            if request.body:
+                try:
+                    data = json.loads(request.body.decode('utf-8'))
+                    if isinstance(data, dict):
+                        raw_code = data.get('qr_data') or data.get('code') or data.get('badge_id') or ''
+                except Exception:
+                    pass
+            if not raw_code:
                 raw_code = request.POST.get('qr_data') or request.POST.get('code') or request.POST.get('badge_id') or ''
 
             if not raw_code:
@@ -775,14 +779,19 @@ def mobile_checkin_api(request):
     """
     if request.method == 'POST':
         raw_code = ''
-        if request.content_type and 'application/json' in request.content_type:
+        if request.body:
             try:
                 data = json.loads(request.body.decode('utf-8'))
-                raw_code = data.get('code') or data.get('qr_data') or data.get('badge_id') or ''
+                if isinstance(data, dict):
+                    raw_code = data.get('code') or data.get('qr_data') or data.get('badge_id') or ''
             except Exception:
                 pass
-        else:
+
+        if not raw_code:
             raw_code = request.POST.get('code') or request.POST.get('qr_data') or request.POST.get('badge_id') or ''
+
+        if not raw_code:
+            raw_code = request.GET.get('code') or request.GET.get('qr_data') or request.GET.get('badge_id') or ''
 
         if not raw_code:
             return JsonResponse({'status': 'INVALID_QR', 'message': 'No QR code or badge ID provided.'}, status=400)
