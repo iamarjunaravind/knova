@@ -1296,6 +1296,31 @@ def _get_scanner_stations_payload():
     return {'exhibitors': exhibitors, 'sessions': sessions, 'experts': experts}
 
 
+def _cors_allow_mobile(view_func):
+    """
+    Decorator to enable full Cross-Origin Resource Sharing (CORS) and preflight
+    OPTIONS requests for native mobile apps (Capacitor/Cordova/WebView).
+    """
+    from functools import wraps
+    from django.http import HttpResponse
+
+    @wraps(view_func)
+    def _wrapped(request, *args, **kwargs):
+        origin = request.headers.get('Origin') or '*'
+        if request.method == 'OPTIONS':
+            res = HttpResponse(status=204)
+        else:
+            res = view_func(request, *args, **kwargs)
+        res['Access-Control-Allow-Origin'] = origin
+        res['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, HEAD'
+        res['Access-Control-Allow-Headers'] = 'Content-Type, X-Session-Key, X-CSRFToken, Authorization, Accept, Origin, User-Agent, X-Requested-With'
+        res['Access-Control-Allow-Credentials'] = 'true'
+        res['Access-Control-Max-Age'] = '86400'
+        return res
+    return _wrapped
+
+
+@_cors_allow_mobile
 @csrf_exempt
 def mobile_login_api(request):
     """
@@ -1337,6 +1362,7 @@ def mobile_login_api(request):
     return JsonResponse({'status': 'ERROR', 'message': 'POST method required.'}, status=405)
 
 
+@_cors_allow_mobile
 @csrf_exempt
 def mobile_logout_api(request):
     """
@@ -1347,6 +1373,8 @@ def mobile_logout_api(request):
     return JsonResponse({'status': 'SUCCESS', 'message': 'Logged out successfully.'})
 
 
+@_cors_allow_mobile
+@csrf_exempt
 def mobile_auth_check_api(request):
     """
     Returns current authentication status and user role info for mobile app.
@@ -1364,6 +1392,7 @@ def mobile_auth_check_api(request):
     })
 
 
+@_cors_allow_mobile
 @csrf_exempt
 def mobile_checkin_api(request):
     """
@@ -1444,6 +1473,8 @@ def mobile_checkin_api(request):
     return JsonResponse({'status': 'ERROR', 'message': 'Method not allowed'}, status=405)
 
 
+@_cors_allow_mobile
+@csrf_exempt
 def mobile_checkin_stats_api(request):
     """
     Real-time stats polling endpoint supporting all 4 modes.
@@ -1490,6 +1521,8 @@ def mobile_checkin_stats_api(request):
     return JsonResponse(data)
 
 
+@_cors_allow_mobile
+@csrf_exempt
 def mobile_checkin_recent_api(request):
     """
     Returns recent scans for the slide-up scans drawer for the active mode.
