@@ -1543,11 +1543,15 @@ def mobile_checkin_recent_api(request):
             reg = v.student
             parts = (reg.full_name or 'A').split()
             initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+            extra = _get_attendee_extra_info(reg) if reg else {}
             items.append({
                 'id': reg.id,
                 'name': reg.full_name,
                 'role': reg.role,
                 'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+                'email': reg.email or '',
+                'phone': reg.phone or '',
+                'school': extra.get('school_or_org', '') or '',
                 'time': v.visited_at.strftime("%I:%M %p"),
                 'date': v.visited_at.strftime("%d %b"),
                 'initials': initials,
@@ -1562,11 +1566,15 @@ def mobile_checkin_recent_api(request):
             name = reg.full_name if reg else s.visitor_name
             parts = (name or 'A').split()
             initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+            extra = _get_attendee_extra_info(reg) if reg else {}
             items.append({
                 'id': reg.id if reg else s.id,
                 'name': name,
                 'role': reg.role if reg else 'Student',
                 'badge_id': reg.registration_id if reg else f"KNV-SEM-{s.id}",
+                'email': reg.email if reg else '',
+                'phone': reg.phone if reg else '',
+                'school': extra.get('school_or_org', '') or '',
                 'time': s.attended_at.strftime("%I:%M %p"),
                 'date': s.attended_at.strftime("%d %b"),
                 'initials': initials,
@@ -1581,11 +1589,15 @@ def mobile_checkin_recent_api(request):
             name = reg.full_name if reg else c.student_name
             parts = (name or 'A').split()
             initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+            extra = _get_attendee_extra_info(reg) if reg else {}
             items.append({
                 'id': reg.id if reg else c.id,
                 'name': name,
                 'role': reg.role if reg else 'Student',
                 'badge_id': c.badge_id or (reg.registration_id if reg else f"KNV-EXP-{c.id}"),
+                'email': reg.email if reg else '',
+                'phone': reg.phone if reg else '',
+                'school': extra.get('school_or_org', '') or '',
                 'time': c.attended_at.strftime("%I:%M %p"),
                 'date': c.attended_at.strftime("%d %b"),
                 'initials': initials,
@@ -1598,11 +1610,15 @@ def mobile_checkin_recent_api(request):
             reg = l.registration
             parts = (reg.full_name or 'A').split()
             initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+            extra = _get_attendee_extra_info(reg) if reg else {}
             items.append({
                 'id': reg.id,
                 'name': reg.full_name,
                 'role': reg.role,
                 'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+                'email': reg.email or '',
+                'phone': reg.phone or '',
+                'school': extra.get('school_or_org', '') or '',
                 'time': l.checked_in_at.strftime("%I:%M %p"),
                 'date': l.checked_in_at.strftime("%d %b"),
                 'initials': initials,
@@ -1615,6 +1631,92 @@ def mobile_checkin_recent_api(request):
         'count': len(items),
         'mode': mode
     })
+
+
+@_cors_allow_mobile
+@csrf_exempt
+def mobile_student_profile_api(request):
+    """
+    Returns full profile, contact info, academic details, and activity timeline for a student.
+    Accepts: ?id=<student_id> or ?badge_id=<badge_id> or ?code=<code>
+    """
+    from django.db import models
+    from .models import Registration, BoothVisit, SeminarAttendance, ExpertConsultationAttendance, StudentChallengePassport
+
+    student_id = request.GET.get('id')
+    badge_id = request.GET.get('badge_id') or request.GET.get('code')
+
+    reg = None
+    if student_id and str(student_id).isdigit():
+        reg = Registration.objects.filter(pk=int(student_id)).first()
+    if not reg and badge_id:
+        reg, _ = _resolve_attendee(badge_id)
+
+    if not reg:
+        return JsonResponse({'status': 'NOT_FOUND', 'message': 'Attendee record not found.'}, status=404)
+
+    extra = _get_attendee_extra_info(reg) or {}
+    parts = (reg.full_name or 'A').split()
+    initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+
+    # Booth visits
+    booth_visits = []
+    for bv in BoothVisit.objects.filter(student=reg).select_related('exhibitor').order_by('-visited_at'):
+        booth_visits.append({
+            'exhibitor': bv.exhibitor.company_name,
+            'time': bv.visited_at.strftime('%I:%M %p'),
+            'date': bv.visited_at.strftime('%d %b %Y'),
+        })
+
+    # Seminar attendances
+    seminars = []
+    for sa in SeminarAttendance.objects.filter(registration=reg).select_related('session').order_by('-attended_at'):
+        seminars.append({
+            'session': sa.session.title if sa.session else 'Seminar Keynote',
+            'hall': getattr(sa.session, 'hall_name', '') if sa.session else '',
+            'time': sa.attended_at.strftime('%I:%M %p'),
+            'date': sa.attended_at.strftime('%d %b %Y'),
+        })
+
+    # Consultations
+    consultations = []
+    for ca in ExpertConsultationAttendance.objects.filter(registration=reg).select_related('expert').order_by('-attended_at'):
+        consultations.append({
+            'expert': ca.expert.name if ca.expert else 'Education Expert',
+            'desk': getattr(ca.expert, 'desk_name', '') if ca.expert else '',
+            'time': ca.attended_at.strftime('%I:%M %p'),
+            'date': ca.attended_at.strftime('%d %b %Y'),
+        })
+
+    # Passport & Points
+    passport = StudentChallengePassport.objects.filter(
+        models.Q(registration=reg) | models.Q(student_email__iexact=reg.email) | models.Q(badge_id__iexact=reg.registration_id)
+    ).first()
+    xp_points = passport.total_points if passport else (10 if reg.is_checked_in else 0)
+
+    data = {
+        'status': 'SUCCESS',
+        'student': {
+            'id': reg.id,
+            'full_name': reg.full_name,
+            'initials': initials,
+            'role': reg.role or 'Student',
+            'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+            'email': reg.email or '',
+            'phone': reg.phone or '',
+            'school_or_org': extra.get('school_or_org') or 'KNOVA Attendee',
+            'target_program': getattr(reg, 'preferred_program', '') or extra.get('target_program', '') or 'General Studies',
+            'preferred_country': getattr(reg, 'preferred_country', '') or 'Any Country',
+            'budget_range': getattr(reg, 'budget_range', '') or 'Standard',
+            'is_checked_in': reg.is_checked_in,
+            'checked_in_time': reg.checked_in_at.strftime('%I:%M %p, %d %b') if reg.checked_in_at else ('Checked In' if reg.is_checked_in else 'Not checked in yet'),
+            'xp_points': xp_points,
+            'booth_visits': booth_visits,
+            'seminars': seminars,
+            'consultations': consultations,
+        }
+    }
+    return JsonResponse(data)
 
 
 def mobile_scanner_view(request):

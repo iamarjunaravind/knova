@@ -664,8 +664,31 @@
       justify-content: space-between;
       background: rgba(255, 255, 255, 0.035);
       border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .recent-item-row:active {
+      transform: scale(0.98);
+      background: rgba(99, 102, 241, 0.15);
+      border-color: rgba(99, 102, 241, 0.35);
+    }
+
+    .recent-item-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(56, 189, 248, 0.25) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 800;
+      flex-shrink: 0;
     }
 
     .recent-item-main {
@@ -929,41 +952,63 @@
     }
 
     /* ==========================================================================
-       SCAN RESULT BOTTOM SHEET
+       SCAN RESULT BOTTOM SHEET & BACKDROP
        ========================================================================== */
+    .result-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 95;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .result-backdrop.open {
+      display: block;
+      opacity: 1;
+    }
+
     .result-sheet {
-      position: absolute;
+      position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      z-index: 60;
-      background: rgba(15, 23, 42, 0.98);
+      z-index: 100;
+      background: #0f172a;
       border-top: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 28px 28px 0 0;
-      padding: 16px 20px calc(var(--safe-bottom) + 20px);
-      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
+      border-top-left-radius: 26px;
+      border-top-right-radius: 26px;
+      padding: 14px 18px calc(var(--safe-bottom) + 18px);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.85);
       transform: translateY(105%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      display: none;
+      max-height: 85vh;
+      overflow-y: auto;
     }
 
-    .result-sheet.open { transform: translateY(0); }
+    .result-sheet.open {
+      display: flex;
+      flex-direction: column;
+      transform: translateY(0);
+    }
+
     .sheet-handle {
       width: 44px;
       height: 4px;
       background: rgba(255, 255, 255, 0.25);
       border-radius: 999px;
-      margin: 0 auto 6px;
+      margin: 0 auto 10px;
+      cursor: pointer;
     }
 
     .result-header {
       display: flex;
       align-items: center;
       gap: 14px;
+      position: relative;
     }
 
     .result-avatar {
@@ -981,7 +1026,7 @@
       flex-shrink: 0;
     }
 
-    .result-title-block { flex: 1; overflow: hidden; }
+    .result-title-block { flex: 1; overflow: hidden; padding-right: 32px; }
     .attendee-name {
       font-size: 1.2rem;
       font-weight: 800;
@@ -1106,16 +1151,17 @@
       gap: 8px;
     }
 
-    /* MODAL SHEETS */
+    /* MODAL SHEETS & OVERLAYS */
     .modal-overlay {
-      position: absolute;
+      position: fixed;
       inset: 0;
-      z-index: 70;
-      background: rgba(7, 10, 18, 0.75);
+      z-index: 100;
+      background: rgba(7, 10, 18, 0.78);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       display: none;
       align-items: flex-end;
+      justify-content: center;
       opacity: 0;
       transition: opacity 0.25s;
     }
@@ -1124,10 +1170,12 @@
 
     .modal-sheet {
       width: 100%;
+      max-width: 500px;
       max-height: 85vh;
       background: rgba(15, 23, 42, 0.98);
       border-top: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 28px 28px 0 0;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
       padding: 16px 20px calc(var(--safe-bottom) + 20px);
       display: flex;
       flex-direction: column;
@@ -1160,7 +1208,7 @@
     .picker-list {
       flex: 1;
       overflow-y: auto;
-      max-height: 50vh;
+      max-height: 48vh;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -1210,6 +1258,174 @@
       background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
       border: none;
       color: #fff;
+    }
+
+    .modal-close-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .modal-close-icon:active { background: rgba(255, 255, 255, 0.18); color: #fff; }
+
+    /* STUDENT PROFILE DETAILS MODAL STYLES */
+    .student-profile-sheet {
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .student-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .student-avatar-lg {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      color: white;
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+      flex-shrink: 0;
+    }
+
+    .student-name-lg {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .student-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: #38bdf8;
+      font-weight: 700;
+    }
+
+    .student-contact-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 12px 0 8px;
+    }
+
+    .contact-action-btn {
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      text-decoration: none;
+    }
+
+    .contact-action-btn:active {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .profile-details-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 6px 0;
+    }
+
+    .profile-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+    }
+
+    .profile-info-tile {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 9px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .info-tile-lbl {
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .info-tile-val {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .profile-section-title {
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--mode-color);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .activity-chip-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .activity-chip-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      font-size: 0.78rem;
     }
   </style>
 </head>
@@ -1461,10 +1677,15 @@
   </nav>
 
   <!-- =========================================================================
-       5. SCAN RESULT BOTTOM SHEET
+       5. SCAN RESULT BOTTOM SHEET & BACKDROP
        ========================================================================= -->
+  <div class="result-backdrop" id="resultSheetBackdrop" onclick="dismissResultAndScanNext()"></div>
+
   <div class="result-sheet" id="resultSheet">
-    <div class="sheet-handle"></div>
+    <div class="sheet-handle" onclick="dismissResultAndScanNext()"></div>
+    <div style="position: absolute; top: 12px; right: 14px; z-index: 5;">
+      <button class="modal-close-icon" onclick="dismissResultAndGoMenu()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
     <div class="result-header">
       <div class="result-avatar" id="resAvatar">A</div>
       <div class="result-title-block">
@@ -1496,15 +1717,91 @@
     </div>
   </div>
 
+  <!-- =========================================================================
+       6. STUDENT PROFILE & DETAILS MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="studentProfileModal" onclick="handleStudentModalBackdrop(event)">
+    <div class="modal-sheet student-profile-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle" onclick="closeStudentModal()"></div>
+      <div class="student-card-header">
+        <div class="student-avatar-lg" id="spAvatar">A</div>
+        <div style="flex: 1; overflow: hidden; padding-right: 36px;">
+          <div class="student-name-lg" id="spFullName">Attendee</div>
+          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            <span class="role-badge student" id="spRole">STUDENT</span>
+            <span class="student-badge-pill"><i class="fa-solid fa-qrcode"></i> <span id="spBadgeId">-</span></span>
+          </div>
+        </div>
+        <button class="modal-close-icon" style="position: absolute; top: 0; right: 0;" onclick="closeStudentModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Quick Contact Actions -->
+      <div class="student-contact-actions" id="spContactRow">
+        <a class="contact-action-btn" id="spBtnCall" href="#" target="_blank">
+          <i class="fa-solid fa-phone" style="color: #34d399;"></i>
+          <span>Call Student</span>
+        </a>
+        <a class="contact-action-btn" id="spBtnEmail" href="#" target="_blank">
+          <i class="fa-solid fa-envelope" style="color: #38bdf8;"></i>
+          <span>Send Email</span>
+        </a>
+      </div>
+
+      <!-- Profile Details Scroll Body -->
+      <div class="profile-details-scroll" id="spScrollBody">
+        <div class="profile-info-grid">
+          <div class="profile-info-tile">
+            <span class="info-tile-lbl">School / Institution</span>
+            <span class="info-tile-val" id="spSchool">-</span>
+          </div>
+          <div class="profile-info-tile">
+            <span class="info-tile-lbl">Target Program</span>
+            <span class="info-tile-val" id="spProgram">-</span>
+          </div>
+          <div class="profile-info-tile">
+            <span class="info-tile-lbl">Preferred Country</span>
+            <span class="info-tile-val" id="spCountry">-</span>
+          </div>
+          <div class="profile-info-tile">
+            <span class="info-tile-lbl">Budget Range</span>
+            <span class="info-tile-val" id="spBudget">-</span>
+          </div>
+          <div class="profile-info-tile">
+            <span class="info-tile-lbl">Expo Gate Check-In</span>
+            <span class="info-tile-val" id="spCheckinStatus" style="color: #34d399;">-</span>
+          </div>
+          <div class="profile-info-tile">
+            <span class="info-tile-lbl">Expo Challenge XP</span>
+            <span class="info-tile-val" id="spXpPoints" style="color: #fbbf24;">0 XP</span>
+          </div>
+        </div>
+
+        <!-- Activity History -->
+        <div class="profile-section-title">
+          <i class="fa-solid fa-timeline"></i>
+          <span>Expo Activity Timeline</span>
+        </div>
+        <div class="activity-chip-list" id="spActivityFeed">
+          <div style="text-align: center; padding: 12px; color: var(--text-muted); font-size: 0.8rem;">Loading activity...</div>
+        </div>
+      </div>
+
+      <button class="modal-btn-cancel" style="margin-top: 10px; height: 44px; width: 100%; border-radius: 999px;" onclick="closeStudentModal()">Done</button>
+    </div>
+  </div>
+
   <!-- STATION PICKER MODAL -->
-  <div class="modal-overlay" id="stationPickerModal">
-    <div class="modal-sheet">
+  <div class="modal-overlay" id="stationPickerModal" onclick="closeStationPicker()">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="sheet-handle" onclick="closeStationPicker()"></div>
-      <div class="modal-title" id="pickerModalTitle">Select Station</div>
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+        <div class="modal-title" id="pickerModalTitle">Select Station</div>
+        <button class="modal-close-icon" onclick="closeStationPicker()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
       <div class="modal-subtitle" id="pickerModalSubtitle">Choose active booth or session.</div>
       <input type="text" id="pickerSearch" class="filter-input" placeholder="Search..." oninput="filterPickerItems()">
       <div class="picker-list" id="pickerList"></div>
-      <button class="modal-btn-cancel" style="margin-top: 12px; height: 44px; width: 100%;" onclick="closeStationPicker()">Close</button>
+      <button class="modal-btn-cancel" style="margin-top: 12px; height: 44px; width: 100%; border-radius: 999px;" onclick="closeStationPicker()">Close</button>
     </div>
   </div>
 
@@ -1697,9 +1994,29 @@ function closeUserModal() {
 // =============================================================================
 // VIEW NAVIGATION (MENU VIEW vs SCANNER VIEW)
 // =============================================================================
+function dismissResultSheetImmediate() {
+  clearTimeout(autoResumeTimer);
+  const sheet = document.getElementById('resultSheet');
+  const backdrop = document.getElementById('resultSheetBackdrop');
+  if (sheet) {
+    sheet.classList.remove('open');
+    sheet.style.display = 'none';
+  }
+  if (backdrop) backdrop.classList.remove('open');
+  isProcessingScan = false;
+}
+
 function openMenuView() {
   activeView = 'menu';
   stopScanner();
+
+  // Close all sheets & modals so they never linger on the menu
+  dismissResultSheetImmediate();
+  closeStationPicker();
+  closeManualModal();
+  closeUserModal();
+  closeStudentModal();
+
   document.getElementById('menuViewScreen').style.display = 'flex';
   document.getElementById('scannerViewScreen').style.display = 'none';
 
@@ -1716,6 +2033,14 @@ function openMenuView() {
 
 function openScannerView() {
   activeView = 'scanner';
+
+  // Ensure all modals and result sheets are closed before starting camera
+  dismissResultSheetImmediate();
+  closeStationPicker();
+  closeManualModal();
+  closeUserModal();
+  closeStudentModal();
+
   document.getElementById('menuViewScreen').style.display = 'none';
   document.getElementById('scannerViewScreen').style.display = 'flex';
 
@@ -1873,8 +2198,10 @@ function selectStationItem(id) {
   else if (currentMode === 'seminar') selectedSessionId = id;
   else if (currentMode === 'counselling') selectedExpertId = id;
 
-  switchScannerMode(currentMode);
   closeStationPicker();
+  updateStationUI();
+  fetchStats();
+  loadRecentPunches();
 }
 
 // =============================================================================
@@ -2073,9 +2400,9 @@ async function fetchStats() {
     });
     const d = await res.json();
     if (d.status === 'SUCCESS') {
-      const c = d.stats.checked_in || 0;
+      const c = d.stats ? d.stats.checked_in : (d.total_checked_in || 0);
       document.getElementById('statCheckedInCount').textContent = c;
-      if (d.stats.target) {
+      if (d.stats && d.stats.target) {
         document.getElementById('statTargetCount').textContent = d.stats.target;
       }
     }
@@ -2087,11 +2414,12 @@ async function fetchStats() {
 // =============================================================================
 function presentScanResult(data) {
   const isOk = data.status === 'SUCCESS';
-  const isWarn = data.status === 'WARNING';
+  const isWarn = data.status === 'ALREADY_CHECKED_IN' || data.status === 'ALREADY_PUNCHED';
   playBeep(isOk);
   triggerHaptic(isOk ? 'success' : 'error');
 
   const sheet = document.getElementById('resultSheet');
+  const backdrop = document.getElementById('resultSheetBackdrop');
   const banner = document.getElementById('resStatusBanner');
   const icon = document.getElementById('resStatusIcon');
   const text = document.getElementById('resStatusText');
@@ -2108,16 +2436,19 @@ function presentScanResult(data) {
     pill.style.display = 'none';
   }
 
-  const s = data.student || {};
-  document.getElementById('resAvatar').textContent = (s.name ? s.name[0] : (data.badge_id ? data.badge_id[0] : '?')).toUpperCase();
-  document.getElementById('resName').textContent = s.name || data.badge_id || 'Attendee Badge';
-  document.getElementById('resRole').textContent = (s.role || 'ATTENDEE').toUpperCase();
-  document.getElementById('resStation').textContent = data.station || currentMode.toUpperCase();
+  const s = data.attendee || data.student || {};
+  document.getElementById('resAvatar').textContent = (s.full_name ? s.full_name[0] : (data.badge_id ? data.badge_id[0] : '?')).toUpperCase();
+  document.getElementById('resName').textContent = s.full_name || s.name || data.badge_id || 'Attendee Badge';
+  document.getElementById('resRole').textContent = (s.role || 'STUDENT').toUpperCase();
+  document.getElementById('resStation').textContent = data.station_name || data.station || currentMode.toUpperCase();
   document.getElementById('resBadgeId').textContent = data.badge_id || s.badge_id || '--';
-  document.getElementById('resOrg').textContent = s.institution || s.organization || s.school || 'General Attendee';
+  document.getElementById('resOrg').textContent = s.school_or_org || s.institution || s.organization || s.school || 'General Attendee';
   document.getElementById('resTime').textContent = data.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
+  sheet.style.display = 'flex';
+  sheet.offsetHeight;
   sheet.classList.add('open');
+  if (backdrop) backdrop.classList.add('open');
 
   // Trigger countdown bar
   const bar = document.getElementById('countdownFill');
@@ -2141,19 +2472,23 @@ function presentScanResult(data) {
 
 function dismissResultAndScanNext() {
   clearTimeout(autoResumeTimer);
-  document.getElementById('resultSheet').classList.remove('open');
-  setTimeout(() => { isProcessingScan = false; }, 400);
+  const sheet = document.getElementById('resultSheet');
+  const backdrop = document.getElementById('resultSheetBackdrop');
+  if (sheet) {
+    sheet.classList.remove('open');
+    setTimeout(() => { sheet.style.display = 'none'; }, 220);
+  }
+  if (backdrop) backdrop.classList.remove('open');
+  setTimeout(() => { isProcessingScan = false; }, 350);
 }
 
 function dismissResultAndGoMenu() {
-  clearTimeout(autoResumeTimer);
-  document.getElementById('resultSheet').classList.remove('open');
+  dismissResultSheetImmediate();
   openMenuView();
-  setTimeout(() => { isProcessingScan = false; }, 400);
 }
 
 // =============================================================================
-// RECENT PUNCHES FEED LOADER
+// RECENT PUNCHES FEED LOADER & STUDENT PROFILE MODAL
 // =============================================================================
 async function loadRecentPunches() {
   const container = document.getElementById('recentPunchedFeed');
@@ -2175,10 +2510,13 @@ async function loadRecentPunches() {
         return;
       }
       container.innerHTML = d.items.map(it => `
-        <div class="recent-item-row">
-          <div>
-            <div class="recent-item-main">${escapeHtml(it.name)}</div>
-            <div class="recent-item-sub">${it.badge_id} &bull; ${escapeHtml(it.station || it.role)}</div>
+        <div class="recent-item-row" data-id="${it.id}" data-badge="${escapeHtml(it.badge_id || '')}" onclick="handleRecentItemClick(this)">
+          <div style="display: flex; align-items: center; gap: 11px;">
+            <div class="recent-item-avatar">${it.initials || 'A'}</div>
+            <div>
+              <div class="recent-item-main">${escapeHtml(it.name)} <i class="fa-solid fa-chevron-right" style="font-size:0.62rem; color:var(--text-muted); margin-left:4px;"></i></div>
+              <div class="recent-item-sub">${escapeHtml(it.badge_id)} &bull; ${escapeHtml(it.station || it.role)}</div>
+            </div>
           </div>
           <div class="recent-item-time">${it.time}</div>
         </div>
@@ -2187,6 +2525,138 @@ async function loadRecentPunches() {
   } catch(e) {
     if (spinner) spinner.classList.remove('fa-spin');
     container.innerHTML = `<div class="recent-empty-placeholder" style="color:#ef4444;">Could not load recent punches.</div>`;
+  }
+}
+
+function handleRecentItemClick(el) {
+  const sid = el.getAttribute('data-id');
+  const bid = el.getAttribute('data-badge');
+  openStudentProfile(sid, bid);
+}
+
+// Open and render student details profile modal
+async function openStudentProfile(studentId, badgeId) {
+  const modal = document.getElementById('studentProfileModal');
+  if (!modal) return;
+
+  // Placeholder state
+  document.getElementById('spFullName').textContent = 'Loading Student...';
+  document.getElementById('spAvatar').textContent = '...';
+  document.getElementById('spRole').textContent = 'STUDENT';
+  document.getElementById('spBadgeId').textContent = badgeId || '--';
+  document.getElementById('spSchool').textContent = 'Loading...';
+  document.getElementById('spProgram').textContent = 'Loading...';
+  document.getElementById('spCountry').textContent = 'Loading...';
+  document.getElementById('spBudget').textContent = 'Loading...';
+  document.getElementById('spCheckinStatus').textContent = 'Loading...';
+  document.getElementById('spXpPoints').textContent = '--';
+  document.getElementById('spBtnCall').style.display = 'none';
+  document.getElementById('spBtnEmail').style.display = 'none';
+  document.getElementById('spActivityFeed').innerHTML = '<div style="text-align:center; padding:12px; color:var(--text-muted); font-size:0.8rem;"><i class="fa-solid fa-spinner fa-spin"></i> Loading attendee profile...</div>';
+
+  modal.classList.add('open');
+
+  try {
+    const sk = localStorage.getItem('knova_session_key') || '';
+    const res = await fetch(`${API_HOST}/api/mobile-student-profile/?id=${studentId || ''}&badge_id=${encodeURIComponent(badgeId || '')}`, {
+      headers: { 'X-Session-Key': sk }
+    });
+    const d = await res.json();
+
+    if (d.status === 'SUCCESS' && d.student) {
+      const s = d.student;
+      document.getElementById('spFullName').textContent = s.full_name || 'Attendee';
+      document.getElementById('spAvatar').textContent = s.initials || 'A';
+      document.getElementById('spRole').textContent = (s.role || 'STUDENT').toUpperCase();
+      document.getElementById('spBadgeId').textContent = s.badge_id || badgeId || '--';
+      document.getElementById('spSchool').textContent = s.school_or_org || 'KNOVA Attendee';
+      document.getElementById('spProgram').textContent = s.target_program || 'General';
+      document.getElementById('spCountry').textContent = s.preferred_country || 'Any';
+      document.getElementById('spBudget').textContent = s.budget_range || 'Standard';
+      document.getElementById('spCheckinStatus').textContent = s.checked_in_time || 'Checked In';
+      document.getElementById('spXpPoints').textContent = `${s.xp_points || 0} XP`;
+
+      // Call button
+      const btnCall = document.getElementById('spBtnCall');
+      if (s.phone) {
+        btnCall.href = `tel:${s.phone}`;
+        btnCall.style.display = 'flex';
+      } else {
+        btnCall.style.display = 'none';
+      }
+
+      // Email button
+      const btnEmail = document.getElementById('spBtnEmail');
+      if (s.email) {
+        btnEmail.href = `mailto:${s.email}`;
+        btnEmail.style.display = 'flex';
+      } else {
+        btnEmail.style.display = 'none';
+      }
+
+      // Activity timeline
+      const feed = document.getElementById('spActivityFeed');
+      let actHtml = '';
+
+      if (s.booth_visits && s.booth_visits.length) {
+        actHtml += s.booth_visits.map(b => `
+          <div class="activity-chip-item">
+            <div>
+              <div style="font-weight:700; color:#fff;"><i class="fa-solid fa-store" style="color:#fbbf24; margin-right:6px;"></i>${escapeHtml(b.exhibitor)}</div>
+              <div style="color:var(--text-muted); font-size:0.7rem;">Booth Visit (+20 XP)</div>
+            </div>
+            <div style="color:var(--mode-color); font-family:'JetBrains Mono',monospace; font-size:0.72rem;">${b.time}</div>
+          </div>
+        `).join('');
+      }
+
+      if (s.seminars && s.seminars.length) {
+        actHtml += s.seminars.map(sm => `
+          <div class="activity-chip-item">
+            <div>
+              <div style="font-weight:700; color:#fff;"><i class="fa-solid fa-chalkboard-user" style="color:#c084fc; margin-right:6px;"></i>${escapeHtml(sm.session)}</div>
+              <div style="color:var(--text-muted); font-size:0.7rem;">${escapeHtml(sm.hall || 'Seminar')} (+25 XP)</div>
+            </div>
+            <div style="color:var(--mode-color); font-family:'JetBrains Mono',monospace; font-size:0.72rem;">${sm.time}</div>
+          </div>
+        `).join('');
+      }
+
+      if (s.consultations && s.consultations.length) {
+        actHtml += s.consultations.map(c => `
+          <div class="activity-chip-item">
+            <div>
+              <div style="font-weight:700; color:#fff;"><i class="fa-solid fa-user-graduate" style="color:#34d399; margin-right:6px;"></i>${escapeHtml(c.expert)}</div>
+              <div style="color:var(--text-muted); font-size:0.7rem;">${escapeHtml(c.desk || 'Advisory Desk')} (+40 XP)</div>
+            </div>
+            <div style="color:var(--mode-color); font-family:'JetBrains Mono',monospace; font-size:0.72rem;">${c.time}</div>
+          </div>
+        `).join('');
+      }
+
+      if (!actHtml) {
+        actHtml = '<div style="text-align:center; padding:12px; color:var(--text-muted); font-size:0.8rem;">No expo activities recorded yet for this attendee.</div>';
+      }
+
+      feed.innerHTML = actHtml;
+    } else {
+      document.getElementById('spFullName').textContent = 'Attendee Profile';
+      document.getElementById('spSchool').textContent = 'Profile details currently unavailable';
+    }
+  } catch(e) {
+    document.getElementById('spFullName').textContent = 'Attendee Profile';
+    document.getElementById('spSchool').textContent = 'Failed to load profile details';
+  }
+}
+
+function closeStudentModal() {
+  const modal = document.getElementById('studentProfileModal');
+  if (modal) modal.classList.remove('open');
+}
+
+function handleStudentModalBackdrop(e) {
+  if (e.target.id === 'studentProfileModal') {
+    closeStudentModal();
   }
 }
 
@@ -2214,10 +2684,56 @@ function escapeHtml(str) {
 }
 
 // =============================================================================
-// APP INITIALIZATION
+// APP INITIALIZATION & HARDWARE BACK SUPPORT
 // =============================================================================
+function handleAppBackButton() {
+  const studentModal = document.getElementById('studentProfileModal');
+  const pickerModal = document.getElementById('stationPickerModal');
+  const manualModal = document.getElementById('manualModal');
+  const userModal = document.getElementById('userModal');
+  const resultSheet = document.getElementById('resultSheet');
+
+  if (studentModal && studentModal.classList.contains('open')) {
+    closeStudentModal();
+    return true;
+  }
+  if (resultSheet && resultSheet.classList.contains('open')) {
+    dismissResultAndScanNext();
+    return true;
+  }
+  if (pickerModal && pickerModal.classList.contains('open')) {
+    closeStationPicker();
+    return true;
+  }
+  if (manualModal && manualModal.classList.contains('open')) {
+    closeManualModal();
+    return true;
+  }
+  if (userModal && userModal.classList.contains('open')) {
+    closeUserModal();
+    return true;
+  }
+  if (activeView === 'scanner') {
+    openMenuView();
+    return true;
+  }
+  return false;
+}
+
+window.addEventListener('popstate', () => {
+  handleAppBackButton();
+});
+
+if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+  window.Capacitor.Plugins.App.addListener('backButton', () => {
+    const handled = handleAppBackButton();
+    if (!handled && activeView === 'menu') {
+      window.Capacitor.Plugins.App.exitApp();
+    }
+  });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-  // Check if saved user info exists in localStorage
   const savedUser = localStorage.getItem('knova_user_info');
   const savedKey = localStorage.getItem('knova_session_key');
 
@@ -2228,7 +2744,6 @@ window.addEventListener('DOMContentLoaded', () => {
     } catch(e) {}
   }
 
-  // Periodic stats refresh
   setInterval(fetchStats, 15000);
 });
 </script>
