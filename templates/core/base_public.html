@@ -891,8 +891,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   .eventor-footer-grid {
     display: grid !important;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr !important;
-    gap: clamp(24px, 3.5vw, 44px) !important;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr 0.85fr !important;
+    gap: clamp(20px, 3vw, 40px) !important;
     margin-bottom: 34px !important;
     align-items: flex-start !important;
   }
@@ -1055,7 +1055,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   @media (max-width: 991px) {
     .eventor-footer-grid {
-      grid-template-columns: 1fr 1fr !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
       gap: 32px 24px !important;
       margin-bottom: 28px !important;
     }
@@ -1068,40 +1068,57 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   @media (max-width: 580px) {
     footer.eventor-footer {
-      padding: 38px 0 20px 0 !important;
+      padding: 34px 0 20px 0 !important;
     }
 
+    /* 2-Column Responsive Layout for Mobile */
     .eventor-footer-grid {
-      grid-template-columns: 1fr !important;
-      gap: 26px !important;
-      margin-bottom: 24px !important;
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 22px 14px !important;
+      margin-bottom: 22px !important;
     }
 
     .eventor-footer-brand-col {
-      grid-column: 1 !important;
+      grid-column: 1 / -1 !important;
+      max-width: 100% !important;
+      margin-bottom: 4px !important;
     }
 
     .eventor-footer-col-title {
+      font-size: 12px !important;
       height: auto !important;
-      margin-bottom: 12px !important;
+      margin-bottom: 10px !important;
+      letter-spacing: 0.6px !important;
     }
 
     .eventor-footer-logo-wrap {
       height: auto !important;
-      margin-bottom: 12px !important;
+      margin-bottom: 10px !important;
     }
 
     .eventor-footer-brand-desc {
-      font-size: 12.5px !important;
-      margin-bottom: 14px !important;
+      font-size: 12px !important;
+      line-height: 1.5 !important;
+      margin-bottom: 12px !important;
     }
 
     .eventor-footer-links-list {
-      gap: 9px !important;
+      gap: 8px !important;
     }
 
     .eventor-footer-link {
-      font-size: 12.5px !important;
+      font-size: 12px !important;
+      line-height: 1.35 !important;
+      display: block !important;
+      width: 100% !important;
+      word-break: normal !important;
+      overflow-wrap: break-word !important;
+      padding: 1px 0 !important;
+    }
+
+    .eventor-footer-social-row {
+      gap: 7px !important;
     }
 
     .eventor-footer-social-btn {
@@ -1111,10 +1128,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     .eventor-footer-bottom {
-      padding-top: 18px !important;
+      padding-top: 16px !important;
+      margin-top: 4px !important;
     }
 
     .eventor-footer-bottom-text {
+      font-size: 11px !important;
+      line-height: 1.5 !important;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .eventor-footer-grid {
+      gap: 20px 10px !important;
+    }
+
+    .eventor-footer-col-title {
+      font-size: 11px !important;
+    }
+
+    .eventor-footer-link {
       font-size: 11.5px !important;
     }
   }
@@ -1847,7 +1880,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       </div>
 
-      <!-- Column 4: Connect & Legal -->
+      <!-- Column 4: Connect -->
 
       <div class="eventor-footer-nav-col">
 
@@ -1865,19 +1898,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <a href="mailto:{{ site_config.email_coordination|default:'coordination@knovaexpo.com' }}?subject=Event%20Coordination%20Inquiry" class="eventor-footer-link">Event Coordination</a>
             <a href="mailto:{{ site_config.email_outreach|default:'outreach@knovaexpo.com' }}?subject=Institutional%20Outreach%20Inquiry" class="eventor-footer-link">Institutional Outreach</a>
           {% endfor %}
+        </div>
 
-          <div class="eventor-footer-legal-divider">
-            {% for item in site_config.get_footer_legal_links %}
-              {% if item.url %}
-                <a href="{{ item.url }}" class="eventor-footer-link">{{ item.text }}</a>
-              {% else %}
-                <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">{{ item.text }}</span>
-              {% endif %}
-            {% empty %}
-              <a href="{% url 'privacy_policy' %}" class="eventor-footer-link">Privacy Policy</a>
-              <a href="{% url 'terms_conditions' %}" class="eventor-footer-link">Terms &amp; Conditions</a>
-            {% endfor %}
-          </div>
+      </div>
+
+      <!-- Column 5: Legal & Policies -->
+
+      <div class="eventor-footer-nav-col eventor-footer-legal-col">
+
+        <h4 class="eventor-footer-col-title">Legal</h4>
+
+        <div class="eventor-footer-links-list">
+          {% for item in site_config.get_footer_legal_links %}
+            {% if item.url %}
+              <a href="{{ item.url }}" class="eventor-footer-link">{{ item.text }}</a>
+            {% else %}
+              <span class="eventor-footer-link" style="cursor: default; pointer-events: none;">{{ item.text }}</span>
+            {% endif %}
+          {% empty %}
+            <a href="{% url 'privacy_policy' %}" class="eventor-footer-link">Privacy Policy</a>
+            <a href="{% url 'terms_conditions' %}" class="eventor-footer-link">Terms &amp; Conditions</a>
+          {% endfor %}
         </div>
 
       </div>
