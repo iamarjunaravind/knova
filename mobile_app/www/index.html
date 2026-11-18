@@ -149,7 +149,6 @@
       letter-spacing: 0.05em;
       color: var(--text-muted);
       margin-bottom: 6px;
-      margin-left: 4px;
     }
 
     .input-box-wrap {
@@ -160,34 +159,37 @@
 
     .input-box-wrap i.prefix-icon {
       position: absolute;
-      left: 16px;
+      left: 14px;
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       pointer-events: none;
     }
 
     .login-input {
       width: 100%;
-      height: 50px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      height: 48px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 14px;
+      padding: 0 42px 0 40px;
       color: #fff;
-      font-size: 0.95rem;
-      padding: 0 46px 0 46px;
+      font-size: 0.92rem;
+      font-family: inherit;
       outline: none;
       transition: all 0.2s;
+      user-select: text;
+      -webkit-user-select: text;
     }
 
     .login-input:focus {
       border-color: #6366f1;
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+      background: rgba(255, 255, 255, 0.09);
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.3);
     }
 
     .toggle-pwd-btn {
       position: absolute;
-      right: 14px;
+      right: 12px;
       background: transparent;
       border: none;
       color: var(--text-muted);
@@ -199,34 +201,38 @@
     .btn-login-submit {
       width: 100%;
       height: 50px;
-      margin-top: 8px;
+      margin-top: 10px;
       background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-      color: white;
       border: none;
       border-radius: 14px;
+      color: #fff;
       font-size: 0.95rem;
-      font-weight: 800;
+      font-weight: 700;
+      font-family: inherit;
       cursor: pointer;
-      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.35);
       transition: all 0.2s;
     }
 
-    .btn-login-submit:active { transform: scale(0.98); }
+    .btn-login-submit:active {
+      transform: scale(0.98);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
+    }
 
     .login-alert {
       display: none;
       margin-top: 14px;
       padding: 10px 14px;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.35);
       border-radius: 12px;
-      color: #f87171;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
       font-size: 0.8rem;
-      font-weight: 600;
+      line-height: 1.4;
       text-align: left;
     }
 
@@ -245,7 +251,7 @@
     }
 
     /* ==========================================================================
-       SCANNER HEADER & UI
+       APP HEADER / TOP MENUBAR WITH EXPLICIT LOGOUT BUTTON
        ========================================================================== */
     .app-header {
       position: absolute;
@@ -253,19 +259,21 @@
       left: 0;
       right: 0;
       z-index: 30;
-      padding: calc(var(--safe-top) + 8px) 14px 6px;
+      padding: calc(var(--safe-top) + 8px) 14px 8px;
       display: flex;
       flex-direction: column;
-      gap: 7px;
-      background: linear-gradient(180deg, rgba(7, 10, 18, 0.96) 0%, rgba(7, 10, 18, 0.85) 85%, transparent 100%);
+      gap: 6px;
+      background: linear-gradient(180deg, rgba(7, 10, 18, 0.98) 0%, rgba(7, 10, 18, 0.90) 85%, transparent 100%);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .header-top-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
     }
 
     .user-pill {
@@ -277,6 +285,7 @@
       padding: 5px 12px;
       border-radius: 999px;
       cursor: pointer;
+      max-width: 45%;
     }
 
     .user-dot {
@@ -286,6 +295,7 @@
       border-radius: 50%;
       box-shadow: 0 0 10px var(--mode-color);
       animation: pulseDot 1.8s infinite;
+      flex-shrink: 0;
     }
 
     @keyframes pulseDot {
@@ -298,33 +308,9 @@
       font-weight: 800;
       letter-spacing: 0.04em;
       color: #fff;
-      max-width: 140px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    .stat-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.74rem;
-      font-weight: 600;
-    }
-
-    .stat-badge span.num {
-      color: var(--mode-color);
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-    }
-
-    .stat-badge span.label {
-      color: var(--text-muted);
-      font-size: 0.7rem;
     }
 
     .header-actions {
@@ -345,7 +331,7 @@
       color: var(--text-main);
       font-size: 0.85rem;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s;
     }
 
     .icon-btn:active { transform: scale(0.92); }
@@ -356,6 +342,29 @@
       box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
     }
     .icon-btn.muted { color: #ef4444; }
+
+    /* EXPLICIT LOGOUT BUTTON ON MENUBAR */
+    .menubar-logout-btn {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 12px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 999px;
+      color: #fca5a5;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .menubar-logout-btn:active {
+      transform: scale(0.94);
+      background: rgba(239, 68, 68, 0.3);
+      color: #fff;
+    }
 
     /* 4-ROLE SEGMENTED TABS */
     .role-tabs-wrap {
@@ -390,33 +399,341 @@
     .role-tab-btn[data-mode="seminar"].active { background: rgba(192, 132, 252, 0.2); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.35); }
     .role-tab-btn[data-mode="counselling"].active { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.35); }
 
-    /* STATION BAR */
-    .station-bar {
+    /* ==========================================================================
+       VIEWS WRAPPER (MENU VIEW vs SCANNER VIEW)
+       ========================================================================== */
+    .views-wrapper {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* VIEW A: MENU / DASHBOARD VIEW */
+    .menu-view-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      padding-top: calc(var(--safe-top) + 64px);
+      padding-bottom: calc(var(--safe-bottom) + 76px);
+      padding-left: 16px;
+      padding-right: 16px;
+      overflow-y: auto;
+      background: radial-gradient(circle at 50% 0%, rgba(30, 27, 75, 0.4) 0%, rgba(7, 10, 18, 0.95) 70%);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Station Banner Card */
+    .menu-station-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 16px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .station-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .station-icon-bubble {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: var(--mode-color);
+      flex-shrink: 0;
+    }
+
+    .station-meta-text {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .station-type-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--mode-color);
+      margin-bottom: 2px;
+    }
+
+    .station-primary-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .station-stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 10px 14px;
+    }
+
+    .stat-tile {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-tile-num {
+      font-size: 1.35rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+    }
+
+    .stat-tile-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    /* HERO SCAN BUTTON ON MENU */
+    .action-scan-hero {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.28) 0%, rgba(56, 189, 248, 0.22) 100%);
+      border: 1.5px solid rgba(99, 102, 241, 0.45);
+      box-shadow: 0 12px 30px rgba(99, 102, 241, 0.25);
+      border-radius: 22px;
+      padding: 18px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .action-scan-hero:active {
+      transform: scale(0.98);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.4) 0%, rgba(56, 189, 248, 0.3) 100%);
+    }
+
+    .scan-hero-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .scan-hero-icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .scan-hero-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .scan-hero-sub {
+      font-size: 0.76rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 2px;
+    }
+
+    .scan-hero-arrow {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.85rem;
+    }
+
+    /* QUICK ACTIONS GRID */
+    .menu-quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .quick-action-btn {
+      height: 48px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      border-radius: 14px;
       color: #fff;
+      font-size: 0.74rem;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
       cursor: pointer;
     }
 
-    .station-info {
+    .quick-action-btn i {
+      font-size: 0.95rem;
+      color: var(--mode-color);
+    }
+
+    .quick-action-btn:active {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(0.96);
+    }
+
+    /* RECENT PUNCHED FEED SECTION */
+    .recent-punched-section {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .recent-section-header {
       display: flex;
       align-items: center;
-      gap: 6px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      justify-content: space-between;
+      margin-bottom: 12px;
     }
-    .station-info i { color: var(--mode-color); }
-    .station-title { overflow: hidden; text-overflow: ellipsis; }
 
-    /* CAMERA VIEWPORT */
+    .recent-section-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .recent-section-title i {
+      color: var(--mode-color);
+    }
+
+    .recent-refresh-link {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .recent-punched-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .recent-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .recent-item-main {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .recent-item-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .recent-item-time {
+      font-size: 0.74rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--mode-color);
+      font-weight: 600;
+    }
+
+    .recent-empty-placeholder {
+      text-align: center;
+      padding: 24px 10px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    /* VIEW B: SCANNER VIEW */
+    .scanner-view-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      background: #000;
+    }
+
+    .scanner-nav-bar {
+      position: absolute;
+      top: calc(var(--safe-top) + 8px);
+      left: 14px;
+      right: 14px;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .scanner-back-btn {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 800;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      cursor: pointer;
+    }
+
+    .scanner-back-btn:active { transform: scale(0.95); }
+
     .scanner-viewport {
       position: relative;
       flex: 1;
@@ -477,42 +794,45 @@
       height: 3px;
       background: linear-gradient(90deg, transparent 0%, var(--mode-color) 50%, transparent 100%);
       box-shadow: 0 0 14px var(--mode-color);
-      border-radius: 50%;
+      border-radius: 3px;
       animation: laserSweep 2s ease-in-out infinite alternate;
     }
 
-    @keyframes laserSweep { 0% { top: 8%; opacity: 0.8; } 50% { opacity: 1; } 100% { top: 90%; opacity: 0.8; } }
-
-    .reticle-hint {
-      margin-top: 22px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.9);
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 5px 14px;
-      border-radius: 999px;
-      backdrop-filter: blur(8px);
-      text-align: center;
-      max-width: 85%;
+    @keyframes laserSweep {
+      0% { top: 10%; opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { top: 90%; opacity: 0.8; }
     }
 
-    /* BOTTOM CONTROLS */
-    .bottom-bar {
+    .reticle-hint {
       position: absolute;
-      bottom: calc(var(--safe-bottom) + 14px);
-      left: 14px;
-      right: 14px;
-      z-index: 30;
+      bottom: -46px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: #fff;
+      backdrop-filter: blur(10px);
+    }
+
+    .bottom-bar {
+      position: absolute;
+      bottom: calc(var(--safe-bottom) + 16px);
+      left: 16px;
+      right: 16px;
+      z-index: 30;
+      display: flex;
       gap: 10px;
     }
 
     .pill-btn {
       flex: 1;
-      height: 46px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -521,91 +841,376 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 999px;
       color: var(--text-main);
-      font-size: 0.82rem;
+      font-size: 0.84rem;
       font-weight: 700;
       backdrop-filter: blur(16px);
       cursor: pointer;
     }
 
-    .pill-btn i { color: var(--mode-color); font-size: 0.95rem; }
+    .pill-btn.primary {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      border-color: #6366f1;
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
 
-    /* RESULT MODAL */
+    /* ==========================================================================
+       BOTTOM NAVIGATION BAR (Menu | Scan | Recent | Logout)
+       ========================================================================== */
+    .app-bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 25;
+      height: calc(var(--safe-bottom) + 60px);
+      padding-bottom: var(--safe-bottom);
+      background: rgba(7, 10, 18, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .bottom-nav-item {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      gap: 3px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .bottom-nav-item i {
+      font-size: 1.15rem;
+    }
+
+    .bottom-nav-item.active {
+      color: var(--mode-color);
+    }
+
+    .bottom-nav-item.scan-center-item {
+      position: relative;
+      top: -12px;
+    }
+
+    .scan-fab {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.45);
+      border: 3px solid #070a12;
+      transition: transform 0.2s;
+    }
+
+    .scan-fab:active {
+      transform: scale(0.92);
+    }
+
+    .bottom-nav-item.logout-nav {
+      color: #f87171;
+    }
+
+    /* ==========================================================================
+       SCAN RESULT BOTTOM SHEET
+       ========================================================================== */
     .result-sheet {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      z-index: 50;
-      background: #0f172a;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      border-top-left-radius: 26px;
-      border-top-right-radius: 26px;
-      padding: 14px 18px calc(var(--safe-bottom) + 18px);
-      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.85);
-      transform: translateY(100%);
+      z-index: 60;
+      background: rgba(15, 23, 42, 0.98);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 28px 28px 0 0;
+      padding: 16px 20px calc(var(--safe-bottom) + 20px);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      transform: translateY(105%);
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .result-sheet.open { transform: translateY(0); }
-    .sheet-handle { width: 38px; height: 4px; background: rgba(255, 255, 255, 0.25); border-radius: 999px; margin: 0 auto 12px; }
+    .sheet-handle {
+      width: 44px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      margin: 0 auto 6px;
+    }
 
-    .result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
     .result-avatar {
       width: 52px;
       height: 52px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-      color: white;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       font-weight: 800;
+      color: white;
+      box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
       flex-shrink: 0;
     }
 
-    .result-avatar.amber { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-    .result-avatar.red { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); }
+    .result-title-block { flex: 1; overflow: hidden; }
+    .attendee-name {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-    .attendee-name { font-size: 1.2rem; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .role-badge { display: inline-flex; align-items: center; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-top: 3px; text-transform: uppercase; }
-    .role-badge.student { background: rgba(56, 189, 248, 0.18); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); }
-    .role-badge.parent { background: rgba(168, 85, 247, 0.18); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); }
-    .role-badge.exhibitor { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
-    .role-badge.other { background: rgba(148, 163, 184, 0.18); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.35); }
+    .role-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-top: 3px;
+    }
 
-    .status-banner { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: 14px; font-size: 0.85rem; font-weight: 700; margin-bottom: 12px; }
-    .status-banner.success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #34d399; }
-    .status-banner.warning { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24; }
-    .status-banner.error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #f87171; }
-    .reward-pill { font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: #fff; }
+    .role-badge.student { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+    .role-badge.parent { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .role-badge.educator { background: rgba(192, 132, 252, 0.2); color: #c084fc; }
 
-    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); padding: 10px 12px; border-radius: 12px; margin-bottom: 14px; }
-    .meta-item { display: flex; flex-direction: column; }
-    .meta-label { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
-    .meta-value { font-size: 0.82rem; font-weight: 600; color: #f1f5f9; font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .status-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
 
-    .countdown-bar-wrap { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.08); border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
-    .countdown-bar-fill { height: 100%; width: 100%; background: var(--mode-color); border-radius: 999px; transition: width 1.8s linear; }
+    .status-banner.success {
+      background: rgba(34, 197, 94, 0.16);
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      color: #4ade80;
+    }
 
-    .action-btn-primary { width: 100%; height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 999px; font-size: 0.92rem; font-weight: 800; cursor: pointer; }
+    .status-banner.warning {
+      background: rgba(245, 158, 11, 0.16);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fbbf24;
+    }
+
+    .status-banner.error {
+      background: rgba(239, 68, 68, 0.16);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
+    }
+
+    .reward-pill {
+      font-size: 0.74rem;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 2px 8px;
+      border-radius: 999px;
+      color: #fff;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .meta-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .meta-value {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .countdown-bar-wrap {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .countdown-bar-fill {
+      width: 100%;
+      height: 100%;
+      background: var(--mode-color);
+      transform-origin: left;
+      transition: transform 2.8s linear;
+    }
+
+    .action-btn-primary {
+      width: 100%;
+      height: 48px;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
 
     /* MODAL SHEETS */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100; display: none; align-items: flex-end; justify-content: center; }
-    .modal-overlay.open { display: flex; }
-    .modal-sheet { width: 100%; max-width: 500px; max-height: 80vh; background: #0f172a; border-top: 1px solid rgba(255, 255, 255, 0.12); border-top-left-radius: 26px; border-top-right-radius: 26px; padding: 18px 18px calc(var(--safe-bottom) + 20px); display: flex; flex-direction: column; }
-    .modal-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 4px; }
-    .modal-subtitle { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px; }
-    .filter-input { width: 100%; height: 44px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 12px; color: #fff; font-size: 0.9rem; padding: 0 14px; outline: none; margin-bottom: 12px; }
-    .picker-list { max-height: 45vh; overflow-y: auto; display: flex; flex-direction: column; gap: 7px; }
-    .picker-item { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); padding: 12px 14px; border-radius: 12px; color: #fff; cursor: pointer; }
-    .picker-item.selected { background: rgba(255, 255, 255, 0.12); border-color: var(--mode-color); }
-    .picker-item-main { font-size: 0.88rem; font-weight: 700; }
-    .picker-item-sub { font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
-    .manual-input { width: 100%; height: 50px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); border-radius: 12px; color: #fff; font-size: 1rem; font-family: 'JetBrains Mono', monospace; padding: 0 16px; outline: none; margin-bottom: 14px; text-transform: uppercase; }
-    .modal-buttons { display: flex; gap: 10px; }
-    .modal-btn-cancel { flex: 1; height: 46px; background: rgba(255, 255, 255, 0.08); color: var(--text-muted); border: none; border-radius: 999px; font-weight: 700; cursor: pointer; }
-    .modal-btn-submit { flex: 2; height: 46px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 999px; font-weight: 800; cursor: pointer; }
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 70;
+      background: rgba(7, 10, 18, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      align-items: flex-end;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .modal-overlay.open { display: flex; opacity: 1; }
+
+    .modal-sheet {
+      width: 100%;
+      max-height: 85vh;
+      background: rgba(15, 23, 42, 0.98);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 28px 28px 0 0;
+      padding: 16px 20px calc(var(--safe-bottom) + 20px);
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.open .modal-sheet { transform: translateY(0); }
+
+    .modal-title { font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .modal-subtitle { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; }
+
+    .filter-input, .manual-input {
+      width: 100%;
+      height: 46px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 0 14px;
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+      margin-bottom: 12px;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .filter-input:focus, .manual-input:focus { border-color: var(--mode-color); }
+
+    .picker-list {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 50vh;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .picker-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .picker-item.selected {
+      background: rgba(99, 102, 241, 0.18);
+      border-color: #6366f1;
+    }
+
+    .picker-item-main { font-size: 0.88rem; font-weight: 700; color: #fff; }
+    .picker-item-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .modal-btn-cancel, .modal-btn-submit {
+      flex: 1;
+      height: 46px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-btn-cancel {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+    }
+
+    .modal-btn-submit {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      border: none;
+      color: #fff;
+    }
   </style>
 </head>
 <body class="mode-gate">
@@ -613,7 +1218,7 @@
 <div id="appContainer">
 
   <!-- =========================================================================
-       LOGIN SCREEN OVERLAY (Shown if not authenticated)
+       1. LOGIN SCREEN
        ========================================================================= -->
   <div class="login-container" id="loginScreen">
     <div class="login-card">
@@ -649,7 +1254,7 @@
         </div>
 
         <button type="submit" class="btn-login-submit" id="btnLoginSubmit">
-          <span>Sign In & Open Scanner</span>
+          <span>Sign In & Open Menu</span>
           <i class="fa-solid fa-arrow-right"></i>
         </button>
 
@@ -664,85 +1269,200 @@
   </div>
 
   <!-- =========================================================================
-       SCANNER INTERFACE (Shown when authenticated)
+       2. TOP MENUBAR / APP HEADER (Fixed at top when authenticated)
        ========================================================================= -->
   <header class="app-header" id="scannerHeader" style="display: none;">
     <div class="header-top-row">
-      <!-- USER CHIP / LOGOUT TRIGGER -->
+      <!-- User Pill -->
       <div class="user-pill" onclick="openUserModal()">
         <div class="user-dot"></div>
         <span class="user-name-title" id="userNameTitle">Staff User</span>
-        <i class="fa-solid fa-angle-down" style="font-size: 0.65rem; color: var(--text-muted);"></i>
+        <i class="fa-solid fa-angle-down" style="font-size: 0.65rem; color: var(--text-muted); flex-shrink: 0;"></i>
       </div>
 
-      <!-- STATS BADGE -->
-      <div class="stat-badge">
-        <span class="label" id="statLabel">Checked In:</span>
-        <span class="num" id="statCount">0</span>
-      </div>
-
-      <!-- HARDWARE CONTROLS -->
+      <!-- Action Buttons + Explicit Logout Button -->
       <div class="header-actions">
-        <button class="icon-btn" id="btnTorch" title="Torch" onclick="toggleTorch()"><i class="fa-solid fa-bolt"></i></button>
-        <button class="icon-btn" id="btnFlipCam" title="Flip Camera" onclick="flipCamera()"><i class="fa-solid fa-camera-rotate"></i></button>
+        <button class="icon-btn cam-action" id="btnTorch" title="Torch" onclick="toggleTorch()" style="display: none;"><i class="fa-solid fa-bolt"></i></button>
+        <button class="icon-btn cam-action" id="btnFlipCam" title="Flip Camera" onclick="flipCamera()" style="display: none;"><i class="fa-solid fa-camera-rotate"></i></button>
         <button class="icon-btn" id="btnSound" title="Sound" onclick="toggleSound()"><i class="fa-solid fa-volume-high"></i></button>
+        
+        <!-- EXPLICIT MENUBAR LOGOUT BUTTON -->
+        <button class="menubar-logout-btn" onclick="handleMobileLogout()" title="Sign Out">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Logout</span>
+        </button>
       </div>
     </div>
 
-    <!-- 4-ROLE SEGMENTED TABS (Hidden or restricted if role is locked) -->
+    <!-- 4-ROLE SEGMENTED TABS (Hidden if role is locked) -->
     <nav class="role-tabs-wrap" id="roleTabsNav">
       <button class="role-tab-btn active" data-mode="gate" onclick="switchScannerMode('gate')">
-        <i class="fa-solid fa-door-open"></i><span>Gate Entry</span>
+        <i class="fa-solid fa-door-open"></i><span>Gate</span>
       </button>
       <button class="role-tab-btn" data-mode="booth" onclick="switchScannerMode('booth')">
-        <i class="fa-solid fa-store"></i><span>Booth Visit</span>
+        <i class="fa-solid fa-store"></i><span>Booth</span>
       </button>
       <button class="role-tab-btn" data-mode="seminar" onclick="switchScannerMode('seminar')">
-        <i class="fa-solid fa-chalkboard-user"></i><span>Seminars</span>
+        <i class="fa-solid fa-chalkboard-user"></i><span>Seminar</span>
       </button>
       <button class="role-tab-btn" data-mode="counselling" onclick="switchScannerMode('counselling')">
-        <i class="fa-solid fa-user-graduate"></i><span>Counselling</span>
+        <i class="fa-solid fa-user-graduate"></i><span>Advisory</span>
       </button>
     </nav>
-
-    <!-- STATION CONTEXT BAR -->
-    <div class="station-bar" id="stationBar" onclick="handleStationBarClick()">
-      <div class="station-info">
-        <i class="fa-solid fa-location-dot" id="stationIcon"></i>
-        <span class="station-title" id="stationTitle">Expo Entrance Turnstiles</span>
-      </div>
-      <i class="fa-solid fa-chevron-down" id="stationChevron" style="font-size: 0.7rem; color: var(--text-muted);"></i>
-    </div>
   </header>
 
-  <!-- VIEWPORT -->
-  <main class="scanner-viewport" id="scannerViewport">
-    <div id="reader"></div>
+  <!-- =========================================================================
+       3. VIEWS CONTAINER (Menu Dashboard View vs Camera Scanner View)
+       ========================================================================= -->
+  <div class="views-wrapper" id="viewsWrapper" style="display: none;">
 
-    <div class="reticle-container">
-      <div class="reticle-box">
-        <div class="corner tl"></div><div class="corner tr"></div>
-        <div class="corner bl"></div><div class="corner br"></div>
-        <div class="laser-line"></div>
+    <!-- VIEW A: MENU / DASHBOARD VIEW (Default upon login) -->
+    <section class="menu-view-screen" id="menuViewScreen">
+      
+      <!-- Station Context & Punch Summary Card -->
+      <div class="menu-station-card">
+        <div class="station-meta-row">
+          <div class="station-icon-bubble">
+            <i class="fa-solid fa-door-open" id="menuStationIcon"></i>
+          </div>
+          <div class="station-meta-text">
+            <div class="station-type-tag" id="menuStationRoleDisplay">Gate Entry Turnstiles</div>
+            <div class="station-primary-name" id="menuStationNameDisplay">Expo Entrance</div>
+          </div>
+        </div>
+
+        <div class="station-stats-row">
+          <div class="stat-tile">
+            <span class="stat-tile-num" id="statCheckedInCount">0</span>
+            <span class="stat-tile-label">Today's Punches</span>
+          </div>
+          <div class="stat-tile">
+            <span class="stat-tile-num" id="statTargetCount">--</span>
+            <span class="stat-tile-label" id="statTargetLabel">Expo Target</span>
+          </div>
+        </div>
       </div>
-      <div class="reticle-hint" id="reticleHint">
-        <i class="fa-solid fa-qrcode" style="margin-right: 5px;"></i>
-        <span id="reticleHintText">Point camera at attendee badge</span>
+
+      <!-- MAIN ACTION HERO: SCAN ATTENDEE QR -->
+      <div class="action-scan-hero" onclick="openScannerView()">
+        <div class="scan-hero-left">
+          <div class="scan-hero-icon-box">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <div>
+            <div class="scan-hero-title">Scan Attendee QR</div>
+            <div class="scan-hero-sub" id="scanHeroSub">Tap to open camera and scan badges</div>
+          </div>
+        </div>
+        <div class="scan-hero-arrow">
+          <i class="fa-solid fa-chevron-right"></i>
+        </div>
+      </div>
+
+      <!-- QUICK SHORTCUTS GRID -->
+      <div class="menu-quick-grid">
+        <div class="quick-action-btn" onclick="openManualModal()">
+          <i class="fa-solid fa-keyboard"></i>
+          <span>Manual Entry</span>
+        </div>
+        <div class="quick-action-btn" id="btnSwitchStationMenu" onclick="openStationPicker()">
+          <i class="fa-solid fa-repeat"></i>
+          <span>Change Booth</span>
+        </div>
+        <div class="quick-action-btn" onclick="fetchStats(); loadRecentPunches();">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span>Refresh Stats</span>
+        </div>
+      </div>
+
+      <!-- RECENT PUNCHED FEED SECTION -->
+      <div class="recent-punched-section">
+        <div class="recent-section-header">
+          <div class="recent-section-title">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Recent Punched</span>
+          </div>
+          <button class="recent-refresh-link" onclick="loadRecentPunches()">
+            <i class="fa-solid fa-rotate-right" id="recentRefreshSpinner"></i>
+            <span>Refresh</span>
+          </button>
+        </div>
+
+        <div class="recent-punched-list" id="recentPunchedFeed">
+          <div class="recent-empty-placeholder">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size:1.4rem; opacity:0.5; margin-bottom:8px; display:block;"></i>
+            Loading recent punches...
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- VIEW B: CAMERA SCANNER VIEW (Active when scanning) -->
+    <div class="scanner-view-screen" id="scannerViewScreen" style="display: none;">
+      <!-- TOP NAVIGATION BAR ON SCANNER -->
+      <div class="scanner-nav-bar">
+        <button class="scanner-back-btn" onclick="openMenuView()">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Menu</span>
+        </button>
+      </div>
+
+      <!-- Camera Viewport -->
+      <main class="scanner-viewport" id="scannerViewport">
+        <div id="reader"></div>
+
+        <div class="reticle-container">
+          <div class="reticle-box">
+            <div class="corner tl"></div><div class="corner tr"></div>
+            <div class="corner bl"></div><div class="corner br"></div>
+            <div class="laser-line"></div>
+          </div>
+          <div class="reticle-hint" id="reticleHint">
+            <i class="fa-solid fa-qrcode" style="margin-right: 5px;"></i>
+            <span id="reticleHintText">Point camera at attendee badge</span>
+          </div>
+        </div>
+      </main>
+
+      <!-- Bottom Floating Bar on Scanner -->
+      <div class="bottom-bar">
+        <button class="pill-btn" onclick="openManualModal()">
+          <i class="fa-solid fa-keyboard"></i><span>Manual Entry</span>
+        </button>
+        <button class="pill-btn primary" onclick="openMenuView()">
+          <i class="fa-solid fa-check"></i><span>Done / Menu</span>
+        </button>
       </div>
     </div>
-  </main>
 
-  <!-- BOTTOM FLOATING ACTION BAR -->
-  <footer class="bottom-bar" id="scannerFooter" style="display: none;">
-    <button class="pill-btn" onclick="openManualModal()">
-      <i class="fa-solid fa-keyboard"></i><span>Manual Entry</span>
-    </button>
-    <button class="pill-btn" onclick="openRecentModal()">
-      <i class="fa-solid fa-clock-rotate-left"></i><span>Recent Scans</span>
-    </button>
-  </footer>
+  </div>
 
-  <!-- RESULT MODAL -->
+  <!-- =========================================================================
+       4. BOTTOM NAVIGATION BAR (Menu | Scan | Recent | Logout)
+       ========================================================================= -->
+  <nav class="app-bottom-nav" id="appBottomNav" style="display: none;">
+    <button class="bottom-nav-item active" id="navItemMenu" onclick="openMenuView()">
+      <i class="fa-solid fa-table-cells-large"></i>
+      <span>Menu</span>
+    </button>
+    <button class="bottom-nav-item scan-center-item" id="navItemScan" onclick="openScannerView()">
+      <div class="scan-fab"><i class="fa-solid fa-qrcode"></i></div>
+      <span style="margin-top: 2px;">Scan</span>
+    </button>
+    <button class="bottom-nav-item" id="navItemRecent" onclick="scrollToRecentPunches()">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+      <span>Recent</span>
+    </button>
+    <button class="bottom-nav-item logout-nav" onclick="handleMobileLogout()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      <span>Logout</span>
+    </button>
+  </nav>
+
+  <!-- =========================================================================
+       5. SCAN RESULT BOTTOM SHEET
+       ========================================================================= -->
   <div class="result-sheet" id="resultSheet">
     <div class="sheet-handle"></div>
     <div class="result-header">
@@ -766,7 +1486,14 @@
       <div class="meta-item"><span class="meta-label">Time</span><span class="meta-value" id="resTime">-</span></div>
     </div>
     <div class="countdown-bar-wrap"><div class="countdown-bar-fill" id="countdownFill"></div></div>
-    <button class="action-btn-primary" onclick="dismissResultAndScanNext()"><i class="fa-solid fa-arrow-right"></i><span>Scan Next Attendee</span></button>
+    <div style="display: flex; gap: 8px;">
+      <button class="action-btn-primary" style="flex: 2;" onclick="dismissResultAndScanNext()">
+        <i class="fa-solid fa-arrow-right"></i><span>Scan Next</span>
+      </button>
+      <button class="pill-btn" style="flex: 1;" onclick="dismissResultAndGoMenu()">
+        <span>Menu</span>
+      </button>
+    </div>
   </div>
 
   <!-- STATION PICKER MODAL -->
@@ -795,17 +1522,6 @@
     </div>
   </div>
 
-  <!-- RECENT SCANS MODAL -->
-  <div class="modal-overlay" id="recentModal">
-    <div class="modal-sheet">
-      <div class="sheet-handle" onclick="closeRecentModal()"></div>
-      <div class="modal-title">Recent Scans</div>
-      <div class="modal-subtitle" id="recentSubtitle">Recent attendance punches.</div>
-      <div class="picker-list" id="recentListContainer"></div>
-      <button class="modal-btn-cancel" style="margin-top: 12px; height: 44px; width: 100%;" onclick="closeRecentModal()">Close</button>
-    </div>
-  </div>
-
   <!-- USER ACCOUNT & LOGOUT MODAL -->
   <div class="modal-overlay" id="userModal">
     <div class="modal-sheet">
@@ -830,7 +1546,7 @@
 
 </div>
 
-<!-- RUNTIME SCRIPT -->
+<!-- DATA & RUNTIME SCRIPT -->
 <script>
 let API_HOST = localStorage.getItem('knova_api_host') || 'https://knovaexpo.com';
 document.getElementById('serverDisplayLabel').textContent = API_HOST.replace('https://', '').replace('http://', '');
@@ -852,6 +1568,7 @@ let stationsData = {
 
 let currentUser = null;
 let currentMode = 'gate';
+let activeView = 'menu';
 let selectedExhibitorId = null;
 let selectedSessionId = null;
 let selectedExpertId = null;
@@ -879,7 +1596,7 @@ async function handleMobileLogin(e) {
     });
     const data = await res.json();
     btn.disabled = false;
-    btn.innerHTML = '<span>Sign In & Open Scanner</span> <i class="fa-solid fa-arrow-right"></i>';
+    btn.innerHTML = '<span>Sign In & Open Menu</span> <i class="fa-solid fa-arrow-right"></i>';
 
     if (data.status === 'SUCCESS' && data.user) {
       currentUser = data.user;
@@ -893,7 +1610,7 @@ async function handleMobileLogin(e) {
     }
   } catch (err) {
     btn.disabled = false;
-    btn.innerHTML = '<span>Sign In & Open Scanner</span> <i class="fa-solid fa-arrow-right"></i>';
+    btn.innerHTML = '<span>Sign In & Open Menu</span> <i class="fa-solid fa-arrow-right"></i>';
     alertEl.textContent = 'Connection error: ' + (err.message || err);
     alertEl.style.display = 'block';
   }
@@ -902,31 +1619,35 @@ async function handleMobileLogin(e) {
 function onLoginSuccess() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('scannerHeader').style.display = 'flex';
-  document.getElementById('scannerFooter').style.display = 'flex';
+  document.getElementById('viewsWrapper').style.display = 'flex';
+  document.getElementById('appBottomNav').style.display = 'flex';
 
   document.getElementById('userNameTitle').textContent = currentUser.name || currentUser.username;
   currentMode = currentUser.default_mode || 'gate';
 
   const roleTabsNav = document.getElementById('roleTabsNav');
-  const stationChevron = document.getElementById('stationChevron');
+  const btnSwitchStation = document.getElementById('btnSwitchStationMenu');
 
   if (currentUser.is_locked) {
     roleTabsNav.style.display = 'none';
-    stationChevron.style.display = 'none';
+    if (btnSwitchStation) btnSwitchStation.style.display = 'none';
     if (currentUser.role === 'exhibitor') selectedExhibitorId = currentUser.station_id;
     if (currentUser.role === 'seminar') selectedSessionId = currentUser.station_id;
     if (currentUser.role === 'counselling') selectedExpertId = currentUser.station_id;
   } else {
     roleTabsNav.style.display = 'grid';
-    stationChevron.style.display = 'inline-block';
+    if (btnSwitchStation) btnSwitchStation.style.display = 'flex';
   }
 
-  switchScannerMode(currentMode);
-  startScanner();
+  updateStationUI();
+  openMenuView();
   fetchStats();
+  loadRecentPunches();
 }
 
 async function handleMobileLogout() {
+  if (!confirm("Are you sure you want to log out?")) return;
+
   const sk = localStorage.getItem('knova_session_key') || '';
   try {
     await fetch(`${API_HOST}/api/mobile-logout/`, {
@@ -942,7 +1663,8 @@ async function handleMobileLogout() {
   stopScanner();
 
   document.getElementById('scannerHeader').style.display = 'none';
-  document.getElementById('scannerFooter').style.display = 'none';
+  document.getElementById('viewsWrapper').style.display = 'none';
+  document.getElementById('appBottomNav').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginUsername').value = '';
   document.getElementById('loginPassword').value = '';
@@ -973,6 +1695,50 @@ function closeUserModal() {
 }
 
 // =============================================================================
+// VIEW NAVIGATION (MENU VIEW vs SCANNER VIEW)
+// =============================================================================
+function openMenuView() {
+  activeView = 'menu';
+  stopScanner();
+  document.getElementById('menuViewScreen').style.display = 'flex';
+  document.getElementById('scannerViewScreen').style.display = 'none';
+
+  // Toggle Menubar hardware buttons
+  document.querySelectorAll('.cam-action').forEach(b => b.style.display = 'none');
+
+  // Bottom nav highlight
+  document.getElementById('navItemMenu').classList.add('active');
+  document.getElementById('navItemScan').classList.remove('active');
+  document.getElementById('navItemRecent').classList.remove('active');
+
+  loadRecentPunches();
+}
+
+function openScannerView() {
+  activeView = 'scanner';
+  document.getElementById('menuViewScreen').style.display = 'none';
+  document.getElementById('scannerViewScreen').style.display = 'flex';
+
+  // Toggle Menubar hardware buttons
+  document.querySelectorAll('.cam-action').forEach(b => b.style.display = 'flex');
+
+  // Bottom nav highlight
+  document.getElementById('navItemMenu').classList.remove('active');
+  document.getElementById('navItemScan').classList.add('active');
+  document.getElementById('navItemRecent').classList.remove('active');
+
+  startScanner();
+}
+
+function scrollToRecentPunches() {
+  openMenuView();
+  setTimeout(() => {
+    const el = document.querySelector('.recent-punched-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }, 100);
+}
+
+// =============================================================================
 // MODE & STATION LOGIC
 // =============================================================================
 function switchScannerMode(mode) {
@@ -987,37 +1753,52 @@ function switchScannerMode(mode) {
     btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
   });
 
-  const stationBar = document.getElementById('stationBar');
-  const stationIcon = document.getElementById('stationIcon');
-  const stationTitle = document.getElementById('stationTitle');
+  updateStationUI();
+  fetchStats();
+  loadRecentPunches();
+}
+
+function updateStationUI() {
+  const stationIcon = document.getElementById('menuStationIcon');
+  const roleDisplay = document.getElementById('menuStationRoleDisplay');
+  const nameDisplay = document.getElementById('menuStationNameDisplay');
+  const scanHeroSub = document.getElementById('scanHeroSub');
   const hint = document.getElementById('reticleHintText');
 
-  if (mode === 'gate') {
-    stationBar.style.display = 'flex';
+  let stationName = 'Expo Gate Turnstiles';
+  let roleTitle = 'Gate Admin';
+
+  if (currentMode === 'gate') {
     stationIcon.className = 'fa-solid fa-door-open';
-    stationTitle.textContent = 'Expo Entrance Turnstiles';
+    roleTitle = 'Expo Gate Entrance';
+    stationName = 'Main Expo Turnstiles';
+    scanHeroSub.textContent = 'Tap to verify badge entry to the expo hall';
     hint.textContent = 'Point at attendee badge to verify hall entry';
-  } else if (mode === 'booth') {
-    stationBar.style.display = 'flex';
+  } else if (currentMode === 'booth') {
     stationIcon.className = 'fa-solid fa-store';
+    roleTitle = 'University Exhibitor';
     const exh = stationsData.exhibitors.find(e => e.id == selectedExhibitorId);
-    stationTitle.textContent = (currentUser && currentUser.role === 'exhibitor') ? currentUser.station_name : (exh ? exh.name : 'Select Booth');
+    stationName = (currentUser && currentUser.role === 'exhibitor') ? currentUser.station_name : (exh ? exh.name : 'Select Booth');
+    scanHeroSub.textContent = 'Tap to scan student badge & award +20 XP';
     hint.textContent = 'Point at student badge to record booth visit (+20 XP)';
-  } else if (mode === 'seminar') {
-    stationBar.style.display = 'flex';
+  } else if (currentMode === 'seminar') {
     stationIcon.className = 'fa-solid fa-chalkboard-user';
+    roleTitle = 'Keynote & Seminar Session';
     const s = stationsData.sessions.find(x => x.id == selectedSessionId);
-    stationTitle.textContent = (currentUser && currentUser.role === 'seminar') ? currentUser.station_name : (s ? s.name : 'Select Session');
+    stationName = (currentUser && currentUser.role === 'seminar') ? currentUser.station_name : (s ? s.name : 'Select Session');
+    scanHeroSub.textContent = 'Tap to punch session attendance & award +25 XP';
     hint.textContent = 'Point at student badge to mark seminar attendance (+25 XP)';
-  } else if (mode === 'counselling') {
-    stationBar.style.display = 'flex';
+  } else if (currentMode === 'counselling') {
     stationIcon.className = 'fa-solid fa-user-graduate';
+    roleTitle = 'Academic Advisory';
     const exp = stationsData.experts.find(x => x.id == selectedExpertId);
-    stationTitle.textContent = (currentUser && currentUser.role === 'counselling') ? currentUser.station_name : (exp ? `${exp.name} (${exp.sub})` : 'Select Counsellor');
+    stationName = (currentUser && currentUser.role === 'counselling') ? currentUser.station_name : (exp ? `${exp.name} (${exp.sub})` : 'Select Counsellor');
+    scanHeroSub.textContent = 'Tap to punch 1-on-1 counseling & award +40 XP';
     hint.textContent = 'Point at student badge to punch 1-on-1 counseling (+40 XP)';
   }
 
-  fetchStats();
+  roleDisplay.textContent = roleTitle;
+  nameDisplay.textContent = stationName;
 }
 
 function handleStationBarClick() {
@@ -1100,87 +1881,150 @@ function selectStationItem(id) {
 // CAMERA SCANNER & AUDIO
 // =============================================================================
 let html5QrCode = null;
-let currentFacingMode = "environment";
 let isScanning = false;
+let isTorchOn = false;
+let currentFacingMode = "environment";
+let isMuted = false;
 let isProcessingScan = false;
-let activeVideoTrack = null;
-let torchActive = false;
 let autoResumeTimer = null;
 
-function startScanner() {
-  if (!currentUser) return;
-  if (!html5QrCode) {
-    html5QrCode = new Html5Qrcode("reader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } });
-  }
-
-  const qrBoxSize = Math.min(window.innerWidth * 0.72, 260);
-  html5QrCode.start(
-    { facingMode: currentFacingMode },
-    { fps: 25, qrbox: { width: qrBoxSize, height: qrBoxSize } },
-    (code) => { if (!isProcessingScan) { isProcessingScan = true; dispatchCheckIn(code); } },
-    () => {}
-  ).then(() => {
-    isScanning = true;
-    try {
-      const v = document.querySelector("#reader video");
-      if (v && v.srcObject) activeVideoTrack = v.srcObject.getVideoTracks()[0];
-    } catch(e) {}
-  }).catch(err => {
-    console.warn("Camera start err:", err);
-  });
-}
-
-function stopScanner() {
-  if (html5QrCode && isScanning) {
-    html5QrCode.stop().then(() => { isScanning = false; }).catch(() => { isScanning = false; });
-  }
-}
-
-function flipCamera() {
-  if (!isScanning) return;
-  currentFacingMode = (currentFacingMode === "environment") ? "user" : "environment";
-  torchActive = false;
-  document.getElementById('btnTorch').classList.remove('active');
-  if (html5QrCode) html5QrCode.stop().then(startScanner).catch(startScanner);
-}
-
-function toggleTorch() {
-  if (!activeVideoTrack) { alert("Torch not supported on this camera."); return; }
-  torchActive = !torchActive;
-  activeVideoTrack.applyConstraints({ advanced: [{ torch: torchActive }] }).then(() => {
-    document.getElementById('btnTorch').classList.toggle('active', torchActive);
-  }).catch(() => { torchActive = false; });
-}
-
-// Audio Chime
-let audioCtx = null;
-let soundEnabled = true;
-function playChime(freq1, freq2) {
-  if (!soundEnabled) return;
+function playBeep(isSuccess = true) {
+  if (isMuted) return;
   try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!audioCtx) audioCtx = new AudioContext();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    const now = audioCtx.currentTime;
-    const osc1 = audioCtx.createOscillator(), osc2 = audioCtx.createOscillator(), gain = audioCtx.createGain();
-    osc1.type = 'sine'; osc2.type = 'sine';
-    osc1.frequency.setValueAtTime(freq1, now); osc1.frequency.exponentialRampToValueAtTime(freq2, now + 0.08);
-    osc2.frequency.setValueAtTime(freq2, now); osc2.frequency.exponentialRampToValueAtTime(freq2 * 1.33, now + 0.08);
-    gain.gain.setValueAtTime(0.18, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-    osc1.connect(gain); osc2.connect(gain); gain.connect(audioCtx.destination);
-    osc1.start(now); osc2.start(now); osc1.stop(now + 0.3); osc2.stop(now + 0.3);
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    if (isSuccess) {
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.16);
+    } else {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(220, ctx.currentTime);
+      osc.frequency.setValueAtTime(160, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.4, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.26);
+    }
   } catch(e) {}
 }
 
+function triggerHaptic(type = 'success') {
+  if (!navigator.vibrate) return;
+  if (type === 'success') navigator.vibrate([40, 60, 40]);
+  else navigator.vibrate([100, 50, 100]);
+}
+
+async function startScanner() {
+  if (isScanning) return;
+  const config = {
+    fps: 15,
+    qrbox: { width: 240, height: 240 },
+    aspectRatio: 1.0,
+    showTorchButtonIfSupported: false,
+    formatsToSupport: [
+      Html5QrcodeSupportedFormats.QR_CODE,
+      Html5QrcodeSupportedFormats.CODE_128,
+      Html5QrcodeSupportedFormats.CODE_39
+    ]
+  };
+
+  html5QrCode = new Html5Qrcode("reader");
+  try {
+    await html5QrCode.start(
+      { facingMode: currentFacingMode },
+      config,
+      onScanSuccess,
+      onScanError
+    );
+    isScanning = true;
+    checkTorchSupport();
+  } catch (err) {
+    console.warn("Camera start failed, retrying with fallback...", err);
+    try {
+      await html5QrCode.start({ facingMode: "user" }, config, onScanSuccess, onScanError);
+      isScanning = true;
+      currentFacingMode = "user";
+    } catch(e2) {
+      console.error("Camera completely inaccessible", e2);
+      alert("Unable to access camera. Please allow camera permissions in app settings.");
+    }
+  }
+}
+
+async function stopScanner() {
+  if (!isScanning || !html5QrCode) return;
+  try {
+    await html5QrCode.stop();
+    await html5QrCode.clear();
+  } catch(e) {}
+  isScanning = false;
+  isTorchOn = false;
+  const btnTorch = document.getElementById('btnTorch');
+  if (btnTorch) btnTorch.classList.remove('active');
+}
+
+async function flipCamera() {
+  if (!isScanning) return;
+  await stopScanner();
+  currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
+  await startScanner();
+}
+
+async function checkTorchSupport() {
+  const btnTorch = document.getElementById('btnTorch');
+  if (!btnTorch) return;
+  try {
+    const track = html5QrCode.getRunningTrackCameraCapabilities();
+    if (track && track.torchFeature().isSupported()) {
+      btnTorch.style.display = 'flex';
+    }
+  } catch(e) {}
+}
+
+async function toggleTorch() {
+  if (!isScanning || !html5QrCode) return;
+  const btnTorch = document.getElementById('btnTorch');
+  try {
+    isTorchOn = !isTorchOn;
+    await html5QrCode.applyVideoConstraints({
+      advanced: [{ torch: isTorchOn }]
+    });
+    btnTorch.classList.toggle('active', isTorchOn);
+  } catch(e) {
+    isTorchOn = false;
+    btnTorch.classList.remove('active');
+  }
+}
+
 function toggleSound() {
-  soundEnabled = !soundEnabled;
-  document.getElementById('btnSound').innerHTML = soundEnabled ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
-  document.getElementById('btnSound').classList.toggle('muted', !soundEnabled);
+  isMuted = !isMuted;
+  const btn = document.getElementById('btnSound');
+  if (btn) {
+    btn.innerHTML = isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+    btn.classList.toggle('muted', isMuted);
+  }
 }
 
 // =============================================================================
-// SCANNER DISPATCH API
+// SCAN PROCESSING & DISPATCH
 // =============================================================================
+function onScanSuccess(decodedText) {
+  if (isProcessingScan) return;
+  isProcessingScan = true;
+  dispatchCheckIn(decodedText);
+}
+
+function onScanError(errorMessage) {
+  // Silent frame scan miss
+}
+
 function getTargetId() {
   if (currentMode === 'booth') return selectedExhibitorId;
   if (currentMode === 'seminar') return selectedSessionId;
@@ -1189,161 +2033,110 @@ function getTargetId() {
 }
 
 async function dispatchCheckIn(code) {
-  if (!code || !code.trim()) { isProcessingScan = false; return; }
+  const targetId = getTargetId();
+  const sk = localStorage.getItem('knova_session_key') || '';
 
-  const sessionKey = localStorage.getItem('knova_session_key') || '';
   const payload = {
     code: code.trim(),
     mode: currentMode,
-    target_id: getTargetId(),
-    session_key: sessionKey
+    target_id: targetId
   };
 
   try {
-    const resp = await fetch(`${API_HOST}/api/mobile-checkin/`, {
+    const res = await fetch(`${API_HOST}/api/mobile-checkin/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Session-Key': sessionKey
+        'X-Session-Key': sk
       },
       body: JSON.stringify(payload)
     });
 
-    if (resp.status === 401) {
-      alert("Session expired. Please sign in again.");
-      handleMobileLogout();
-      return;
-    }
-
-    const data = await resp.json();
-    renderCheckInResult(data, code);
+    const data = await res.json();
+    presentScanResult(data);
   } catch (err) {
-    renderCheckInResult({ status: 'NETWORK_ERROR', message: 'Connection to server failed.' }, code);
+    presentScanResult({
+      status: 'ERROR',
+      message: 'Network offline. Could not reach KNOVA server.',
+      student: null
+    });
   }
-}
-
-function renderCheckInResult(data, rawCode) {
-  const sheet = document.getElementById('resultSheet');
-  const avatar = document.getElementById('resAvatar');
-  const nameEl = document.getElementById('resName');
-  const roleEl = document.getElementById('resRole');
-  const statusBanner = document.getElementById('resStatusBanner');
-  const statusIcon = document.getElementById('resStatusIcon');
-  const statusText = document.getElementById('resStatusText');
-  const rewardPill = document.getElementById('resRewardPill');
-  const stationEl = document.getElementById('resStation');
-  const badgeIdEl = document.getElementById('resBadgeId');
-  const orgEl = document.getElementById('resOrg');
-  const timeEl = document.getElementById('resTime');
-
-  statusBanner.className = 'status-banner';
-  avatar.className = 'result-avatar';
-
-  if (data.status === 'SUCCESS') {
-    playChime(587.33, 880);
-    if (navigator.vibrate) navigator.vibrate([70]);
-
-    statusBanner.classList.add('success');
-    statusIcon.className = 'fa-solid fa-circle-check';
-    statusText.textContent = data.message || 'PUNCH RECORDED';
-    rewardPill.style.display = 'inline-block';
-    rewardPill.textContent = data.badge_reward || 'Verified';
-
-    const att = data.attendee || {};
-    nameEl.textContent = att.full_name || 'Attendee';
-    avatar.textContent = att.initials || 'A';
-    badgeIdEl.textContent = att.badge_id || rawCode;
-    orgEl.textContent = att.school_or_org || '-';
-    timeEl.textContent = att.checked_in_time || 'Just now';
-    stationEl.textContent = data.station_name || 'Verified';
-
-    setRoleBadge(roleEl, att.role);
-    updateStats(data.stats);
-
-  } else if (data.status === 'ALREADY_CHECKED_IN' || data.status === 'ALREADY_PUNCHED') {
-    playChime(440, 370);
-    if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
-
-    statusBanner.classList.add('warning');
-    avatar.classList.add('amber');
-    statusIcon.className = 'fa-solid fa-triangle-exclamation';
-    statusText.textContent = data.message || 'ALREADY PUNCHED';
-    rewardPill.style.display = 'inline-block';
-    rewardPill.textContent = 'Duplicate';
-
-    const att = data.attendee || {};
-    nameEl.textContent = att.full_name || 'Attendee';
-    avatar.textContent = att.initials || 'A';
-    badgeIdEl.textContent = att.badge_id || rawCode;
-    orgEl.textContent = att.school_or_org || '-';
-    timeEl.textContent = att.checked_in_time ? `At ${att.checked_in_time}` : 'Earlier';
-    stationEl.textContent = data.station_name || '-';
-
-    setRoleBadge(roleEl, att.role);
-    if (data.stats) updateStats(data.stats);
-
-  } else {
-    playChime(220, 110);
-    if (navigator.vibrate) navigator.vibrate([300]);
-
-    statusBanner.classList.add('error');
-    avatar.classList.add('red');
-    statusIcon.className = 'fa-solid fa-circle-xmark';
-    statusText.textContent = 'UNREGISTERED BADGE';
-    rewardPill.style.display = 'none';
-
-    nameEl.textContent = 'Unknown Attendee';
-    avatar.textContent = '?';
-    badgeIdEl.textContent = rawCode || 'Invalid';
-    orgEl.textContent = 'No record found';
-    timeEl.textContent = '-';
-    stationEl.textContent = '-';
-    setRoleBadge(roleEl, 'UNKNOWN');
-  }
-
-  sheet.classList.add('open');
-  startCountdownBar();
-}
-
-function setRoleBadge(el, role) {
-  const r = (role || 'STUDENT').toUpperCase();
-  el.textContent = r;
-  el.className = 'role-badge';
-  if (r.includes('STUDENT')) el.classList.add('student');
-  else if (r.includes('PARENT')) el.classList.add('parent');
-  else if (r.includes('EXHIBITOR') || r.includes('UNI')) el.classList.add('exhibitor');
-  else el.classList.add('other');
-}
-
-function updateStats(stats) {
-  if (!stats) return;
-  const labelEl = document.getElementById('statLabel');
-  const countEl = document.getElementById('statCount');
-  if (stats.station_label) labelEl.textContent = `${stats.station_label}:`;
-  if (stats.station_count !== undefined) countEl.textContent = stats.station_count;
-  else if (stats.total_checked_in !== undefined) countEl.textContent = stats.total_checked_in;
 }
 
 async function fetchStats() {
-  if (!currentUser) return;
   try {
     const tid = getTargetId();
     const sk = localStorage.getItem('knova_session_key') || '';
-    const res = await fetch(`${API_HOST}/api/mobile-checkin/stats/?mode=${currentMode}${tid ? `&target_id=${tid}` : ''}`, {
+    const url = `${API_HOST}/api/mobile-stats/?mode=${currentMode}` + (tid ? `&target_id=${tid}` : '');
+    const res = await fetch(url, {
       headers: { 'X-Session-Key': sk }
     });
     const d = await res.json();
-    if (d.status === 'SUCCESS') updateStats(d);
+    if (d.status === 'SUCCESS') {
+      const c = d.stats.checked_in || 0;
+      document.getElementById('statCheckedInCount').textContent = c;
+      if (d.stats.target) {
+        document.getElementById('statTargetCount').textContent = d.stats.target;
+      }
+    }
   } catch(e) {}
 }
 
-function startCountdownBar() {
-  const fill = document.getElementById('countdownFill');
-  fill.style.transition = 'none'; fill.style.width = '100%';
-  fill.offsetHeight;
-  fill.style.transition = 'width 1.8s linear'; fill.style.width = '0%';
+// =============================================================================
+// PRESENT SCAN RESULT SHEET
+// =============================================================================
+function presentScanResult(data) {
+  const isOk = data.status === 'SUCCESS';
+  const isWarn = data.status === 'WARNING';
+  playBeep(isOk);
+  triggerHaptic(isOk ? 'success' : 'error');
+
+  const sheet = document.getElementById('resultSheet');
+  const banner = document.getElementById('resStatusBanner');
+  const icon = document.getElementById('resStatusIcon');
+  const text = document.getElementById('resStatusText');
+  const pill = document.getElementById('resRewardPill');
+
+  banner.className = `status-banner ${isOk ? 'success' : (isWarn ? 'warning' : 'error')}`;
+  icon.className = `fa-solid ${isOk ? 'fa-circle-check' : (isWarn ? 'fa-triangle-exclamation' : 'fa-circle-xmark')}`;
+  text.textContent = data.message || (isOk ? 'CHECK-IN CONFIRMED' : 'CHECK-IN FAILED');
+
+  if (isOk && data.xp_awarded) {
+    pill.textContent = `+${data.xp_awarded} XP`;
+    pill.style.display = 'inline-block';
+  } else {
+    pill.style.display = 'none';
+  }
+
+  const s = data.student || {};
+  document.getElementById('resAvatar').textContent = (s.name ? s.name[0] : (data.badge_id ? data.badge_id[0] : '?')).toUpperCase();
+  document.getElementById('resName').textContent = s.name || data.badge_id || 'Attendee Badge';
+  document.getElementById('resRole').textContent = (s.role || 'ATTENDEE').toUpperCase();
+  document.getElementById('resStation').textContent = data.station || currentMode.toUpperCase();
+  document.getElementById('resBadgeId').textContent = data.badge_id || s.badge_id || '--';
+  document.getElementById('resOrg').textContent = s.institution || s.organization || s.school || 'General Attendee';
+  document.getElementById('resTime').textContent = data.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  sheet.classList.add('open');
+
+  // Trigger countdown bar
+  const bar = document.getElementById('countdownFill');
+  bar.style.transition = 'none';
+  bar.style.transform = 'scaleX(1)';
+  setTimeout(() => {
+    bar.style.transition = 'transform 3.2s linear';
+    bar.style.transform = 'scaleX(0)';
+  }, 30);
+
+  // Update counts
+  fetchStats();
+  loadRecentPunches();
+
+  // Auto dismiss after 3.5s
   clearTimeout(autoResumeTimer);
-  autoResumeTimer = setTimeout(dismissResultAndScanNext, 1800);
+  autoResumeTimer = setTimeout(() => {
+    dismissResultAndScanNext();
+  }, 3500);
 }
 
 function dismissResultAndScanNext() {
@@ -1352,8 +2145,53 @@ function dismissResultAndScanNext() {
   setTimeout(() => { isProcessingScan = false; }, 400);
 }
 
+function dismissResultAndGoMenu() {
+  clearTimeout(autoResumeTimer);
+  document.getElementById('resultSheet').classList.remove('open');
+  openMenuView();
+  setTimeout(() => { isProcessingScan = false; }, 400);
+}
+
 // =============================================================================
-// MODALS (Manual Entry & Recent Scans)
+// RECENT PUNCHES FEED LOADER
+// =============================================================================
+async function loadRecentPunches() {
+  const container = document.getElementById('recentPunchedFeed');
+  const spinner = document.getElementById('recentRefreshSpinner');
+  if (spinner) spinner.classList.add('fa-spin');
+
+  try {
+    const tid = getTargetId();
+    const sk = localStorage.getItem('knova_session_key') || '';
+    const res = await fetch(`${API_HOST}/api/mobile-recent/?mode=${currentMode}` + (tid ? `&target_id=${tid}` : ''), {
+      headers: { 'X-Session-Key': sk }
+    });
+    const d = await res.json();
+    if (spinner) spinner.classList.remove('fa-spin');
+
+    if (d.status === 'SUCCESS' && d.items) {
+      if (!d.items.length) {
+        container.innerHTML = `<div class="recent-empty-placeholder"><i class="fa-solid fa-qrcode" style="font-size:1.8rem; opacity:0.3; margin-bottom:8px; display:block;"></i>No punches recorded yet.<br>Tap "Scan Attendee QR" above to begin.</div>`;
+        return;
+      }
+      container.innerHTML = d.items.map(it => `
+        <div class="recent-item-row">
+          <div>
+            <div class="recent-item-main">${escapeHtml(it.name)}</div>
+            <div class="recent-item-sub">${it.badge_id} &bull; ${escapeHtml(it.station || it.role)}</div>
+          </div>
+          <div class="recent-item-time">${it.time}</div>
+        </div>
+      `).join('');
+    }
+  } catch(e) {
+    if (spinner) spinner.classList.remove('fa-spin');
+    container.innerHTML = `<div class="recent-empty-placeholder" style="color:#ef4444;">Could not load recent punches.</div>`;
+  }
+}
+
+// =============================================================================
+// MANUAL BADGE PUNCH MODAL
 // =============================================================================
 function openManualModal() {
   document.getElementById('manualModal').classList.add('open');
@@ -1371,58 +2209,26 @@ function submitManualCode() {
 }
 document.getElementById('manualCodeInput').addEventListener('keydown', e => { if (e.key === 'Enter') submitManualCode(); });
 
-function openRecentModal() { fetchRecentScans(); document.getElementById('recentModal').classList.add('open'); }
-function closeRecentModal() { document.getElementById('recentModal').classList.remove('open'); }
-async function fetchRecentScans() {
-  const container = document.getElementById('recentListContainer');
-  container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Loading recent scans...</div>';
-  try {
-    const tid = getTargetId();
-    const sk = localStorage.getItem('knova_session_key') || '';
-    const res = await fetch(`${API_HOST}/api/mobile-checkin/recent/?mode=${currentMode}${tid ? `&target_id=${tid}` : ''}`, {
-      headers: { 'X-Session-Key': sk }
-    });
-    const d = await res.json();
-    if (d.status === 'SUCCESS' && d.items) {
-      if (!d.items.length) {
-        container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:0.85rem;">No scans recorded yet.</div>';
-        return;
-      }
-      container.innerHTML = d.items.map(it => `
-        <div class="picker-item">
-          <div>
-            <div class="picker-item-main">${escapeHtml(it.name)}</div>
-            <div class="picker-item-sub">${it.badge_id} &bull; ${it.station || it.role}</div>
-          </div>
-          <div style="font-size:0.75rem; color:var(--mode-color); font-family:'JetBrains Mono',monospace;">${it.time}</div>
-        </div>
-      `).join('');
-    }
-  } catch(e) {
-    container.innerHTML = '<div style="text-align:center; padding:20px; color:#ef4444;">Could not load recent scans.</div>';
-  }
-}
-
 function escapeHtml(str) {
   return (str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
 }
 
 // =============================================================================
-// APP INITIALIZATION & AUTO-LOGIN
+// APP INITIALIZATION
 // =============================================================================
 window.addEventListener('DOMContentLoaded', () => {
+  // Check if saved user info exists in localStorage
+  const savedUser = localStorage.getItem('knova_user_info');
   const savedKey = localStorage.getItem('knova_session_key');
-  if (savedKey) {
-    fetch(`${API_HOST}/api/mobile-auth-check/`, { headers: { 'X-Session-Key': savedKey } })
-      .then(r => r.json())
-      .then(d => {
-        if (d.status === 'SUCCESS' && d.user && d.user.is_authenticated) {
-          currentUser = d.user;
-          if (d.stations) stationsData = d.stations;
-          onLoginSuccess();
-        }
-      }).catch(() => {});
+
+  if (savedUser && savedKey) {
+    try {
+      currentUser = JSON.parse(savedUser);
+      onLoginSuccess();
+    } catch(e) {}
   }
+
+  // Periodic stats refresh
   setInterval(fetchStats, 15000);
 });
 </script>

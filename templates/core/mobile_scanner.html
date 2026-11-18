@@ -235,7 +235,7 @@
     }
 
     /* ==========================================================================
-       SCANNER MAIN HEADER & UI
+       APP HEADER / TOP MENUBAR WITH EXPLICIT LOGOUT BUTTON
        ========================================================================== */
     .app-header {
       position: absolute;
@@ -243,19 +243,21 @@
       left: 0;
       right: 0;
       z-index: 30;
-      padding: calc(var(--safe-top) + 8px) 14px 6px;
+      padding: calc(var(--safe-top) + 8px) 14px 8px;
       display: flex;
       flex-direction: column;
-      gap: 7px;
-      background: linear-gradient(180deg, rgba(7, 10, 18, 0.96) 0%, rgba(7, 10, 18, 0.85) 85%, transparent 100%);
+      gap: 6px;
+      background: linear-gradient(180deg, rgba(7, 10, 18, 0.98) 0%, rgba(7, 10, 18, 0.90) 85%, transparent 100%);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .header-top-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
     }
 
     .user-pill {
@@ -267,6 +269,7 @@
       padding: 5px 12px;
       border-radius: 999px;
       cursor: pointer;
+      max-width: 45%;
     }
 
     .user-dot {
@@ -276,6 +279,7 @@
       border-radius: 50%;
       box-shadow: 0 0 10px var(--mode-color);
       animation: pulseDot 1.8s infinite;
+      flex-shrink: 0;
     }
 
     @keyframes pulseDot {
@@ -288,33 +292,9 @@
       font-weight: 800;
       letter-spacing: 0.04em;
       color: #fff;
-      max-width: 140px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    .stat-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.74rem;
-      font-weight: 600;
-    }
-
-    .stat-badge span.num {
-      color: var(--mode-color);
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-    }
-
-    .stat-badge span.label {
-      color: var(--text-muted);
-      font-size: 0.7rem;
     }
 
     .header-actions {
@@ -335,7 +315,7 @@
       color: var(--text-main);
       font-size: 0.85rem;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s;
     }
 
     .icon-btn:active { transform: scale(0.92); }
@@ -346,6 +326,29 @@
       box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
     }
     .icon-btn.muted { color: #ef4444; }
+
+    /* EXPLICIT LOGOUT BUTTON ON MENUBAR */
+    .menubar-logout-btn {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 12px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 999px;
+      color: #fca5a5;
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .menubar-logout-btn:active {
+      transform: scale(0.94);
+      background: rgba(239, 68, 68, 0.3);
+      color: #fff;
+    }
 
     /* 4-ROLE SEGMENTED TABS */
     .role-tabs-wrap {
@@ -380,33 +383,341 @@
     .role-tab-btn[data-mode="seminar"].active { background: rgba(192, 132, 252, 0.2); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.35); }
     .role-tab-btn[data-mode="counselling"].active { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.35); }
 
-    /* STATION BAR */
-    .station-bar {
+    /* ==========================================================================
+       VIEWS WRAPPER (MENU VIEW vs SCANNER VIEW)
+       ========================================================================== */
+    .views-wrapper {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* VIEW A: MENU / DASHBOARD VIEW */
+    .menu-view-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      padding-top: calc(var(--safe-top) + 64px);
+      padding-bottom: calc(var(--safe-bottom) + 76px);
+      padding-left: 16px;
+      padding-right: 16px;
+      overflow-y: auto;
+      background: radial-gradient(circle at 50% 0%, rgba(30, 27, 75, 0.4) 0%, rgba(7, 10, 18, 0.95) 70%);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Station Banner Card */
+    .menu-station-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 16px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .station-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .station-icon-bubble {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: var(--mode-color);
+      flex-shrink: 0;
+    }
+
+    .station-meta-text {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .station-type-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--mode-color);
+      margin-bottom: 2px;
+    }
+
+    .station-primary-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .station-stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 10px 14px;
+    }
+
+    .stat-tile {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-tile-num {
+      font-size: 1.35rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+    }
+
+    .stat-tile-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    /* HERO SCAN BUTTON ON MENU */
+    .action-scan-hero {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.28) 0%, rgba(56, 189, 248, 0.22) 100%);
+      border: 1.5px solid rgba(99, 102, 241, 0.45);
+      box-shadow: 0 12px 30px rgba(99, 102, 241, 0.25);
+      border-radius: 22px;
+      padding: 18px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .action-scan-hero:active {
+      transform: scale(0.98);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.4) 0%, rgba(56, 189, 248, 0.3) 100%);
+    }
+
+    .scan-hero-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .scan-hero-icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .scan-hero-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .scan-hero-sub {
+      font-size: 0.76rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 2px;
+    }
+
+    .scan-hero-arrow {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.85rem;
+    }
+
+    /* QUICK ACTIONS GRID */
+    .menu-quick-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .quick-action-btn {
+      height: 48px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 5px 12px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      border-radius: 14px;
       color: #fff;
+      font-size: 0.74rem;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
       cursor: pointer;
     }
 
-    .station-info {
+    .quick-action-btn i {
+      font-size: 0.95rem;
+      color: var(--mode-color);
+    }
+
+    .quick-action-btn:active {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(0.96);
+    }
+
+    /* RECENT PUNCHED FEED SECTION */
+    .recent-punched-section {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .recent-section-header {
       display: flex;
       align-items: center;
-      gap: 6px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      justify-content: space-between;
+      margin-bottom: 12px;
     }
-    .station-info i { color: var(--mode-color); }
-    .station-title { overflow: hidden; text-overflow: ellipsis; }
 
-    /* CAMERA VIEWPORT */
+    .recent-section-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .recent-section-title i {
+      color: var(--mode-color);
+    }
+
+    .recent-refresh-link {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .recent-punched-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .recent-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .recent-item-main {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .recent-item-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .recent-item-time {
+      font-size: 0.74rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--mode-color);
+      font-weight: 600;
+    }
+
+    .recent-empty-placeholder {
+      text-align: center;
+      padding: 24px 10px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    /* VIEW B: SCANNER VIEW */
+    .scanner-view-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      background: #000;
+    }
+
+    .scanner-nav-bar {
+      position: absolute;
+      top: calc(var(--safe-top) + 8px);
+      left: 14px;
+      right: 14px;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .scanner-back-btn {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 800;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      cursor: pointer;
+    }
+
+    .scanner-back-btn:active { transform: scale(0.95); }
+
     .scanner-viewport {
       position: relative;
       flex: 1;
@@ -487,22 +798,19 @@
       max-width: 85%;
     }
 
-    /* BOTTOM CONTROLS */
-    .bottom-bar {
+    .scanner-floating-bottom {
       position: absolute;
-      bottom: calc(var(--safe-bottom) + 14px);
-      left: 14px;
-      right: 14px;
-      z-index: 30;
+      bottom: calc(var(--safe-bottom) + 16px);
+      left: 16px;
+      right: 16px;
+      z-index: 40;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
       gap: 10px;
     }
 
     .pill-btn {
       flex: 1;
-      height: 46px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -511,13 +819,92 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 999px;
       color: var(--text-main);
-      font-size: 0.82rem;
+      font-size: 0.84rem;
       font-weight: 700;
       backdrop-filter: blur(16px);
       cursor: pointer;
     }
 
-    .pill-btn i { color: var(--mode-color); font-size: 0.95rem; }
+    .pill-btn.primary {
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      border-color: #6366f1;
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    /* ==========================================================================
+       BOTTOM NAVIGATION BAR (Menu | Scan | Recent | Logout)
+       ========================================================================== */
+    .app-bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 25;
+      height: calc(var(--safe-bottom) + 60px);
+      padding-bottom: var(--safe-bottom);
+      background: rgba(7, 10, 18, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .bottom-nav-item {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      gap: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .bottom-nav-item i {
+      font-size: 1.1rem;
+    }
+
+    .bottom-nav-item.active {
+      color: var(--mode-color);
+    }
+
+    .bottom-nav-item.scan-center-item {
+      position: relative;
+      top: -10px;
+    }
+
+    .scan-fab {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      border: 3px solid #070a12;
+      transition: transform 0.2s;
+    }
+
+    .bottom-nav-item.scan-center-item:active .scan-fab {
+      transform: scale(0.92);
+    }
+
+    .bottom-nav-item.logout-nav {
+      color: #fca5a5;
+    }
 
     /* RESULT MODAL */
     .result-sheet {
@@ -525,7 +912,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      z-index: 50;
+      z-index: 60;
       background: #0f172a;
       border-top: 1px solid rgba(255, 255, 255, 0.12);
       border-top-left-radius: 26px;
@@ -603,7 +990,7 @@
 <div id="appContainer">
 
   <!-- =========================================================================
-       LOGIN SCREEN OVERLAY (Shown if not authenticated)
+       1. LOGIN SCREEN OVERLAY (Shown if not authenticated)
        ========================================================================= -->
   <div class="login-container" id="loginScreen" {% if role_info.is_authenticated %}style="display: none;"{% endif %}>
     <div class="login-card">
@@ -639,7 +1026,7 @@
         </div>
 
         <button type="submit" class="btn-login-submit" id="btnLoginSubmit">
-          <span>Sign In & Open Scanner</span>
+          <span>Sign In & Open Menu</span>
           <i class="fa-solid fa-arrow-right"></i>
         </button>
 
@@ -649,7 +1036,7 @@
   </div>
 
   <!-- =========================================================================
-       SCANNER INTERFACE (Shown when authenticated)
+       2. TOP APP HEADER / MENUBAR WITH ONE-TAP LOGOUT OPTION
        ========================================================================= -->
   <header class="app-header" id="scannerHeader" {% if not role_info.is_authenticated %}style="display: none;"{% endif %}>
     <div class="header-top-row">
@@ -660,17 +1047,18 @@
         <i class="fa-solid fa-angle-down" style="font-size: 0.65rem; color: var(--text-muted);"></i>
       </div>
 
-      <!-- STATS BADGE -->
-      <div class="stat-badge">
-        <span class="label" id="statLabel">Checked In:</span>
-        <span class="num" id="statCount">{{ total_checked_in }}</span>
-      </div>
-
-      <!-- HARDWARE CONTROLS -->
+      <!-- HARDWARE & LOGOUT CONTROLS -->
       <div class="header-actions">
-        <button class="icon-btn" id="btnTorch" title="Torch" onclick="toggleTorch()"><i class="fa-solid fa-bolt"></i></button>
-        <button class="icon-btn" id="btnFlipCam" title="Flip Camera" onclick="flipCamera()"><i class="fa-solid fa-camera-rotate"></i></button>
+        <!-- Torch & Camera Flip: only active when inside camera scanner view -->
+        <button class="icon-btn cam-action" id="btnTorch" title="Torch" onclick="toggleTorch()" style="display: none;"><i class="fa-solid fa-bolt"></i></button>
+        <button class="icon-btn cam-action" id="btnFlipCam" title="Flip Camera" onclick="flipCamera()" style="display: none;"><i class="fa-solid fa-camera-rotate"></i></button>
         <button class="icon-btn" id="btnSound" title="Sound" onclick="toggleSound()"><i class="fa-solid fa-volume-high"></i></button>
+
+        <!-- EXPLICIT ONE-TAP LOGOUT BUTTON ON MENUBAR -->
+        <button class="menubar-logout-btn" onclick="handleMobileLogout()" title="Log Out">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>Logout</span>
+        </button>
       </div>
     </div>
 
@@ -689,45 +1077,158 @@
         <i class="fa-solid fa-user-graduate"></i><span>Counselling</span>
       </button>
     </nav>
-
-    <!-- STATION CONTEXT BAR -->
-    <div class="station-bar" id="stationBar" onclick="handleStationBarClick()">
-      <div class="station-info">
-        <i class="fa-solid fa-location-dot" id="stationIcon"></i>
-        <span class="station-title" id="stationTitle">{{ role_info.station_name|default:"Expo Gate" }}</span>
-      </div>
-      <i class="fa-solid fa-chevron-down" id="stationChevron" style="font-size: 0.7rem; color: var(--text-muted); {% if role_info.is_locked %}display: none;{% endif %}"></i>
-    </div>
   </header>
 
-  <!-- VIEWPORT -->
-  <main class="scanner-viewport" id="scannerViewport">
-    <div id="reader"></div>
+  <!-- =========================================================================
+       3. VIEWS WRAPPER (MENU VIEW vs SCANNER VIEW)
+       ========================================================================= -->
+  <div class="views-wrapper" id="viewsWrapper" {% if not role_info.is_authenticated %}style="display: none;"{% endif %}>
 
-    <div class="reticle-container">
-      <div class="reticle-box">
-        <div class="corner tl"></div><div class="corner tr"></div>
-        <div class="corner bl"></div><div class="corner br"></div>
-        <div class="laser-line"></div>
+    <!-- =======================================================================
+         VIEW A: MENU / DASHBOARD SCREEN (Default on open)
+         ======================================================================= -->
+    <div class="menu-view-screen" id="menuViewScreen">
+      <!-- STATION SUMMARY CARD -->
+      <div class="menu-station-card">
+        <div class="station-meta-row">
+          <div class="station-icon-bubble" id="menuStationIconBubble">
+            <i class="fa-solid fa-store" id="menuStationIcon"></i>
+          </div>
+          <div class="station-meta-text">
+            <div class="station-type-tag" id="menuStationRoleDisplay">{{ role_info.role_display|default:"University Booth" }}</div>
+            <div class="station-primary-name" id="menuStationNameDisplay">{{ role_info.station_name|default:"Malabar University" }}</div>
+          </div>
+        </div>
+
+        <div class="station-stats-row">
+          <div class="stat-tile">
+            <div class="stat-tile-num" id="menuStationCount">0</div>
+            <div class="stat-tile-label" id="menuStationCountLabel">Today's Punches</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-num" id="menuTotalRegCount">{{ total_registered }}</div>
+            <div class="stat-tile-label">Total Registered</div>
+          </div>
+        </div>
       </div>
-      <div class="reticle-hint" id="reticleHint">
-        <i class="fa-solid fa-qrcode" style="margin-right: 5px;"></i>
-        <span id="reticleHintText">Point camera at attendee badge</span>
+
+      <!-- MAIN ACTION HERO: SCAN ATTENDEE QR -->
+      <div class="action-scan-hero" onclick="openScannerView()">
+        <div class="scan-hero-left">
+          <div class="scan-hero-icon-box">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <div>
+            <div class="scan-hero-title">Scan Attendee QR</div>
+            <div class="scan-hero-sub" id="scanHeroSub">Tap to activate camera & punch badge</div>
+          </div>
+        </div>
+        <div class="scan-hero-arrow">
+          <i class="fa-solid fa-chevron-right"></i>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS (Manual Punch & Station Selection) -->
+      <div class="menu-quick-grid">
+        <button class="quick-action-btn" onclick="openManualModal()">
+          <i class="fa-solid fa-keyboard"></i>
+          <span>Manual Punch</span>
+        </button>
+        <button class="quick-action-btn" id="btnSwitchStationMenu" onclick="handleStationBarClick()" {% if role_info.is_locked %}style="display: none;"{% endif %}>
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span>Switch Station</span>
+        </button>
+        <button class="quick-action-btn" onclick="loadRecentPunches()">
+          <i class="fa-solid fa-rotate"></i>
+          <span>Refresh Punches</span>
+        </button>
+      </div>
+
+      <!-- RECENT PUNCHED FEED SECTION -->
+      <div class="recent-punched-section">
+        <div class="recent-section-header">
+          <div class="recent-section-title">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Recent Punched</span>
+          </div>
+          <button class="recent-refresh-link" onclick="loadRecentPunches()">
+            <i class="fa-solid fa-arrows-rotate" id="recentRefreshSpinner"></i> Refresh
+          </button>
+        </div>
+
+        <div class="recent-punched-list" id="recentPunchedFeed">
+          <div class="recent-loading-placeholder">Loading recent punches...</div>
+        </div>
       </div>
     </div>
-  </main>
 
-  <!-- BOTTOM FLOATING ACTION BAR -->
-  <footer class="bottom-bar" id="scannerFooter" {% if not role_info.is_authenticated %}style="display: none;"{% endif %}>
-    <button class="pill-btn" onclick="openManualModal()">
-      <i class="fa-solid fa-keyboard"></i><span>Manual Entry</span>
-    </button>
-    <button class="pill-btn" onclick="openRecentModal()">
-      <i class="fa-solid fa-clock-rotate-left"></i><span>Recent Scans</span>
-    </button>
-  </footer>
+    <!-- =======================================================================
+         VIEW B: SCANNER VIEW (Active when scanning)
+         ======================================================================= -->
+    <div class="scanner-view-screen" id="scannerViewScreen" style="display: none;">
+      <!-- TOP NAVIGATION BAR ON SCANNER -->
+      <div class="scanner-nav-bar">
+        <button class="scanner-back-btn" onclick="openMenuView()">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Back to Menu</span>
+        </button>
+      </div>
 
-  <!-- RESULT MODAL -->
+      <!-- CAMERA VIEWPORT -->
+      <main class="scanner-viewport" id="scannerViewport">
+        <div id="reader"></div>
+
+        <div class="reticle-container">
+          <div class="reticle-box">
+            <div class="corner tl"></div><div class="corner tr"></div>
+            <div class="corner bl"></div><div class="corner br"></div>
+            <div class="laser-line"></div>
+          </div>
+          <div class="reticle-hint" id="reticleHint">
+            <i class="fa-solid fa-qrcode" style="margin-right: 5px;"></i>
+            <span id="reticleHintText">Point camera at attendee badge</span>
+          </div>
+        </div>
+      </main>
+
+      <!-- BOTTOM BAR ON SCANNER -->
+      <div class="scanner-floating-bottom">
+        <button class="pill-btn" onclick="openManualModal()">
+          <i class="fa-solid fa-keyboard"></i><span>Manual Entry</span>
+        </button>
+        <button class="pill-btn primary" onclick="openMenuView()">
+          <i class="fa-solid fa-check"></i><span>Done / Menu</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- =========================================================================
+       4. BOTTOM NAVIGATION BAR (Menu | Scan | Recent | Logout)
+       ========================================================================= -->
+  <nav class="app-bottom-nav" id="appBottomNav" {% if not role_info.is_authenticated %}style="display: none;"{% endif %}>
+    <button class="bottom-nav-item active" id="navItemMenu" onclick="openMenuView()">
+      <i class="fa-solid fa-table-cells-large"></i>
+      <span>Menu</span>
+    </button>
+    <button class="bottom-nav-item scan-center-item" id="navItemScan" onclick="openScannerView()">
+      <div class="scan-fab"><i class="fa-solid fa-qrcode"></i></div>
+      <span style="margin-top: 2px;">Scan</span>
+    </button>
+    <button class="bottom-nav-item" id="navItemRecent" onclick="scrollToRecentPunches()">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+      <span>Recent</span>
+    </button>
+    <button class="bottom-nav-item logout-nav" onclick="handleMobileLogout()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      <span>Logout</span>
+    </button>
+  </nav>
+
+  <!-- =========================================================================
+       5. SCAN RESULT BOTTOM SHEET
+       ========================================================================= -->
   <div class="result-sheet" id="resultSheet">
     <div class="sheet-handle"></div>
     <div class="result-header">
@@ -751,7 +1252,14 @@
       <div class="meta-item"><span class="meta-label">Time</span><span class="meta-value" id="resTime">-</span></div>
     </div>
     <div class="countdown-bar-wrap"><div class="countdown-bar-fill" id="countdownFill"></div></div>
-    <button class="action-btn-primary" onclick="dismissResultAndScanNext()"><i class="fa-solid fa-arrow-right"></i><span>Scan Next Attendee</span></button>
+    <div style="display: flex; gap: 8px;">
+      <button class="action-btn-primary" style="flex: 2;" onclick="dismissResultAndScanNext()">
+        <i class="fa-solid fa-arrow-right"></i><span>Scan Next</span>
+      </button>
+      <button class="pill-btn" style="flex: 1;" onclick="dismissResultAndGoMenu()">
+        <span>Menu</span>
+      </button>
+    </div>
   </div>
 
   <!-- STATION PICKER MODAL -->
@@ -777,17 +1285,6 @@
         <button class="modal-btn-cancel" onclick="closeManualModal()">Cancel</button>
         <button class="modal-btn-submit" onclick="submitManualCode()">Punch Badge</button>
       </div>
-    </div>
-  </div>
-
-  <!-- RECENT SCANS MODAL -->
-  <div class="modal-overlay" id="recentModal">
-    <div class="modal-sheet">
-      <div class="sheet-handle" onclick="closeRecentModal()"></div>
-      <div class="modal-title">Recent Scans</div>
-      <div class="modal-subtitle" id="recentSubtitle">Recent attendance punches.</div>
-      <div class="picker-list" id="recentListContainer"></div>
-      <button class="modal-btn-cancel" style="margin-top: 12px; height: 44px; width: 100%;" onclick="closeRecentModal()">Close</button>
     </div>
   </div>
 
@@ -846,6 +1343,8 @@ let selectedExhibitorId = (currentUser && currentUser.role === 'exhibitor') ? cu
 let selectedSessionId = (currentUser && currentUser.role === 'seminar') ? currentUser.station_id : (INITIAL_CONFIG.defaultSessionId || (INITIAL_CONFIG.sessions[0] ? INITIAL_CONFIG.sessions[0].id : null));
 let selectedExpertId = (currentUser && currentUser.role === 'counselling') ? currentUser.station_id : (INITIAL_CONFIG.defaultExpertId || (INITIAL_CONFIG.experts[0] ? INITIAL_CONFIG.experts[0].id : null));
 
+let activeView = 'menu'; // 'menu' | 'scanner'
+
 // =============================================================================
 // LOGIN & LOGOUT HANDLERS
 // =============================================================================
@@ -872,7 +1371,7 @@ async function handleMobileLogin(e) {
     });
     const data = await res.json();
     btn.disabled = false;
-    btn.innerHTML = '<span>Sign In & Open Scanner</span> <i class="fa-solid fa-arrow-right"></i>';
+    btn.innerHTML = '<span>Sign In & Open Menu</span> <i class="fa-solid fa-arrow-right"></i>';
 
     if (data.status === 'SUCCESS' && data.user) {
       currentUser = data.user;
@@ -885,7 +1384,7 @@ async function handleMobileLogin(e) {
     }
   } catch (err) {
     btn.disabled = false;
-    btn.innerHTML = '<span>Sign In & Open Scanner</span> <i class="fa-solid fa-arrow-right"></i>';
+    btn.innerHTML = '<span>Sign In & Open Menu</span> <i class="fa-solid fa-arrow-right"></i>';
     alertEl.textContent = 'Connection error: ' + (err.message || err);
     alertEl.style.display = 'block';
   }
@@ -894,31 +1393,35 @@ async function handleMobileLogin(e) {
 function onLoginSuccess() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('scannerHeader').style.display = 'flex';
-  document.getElementById('scannerFooter').style.display = 'flex';
+  document.getElementById('viewsWrapper').style.display = 'flex';
+  document.getElementById('appBottomNav').style.display = 'flex';
 
   document.getElementById('userNameTitle').textContent = currentUser.name || currentUser.username;
   currentMode = currentUser.default_mode || 'gate';
 
   const roleTabsNav = document.getElementById('roleTabsNav');
-  const stationChevron = document.getElementById('stationChevron');
+  const btnSwitchStation = document.getElementById('btnSwitchStationMenu');
 
   if (currentUser.is_locked) {
     roleTabsNav.style.display = 'none';
-    stationChevron.style.display = 'none';
+    if (btnSwitchStation) btnSwitchStation.style.display = 'none';
     if (currentUser.role === 'exhibitor') selectedExhibitorId = currentUser.station_id;
     if (currentUser.role === 'seminar') selectedSessionId = currentUser.station_id;
     if (currentUser.role === 'counselling') selectedExpertId = currentUser.station_id;
   } else {
     roleTabsNav.style.display = 'grid';
-    stationChevron.style.display = 'inline-block';
+    if (btnSwitchStation) btnSwitchStation.style.display = 'flex';
   }
 
-  switchScannerMode(currentMode);
-  startScanner();
+  updateStationUI();
+  openMenuView();
   fetchStats();
+  loadRecentPunches();
 }
 
 async function handleMobileLogout() {
+  if (!confirm("Are you sure you want to log out?")) return;
+
   try {
     await fetch('/api/mobile-logout/', { method: 'POST', headers: { 'X-CSRFToken': getCookie('csrftoken') || '' } });
   } catch(e) {}
@@ -930,7 +1433,8 @@ async function handleMobileLogout() {
   stopScanner();
 
   document.getElementById('scannerHeader').style.display = 'none';
-  document.getElementById('scannerFooter').style.display = 'none';
+  document.getElementById('viewsWrapper').style.display = 'none';
+  document.getElementById('appBottomNav').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginUsername').value = '';
   document.getElementById('loginPassword').value = '';
@@ -961,6 +1465,50 @@ function closeUserModal() {
 }
 
 // =============================================================================
+// VIEW NAVIGATION (MENU VIEW vs SCANNER VIEW)
+// =============================================================================
+function openMenuView() {
+  activeView = 'menu';
+  stopScanner();
+  document.getElementById('menuViewScreen').style.display = 'flex';
+  document.getElementById('scannerViewScreen').style.display = 'none';
+
+  // Toggle Menubar hardware buttons
+  document.querySelectorAll('.cam-action').forEach(b => b.style.display = 'none');
+
+  // Bottom nav highlight
+  document.getElementById('navItemMenu').classList.add('active');
+  document.getElementById('navItemScan').classList.remove('active');
+  document.getElementById('navItemRecent').classList.remove('active');
+
+  loadRecentPunches();
+}
+
+function openScannerView() {
+  activeView = 'scanner';
+  document.getElementById('menuViewScreen').style.display = 'none';
+  document.getElementById('scannerViewScreen').style.display = 'flex';
+
+  // Toggle Menubar hardware buttons
+  document.querySelectorAll('.cam-action').forEach(b => b.style.display = 'flex');
+
+  // Bottom nav highlight
+  document.getElementById('navItemMenu').classList.remove('active');
+  document.getElementById('navItemScan').classList.add('active');
+  document.getElementById('navItemRecent').classList.remove('active');
+
+  startScanner();
+}
+
+function scrollToRecentPunches() {
+  openMenuView();
+  setTimeout(() => {
+    const el = document.querySelector('.recent-punched-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }, 100);
+}
+
+// =============================================================================
 // MODE & STATION LOGIC
 // =============================================================================
 function switchScannerMode(mode) {
@@ -975,37 +1523,52 @@ function switchScannerMode(mode) {
     btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
   });
 
-  const stationBar = document.getElementById('stationBar');
-  const stationIcon = document.getElementById('stationIcon');
-  const stationTitle = document.getElementById('stationTitle');
+  updateStationUI();
+  fetchStats();
+  loadRecentPunches();
+}
+
+function updateStationUI() {
+  const stationIcon = document.getElementById('menuStationIcon');
+  const roleDisplay = document.getElementById('menuStationRoleDisplay');
+  const nameDisplay = document.getElementById('menuStationNameDisplay');
+  const scanHeroSub = document.getElementById('scanHeroSub');
   const hint = document.getElementById('reticleHintText');
 
-  if (mode === 'gate') {
-    stationBar.style.display = 'flex';
+  let stationName = 'Expo Gate Turnstiles';
+  let roleTitle = 'Gate Admin';
+
+  if (currentMode === 'gate') {
     stationIcon.className = 'fa-solid fa-door-open';
-    stationTitle.textContent = 'Expo Entrance Turnstiles';
+    roleTitle = 'Expo Gate Entrance';
+    stationName = 'Main Expo Turnstiles';
+    scanHeroSub.textContent = 'Tap to verify badge entry to the expo hall';
     hint.textContent = 'Point at attendee badge to verify hall entry';
-  } else if (mode === 'booth') {
-    stationBar.style.display = 'flex';
+  } else if (currentMode === 'booth') {
     stationIcon.className = 'fa-solid fa-store';
+    roleTitle = 'University Exhibitor';
     const exh = INITIAL_CONFIG.exhibitors.find(e => e.id == selectedExhibitorId);
-    stationTitle.textContent = (currentUser && currentUser.role === 'exhibitor') ? currentUser.station_name : (exh ? exh.name : 'Select Booth');
+    stationName = (currentUser && currentUser.role === 'exhibitor') ? currentUser.station_name : (exh ? exh.name : 'Select Booth');
+    scanHeroSub.textContent = 'Tap to scan student badge & award +20 XP';
     hint.textContent = 'Point at student badge to record booth visit (+20 XP)';
-  } else if (mode === 'seminar') {
-    stationBar.style.display = 'flex';
+  } else if (currentMode === 'seminar') {
     stationIcon.className = 'fa-solid fa-chalkboard-user';
+    roleTitle = 'Keynote & Seminar Session';
     const s = INITIAL_CONFIG.sessions.find(x => x.id == selectedSessionId);
-    stationTitle.textContent = (currentUser && currentUser.role === 'seminar') ? currentUser.station_name : (s ? s.name : 'Select Session');
+    stationName = (currentUser && currentUser.role === 'seminar') ? currentUser.station_name : (s ? s.name : 'Select Session');
+    scanHeroSub.textContent = 'Tap to punch session attendance & award +25 XP';
     hint.textContent = 'Point at student badge to mark seminar attendance (+25 XP)';
-  } else if (mode === 'counselling') {
-    stationBar.style.display = 'flex';
+  } else if (currentMode === 'counselling') {
     stationIcon.className = 'fa-solid fa-user-graduate';
+    roleTitle = 'Academic Advisory';
     const exp = INITIAL_CONFIG.experts.find(x => x.id == selectedExpertId);
-    stationTitle.textContent = (currentUser && currentUser.role === 'counselling') ? currentUser.station_name : (exp ? `${exp.name} (${exp.sub})` : 'Select Counsellor');
+    stationName = (currentUser && currentUser.role === 'counselling') ? currentUser.station_name : (exp ? `${exp.name} (${exp.sub})` : 'Select Counsellor');
+    scanHeroSub.textContent = 'Tap to punch 1-on-1 counseling & award +40 XP';
     hint.textContent = 'Point at student badge to punch 1-on-1 counseling (+40 XP)';
   }
 
-  fetchStats();
+  roleDisplay.textContent = roleTitle;
+  nameDisplay.textContent = stationName;
 }
 
 function handleStationBarClick() {
@@ -1306,11 +1869,14 @@ function setRoleBadge(el, role) {
 
 function updateStats(stats) {
   if (!stats) return;
-  const labelEl = document.getElementById('statLabel');
-  const countEl = document.getElementById('statCount');
-  if (stats.station_label) labelEl.textContent = `${stats.station_label}:`;
-  if (stats.station_count !== undefined) countEl.textContent = stats.station_count;
-  else if (stats.total_checked_in !== undefined) countEl.textContent = stats.total_checked_in;
+  const countEl = document.getElementById('menuStationCount');
+  const labelEl = document.getElementById('menuStationCountLabel');
+  if (stats.station_label && labelEl) labelEl.textContent = stats.station_label;
+  if (stats.station_count !== undefined && countEl) countEl.textContent = stats.station_count;
+  else if (stats.total_checked_in !== undefined && countEl) countEl.textContent = stats.total_checked_in;
+  if (stats.total_registered !== undefined && document.getElementById('menuTotalRegCount')) {
+    document.getElementById('menuTotalRegCount').textContent = stats.total_registered;
+  }
 }
 
 async function fetchStats() {
@@ -1341,8 +1907,53 @@ function dismissResultAndScanNext() {
   setTimeout(() => { isProcessingScan = false; }, 400);
 }
 
+function dismissResultAndGoMenu() {
+  clearTimeout(autoResumeTimer);
+  document.getElementById('resultSheet').classList.remove('open');
+  openMenuView();
+  setTimeout(() => { isProcessingScan = false; }, 400);
+}
+
 // =============================================================================
-// MODALS (Manual Entry & Recent Scans)
+// RECENT PUNCHES FEED LOADER
+// =============================================================================
+async function loadRecentPunches() {
+  const container = document.getElementById('recentPunchedFeed');
+  const spinner = document.getElementById('recentRefreshSpinner');
+  if (spinner) spinner.classList.add('fa-spin');
+
+  try {
+    const tid = getTargetId();
+    const sk = localStorage.getItem('knova_session_key') || '';
+    const res = await fetch(`/api/mobile-checkin/recent/?mode=${currentMode}${tid ? `&target_id=${tid}` : ''}`, {
+      headers: { 'X-Session-Key': sk }
+    });
+    const d = await res.json();
+    if (spinner) spinner.classList.remove('fa-spin');
+
+    if (d.status === 'SUCCESS' && d.items) {
+      if (!d.items.length) {
+        container.innerHTML = `<div class="recent-empty-placeholder"><i class="fa-solid fa-qrcode" style="font-size:1.8rem; opacity:0.3; margin-bottom:8px; display:block;"></i>No punches recorded yet.<br>Tap "Scan Attendee QR" above to begin.</div>`;
+        return;
+      }
+      container.innerHTML = d.items.map(it => `
+        <div class="recent-item-row">
+          <div>
+            <div class="recent-item-main">${escapeHtml(it.name)}</div>
+            <div class="recent-item-sub">${it.badge_id} &bull; ${escapeHtml(it.station || it.role)}</div>
+          </div>
+          <div class="recent-item-time">${it.time}</div>
+        </div>
+      `).join('');
+    }
+  } catch(e) {
+    if (spinner) spinner.classList.remove('fa-spin');
+    container.innerHTML = `<div class="recent-empty-placeholder" style="color:#ef4444;">Could not load recent punches.</div>`;
+  }
+}
+
+// =============================================================================
+// MANUAL BADGE PUNCH MODAL
 // =============================================================================
 function openManualModal() {
   document.getElementById('manualModal').classList.add('open');
@@ -1359,38 +1970,6 @@ function submitManualCode() {
   dispatchCheckIn(c);
 }
 document.getElementById('manualCodeInput').addEventListener('keydown', e => { if (e.key === 'Enter') submitManualCode(); });
-
-function openRecentModal() { fetchRecentScans(); document.getElementById('recentModal').classList.add('open'); }
-function closeRecentModal() { document.getElementById('recentModal').classList.remove('open'); }
-async function fetchRecentScans() {
-  const container = document.getElementById('recentListContainer');
-  container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Loading recent scans...</div>';
-  try {
-    const tid = getTargetId();
-    const sk = localStorage.getItem('knova_session_key') || '';
-    const res = await fetch(`/api/mobile-checkin/recent/?mode=${currentMode}${tid ? `&target_id=${tid}` : ''}`, {
-      headers: { 'X-Session-Key': sk }
-    });
-    const d = await res.json();
-    if (d.status === 'SUCCESS' && d.items) {
-      if (!d.items.length) {
-        container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:0.85rem;">No scans recorded yet.</div>';
-        return;
-      }
-      container.innerHTML = d.items.map(it => `
-        <div class="picker-item">
-          <div>
-            <div class="picker-item-main">${escapeHtml(it.name)}</div>
-            <div class="picker-item-sub">${it.badge_id} &bull; ${it.station || it.role}</div>
-          </div>
-          <div style="font-size:0.75rem; color:var(--mode-color); font-family:'JetBrains Mono',monospace;">${it.time}</div>
-        </div>
-      `).join('');
-    }
-  } catch(e) {
-    container.innerHTML = '<div style="text-align:center; padding:20px; color:#ef4444;">Could not load recent scans.</div>';
-  }
-}
 
 function escapeHtml(str) {
   return (str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
