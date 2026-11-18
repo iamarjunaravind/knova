@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>KNOVA 4-in-1 Mobile Scanner</title>
+  <title>KNOVA Scanner Portal | Mobile Check-In</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,21 +21,16 @@
   <style>
     :root {
       --bg: #070a12;
-      --card-bg: rgba(15, 23, 42, 0.88);
-      --card-border: rgba(255, 255, 255, 0.08);
+      --card-bg: rgba(15, 23, 42, 0.92);
+      --card-border: rgba(255, 255, 255, 0.09);
       --mode-color: #38bdf8;
       --mode-glow: rgba(56, 189, 248, 0.4);
-      --accent-blue: #38bdf8;
-      --accent-amber: #f59e0b;
-      --accent-purple: #a855f7;
-      --accent-emerald: #10b981;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
-    /* THEME MODES */
     body.mode-gate { --mode-color: #38bdf8; --mode-glow: rgba(56, 189, 248, 0.4); }
     body.mode-booth { --mode-color: #f59e0b; --mode-glow: rgba(245, 158, 11, 0.4); }
     body.mode-seminar { --mode-color: #c084fc; --mode-glow: rgba(192, 132, 252, 0.4); }
@@ -69,7 +64,179 @@
       background-color: var(--bg);
     }
 
-    /* TOP HEADER */
+    /* ==========================================================================
+       LOGIN VIEW
+       ========================================================================== */
+    .login-container {
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #070a12 70%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--safe-top) + 24px) 24px calc(var(--safe-bottom) + 24px);
+      overflow-y: auto;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      padding: 30px 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(99, 102, 241, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      text-align: center;
+    }
+
+    .login-logo-wrap {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: white;
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+    }
+
+    .login-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .login-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+      line-height: 1.4;
+    }
+
+    .role-pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 22px;
+    }
+
+    .role-pill-hint {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+    }
+
+    .login-input-group {
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .login-label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      margin-left: 4px;
+    }
+
+    .input-box-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-box-wrap i.prefix-icon {
+      position: absolute;
+      left: 16px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    .login-input {
+      width: 100%;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 0.95rem;
+      padding: 0 46px 0 46px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .login-input:focus {
+      border-color: #6366f1;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .toggle-pwd-btn {
+      position: absolute;
+      right: 14px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    .btn-login-submit {
+      width: 100%;
+      height: 52px;
+      margin-top: 10px;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-login-submit:active { transform: scale(0.98); }
+
+    .login-alert {
+      display: none;
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 12px;
+      color: #f87171;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    /* ==========================================================================
+       SCANNER MAIN HEADER & UI
+       ========================================================================== */
     .app-header {
       position: absolute;
       top: 0;
@@ -79,7 +246,7 @@
       padding: calc(var(--safe-top) + 8px) 14px 6px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
       background: linear-gradient(180deg, rgba(7, 10, 18, 0.96) 0%, rgba(7, 10, 18, 0.85) 85%, transparent 100%);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
@@ -91,24 +258,24 @@
       justify-content: space-between;
     }
 
-    .brand-pill {
+    .user-pill {
       display: flex;
       align-items: center;
       gap: 7px;
       background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 5px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 5px 12px;
       border-radius: 999px;
+      cursor: pointer;
     }
 
-    .live-dot {
+    .user-dot {
       width: 8px;
       height: 8px;
       background: var(--mode-color);
       border-radius: 50%;
       box-shadow: 0 0 10px var(--mode-color);
       animation: pulseDot 1.8s infinite;
-      transition: background 0.3s, box-shadow 0.3s;
     }
 
     @keyframes pulseDot {
@@ -116,15 +283,17 @@
       50% { opacity: 0.35; transform: scale(0.85); }
     }
 
-    .brand-title {
+    .user-name-title {
       font-size: 0.76rem;
       font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      letter-spacing: 0.04em;
       color: #fff;
+      max-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    /* STATS BADGE */
     .stat-badge {
       display: flex;
       align-items: center;
@@ -141,7 +310,6 @@
       color: var(--mode-color);
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
-      transition: color 0.3s;
     }
 
     .stat-badge span.label {
@@ -149,7 +317,6 @@
       font-size: 0.7rem;
     }
 
-    /* HEADER CONTROLS */
     .header-actions {
       display: flex;
       align-items: center;
@@ -204,45 +371,16 @@
       font-size: 0.68rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.22s ease;
       gap: 2px;
     }
 
-    .role-tab-btn i {
-      font-size: 0.85rem;
-    }
+    .role-tab-btn.active { background: rgba(255, 255, 255, 0.12); color: #fff; }
+    .role-tab-btn[data-mode="gate"].active { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); }
+    .role-tab-btn[data-mode="booth"].active { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+    .role-tab-btn[data-mode="seminar"].active { background: rgba(192, 132, 252, 0.2); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.35); }
+    .role-tab-btn[data-mode="counselling"].active { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.35); }
 
-    .role-tab-btn.active {
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
-    }
-
-    .role-tab-btn[data-mode="gate"].active {
-      background: rgba(56, 189, 248, 0.2);
-      color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.35);
-    }
-
-    .role-tab-btn[data-mode="booth"].active {
-      background: rgba(245, 158, 11, 0.2);
-      color: #fbbf24;
-      border: 1px solid rgba(245, 158, 11, 0.35);
-    }
-
-    .role-tab-btn[data-mode="seminar"].active {
-      background: rgba(192, 132, 252, 0.2);
-      color: #c084fc;
-      border: 1px solid rgba(192, 132, 252, 0.35);
-    }
-
-    .role-tab-btn[data-mode="counselling"].active {
-      background: rgba(52, 211, 153, 0.2);
-      color: #34d399;
-      border: 1px solid rgba(52, 211, 153, 0.35);
-    }
-
-    /* STATION SELECTOR PILL */
+    /* STATION BAR */
     .station-bar {
       display: flex;
       align-items: center;
@@ -255,10 +393,8 @@
       font-weight: 600;
       color: #fff;
       cursor: pointer;
-      transition: background 0.2s;
     }
 
-    .station-bar:active { background: rgba(255, 255, 255, 0.1); }
     .station-info {
       display: flex;
       align-items: center;
@@ -269,9 +405,8 @@
     }
     .station-info i { color: var(--mode-color); }
     .station-title { overflow: hidden; text-overflow: ellipsis; }
-    .station-chevron { color: var(--text-muted); font-size: 0.7rem; flex-shrink: 0; }
 
-    /* CAMERA VIEWPORT CONTAINER */
+    /* CAMERA VIEWPORT */
     .scanner-viewport {
       position: relative;
       flex: 1;
@@ -284,21 +419,9 @@
       background: #000;
     }
 
-    #reader {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: cover !important;
-      border: none !important;
-    }
+    #reader { width: 100% !important; height: 100% !important; object-fit: cover !important; border: none !important; }
+    #reader video { width: 100% !important; height: 100% !important; object-fit: cover !important; }
 
-    #reader video {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: cover !important;
-      transform: scale(1.02);
-    }
-
-    /* CAMERA OVERLAY RETICLE */
     .reticle-container {
       position: absolute;
       inset: 0;
@@ -321,7 +444,6 @@
       justify-content: center;
     }
 
-    /* 4 CORNER GLOW BRACKETS */
     .corner {
       position: absolute;
       width: 32px;
@@ -337,7 +459,6 @@
     .corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; border-bottom-left-radius: 20px; }
     .corner.br { bottom: 0; right: 0; border-left: none; border-top: none; border-bottom-right-radius: 20px; }
 
-    /* LASER LINE */
     .laser-line {
       position: absolute;
       top: 10%;
@@ -348,14 +469,9 @@
       box-shadow: 0 0 14px var(--mode-color);
       border-radius: 50%;
       animation: laserSweep 2s ease-in-out infinite alternate;
-      transition: background 0.3s, box-shadow 0.3s;
     }
 
-    @keyframes laserSweep {
-      0% { top: 8%; opacity: 0.8; }
-      50% { opacity: 1; }
-      100% { top: 90%; opacity: 0.8; }
-    }
+    @keyframes laserSweep { 0% { top: 8%; opacity: 0.8; } 50% { opacity: 1; } 100% { top: 90%; opacity: 0.8; } }
 
     .reticle-hint {
       margin-top: 22px;
@@ -367,43 +483,11 @@
       padding: 5px 14px;
       border-radius: 999px;
       backdrop-filter: blur(8px);
-      letter-spacing: 0.02em;
       text-align: center;
       max-width: 85%;
     }
 
-    /* CAMERA PLACEHOLDER */
-    .camera-placeholder {
-      position: absolute;
-      inset: 0;
-      background: #070a12;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 30px;
-      text-align: center;
-      z-index: 5;
-    }
-
-    .camera-placeholder i {
-      font-size: 2.8rem;
-      color: var(--mode-color);
-      margin-bottom: 16px;
-    }
-
-    .start-cam-btn {
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-      color: white;
-      border: none;
-      padding: 12px 28px;
-      border-radius: 999px;
-      font-size: 0.92rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    /* BOTTOM CONTROLS FLOATING BAR */
+    /* BOTTOM CONTROLS */
     .bottom-bar {
       position: absolute;
       bottom: calc(var(--safe-bottom) + 14px);
@@ -431,14 +515,11 @@
       font-weight: 700;
       backdrop-filter: blur(16px);
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-      transition: all 0.2s ease;
     }
 
-    .pill-btn:active { transform: scale(0.96); }
-    .pill-btn i { font-size: 0.95rem; color: var(--mode-color); }
+    .pill-btn i { color: var(--mode-color); font-size: 0.95rem; }
 
-    /* SLIDE-UP RESULT MODAL / BOTTOM SHEET */
+    /* RESULT MODAL */
     .result-sheet {
       position: absolute;
       bottom: 0;
@@ -456,22 +537,9 @@
     }
 
     .result-sheet.open { transform: translateY(0); }
+    .sheet-handle { width: 38px; height: 4px; background: rgba(255, 255, 255, 0.25); border-radius: 999px; margin: 0 auto 12px; }
 
-    .sheet-handle {
-      width: 38px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.25);
-      border-radius: 999px;
-      margin: 0 auto 12px;
-    }
-
-    .result-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
+    .result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
     .result-avatar {
       width: 52px;
       height: 52px;
@@ -487,204 +555,44 @@
     }
 
     .result-avatar.amber { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-    .result-avatar.purple { background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%); }
-    .result-avatar.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
     .result-avatar.red { background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); }
 
-    .result-title-block { flex: 1; overflow: hidden; }
-
-    .attendee-name {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1.2;
-    }
-
-    .role-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 999px;
-      margin-top: 3px;
-      text-transform: uppercase;
-    }
-
+    .attendee-name { font-size: 1.2rem; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .role-badge { display: inline-flex; align-items: center; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-top: 3px; text-transform: uppercase; }
     .role-badge.student { background: rgba(56, 189, 248, 0.18); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); }
     .role-badge.parent { background: rgba(168, 85, 247, 0.18); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); }
     .role-badge.exhibitor { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
     .role-badge.other { background: rgba(148, 163, 184, 0.18); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.35); }
 
-    /* STATUS BANNER */
-    .status-banner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 14px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
+    .status-banner { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: 14px; font-size: 0.85rem; font-weight: 700; margin-bottom: 12px; }
     .status-banner.success { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #34d399; }
     .status-banner.warning { background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24; }
     .status-banner.error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #f87171; }
+    .reward-pill { font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: #fff; }
 
-    .reward-pill {
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-    }
-
-    .meta-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 10px 12px;
-      border-radius: 12px;
-      margin-bottom: 14px;
-    }
-
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); padding: 10px 12px; border-radius: 12px; margin-bottom: 14px; }
     .meta-item { display: flex; flex-direction: column; }
     .meta-label { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
-    .meta-value { font-size: 0.82rem; font-weight: 600; color: #f1f5f9; font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+    .meta-value { font-size: 0.82rem; font-weight: 600; color: #f1f5f9; font-family: 'JetBrains Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     .countdown-bar-wrap { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.08); border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
     .countdown-bar-fill { height: 100%; width: 100%; background: var(--mode-color); border-radius: 999px; transition: width 1.8s linear; }
 
-    .action-btn-primary {
-      width: 100%;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: white;
-      border: none;
-      border-radius: 999px;
-      font-size: 0.92rem;
-      font-weight: 800;
-      cursor: pointer;
-    }
+    .action-btn-primary { width: 100%; height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 999px; font-size: 0.92rem; font-weight: 800; cursor: pointer; }
 
-    .action-btn-primary:active { transform: scale(0.97); }
-
-    /* MODAL SHEETS (Drawer for Station Picker & Manual Entry) */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.78);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 100;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-    }
-
+    /* MODAL SHEETS */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100; display: none; align-items: flex-end; justify-content: center; }
     .modal-overlay.open { display: flex; }
-
-    .modal-sheet {
-      width: 100%;
-      max-width: 500px;
-      max-height: 80vh;
-      background: #0f172a;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      border-top-left-radius: 26px;
-      border-top-right-radius: 26px;
-      padding: 18px 18px calc(var(--safe-bottom) + 20px);
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
-      animation: slideUpModal 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes slideUpModal {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-
+    .modal-sheet { width: 100%; max-width: 500px; max-height: 80vh; background: #0f172a; border-top: 1px solid rgba(255, 255, 255, 0.12); border-top-left-radius: 26px; border-top-right-radius: 26px; padding: 18px 18px calc(var(--safe-bottom) + 20px); display: flex; flex-direction: column; }
     .modal-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 4px; }
     .modal-subtitle { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px; }
-
-    .filter-input {
-      width: 100%;
-      height: 44px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1.5px solid rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
-      color: #fff;
-      font-size: 0.9rem;
-      padding: 0 14px;
-      outline: none;
-      margin-bottom: 12px;
-    }
-
-    .picker-list {
-      max-height: 45vh;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .picker-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      padding: 12px 14px;
-      border-radius: 12px;
-      color: #fff;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .picker-item:active, .picker-item.selected {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: var(--mode-color);
-    }
-
-    .picker-item-main {
-      font-size: 0.88rem;
-      font-weight: 700;
-    }
-
-    .picker-item-sub {
-      font-size: 0.74rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .manual-input {
-      width: 100%;
-      height: 50px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1.5px solid rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      color: #fff;
-      font-size: 1rem;
-      font-family: 'JetBrains Mono', monospace;
-      padding: 0 16px;
-      outline: none;
-      margin-bottom: 14px;
-      text-transform: uppercase;
-    }
-
+    .filter-input { width: 100%; height: 44px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.12); border-radius: 12px; color: #fff; font-size: 0.9rem; padding: 0 14px; outline: none; margin-bottom: 12px; }
+    .picker-list { max-height: 45vh; overflow-y: auto; display: flex; flex-direction: column; gap: 7px; }
+    .picker-item { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); padding: 12px 14px; border-radius: 12px; color: #fff; cursor: pointer; }
+    .picker-item.selected { background: rgba(255, 255, 255, 0.12); border-color: var(--mode-color); }
+    .picker-item-main { font-size: 0.88rem; font-weight: 700; }
+    .picker-item-sub { font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
+    .manual-input { width: 100%; height: 50px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); border-radius: 12px; color: #fff; font-size: 1rem; font-family: 'JetBrains Mono', monospace; padding: 0 16px; outline: none; margin-bottom: 14px; text-transform: uppercase; }
     .modal-buttons { display: flex; gap: 10px; }
     .modal-btn-cancel { flex: 1; height: 46px; background: rgba(255, 255, 255, 0.08); color: var(--text-muted); border: none; border-radius: 999px; font-weight: 700; cursor: pointer; }
     .modal-btn-submit { flex: 2; height: 46px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 999px; font-weight: 800; cursor: pointer; }
@@ -693,154 +601,165 @@
 <body class="mode-{{ default_mode }}">
 
 <div id="appContainer">
-  <!-- TOP HEADER -->
-  <header class="app-header">
-    <div class="header-top-row">
-      <div class="brand-pill">
-        <div class="live-dot"></div>
-        <span class="brand-title" id="brandTitle">KNOVA GATE SCAN</span>
+
+  <!-- =========================================================================
+       LOGIN SCREEN OVERLAY (Shown if not authenticated)
+       ========================================================================= -->
+  <div class="login-container" id="loginScreen" {% if role_info.is_authenticated %}style="display: none;"{% endif %}>
+    <div class="login-card">
+      <div class="login-logo-wrap">
+        <i class="fa-solid fa-qrcode"></i>
+      </div>
+      <h1 class="login-title">KNOVA Scanner</h1>
+      <p class="login-subtitle">Sign in with your staff, exhibitor, or counsellor account to activate mobile QR scanning.</p>
+
+      <div class="role-pills-row">
+        <span class="role-pill-hint">🚪 Gate Admin</span>
+        <span class="role-pill-hint">🏛️ Exhibitor</span>
+        <span class="role-pill-hint">🎤 Seminar</span>
+        <span class="role-pill-hint">🎓 Counsellor</span>
       </div>
 
-      <!-- DYNAMIC STATS COUNTER -->
+      <form id="mobileLoginForm" onsubmit="handleMobileLogin(event)">
+        <div class="login-input-group">
+          <label class="login-label">Username, Email, or Badge ID</label>
+          <div class="input-box-wrap">
+            <i class="fa-solid fa-user prefix-icon"></i>
+            <input type="text" id="loginUsername" class="login-input" placeholder="e.g. admin or admission@..." required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="login-input-group">
+          <label class="login-label">Password</label>
+          <div class="input-box-wrap">
+            <i class="fa-solid fa-lock prefix-icon"></i>
+            <input type="password" id="loginPassword" class="login-input" placeholder="Enter password" required autocomplete="current-password">
+            <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility()"><i class="fa-solid fa-eye" id="pwdEyeIcon"></i></button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login-submit" id="btnLoginSubmit">
+          <span>Sign In & Open Scanner</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+        <div class="login-alert" id="loginAlert"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       SCANNER INTERFACE (Shown when authenticated)
+       ========================================================================= -->
+  <header class="app-header" id="scannerHeader" {% if not role_info.is_authenticated %}style="display: none;"{% endif %}>
+    <div class="header-top-row">
+      <!-- USER CHIP / LOGOUT TRIGGER -->
+      <div class="user-pill" onclick="openUserModal()">
+        <div class="user-dot"></div>
+        <span class="user-name-title" id="userNameTitle">{{ role_info.name|default:"Gate Staff" }}</span>
+        <i class="fa-solid fa-angle-down" style="font-size: 0.65rem; color: var(--text-muted);"></i>
+      </div>
+
+      <!-- STATS BADGE -->
       <div class="stat-badge">
         <span class="label" id="statLabel">Checked In:</span>
         <span class="num" id="statCount">{{ total_checked_in }}</span>
       </div>
 
-      <!-- HEADER CONTROLS -->
+      <!-- HARDWARE CONTROLS -->
       <div class="header-actions">
-        <button class="icon-btn" id="btnTorch" title="Toggle Flashlight" onclick="toggleTorch()"><i class="fa-solid fa-bolt"></i></button>
+        <button class="icon-btn" id="btnTorch" title="Torch" onclick="toggleTorch()"><i class="fa-solid fa-bolt"></i></button>
         <button class="icon-btn" id="btnFlipCam" title="Flip Camera" onclick="flipCamera()"><i class="fa-solid fa-camera-rotate"></i></button>
-        <button class="icon-btn" id="btnSound" title="Toggle Sound" onclick="toggleSound()"><i class="fa-solid fa-volume-high"></i></button>
+        <button class="icon-btn" id="btnSound" title="Sound" onclick="toggleSound()"><i class="fa-solid fa-volume-high"></i></button>
       </div>
     </div>
 
-    <!-- 4-ROLE SEGMENTED TABS -->
-    <nav class="role-tabs-wrap" aria-label="Scanner Mode">
-      <button class="role-tab-btn {% if default_mode == 'gate' %}active{% endif %}" data-mode="gate" onclick="switchScannerMode('gate')">
-        <i class="fa-solid fa-door-open"></i>
-        <span>Gate Entry</span>
+    <!-- 4-ROLE SEGMENTED TABS (Hidden or restricted if role is locked) -->
+    <nav class="role-tabs-wrap" id="roleTabsNav" {% if role_info.is_locked %}style="display: none;"{% endif %}>
+      <button class="role-tab-btn active" data-mode="gate" onclick="switchScannerMode('gate')">
+        <i class="fa-solid fa-door-open"></i><span>Gate Entry</span>
       </button>
-      <button class="role-tab-btn {% if default_mode == 'booth' %}active{% endif %}" data-mode="booth" onclick="switchScannerMode('booth')">
-        <i class="fa-solid fa-store"></i>
-        <span>Booth Visit</span>
+      <button class="role-tab-btn" data-mode="booth" onclick="switchScannerMode('booth')">
+        <i class="fa-solid fa-store"></i><span>Booth Visit</span>
       </button>
-      <button class="role-tab-btn {% if default_mode == 'seminar' %}active{% endif %}" data-mode="seminar" onclick="switchScannerMode('seminar')">
-        <i class="fa-solid fa-chalkboard-user"></i>
-        <span>Seminars</span>
+      <button class="role-tab-btn" data-mode="seminar" onclick="switchScannerMode('seminar')">
+        <i class="fa-solid fa-chalkboard-user"></i><span>Seminars</span>
       </button>
-      <button class="role-tab-btn {% if default_mode == 'counselling' %}active{% endif %}" data-mode="counselling" onclick="switchScannerMode('counselling')">
-        <i class="fa-solid fa-user-graduate"></i>
-        <span>Counselling</span>
+      <button class="role-tab-btn" data-mode="counselling" onclick="switchScannerMode('counselling')">
+        <i class="fa-solid fa-user-graduate"></i><span>Counselling</span>
       </button>
     </nav>
 
-    <!-- STATION / SESSION CONTEXT BAR -->
-    <div class="station-bar" id="stationBar" onclick="openStationPicker()" style="display: none;">
+    <!-- STATION CONTEXT BAR -->
+    <div class="station-bar" id="stationBar" onclick="handleStationBarClick()">
       <div class="station-info">
         <i class="fa-solid fa-location-dot" id="stationIcon"></i>
-        <span class="station-title" id="stationTitle">Select Active Station</span>
+        <span class="station-title" id="stationTitle">{{ role_info.station_name|default:"Expo Gate" }}</span>
       </div>
-      <i class="fa-solid fa-chevron-down station-chevron"></i>
+      <i class="fa-solid fa-chevron-down" id="stationChevron" style="font-size: 0.7rem; color: var(--text-muted); {% if role_info.is_locked %}display: none;{% endif %}"></i>
     </div>
   </header>
 
-  <!-- SCANNER VIEWPORT -->
-  <main class="scanner-viewport">
+  <!-- VIEWPORT -->
+  <main class="scanner-viewport" id="scannerViewport">
     <div id="reader"></div>
 
-    <!-- RETICLE OVERLAY -->
     <div class="reticle-container">
       <div class="reticle-box">
-        <div class="corner tl"></div>
-        <div class="corner tr"></div>
-        <div class="corner bl"></div>
-        <div class="corner br"></div>
+        <div class="corner tl"></div><div class="corner tr"></div>
+        <div class="corner bl"></div><div class="corner br"></div>
         <div class="laser-line"></div>
       </div>
       <div class="reticle-hint" id="reticleHint">
         <i class="fa-solid fa-qrcode" style="margin-right: 5px;"></i>
-        <span id="reticleHintText">Align attendee badge QR code inside frame</span>
+        <span id="reticleHintText">Point camera at attendee badge</span>
       </div>
-    </div>
-
-    <!-- CAMERA PLACEHOLDER -->
-    <div class="camera-placeholder" id="cameraPlaceholder" style="display: none;">
-      <i class="fa-solid fa-camera"></i>
-      <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;">Camera Access Required</div>
-      <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px;">Enable camera permission to scan attendee badges.</div>
-      <button class="start-cam-btn" onclick="startScanner()"><i class="fa-solid fa-play" style="margin-right: 5px;"></i> Enable Camera</button>
     </div>
   </main>
 
   <!-- BOTTOM FLOATING ACTION BAR -->
-  <footer class="bottom-bar">
+  <footer class="bottom-bar" id="scannerFooter" {% if not role_info.is_authenticated %}style="display: none;"{% endif %}>
     <button class="pill-btn" onclick="openManualModal()">
-      <i class="fa-solid fa-keyboard"></i>
-      <span>Manual Entry</span>
+      <i class="fa-solid fa-keyboard"></i><span>Manual Entry</span>
     </button>
     <button class="pill-btn" onclick="openRecentModal()">
-      <i class="fa-solid fa-clock-rotate-left"></i>
-      <span>Recent Scans</span>
+      <i class="fa-solid fa-clock-rotate-left"></i><span>Recent Scans</span>
     </button>
   </footer>
 
-  <!-- SLIDE-UP RESULT MODAL -->
+  <!-- RESULT MODAL -->
   <div class="result-sheet" id="resultSheet">
     <div class="sheet-handle"></div>
-
     <div class="result-header">
       <div class="result-avatar" id="resAvatar">A</div>
       <div class="result-title-block">
-        <div class="attendee-name" id="resName">Attendee Name</div>
+        <div class="attendee-name" id="resName">Attendee</div>
         <div class="role-badge student" id="resRole">STUDENT</div>
       </div>
     </div>
-
-    <!-- STATUS BANNER & REWARD -->
     <div class="status-banner success" id="resStatusBanner">
-      <div style="display: flex; align-items: center; gap: 8px;">
+      <div style="display:flex; align-items:center; gap:8px;">
         <i class="fa-solid fa-circle-check" id="resStatusIcon"></i>
         <span id="resStatusText">CHECK-IN CONFIRMED</span>
       </div>
       <span class="reward-pill" id="resRewardPill">+20 XP</span>
     </div>
-
     <div class="meta-grid">
-      <div class="meta-item">
-        <span class="meta-label">Station / Room</span>
-        <span class="meta-value" id="resStation">Main Entrance</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Badge ID</span>
-        <span class="meta-value" id="resBadgeId">KNOVA-ST-00000</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">School / Org</span>
-        <span class="meta-value" id="resOrg">-</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Punch Time</span>
-        <span class="meta-value" id="resTime">10:00 AM</span>
-      </div>
+      <div class="meta-item"><span class="meta-label">Station</span><span class="meta-value" id="resStation">-</span></div>
+      <div class="meta-item"><span class="meta-label">Badge ID</span><span class="meta-value" id="resBadgeId">-</span></div>
+      <div class="meta-item"><span class="meta-label">School / Org</span><span class="meta-value" id="resOrg">-</span></div>
+      <div class="meta-item"><span class="meta-label">Time</span><span class="meta-value" id="resTime">-</span></div>
     </div>
-
-    <div class="countdown-bar-wrap">
-      <div class="countdown-bar-fill" id="countdownFill"></div>
-    </div>
-
-    <button class="action-btn-primary" onclick="dismissResultAndScanNext()">
-      <i class="fa-solid fa-arrow-right"></i>
-      <span>Scan Next Attendee</span>
-    </button>
+    <div class="countdown-bar-wrap"><div class="countdown-bar-fill" id="countdownFill"></div></div>
+    <button class="action-btn-primary" onclick="dismissResultAndScanNext()"><i class="fa-solid fa-arrow-right"></i><span>Scan Next Attendee</span></button>
   </div>
 
-  <!-- STATION PICKER MODAL (For Booth, Seminar, Counselling) -->
+  <!-- STATION PICKER MODAL -->
   <div class="modal-overlay" id="stationPickerModal">
     <div class="modal-sheet">
       <div class="sheet-handle" onclick="closeStationPicker()"></div>
       <div class="modal-title" id="pickerModalTitle">Select Station</div>
-      <div class="modal-subtitle" id="pickerModalSubtitle">Choose which station you are scanning for today.</div>
+      <div class="modal-subtitle" id="pickerModalSubtitle">Choose active booth or session.</div>
       <input type="text" id="pickerSearch" class="filter-input" placeholder="Search..." oninput="filterPickerItems()">
       <div class="picker-list" id="pickerList"></div>
       <button class="modal-btn-cancel" style="margin-top: 12px; height: 44px; width: 100%;" onclick="closeStationPicker()">Close</button>
@@ -852,7 +771,7 @@
     <div class="modal-sheet">
       <div class="sheet-handle" onclick="closeManualModal()"></div>
       <div class="modal-title">Manual Badge Punch</div>
-      <div class="modal-subtitle">Enter attendee Badge ID (e.g. KNOVA-ST-83942), email, or registration number.</div>
+      <div class="modal-subtitle">Enter attendee Badge ID (e.g. KNOVA-ST-83942), email, or ID number.</div>
       <input type="text" id="manualCodeInput" class="manual-input" placeholder="e.g. KNOVA-ST-83942">
       <div class="modal-buttons">
         <button class="modal-btn-cancel" onclick="closeManualModal()">Cancel</button>
@@ -866,17 +785,41 @@
     <div class="modal-sheet">
       <div class="sheet-handle" onclick="closeRecentModal()"></div>
       <div class="modal-title">Recent Scans</div>
-      <div class="modal-subtitle" id="recentSubtitle">Recent attendance punches for this station.</div>
+      <div class="modal-subtitle" id="recentSubtitle">Recent attendance punches.</div>
       <div class="picker-list" id="recentListContainer"></div>
       <button class="modal-btn-cancel" style="margin-top: 12px; height: 44px; width: 100%;" onclick="closeRecentModal()">Close</button>
     </div>
   </div>
+
+  <!-- USER ACCOUNT & LOGOUT MODAL -->
+  <div class="modal-overlay" id="userModal">
+    <div class="modal-sheet">
+      <div class="sheet-handle" onclick="closeUserModal()"></div>
+      <div class="modal-title">Scanner Account</div>
+      <div class="modal-subtitle">Currently signed in to KNOVA Scanner.</div>
+
+      <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 14px; border-radius: 14px; margin-bottom: 16px;">
+        <div style="font-size: 1rem; font-weight: 800; color: #fff;" id="modalUserFullName">-</div>
+        <div style="font-size: 0.78rem; color: var(--mode-color); font-weight: 700; margin-top: 2px;" id="modalUserRoleDisplay">-</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;" id="modalUserStationDisplay">-</div>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="modal-btn-cancel" onclick="closeUserModal()">Close</button>
+        <button class="modal-btn-submit" style="background: #ef4444; box-shadow: 0 4px 14px rgba(239,68,68,0.3);" onclick="handleMobileLogout()">
+          <i class="fa-solid fa-right-from-bracket" style="margin-right: 6px;"></i> Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<!-- CLIENT STATE & 4-ROLE DATA INGESTION -->
+<!-- DATA & RUNTIME SCRIPT -->
 <script>
 const INITIAL_CONFIG = {
-  mode: "{{ default_mode|default:'gate' }}",
+  roleInfo: {{ role_info|safe|default:"{}" }},
+  defaultMode: "{{ default_mode|default:'gate' }}",
   defaultExhibitorId: {{ default_exhibitor_id|default:"null" }},
   defaultSessionId: {{ default_session_id|default:"null" }},
   defaultExpertId: {{ default_expert_id|default:"null" }},
@@ -897,104 +840,201 @@ const INITIAL_CONFIG = {
   ]
 };
 
-let currentMode = localStorage.getItem('knova_scan_mode') || INITIAL_CONFIG.mode;
-let selectedExhibitorId = localStorage.getItem('knova_exhibitor_id') || INITIAL_CONFIG.defaultExhibitorId;
-let selectedSessionId = localStorage.getItem('knova_session_id') || INITIAL_CONFIG.defaultSessionId;
-let selectedExpertId = localStorage.getItem('knova_expert_id') || INITIAL_CONFIG.defaultExpertId;
-
-// Fallback to first if null
-if (!selectedExhibitorId && INITIAL_CONFIG.exhibitors.length) selectedExhibitorId = INITIAL_CONFIG.exhibitors[0].id;
-if (!selectedSessionId && INITIAL_CONFIG.sessions.length) selectedSessionId = INITIAL_CONFIG.sessions[0].id;
-if (!selectedExpertId && INITIAL_CONFIG.experts.length) selectedExpertId = INITIAL_CONFIG.experts[0].id;
+let currentUser = INITIAL_CONFIG.roleInfo.is_authenticated ? INITIAL_CONFIG.roleInfo : null;
+let currentMode = currentUser ? (currentUser.default_mode || 'gate') : 'gate';
+let selectedExhibitorId = (currentUser && currentUser.role === 'exhibitor') ? currentUser.station_id : (INITIAL_CONFIG.defaultExhibitorId || (INITIAL_CONFIG.exhibitors[0] ? INITIAL_CONFIG.exhibitors[0].id : null));
+let selectedSessionId = (currentUser && currentUser.role === 'seminar') ? currentUser.station_id : (INITIAL_CONFIG.defaultSessionId || (INITIAL_CONFIG.sessions[0] ? INITIAL_CONFIG.sessions[0].id : null));
+let selectedExpertId = (currentUser && currentUser.role === 'counselling') ? currentUser.station_id : (INITIAL_CONFIG.defaultExpertId || (INITIAL_CONFIG.experts[0] ? INITIAL_CONFIG.experts[0].id : null));
 
 // =============================================================================
-// MODE SWITCHER ENGINE (Gate, Booth, Seminar, Counselling)
+// LOGIN & LOGOUT HANDLERS
+// =============================================================================
+async function handleMobileLogin(e) {
+  e.preventDefault();
+  const u = document.getElementById('loginUsername').value.trim();
+  const p = document.getElementById('loginPassword').value.trim();
+  const alertEl = document.getElementById('loginAlert');
+  const btn = document.getElementById('btnLoginSubmit');
+
+  if (!u || !p) return;
+  alertEl.style.display = 'none';
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
+
+  try {
+    const res = await fetch('/api/mobile-login/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken') || ''
+      },
+      body: JSON.stringify({ username: u, password: p })
+    });
+    const data = await res.json();
+    btn.disabled = false;
+    btn.innerHTML = '<span>Sign In & Open Scanner</span> <i class="fa-solid fa-arrow-right"></i>';
+
+    if (data.status === 'SUCCESS' && data.user) {
+      currentUser = data.user;
+      if (data.session_key) localStorage.setItem('knova_session_key', data.session_key);
+      localStorage.setItem('knova_user_info', JSON.stringify(currentUser));
+      onLoginSuccess();
+    } else {
+      alertEl.textContent = data.message || 'Authentication failed. Please check credentials.';
+      alertEl.style.display = 'block';
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.innerHTML = '<span>Sign In & Open Scanner</span> <i class="fa-solid fa-arrow-right"></i>';
+    alertEl.textContent = 'Network error connecting to login server.';
+    alertEl.style.display = 'block';
+  }
+}
+
+function onLoginSuccess() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('scannerHeader').style.display = 'flex';
+  document.getElementById('scannerFooter').style.display = 'flex';
+
+  document.getElementById('userNameTitle').textContent = currentUser.name || currentUser.username;
+  currentMode = currentUser.default_mode || 'gate';
+
+  const roleTabsNav = document.getElementById('roleTabsNav');
+  const stationChevron = document.getElementById('stationChevron');
+
+  if (currentUser.is_locked) {
+    roleTabsNav.style.display = 'none';
+    stationChevron.style.display = 'none';
+    if (currentUser.role === 'exhibitor') selectedExhibitorId = currentUser.station_id;
+    if (currentUser.role === 'seminar') selectedSessionId = currentUser.station_id;
+    if (currentUser.role === 'counselling') selectedExpertId = currentUser.station_id;
+  } else {
+    roleTabsNav.style.display = 'grid';
+    stationChevron.style.display = 'inline-block';
+  }
+
+  switchScannerMode(currentMode);
+  startScanner();
+  fetchStats();
+}
+
+async function handleMobileLogout() {
+  try {
+    await fetch('/api/mobile-logout/', { method: 'POST', headers: { 'X-CSRFToken': getCookie('csrftoken') || '' } });
+  } catch(e) {}
+
+  currentUser = null;
+  localStorage.removeItem('knova_session_key');
+  localStorage.removeItem('knova_user_info');
+  closeUserModal();
+  stopScanner();
+
+  document.getElementById('scannerHeader').style.display = 'none';
+  document.getElementById('scannerFooter').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUsername').value = '';
+  document.getElementById('loginPassword').value = '';
+}
+
+function togglePasswordVisibility() {
+  const pwd = document.getElementById('loginPassword');
+  const eye = document.getElementById('pwdEyeIcon');
+  if (pwd.type === 'password') {
+    pwd.type = 'text';
+    eye.className = 'fa-solid fa-eye-slash';
+  } else {
+    pwd.type = 'password';
+    eye.className = 'fa-solid fa-eye';
+  }
+}
+
+function openUserModal() {
+  if (!currentUser) return;
+  document.getElementById('modalUserFullName').textContent = currentUser.name || currentUser.username;
+  document.getElementById('modalUserRoleDisplay').textContent = currentUser.role_display || 'Staff';
+  document.getElementById('modalUserStationDisplay').textContent = currentUser.station_name || 'All Gates';
+  document.getElementById('userModal').classList.add('open');
+}
+
+function closeUserModal() {
+  document.getElementById('userModal').classList.remove('open');
+}
+
+// =============================================================================
+// MODE & STATION LOGIC
 // =============================================================================
 function switchScannerMode(mode) {
-  currentMode = mode;
-  localStorage.setItem('knova_scan_mode', mode);
+  if (currentUser && currentUser.is_locked && currentUser.default_mode !== mode) {
+    return; // Role is locked
+  }
 
-  // Update Body Theme
+  currentMode = mode;
   document.body.className = `mode-${mode}`;
 
-  // Update Tab Buttons
   document.querySelectorAll('.role-tab-btn').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
   });
 
   const stationBar = document.getElementById('stationBar');
-  const brandTitle = document.getElementById('brandTitle');
-  const reticleHintText = document.getElementById('reticleHintText');
+  const stationIcon = document.getElementById('stationIcon');
+  const stationTitle = document.getElementById('stationTitle');
+  const hint = document.getElementById('reticleHintText');
 
   if (mode === 'gate') {
-    stationBar.style.display = 'none';
-    brandTitle.textContent = 'GATE ENTRY SCAN';
-    reticleHintText.textContent = 'Point at attendee pass to verify expo hall entry';
+    stationBar.style.display = 'flex';
+    stationIcon.className = 'fa-solid fa-door-open';
+    stationTitle.textContent = 'Expo Entrance Turnstiles';
+    hint.textContent = 'Point at attendee badge to verify hall entry';
   } else if (mode === 'booth') {
     stationBar.style.display = 'flex';
-    brandTitle.textContent = 'BOOTH VISIT PUNCH';
-    reticleHintText.textContent = 'Point at student badge to record booth visit & lead';
-    updateStationBarDisplay();
+    stationIcon.className = 'fa-solid fa-store';
+    const exh = INITIAL_CONFIG.exhibitors.find(e => e.id == selectedExhibitorId);
+    stationTitle.textContent = (currentUser && currentUser.role === 'exhibitor') ? currentUser.station_name : (exh ? exh.name : 'Select Booth');
+    hint.textContent = 'Point at student badge to record booth visit (+20 XP)';
   } else if (mode === 'seminar') {
     stationBar.style.display = 'flex';
-    brandTitle.textContent = 'SEMINAR ATTENDANCE';
-    reticleHintText.textContent = 'Point at student badge to mark seminar attendance';
-    updateStationBarDisplay();
+    stationIcon.className = 'fa-solid fa-chalkboard-user';
+    const s = INITIAL_CONFIG.sessions.find(x => x.id == selectedSessionId);
+    stationTitle.textContent = (currentUser && currentUser.role === 'seminar') ? currentUser.station_name : (s ? s.name : 'Select Session');
+    hint.textContent = 'Point at student badge to mark seminar attendance (+25 XP)';
   } else if (mode === 'counselling') {
     stationBar.style.display = 'flex';
-    brandTitle.textContent = 'COUNSELLING PUNCH';
-    reticleHintText.textContent = 'Point at student badge to punch 1-on-1 counseling';
-    updateStationBarDisplay();
+    stationIcon.className = 'fa-solid fa-user-graduate';
+    const exp = INITIAL_CONFIG.experts.find(x => x.id == selectedExpertId);
+    stationTitle.textContent = (currentUser && currentUser.role === 'counselling') ? currentUser.station_name : (exp ? `${exp.name} (${exp.sub})` : 'Select Counsellor');
+    hint.textContent = 'Point at student badge to punch 1-on-1 counseling (+40 XP)';
   }
 
   fetchStats();
 }
 
-function updateStationBarDisplay() {
-  const icon = document.getElementById('stationIcon');
-  const title = document.getElementById('stationTitle');
-
-  if (currentMode === 'booth') {
-    icon.className = 'fa-solid fa-store';
-    const found = INITIAL_CONFIG.exhibitors.find(e => e.id == selectedExhibitorId);
-    title.textContent = found ? found.name : 'Select Booth';
-  } else if (currentMode === 'seminar') {
-    icon.className = 'fa-solid fa-chalkboard-user';
-    const found = INITIAL_CONFIG.sessions.find(s => s.id == selectedSessionId);
-    title.textContent = found ? found.name : 'Select Session';
-  } else if (currentMode === 'counselling') {
-    icon.className = 'fa-solid fa-user-graduate';
-    const found = INITIAL_CONFIG.experts.find(x => x.id == selectedExpertId);
-    title.textContent = found ? `${found.name} (${found.sub})` : 'Select Counsellor';
-  }
+function handleStationBarClick() {
+  if (currentUser && currentUser.is_locked) return;
+  if (currentMode !== 'gate') openStationPicker();
 }
 
-// =============================================================================
-// STATION PICKER MODAL
-// =============================================================================
 function openStationPicker() {
   const modal = document.getElementById('stationPickerModal');
   const title = document.getElementById('pickerModalTitle');
   const sub = document.getElementById('pickerModalSubtitle');
-  const list = document.getElementById('pickerList');
   document.getElementById('pickerSearch').value = '';
 
   let items = [];
   let selectedId = null;
 
   if (currentMode === 'booth') {
-    title.textContent = 'Select University / Booth';
-    sub.textContent = 'Choose which exhibitor booth you are representing today.';
+    title.textContent = 'Select Exhibitor Booth';
+    sub.textContent = 'Choose university or exhibitor booth:';
     items = INITIAL_CONFIG.exhibitors;
     selectedId = selectedExhibitorId;
   } else if (currentMode === 'seminar') {
     title.textContent = 'Select Seminar Session';
-    sub.textContent = 'Choose which keynote or seminar talk you are scanning for.';
+    sub.textContent = 'Choose keynote or talk session:';
     items = INITIAL_CONFIG.sessions;
     selectedId = selectedSessionId;
   } else if (currentMode === 'counselling') {
     title.textContent = 'Select Counsellor Desk';
-    sub.textContent = 'Choose which education expert station you are operating.';
+    sub.textContent = 'Choose education expert desk:';
     items = INITIAL_CONFIG.experts;
     selectedId = selectedExpertId;
   }
@@ -1009,11 +1049,10 @@ function closeStationPicker() {
 
 function renderPickerItems(items, selectedId) {
   const list = document.getElementById('pickerList');
-  if (!items || items.length === 0) {
-    list.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.85rem;">No items found.</div>`;
+  if (!items || !items.length) {
+    list.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);">No stations available.</div>`;
     return;
   }
-
   list.innerHTML = items.map(it => `
     <div class="picker-item ${it.id == selectedId ? 'selected' : ''}" onclick="selectStationItem(${it.id})">
       <div>
@@ -1032,157 +1071,57 @@ function filterPickerItems() {
   if (currentMode === 'booth') { pool = INITIAL_CONFIG.exhibitors; selectedId = selectedExhibitorId; }
   else if (currentMode === 'seminar') { pool = INITIAL_CONFIG.sessions; selectedId = selectedSessionId; }
   else if (currentMode === 'counselling') { pool = INITIAL_CONFIG.experts; selectedId = selectedExpertId; }
-
   const filtered = pool.filter(p => p.name.toLowerCase().includes(q) || (p.sub && p.sub.toLowerCase().includes(q)));
   renderPickerItems(filtered, selectedId);
 }
 
 function selectStationItem(id) {
-  if (currentMode === 'booth') {
-    selectedExhibitorId = id;
-    localStorage.setItem('knova_exhibitor_id', id);
-  } else if (currentMode === 'seminar') {
-    selectedSessionId = id;
-    localStorage.setItem('knova_session_id', id);
-  } else if (currentMode === 'counselling') {
-    selectedExpertId = id;
-    localStorage.setItem('knova_expert_id', id);
-  }
-  updateStationBarDisplay();
+  if (currentMode === 'booth') selectedExhibitorId = id;
+  else if (currentMode === 'seminar') selectedSessionId = id;
+  else if (currentMode === 'counselling') selectedExpertId = id;
+
+  switchScannerMode(currentMode);
   closeStationPicker();
-  fetchStats();
 }
 
 // =============================================================================
-// AUDIO CHIME SYNTHESIZER (WEB AUDIO API - 0ms Latency)
-// =============================================================================
-let audioCtx = null;
-let soundEnabled = true;
-
-function initAudio() {
-  if (!audioCtx) {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (AudioContext) audioCtx = new AudioContext();
-  }
-  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-}
-
-function playSuccessChime() {
-  if (!soundEnabled) return;
-  try {
-    initAudio();
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    const osc1 = audioCtx.createOscillator();
-    const osc2 = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc1.type = 'sine'; osc2.type = 'sine';
-    osc1.frequency.setValueAtTime(587.33, now);
-    osc1.frequency.exponentialRampToValueAtTime(880, now + 0.08);
-    osc2.frequency.setValueAtTime(880, now);
-    osc2.frequency.exponentialRampToValueAtTime(1174.66, now + 0.08);
-    gain.gain.setValueAtTime(0.18, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-    osc1.connect(gain); osc2.connect(gain); gain.connect(audioCtx.destination);
-    osc1.start(now); osc2.start(now); osc1.stop(now + 0.3); osc2.stop(now + 0.3);
-  } catch (e) {}
-}
-
-function playWarningChime() {
-  if (!soundEnabled) return;
-  try {
-    initAudio();
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(440, now);
-    osc.frequency.setValueAtTime(370, now + 0.1);
-    gain.gain.setValueAtTime(0.2, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(now); osc.stop(now + 0.3);
-  } catch (e) {}
-}
-
-function playErrorChime() {
-  if (!soundEnabled) return;
-  try {
-    initAudio();
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(220, now);
-    osc.frequency.exponentialRampToValueAtTime(110, now + 0.25);
-    gain.gain.setValueAtTime(0.2, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(now); osc.stop(now + 0.3);
-  } catch (e) {}
-}
-
-function toggleSound() {
-  soundEnabled = !soundEnabled;
-  const btn = document.getElementById('btnSound');
-  if (soundEnabled) {
-    btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-    btn.classList.remove('muted');
-    playSuccessChime();
-  } else {
-    btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-    btn.classList.add('muted');
-  }
-}
-
-// =============================================================================
-// CAMERA SCANNER ENGINE & HARDWARE
+// CAMERA SCANNER & AUDIO
 // =============================================================================
 let html5QrCode = null;
-let isScanning = false;
 let currentFacingMode = "environment";
-let torchActive = false;
-let activeVideoTrack = null;
+let isScanning = false;
 let isProcessingScan = false;
+let activeVideoTrack = null;
+let torchActive = false;
 let autoResumeTimer = null;
 
 function startScanner() {
-  document.getElementById('cameraPlaceholder').style.display = 'none';
+  if (!currentUser) return;
   if (!html5QrCode) {
     html5QrCode = new Html5Qrcode("reader", { experimentalFeatures: { useBarCodeDetectorIfSupported: true } });
   }
 
   const qrBoxSize = Math.min(window.innerWidth * 0.72, 260);
-  const config = {
-    fps: 25,
-    qrbox: { width: qrBoxSize, height: qrBoxSize },
-    aspectRatio: 1.0,
-    videoConstraints: { facingMode: { ideal: currentFacingMode }, focusMode: "continuous" }
-  };
-
   html5QrCode.start(
     { facingMode: currentFacingMode },
-    config,
+    { fps: 25, qrbox: { width: qrBoxSize, height: qrBoxSize } },
     (code) => { if (!isProcessingScan) { isProcessingScan = true; dispatchCheckIn(code); } },
     () => {}
   ).then(() => {
     isScanning = true;
-    captureActiveVideoTrack();
-  }).catch(() => {
-    isScanning = false;
-    document.getElementById('cameraPlaceholder').style.display = 'flex';
+    try {
+      const v = document.querySelector("#reader video");
+      if (v && v.srcObject) activeVideoTrack = v.srcObject.getVideoTracks()[0];
+    } catch(e) {}
+  }).catch(err => {
+    console.warn("Camera start err:", err);
   });
 }
 
-function captureActiveVideoTrack() {
-  try {
-    const video = document.querySelector("#reader video");
-    if (video && video.srcObject) {
-      activeVideoTrack = video.srcObject.getVideoTracks()[0];
-    }
-  } catch (e) {}
+function stopScanner() {
+  if (html5QrCode && isScanning) {
+    html5QrCode.stop().then(() => { isScanning = false; }).catch(() => { isScanning = false; });
+  }
 }
 
 function flipCamera() {
@@ -1194,20 +1133,43 @@ function flipCamera() {
 }
 
 function toggleTorch() {
-  captureActiveVideoTrack();
-  if (!activeVideoTrack) { alert("Torch not supported on this camera device."); return; }
-  const caps = activeVideoTrack.getCapabilities ? activeVideoTrack.getCapabilities() : {};
-  if (!caps.torch) { alert("Torch not available on this camera."); return; }
+  if (!activeVideoTrack) { alert("Torch not supported on this camera."); return; }
   torchActive = !torchActive;
   activeVideoTrack.applyConstraints({ advanced: [{ torch: torchActive }] }).then(() => {
     document.getElementById('btnTorch').classList.toggle('active', torchActive);
   }).catch(() => { torchActive = false; });
 }
 
+// Audio Chime
+let audioCtx = null;
+let soundEnabled = true;
+function playChime(freq1, freq2) {
+  if (!soundEnabled) return;
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!audioCtx) audioCtx = new AudioContext();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const now = audioCtx.currentTime;
+    const osc1 = audioCtx.createOscillator(), osc2 = audioCtx.createOscillator(), gain = audioCtx.createGain();
+    osc1.type = 'sine'; osc2.type = 'sine';
+    osc1.frequency.setValueAtTime(freq1, now); osc1.frequency.exponentialRampToValueAtTime(freq2, now + 0.08);
+    osc2.frequency.setValueAtTime(freq2, now); osc2.frequency.exponentialRampToValueAtTime(freq2 * 1.33, now + 0.08);
+    gain.gain.setValueAtTime(0.18, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+    osc1.connect(gain); osc2.connect(gain); gain.connect(audioCtx.destination);
+    osc1.start(now); osc2.start(now); osc1.stop(now + 0.3); osc2.stop(now + 0.3);
+  } catch(e) {}
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('btnSound').innerHTML = soundEnabled ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
+  document.getElementById('btnSound').classList.toggle('muted', !soundEnabled);
+}
+
 // =============================================================================
-// UNIFIED 4-ROLE DISPATCH API
+// SCANNER DISPATCH API
 // =============================================================================
-function getTargetIdForCurrentMode() {
+function getTargetId() {
   if (currentMode === 'booth') return selectedExhibitorId;
   if (currentMode === 'seminar') return selectedSessionId;
   if (currentMode === 'counselling') return selectedExpertId;
@@ -1217,10 +1179,12 @@ function getTargetIdForCurrentMode() {
 async function dispatchCheckIn(code) {
   if (!code || !code.trim()) { isProcessingScan = false; return; }
 
+  const sessionKey = localStorage.getItem('knova_session_key') || '';
   const payload = {
     code: code.trim(),
     mode: currentMode,
-    target_id: getTargetIdForCurrentMode()
+    target_id: getTargetId(),
+    session_key: sessionKey
   };
 
   try {
@@ -1228,15 +1192,21 @@ async function dispatchCheckIn(code) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': getCookie('csrftoken') || ''
+        'X-CSRFToken': getCookie('csrftoken') || '',
+        'X-Session-Key': sessionKey
       },
       body: JSON.stringify(payload)
     });
 
+    if (resp.status === 401) {
+      alert("Session expired. Please sign in again.");
+      handleMobileLogout();
+      return;
+    }
+
     const data = await resp.json();
     renderCheckInResult(data, code);
   } catch (err) {
-    console.error("Check-in network error:", err);
     renderCheckInResult({ status: 'NETWORK_ERROR', message: 'Connection to server failed.' }, code);
   }
 }
@@ -1259,13 +1229,12 @@ function renderCheckInResult(data, rawCode) {
   avatar.className = 'result-avatar';
 
   if (data.status === 'SUCCESS') {
-    playSuccessChime();
+    playChime(587.33, 880);
     if (navigator.vibrate) navigator.vibrate([70]);
 
     statusBanner.classList.add('success');
     statusIcon.className = 'fa-solid fa-circle-check';
     statusText.textContent = data.message || 'PUNCH RECORDED';
-
     rewardPill.style.display = 'inline-block';
     rewardPill.textContent = data.badge_reward || 'Verified';
 
@@ -1275,20 +1244,19 @@ function renderCheckInResult(data, rawCode) {
     badgeIdEl.textContent = att.badge_id || rawCode;
     orgEl.textContent = att.school_or_org || '-';
     timeEl.textContent = att.checked_in_time || 'Just now';
-    stationEl.textContent = data.station_name || 'Checked In';
+    stationEl.textContent = data.station_name || 'Verified';
 
     setRoleBadge(roleEl, att.role);
     updateStats(data.stats);
 
   } else if (data.status === 'ALREADY_CHECKED_IN' || data.status === 'ALREADY_PUNCHED') {
-    playWarningChime();
+    playChime(440, 370);
     if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
 
     statusBanner.classList.add('warning');
     avatar.classList.add('amber');
     statusIcon.className = 'fa-solid fa-triangle-exclamation';
     statusText.textContent = data.message || 'ALREADY PUNCHED';
-
     rewardPill.style.display = 'inline-block';
     rewardPill.textContent = 'Duplicate';
 
@@ -1304,7 +1272,7 @@ function renderCheckInResult(data, rawCode) {
     if (data.stats) updateStats(data.stats);
 
   } else {
-    playErrorChime();
+    playChime(220, 110);
     if (navigator.vibrate) navigator.vibrate([300]);
 
     statusBanner.classList.add('error');
@@ -1313,10 +1281,10 @@ function renderCheckInResult(data, rawCode) {
     statusText.textContent = 'UNREGISTERED BADGE';
     rewardPill.style.display = 'none';
 
-    nameEl.textContent = 'Unknown Badge';
+    nameEl.textContent = 'Unknown Attendee';
     avatar.textContent = '?';
     badgeIdEl.textContent = rawCode || 'Invalid';
-    orgEl.textContent = 'No attendee found';
+    orgEl.textContent = 'No record found';
     timeEl.textContent = '-';
     stationEl.textContent = '-';
     setRoleBadge(roleEl, 'UNKNOWN');
@@ -1346,23 +1314,23 @@ function updateStats(stats) {
 }
 
 async function fetchStats() {
+  if (!currentUser) return;
   try {
-    const tid = getTargetIdForCurrentMode();
-    const url = `/api/mobile-checkin/stats/?mode=${currentMode}${tid ? `&target_id=${tid}` : ''}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.status === 'SUCCESS') updateStats(data);
-  } catch (e) {}
+    const tid = getTargetId();
+    const sk = localStorage.getItem('knova_session_key') || '';
+    const res = await fetch(`/api/mobile-checkin/stats/?mode=${currentMode}${tid ? `&target_id=${tid}` : ''}`, {
+      headers: { 'X-Session-Key': sk }
+    });
+    const d = await res.json();
+    if (d.status === 'SUCCESS') updateStats(d);
+  } catch(e) {}
 }
 
 function startCountdownBar() {
   const fill = document.getElementById('countdownFill');
-  fill.style.transition = 'none';
-  fill.style.width = '100%';
+  fill.style.transition = 'none'; fill.style.width = '100%';
   fill.offsetHeight;
-  fill.style.transition = 'width 1.8s linear';
-  fill.style.width = '0%';
-
+  fill.style.transition = 'width 1.8s linear'; fill.style.width = '0%';
   clearTimeout(autoResumeTimer);
   autoResumeTimer = setTimeout(dismissResultAndScanNext, 1800);
 }
@@ -1374,7 +1342,7 @@ function dismissResultAndScanNext() {
 }
 
 // =============================================================================
-// MANUAL ENTRY MODAL
+// MODALS (Manual Entry & Recent Scans)
 // =============================================================================
 function openManualModal() {
   document.getElementById('manualModal').classList.add('open');
@@ -1382,52 +1350,34 @@ function openManualModal() {
   input.value = '';
   setTimeout(() => input.focus(), 150);
 }
-
-function closeManualModal() {
-  document.getElementById('manualModal').classList.remove('open');
-}
-
+function closeManualModal() { document.getElementById('manualModal').classList.remove('open'); }
 function submitManualCode() {
-  const code = document.getElementById('manualCodeInput').value.trim();
-  if (!code) return;
+  const c = document.getElementById('manualCodeInput').value.trim();
+  if (!c) return;
   closeManualModal();
   isProcessingScan = true;
-  dispatchCheckIn(code);
+  dispatchCheckIn(c);
 }
+document.getElementById('manualCodeInput').addEventListener('keydown', e => { if (e.key === 'Enter') submitManualCode(); });
 
-document.getElementById('manualCodeInput').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') submitManualCode();
-});
-
-// =============================================================================
-// RECENT SCANS MODAL
-// =============================================================================
-function openRecentModal() {
-  fetchRecentScans();
-  document.getElementById('recentModal').classList.add('open');
-}
-
-function closeRecentModal() {
-  document.getElementById('recentModal').classList.remove('open');
-}
-
+function openRecentModal() { fetchRecentScans(); document.getElementById('recentModal').classList.add('open'); }
+function closeRecentModal() { document.getElementById('recentModal').classList.remove('open'); }
 async function fetchRecentScans() {
-  const sub = document.getElementById('recentSubtitle');
-  sub.textContent = `Recent scans for ${currentMode.toUpperCase()} mode.`;
   const container = document.getElementById('recentListContainer');
   container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Loading recent scans...</div>';
-
   try {
-    const tid = getTargetIdForCurrentMode();
-    const url = `/api/mobile-checkin/recent/?mode=${currentMode}${tid ? `&target_id=${tid}` : ''}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.status === 'SUCCESS' && data.items) {
-      if (data.items.length === 0) {
+    const tid = getTargetId();
+    const sk = localStorage.getItem('knova_session_key') || '';
+    const res = await fetch(`/api/mobile-checkin/recent/?mode=${currentMode}${tid ? `&target_id=${tid}` : ''}`, {
+      headers: { 'X-Session-Key': sk }
+    });
+    const d = await res.json();
+    if (d.status === 'SUCCESS' && d.items) {
+      if (!d.items.length) {
         container.innerHTML = '<div style="text-align:center; padding:24px; color:var(--text-muted); font-size:0.85rem;">No scans recorded yet.</div>';
         return;
       }
-      container.innerHTML = data.items.map(it => `
+      container.innerHTML = d.items.map(it => `
         <div class="picker-item">
           <div>
             <div class="picker-item-main">${escapeHtml(it.name)}</div>
@@ -1437,15 +1387,13 @@ async function fetchRecentScans() {
         </div>
       `).join('');
     }
-  } catch (e) {
+  } catch(e) {
     container.innerHTML = '<div style="text-align:center; padding:20px; color:#ef4444;">Could not load recent scans.</div>';
   }
 }
 
 function escapeHtml(str) {
-  return (str || '').replace(/[&<>"']/g, m => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  })[m]);
+  return (str || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
 }
 
 function getCookie(name) {
@@ -1464,11 +1412,25 @@ function getCookie(name) {
 }
 
 // =============================================================================
-// INITIALIZATION
+// APP INITIALIZATION
 // =============================================================================
 window.addEventListener('DOMContentLoaded', () => {
-  switchScannerMode(currentMode);
-  startScanner();
+  if (currentUser && currentUser.is_authenticated) {
+    onLoginSuccess();
+  } else {
+    // Check if session key in localStorage can restore auth
+    const savedKey = localStorage.getItem('knova_session_key');
+    if (savedKey) {
+      fetch('/api/mobile-auth-check/', { headers: { 'X-Session-Key': savedKey } })
+        .then(r => r.json())
+        .then(d => {
+          if (d.status === 'SUCCESS' && d.user && d.user.is_authenticated) {
+            currentUser = d.user;
+            onLoginSuccess();
+          }
+        }).catch(() => {});
+    }
+  }
   setInterval(fetchStats, 15000);
 });
 </script>
