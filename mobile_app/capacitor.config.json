@@ -1,11 +1,11 @@
 {
   "appId": "com.knovaexpo.scanner",
-  "appName": "KNOVA Gate Checkin",
+  "appName": "KNOVA Scanner",
   "webDir": "www",
   "bundledWebRuntime": false,
   "server": {
-    "cleartext": true,
-    "androidScheme": "https"
+    "url": "https://knovaexpo.com/scanner/",
+    "cleartext": true
   },
   "android": {
     "allowMixedContent": true,
