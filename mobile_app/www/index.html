@@ -2380,14 +2380,14 @@ async function handleMobileLogin(e) {
     btn.disabled = false;
     btn.innerHTML = '<span>Sign In & Open Menu</span> <i class="fa-solid fa-arrow-right"></i>';
 
-    if (data.status === 'SUCCESS' && data.user) {
+    if (data.status === 'SUCCESS' && data.user && data.user.has_scanner_access) {
       currentUser = data.user;
       if (data.stations) stationsData = data.stations;
       if (data.session_key) localStorage.setItem('knova_session_key', data.session_key);
       localStorage.setItem('knova_user_info', JSON.stringify(currentUser));
       onLoginSuccess();
     } else {
-      alertEl.textContent = data.message || 'Authentication failed. Please check credentials.';
+      alertEl.textContent = data.message || 'Access Denied: Only Expo Staff, Exhibitors, and Counsellors can operate the scanner.';
       alertEl.style.display = 'block';
     }
   } catch (err) {
@@ -2399,6 +2399,11 @@ async function handleMobileLogin(e) {
 }
 
 function onLoginSuccess() {
+  if (!currentUser || !currentUser.has_scanner_access) {
+    handleMobileLogout(true);
+    return;
+  }
+
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('scannerHeader').style.display = 'flex';
   document.getElementById('viewsWrapper').style.display = 'flex';
@@ -2427,8 +2432,8 @@ function onLoginSuccess() {
   loadRecentPunches();
 }
 
-async function handleMobileLogout() {
-  if (!confirm("Are you sure you want to log out?")) return;
+async function handleMobileLogout(skipConfirm = false) {
+  if (!skipConfirm && !confirm("Are you sure you want to log out?")) return;
 
   const sk = localStorage.getItem('knova_session_key') || '';
   try {
@@ -3382,11 +3387,40 @@ window.addEventListener('DOMContentLoaded', () => {
   const savedUser = localStorage.getItem('knova_user_info');
   const savedKey = localStorage.getItem('knova_session_key');
 
-  if (savedUser && savedKey) {
+  if (savedUser) {
     try {
-      currentUser = JSON.parse(savedUser);
-      onLoginSuccess();
-    } catch(e) {}
+      const u = JSON.parse(savedUser);
+      if (!u || !u.has_scanner_access || u.role === 'student' || u.role === 'parent') {
+        localStorage.removeItem('knova_user_info');
+        localStorage.removeItem('knova_session_key');
+        currentUser = null;
+      } else {
+        currentUser = u;
+      }
+    } catch(e) {
+      localStorage.removeItem('knova_user_info');
+      localStorage.removeItem('knova_session_key');
+      currentUser = null;
+    }
+  }
+
+  if (currentUser && currentUser.has_scanner_access && savedKey) {
+    onLoginSuccess();
+    // Verify session with server in background
+    fetch(API_HOST + '/api/mobile-auth-check/', {
+      headers: { 'X-Session-Key': savedKey }
+    })
+    .then(r => r.json())
+    .then(d => {
+      if (d.status === 'SUCCESS' && d.user && d.user.has_scanner_access) {
+        currentUser = d.user;
+        localStorage.setItem('knova_user_info', JSON.stringify(currentUser));
+        if (d.stations) stationsData = d.stations;
+      } else {
+        handleMobileLogout(true);
+      }
+    })
+    .catch(() => {});
   }
 
   setInterval(fetchStats, 15000);

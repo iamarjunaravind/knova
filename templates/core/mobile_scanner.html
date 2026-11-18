@@ -234,6 +234,89 @@
       text-align: left;
     }
 
+    /* Access Denied Banner for Attendees */
+    .access-denied-banner {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.16) 0%, rgba(245, 158, 11, 0.12) 100%);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 18px;
+      padding: 16px 14px;
+      margin-bottom: 18px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .denied-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .denied-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #f87171;
+    }
+
+    .denied-msg {
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+    .denied-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    .denied-btn {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .denied-btn.portal-btn {
+      background: rgba(99, 102, 241, 0.25);
+      border: 1px solid rgba(99, 102, 241, 0.5);
+      color: #818cf8;
+    }
+
+    .denied-btn.portal-btn:active {
+      background: rgba(99, 102, 241, 0.4);
+    }
+
+    .denied-btn.switch-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #f1f5f9;
+    }
+
+    .denied-btn.switch-btn:active {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
     /* ==========================================================================
        APP HEADER / TOP MENUBAR WITH EXPLICIT LOGOUT BUTTON
        ========================================================================== */
@@ -1517,15 +1600,27 @@
 <div id="appContainer">
 
   <!-- =========================================================================
-       1. LOGIN SCREEN OVERLAY (Shown if not authenticated)
+       1. LOGIN SCREEN OVERLAY (Shown if not authenticated as staff)
        ========================================================================= -->
-  <div class="login-container" id="loginScreen" {% if role_info.is_authenticated %}style="display: none;"{% endif %}>
+  <div class="login-container" id="loginScreen" {% if role_info.is_authenticated and role_info.has_scanner_access %}style="display: none;"{% endif %}>
     <div class="login-card">
       <div class="login-logo-wrap">
         <i class="fa-solid fa-qrcode"></i>
       </div>
       <h1 class="login-title">KNOVA Scanner</h1>
       <p class="login-subtitle">Sign in with your staff, exhibitor, or counsellor account to activate mobile QR scanning.</p>
+
+      {% if access_denied %}
+      <div class="access-denied-banner">
+        <div class="denied-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div class="denied-title">Staff Access Only</div>
+        <div class="denied-msg">{{ access_denied_reason }}</div>
+        <div class="denied-actions">
+          <a href="/portal/" class="denied-btn portal-btn"><i class="fa-solid fa-graduation-cap"></i> Open Attendee Portal</a>
+          <button type="button" onclick="handleMobileLogout(true)" class="denied-btn switch-btn"><i class="fa-solid fa-right-from-bracket"></i> Sign In as Staff / Exhibitor</button>
+        </div>
+      </div>
+      {% endif %}
 
       <div class="role-pills-row">
         <span class="role-pill-hint">🚪 Gate Admin</span>
@@ -1565,7 +1660,7 @@
   <!-- =========================================================================
        2. TOP APP HEADER / MENUBAR WITH ONE-TAP LOGOUT OPTION
        ========================================================================= -->
-  <header class="app-header" id="scannerHeader" {% if not role_info.is_authenticated %}style="display: none;"{% endif %}>
+  <header class="app-header" id="scannerHeader" {% if not role_info.is_authenticated or not role_info.has_scanner_access %}style="display: none;"{% endif %}>
     <div class="header-top-row">
       <!-- USER CHIP / LOGOUT TRIGGER -->
       <div class="user-pill" onclick="openUserModal()">
@@ -1609,7 +1704,7 @@
   <!-- =========================================================================
        3. VIEWS WRAPPER (MENU VIEW vs SCANNER VIEW)
        ========================================================================= -->
-  <div class="views-wrapper" id="viewsWrapper" {% if not role_info.is_authenticated %}style="display: none;"{% endif %}>
+  <div class="views-wrapper" id="viewsWrapper" {% if not role_info.is_authenticated or not role_info.has_scanner_access %}style="display: none;"{% endif %}>
 
     <!-- =======================================================================
          VIEW A: MENU / DASHBOARD SCREEN (Default on open)
@@ -1903,7 +1998,7 @@
   <!-- =========================================================================
        4. BOTTOM NAVIGATION BAR (Menu | Scan | Stats | Recent | Logout)
        ========================================================================= -->
-  <nav class="app-bottom-nav" id="appBottomNav" {% if not role_info.is_authenticated %}style="display: none;"{% endif %}>
+  <nav class="app-bottom-nav" id="appBottomNav" {% if not role_info.is_authenticated or not role_info.has_scanner_access %}style="display: none;"{% endif %}>
     <button class="bottom-nav-item active" id="navItemMenu" onclick="openMenuView()">
       <i class="fa-solid fa-table-cells-large"></i>
       <span>Menu</span>
@@ -2119,7 +2214,7 @@ const INITIAL_CONFIG = {
   ]
 };
 
-let currentUser = INITIAL_CONFIG.roleInfo.is_authenticated ? INITIAL_CONFIG.roleInfo : null;
+let currentUser = (INITIAL_CONFIG.roleInfo && INITIAL_CONFIG.roleInfo.is_authenticated && INITIAL_CONFIG.roleInfo.has_scanner_access) ? INITIAL_CONFIG.roleInfo : null;
 let currentMode = currentUser ? (currentUser.default_mode || 'gate') : 'gate';
 let selectedExhibitorId = (currentUser && currentUser.role === 'exhibitor') ? currentUser.station_id : (INITIAL_CONFIG.defaultExhibitorId || (INITIAL_CONFIG.exhibitors[0] ? INITIAL_CONFIG.exhibitors[0].id : null));
 let selectedSessionId = (currentUser && currentUser.role === 'seminar') ? currentUser.station_id : (INITIAL_CONFIG.defaultSessionId || (INITIAL_CONFIG.sessions[0] ? INITIAL_CONFIG.sessions[0].id : null));
@@ -2155,13 +2250,13 @@ async function handleMobileLogin(e) {
     btn.disabled = false;
     btn.innerHTML = '<span>Sign In & Open Menu</span> <i class="fa-solid fa-arrow-right"></i>';
 
-    if (data.status === 'SUCCESS' && data.user) {
+    if (data.status === 'SUCCESS' && data.user && data.user.has_scanner_access) {
       currentUser = data.user;
       if (data.session_key) localStorage.setItem('knova_session_key', data.session_key);
       localStorage.setItem('knova_user_info', JSON.stringify(currentUser));
       onLoginSuccess();
     } else {
-      alertEl.textContent = data.message || 'Authentication failed. Please check credentials.';
+      alertEl.textContent = data.message || 'Access Denied: Only Expo Staff, Exhibitors, and Counsellors can operate the scanner.';
       alertEl.style.display = 'block';
     }
   } catch (err) {
@@ -2173,6 +2268,11 @@ async function handleMobileLogin(e) {
 }
 
 function onLoginSuccess() {
+  if (!currentUser || !currentUser.has_scanner_access) {
+    handleMobileLogout(true);
+    return;
+  }
+
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('scannerHeader').style.display = 'flex';
   document.getElementById('viewsWrapper').style.display = 'flex';
@@ -2201,8 +2301,8 @@ function onLoginSuccess() {
   loadRecentPunches();
 }
 
-async function handleMobileLogout() {
-  if (!confirm("Are you sure you want to log out?")) return;
+async function handleMobileLogout(skipConfirm = false) {
+  if (!skipConfirm && !confirm("Are you sure you want to log out?")) return;
 
   try {
     await fetch('/api/mobile-logout/', { method: 'POST', headers: { 'X-CSRFToken': getCookie('csrftoken') || '' } });
@@ -2220,6 +2320,8 @@ async function handleMobileLogout() {
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginUsername').value = '';
   document.getElementById('loginPassword').value = '';
+  const deniedEl = document.querySelector('.access-denied-banner');
+  if (deniedEl) deniedEl.style.display = 'none';
 }
 
 function togglePasswordVisibility() {
@@ -3104,11 +3206,26 @@ function getCookie(name) {
 // APP INITIALIZATION
 // =============================================================================
 window.addEventListener('DOMContentLoaded', () => {
+  // Purge any stored attendee session from localStorage
+  const savedUserStr = localStorage.getItem('knova_user_info');
+  if (savedUserStr) {
+    try {
+      const u = JSON.parse(savedUserStr);
+      if (!u || !u.has_scanner_access || u.role === 'student' || u.role === 'parent') {
+        localStorage.removeItem('knova_user_info');
+        localStorage.removeItem('knova_session_key');
+        currentUser = null;
+      }
+    } catch(e) {
+      localStorage.removeItem('knova_user_info');
+    }
+  }
+
   if (INITIAL_CONFIG.initialStats) {
     updateStats(INITIAL_CONFIG.initialStats);
   }
 
-  if (currentUser && currentUser.is_authenticated) {
+  if (currentUser && currentUser.is_authenticated && currentUser.has_scanner_access) {
     onLoginSuccess();
   } else {
     // Check if session key in localStorage can restore auth
@@ -3117,9 +3234,13 @@ window.addEventListener('DOMContentLoaded', () => {
       fetch('/api/mobile-auth-check/', { headers: { 'X-Session-Key': savedKey } })
         .then(r => r.json())
         .then(d => {
-          if (d.status === 'SUCCESS' && d.user && d.user.is_authenticated) {
+          if (d.status === 'SUCCESS' && d.user && d.user.is_authenticated && d.user.has_scanner_access) {
             currentUser = d.user;
             onLoginSuccess();
+          } else {
+            localStorage.removeItem('knova_user_info');
+            localStorage.removeItem('knova_session_key');
+            currentUser = null;
           }
         }).catch(() => {});
     }

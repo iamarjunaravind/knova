@@ -1347,10 +1347,16 @@ def mobile_login_api(request):
         if not user:
             return JsonResponse({'status': 'ERROR', 'message': err_msg or 'Invalid credentials.'}, status=401)
 
+        role_info = _get_user_scanner_role_info(user)
+        if not role_info.get('has_scanner_access'):
+            return JsonResponse({
+                'status': 'FORBIDDEN',
+                'message': f"Access Denied: Account '{user.username}' is a {role_info.get('role_display', 'Student Attendee')}. Only Expo Gate Staff, University Exhibitors, Seminar Staff, and Academic Counsellors can operate the scanner app."
+            }, status=403)
+
         if not request.session.session_key:
             request.session.save()
 
-        role_info = _get_user_scanner_role_info(user)
         return JsonResponse({
             'status': 'SUCCESS',
             'message': f'Signed in as {role_info.get("name", user.username)}.',
@@ -1378,15 +1384,25 @@ def mobile_logout_api(request):
 def mobile_auth_check_api(request):
     """
     Returns current authentication status and user role info for mobile app.
+    Strictly verifies that user has staff/scanner operating privileges.
     """
     user = _get_user_from_request_or_session(request)
     if not user:
-        return JsonResponse({'status': 'UNAUTHENTICATED', 'is_authenticated': False})
+        return JsonResponse({'status': 'UNAUTHENTICATED', 'is_authenticated': False, 'has_scanner_access': False})
 
     role_info = _get_user_scanner_role_info(user)
+    if not role_info.get('has_scanner_access'):
+        return JsonResponse({
+            'status': 'FORBIDDEN',
+            'is_authenticated': False,
+            'has_scanner_access': False,
+            'message': f"Access Denied: Account '{user.username}' is a student attendee without scanner privileges."
+        }, status=403)
+
     return JsonResponse({
         'status': 'SUCCESS',
         'is_authenticated': True,
+        'has_scanner_access': True,
         'user': role_info,
         'stations': _get_scanner_stations_payload()
     })
@@ -1792,7 +1808,25 @@ def mobile_scanner_view(request):
     """
     from .models import Registration, ExpoCheckInLog, EventLocation, Exhibitor, ProgrammeSession, EducationExpert
     user = _get_user_from_request_or_session(request)
-    role_info = _get_user_scanner_role_info(user) if user else {'is_authenticated': False, 'has_scanner_access': False}
+    raw_role_info = _get_user_scanner_role_info(user) if user else {'is_authenticated': False, 'has_scanner_access': False}
+
+    access_denied = False
+    access_denied_reason = ""
+    if user and user.is_authenticated:
+        if not raw_role_info.get('has_scanner_access'):
+            access_denied = True
+            access_denied_reason = f"Signed in as {user.get_full_name() or user.username} ({raw_role_info.get('role_display', 'Student Attendee')}). Scanner access is restricted to Expo Gate Staff, University Exhibitors, Seminar Staff, and Academic Counsellors."
+            role_info = {
+                'is_authenticated': False,
+                'has_scanner_access': False,
+                'role': 'student',
+                'username': user.username,
+                'name': user.get_full_name() or user.username
+            }
+        else:
+            role_info = raw_role_info
+    else:
+        role_info = {'is_authenticated': False, 'has_scanner_access': False, 'role': 'none'}
 
     total_checked_in = Registration.objects.filter(is_checked_in=True).count()
     total_registered = Registration.objects.count()
@@ -1845,6 +1879,8 @@ def mobile_scanner_view(request):
         'experts': experts,
         'role_info': role_info,
         'role_info_json': json.dumps(role_info),
+        'access_denied': access_denied,
+        'access_denied_reason': access_denied_reason,
         'default_mode': default_mode,
         'default_exhibitor_id': default_exhibitor_id,
         'default_session_id': default_session_id,
