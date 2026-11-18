@@ -593,6 +593,318 @@
       transform: scale(0.96);
     }
 
+    /* ==========================================================================
+       EXPO LIVE STATISTICS SECTION
+       ========================================================================== */
+    .expo-stats-section {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.3s;
+    }
+
+    .expo-stats-section.pulse-highlight {
+      animation: sectionGlow 1.2s ease-in-out;
+    }
+
+    @keyframes sectionGlow {
+      0% { transform: scale(1); box-shadow: 0 0 0 rgba(99, 102, 241, 0); }
+      50% { transform: scale(1.015); box-shadow: 0 0 25px rgba(99, 102, 241, 0.45); }
+      100% { transform: scale(1); box-shadow: 0 0 0 rgba(99, 102, 241, 0); }
+    }
+
+    .stats-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2px;
+    }
+
+    .stats-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stats-main-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .stats-live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: dotPulse 1.5s infinite;
+    }
+
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .stats-refresh-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .stats-refresh-btn:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    /* 3-Column Core Metrics Hero */
+    .stats-metrics-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .stat-metric-card {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-border, #6366f1), transparent);
+    }
+
+    .stat-metric-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .stat-metric-icon {
+      font-size: 0.95rem;
+      opacity: 0.95;
+    }
+
+    .stat-metric-badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+    }
+
+    .stat-metric-num {
+      font-size: 1.4rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+
+    .stat-metric-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stat-metric-sub {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Total Each Breakdown Containers */
+    .stat-detail-box {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 13px 14px;
+    }
+
+    .stat-box-title {
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Role Progress Breakdown Row */
+    .role-stat-item {
+      margin-bottom: 11px;
+    }
+    .role-stat-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .role-stat-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 0.75rem;
+    }
+
+    .role-stat-name {
+      font-weight: 700;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .role-stat-counts {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .role-stat-counts strong {
+      color: #fff;
+    }
+
+    .role-progress-bar-wrap {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .role-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .role-progress-fill.student { background: linear-gradient(90deg, #6366f1, #38bdf8); }
+    .role-progress-fill.parent { background: linear-gradient(90deg, #38bdf8, #34d399); }
+    .role-progress-fill.other { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+    /* 4-in-1 Station Activity 2x2 Grid */
+    .station-activities-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .act-stat-card {
+      background: rgba(255, 255, 255, 0.028);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 10px 11px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .act-stat-card.active-role {
+      background: rgba(99, 102, 241, 0.12);
+      border-color: rgba(99, 102, 241, 0.35);
+    }
+
+    .act-stat-icon-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .act-stat-icon {
+      font-size: 0.85rem;
+    }
+
+    .act-stat-tag {
+      font-size: 0.58rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+    }
+
+    .act-stat-num {
+      font-size: 1.25rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .act-stat-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    .act-stat-sub {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .station-personal-pill {
+      display: inline-block;
+      margin-top: 5px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: #fbbf24;
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
     /* RECENT PUNCHED FEED SECTION */
     .recent-punched-section {
       background: rgba(15, 23, 42, 0.6);
@@ -1353,11 +1665,180 @@
           <i class="fa-solid fa-arrows-rotate"></i>
           <span>Switch Station</span>
         </button>
-        <button class="quick-action-btn" onclick="loadRecentPunches()">
-          <i class="fa-solid fa-rotate"></i>
-          <span>Refresh Punches</span>
+        <button class="quick-action-btn" onclick="fetchStats()">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Refresh Stats</span>
         </button>
       </div>
+
+      <!-- =====================================================================
+           EXPO STATISTICS & TOTAL NUMBERS SECTION
+           ===================================================================== -->
+      <section class="expo-stats-section" id="expoStatsSection">
+        <div class="stats-header-bar">
+          <div class="stats-title-wrap">
+            <h2 class="stats-main-title">
+              <i class="fa-solid fa-chart-pie" style="color: #6366f1;"></i>
+              <span>Live Statistics</span>
+            </h2>
+            <div class="stats-live-pill">
+              <span class="pulse-dot"></span> LIVE
+            </div>
+          </div>
+          <button type="button" class="stats-refresh-btn" onclick="fetchStats()">
+            <i class="fa-solid fa-rotate" id="statsRefreshSpinner"></i>
+            <span>Refresh</span>
+          </button>
+        </div>
+
+        <!-- 3-COL CORE METRICS (TOTAL NUMBERS) -->
+        <div class="stats-metrics-grid-3">
+          <div class="stat-metric-card" style="--accent-border: #38bdf8;">
+            <div class="stat-metric-top">
+              <i class="fa-solid fa-users stat-metric-icon" style="color: #38bdf8;"></i>
+              <span class="stat-metric-badge">All</span>
+            </div>
+            <div class="stat-metric-num" id="statTotalReg">{{ total_registered }}</div>
+            <div class="stat-metric-label">Registered</div>
+            <div class="stat-metric-sub">Total database</div>
+          </div>
+
+          <div class="stat-metric-card" style="--accent-border: #34d399;">
+            <div class="stat-metric-top">
+              <i class="fa-solid fa-door-open stat-metric-icon" style="color: #34d399;"></i>
+              <span class="stat-metric-badge" id="statCheckinRateBadge">{{ checkin_rate }}%</span>
+            </div>
+            <div class="stat-metric-num" id="statTotalCheckedIn">{{ total_checked_in }}</div>
+            <div class="stat-metric-label">Hall Entry</div>
+            <div class="stat-metric-sub" id="statCheckinSub">Checked In</div>
+          </div>
+
+          <div class="stat-metric-card" style="--accent-border: #fbbf24;">
+            <div class="stat-metric-top">
+              <i class="fa-solid fa-bolt stat-metric-icon" style="color: #fbbf24;"></i>
+              <span class="stat-metric-badge">Punches</span>
+            </div>
+            <div class="stat-metric-num" id="statTotalAllPunches">{{ total_all_punches }}</div>
+            <div class="stat-metric-label">All Activities</div>
+            <div class="stat-metric-sub">Across 4 stations</div>
+          </div>
+        </div>
+
+        <!-- TOTAL EACH: ATTENDEE BREAKDOWN -->
+        <div class="stat-detail-box">
+          <div class="stat-box-title">
+            <i class="fa-solid fa-id-badge" style="color: #818cf8;"></i>
+            <span>Attendee Numbers & Turnout</span>
+          </div>
+
+          <!-- Students Row -->
+          <div class="role-stat-item">
+            <div class="role-stat-head">
+              <span class="role-stat-name">
+                <i class="fa-solid fa-graduation-cap" style="color: #818cf8;"></i>
+                <span>Students</span>
+              </span>
+              <span class="role-stat-counts">
+                <strong id="statStudentsCheckedIn">{{ students_checked_in|default:"0" }}</strong> / <span id="statStudentsTotal">{{ total_students|default:"0" }}</span>
+                (<span id="statStudentsRate">{{ student_rate|default:"0" }}%</span>)
+              </span>
+            </div>
+            <div class="role-progress-bar-wrap">
+              <div class="role-progress-fill student" id="statStudentsBar" style="width: {{ student_rate|default:0 }}%;"></div>
+            </div>
+          </div>
+
+          <!-- Parents Row -->
+          <div class="role-stat-item">
+            <div class="role-stat-head">
+              <span class="role-stat-name">
+                <i class="fa-solid fa-user-group" style="color: #38bdf8;"></i>
+                <span>Parents</span>
+              </span>
+              <span class="role-stat-counts">
+                <strong id="statParentsCheckedIn">{{ parents_checked_in|default:"0" }}</strong> / <span id="statParentsTotal">{{ total_parents|default:"0" }}</span>
+                (<span id="statParentsRate">{{ parent_rate|default:"0" }}%</span>)
+              </span>
+            </div>
+            <div class="role-progress-bar-wrap">
+              <div class="role-progress-fill parent" id="statParentsBar" style="width: {{ parent_rate|default:0 }}%;"></div>
+            </div>
+          </div>
+
+          <!-- Staff / Exhibitors Row -->
+          <div class="role-stat-item">
+            <div class="role-stat-head">
+              <span class="role-stat-name">
+                <i class="fa-solid fa-building-columns" style="color: #f59e0b;"></i>
+                <span>Exhibitors & Staff</span>
+              </span>
+              <span class="role-stat-counts">
+                <strong id="statOthersCheckedIn">{{ others_checked_in|default:"0" }}</strong> / <span id="statOthersTotal">{{ total_others|default:"0" }}</span>
+              </span>
+            </div>
+            <div class="role-progress-bar-wrap">
+              <div class="role-progress-fill other" id="statOthersBar" style="width: 100%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TOTAL EACH: 4-IN-1 STATION ACTIVITIES -->
+        <div class="stat-detail-box">
+          <div class="stat-box-title">
+            <i class="fa-solid fa-list-check" style="color: #34d399;"></i>
+            <span>Activity Totals (Each Station)</span>
+          </div>
+
+          <div class="station-activities-grid">
+            <!-- 1. Main Gate -->
+            <div class="act-stat-card" id="actCardGate">
+              <div class="act-stat-icon-row">
+                <i class="fa-solid fa-door-open act-stat-icon" style="color: #38bdf8;"></i>
+                <span class="act-stat-tag">Main Hall</span>
+              </div>
+              <div class="act-stat-num" id="statGateEntries">{{ total_checked_in }}</div>
+              <div class="act-stat-title">Gate Entries</div>
+              <div class="act-stat-sub">Turnstile Check-ins</div>
+            </div>
+
+            <!-- 2. Booths -->
+            <div class="act-stat-card" id="actCardBooth">
+              <div class="act-stat-icon-row">
+                <i class="fa-solid fa-store act-stat-icon" style="color: #f59e0b;"></i>
+                <span class="act-stat-tag">Exhibitors</span>
+              </div>
+              <div class="act-stat-num" id="statBoothVisits">{{ total_booth_visits|default:"0" }}</div>
+              <div class="act-stat-title">Booth Visits</div>
+              <div class="act-stat-sub"><span id="statBoothUnique">{{ unique_booth_visitors|default:"0" }}</span> unique students</div>
+              <div class="station-personal-pill" id="statMyBoothPill" style="display: none;">My Booth: 0</div>
+            </div>
+
+            <!-- 3. Seminars -->
+            <div class="act-stat-card" id="actCardSeminar">
+              <div class="act-stat-icon-row">
+                <i class="fa-solid fa-chalkboard-user act-stat-icon" style="color: #c084fc;"></i>
+                <span class="act-stat-tag">Seminars</span>
+              </div>
+              <div class="act-stat-num" id="statSeminars">{{ total_seminars|default:"0" }}</div>
+              <div class="act-stat-title">Seminar Attendees</div>
+              <div class="act-stat-sub"><span id="statSeminarsUnique">{{ unique_seminar_visitors|default:"0" }}</span> participants</div>
+              <div class="station-personal-pill" id="statMySeminarPill" style="display: none;">My Hall: 0</div>
+            </div>
+
+            <!-- 4. Counsellors -->
+            <div class="act-stat-card" id="actCardCounselling">
+              <div class="act-stat-icon-row">
+                <i class="fa-solid fa-user-graduate act-stat-icon" style="color: #34d399;"></i>
+                <span class="act-stat-tag">Counsellors</span>
+              </div>
+              <div class="act-stat-num" id="statConsultations">{{ total_consultations|default:"0" }}</div>
+              <div class="act-stat-title">Consultations</div>
+              <div class="act-stat-sub"><span id="statConsultationsUnique">{{ unique_consultation_visitors|default:"0" }}</span> 1-on-1 sessions</div>
+              <div class="station-personal-pill" id="statMyConsultPill" style="display: none;">My Desk: 0</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- RECENT PUNCHED FEED SECTION -->
       <div class="recent-punched-section">
@@ -1420,7 +1901,7 @@
   </div>
 
   <!-- =========================================================================
-       4. BOTTOM NAVIGATION BAR (Menu | Scan | Recent | Logout)
+       4. BOTTOM NAVIGATION BAR (Menu | Scan | Stats | Recent | Logout)
        ========================================================================= -->
   <nav class="app-bottom-nav" id="appBottomNav" {% if not role_info.is_authenticated %}style="display: none;"{% endif %}>
     <button class="bottom-nav-item active" id="navItemMenu" onclick="openMenuView()">
@@ -1430,6 +1911,10 @@
     <button class="bottom-nav-item scan-center-item" id="navItemScan" onclick="openScannerView()">
       <div class="scan-fab"><i class="fa-solid fa-qrcode"></i></div>
       <span style="margin-top: 2px;">Scan</span>
+    </button>
+    <button class="bottom-nav-item" id="navItemStats" onclick="scrollToStatsSection()">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>Stats</span>
     </button>
     <button class="bottom-nav-item" id="navItemRecent" onclick="scrollToRecentPunches()">
       <i class="fa-solid fa-clock-rotate-left"></i>
@@ -1612,6 +2097,7 @@
 <script>
 const INITIAL_CONFIG = {
   roleInfo: {{ role_info_json|safe|default:"{}" }},
+  initialStats: {{ stats_json|safe|default:"{}" }},
   defaultMode: "{{ default_mode|default:'gate' }}",
   defaultExhibitorId: {{ default_exhibitor_id|default:"null" }},
   defaultSessionId: {{ default_session_id|default:"null" }},
@@ -1795,6 +2281,8 @@ function openMenuView() {
   // Bottom nav highlight
   document.getElementById('navItemMenu').classList.add('active');
   document.getElementById('navItemScan').classList.remove('active');
+  const navStats = document.getElementById('navItemStats');
+  if (navStats) navStats.classList.remove('active');
   document.getElementById('navItemRecent').classList.remove('active');
 
   loadRecentPunches();
@@ -1819,17 +2307,47 @@ function openScannerView() {
   // Bottom nav highlight
   document.getElementById('navItemMenu').classList.remove('active');
   document.getElementById('navItemScan').classList.add('active');
+  const navStats = document.getElementById('navItemStats');
+  if (navStats) navStats.classList.remove('active');
   document.getElementById('navItemRecent').classList.remove('active');
 
   startScanner();
 }
 
+function scrollToStatsSection() {
+  if (activeView !== 'menu') {
+    openMenuView();
+  }
+  setTimeout(() => {
+    const el = document.getElementById('expoStatsSection');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.classList.add('pulse-highlight');
+      setTimeout(() => el.classList.remove('pulse-highlight'), 1200);
+    }
+  }, 100);
+
+  document.getElementById('navItemMenu').classList.remove('active');
+  document.getElementById('navItemScan').classList.remove('active');
+  const navStats = document.getElementById('navItemStats');
+  if (navStats) navStats.classList.add('active');
+  document.getElementById('navItemRecent').classList.remove('active');
+}
+
 function scrollToRecentPunches() {
-  openMenuView();
+  if (activeView !== 'menu') {
+    openMenuView();
+  }
   setTimeout(() => {
     const el = document.querySelector('.recent-punched-section');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 100);
+
+  document.getElementById('navItemMenu').classList.remove('active');
+  document.getElementById('navItemScan').classList.remove('active');
+  const navStats = document.getElementById('navItemStats');
+  if (navStats) navStats.classList.remove('active');
+  document.getElementById('navItemRecent').classList.add('active');
 }
 
 // =============================================================================
@@ -2200,18 +2718,137 @@ function setRoleBadge(el, role) {
 
 function updateStats(stats) {
   if (!stats) return;
+
+  // Station specific banner
   const countEl = document.getElementById('menuStationCount');
   const labelEl = document.getElementById('menuStationCountLabel');
   if (stats.station_label && labelEl) labelEl.textContent = stats.station_label;
   if (stats.station_count !== undefined && countEl) countEl.textContent = stats.station_count;
   else if (stats.total_checked_in !== undefined && countEl) countEl.textContent = stats.total_checked_in;
-  if (stats.total_registered !== undefined && document.getElementById('menuTotalRegCount')) {
-    document.getElementById('menuTotalRegCount').textContent = stats.total_registered;
+
+  // Core totals
+  if (stats.total_registered !== undefined) {
+    const el = document.getElementById('statTotalReg');
+    if (el) el.textContent = stats.total_registered;
+    const menuReg = document.getElementById('menuTotalRegCount');
+    if (menuReg) menuReg.textContent = stats.total_registered;
+  }
+  if (stats.total_checked_in !== undefined) {
+    const el = document.getElementById('statTotalCheckedIn');
+    if (el) el.textContent = stats.total_checked_in;
+    const gateEl = document.getElementById('statGateEntries');
+    if (gateEl) gateEl.textContent = stats.total_checked_in;
+  }
+  if (stats.checkin_rate !== undefined) {
+    const badge = document.getElementById('statCheckinRateBadge');
+    if (badge) badge.textContent = stats.checkin_rate + '%';
+  }
+  if (stats.total_all_punches !== undefined) {
+    const el = document.getElementById('statTotalAllPunches');
+    if (el) el.textContent = stats.total_all_punches;
+  }
+
+  // Attendee Breakdown (Students, Parents, Others)
+  if (stats.total_students !== undefined) {
+    const el = document.getElementById('statStudentsTotal');
+    if (el) el.textContent = stats.total_students;
+  }
+  if (stats.students_checked_in !== undefined) {
+    const el = document.getElementById('statStudentsCheckedIn');
+    if (el) el.textContent = stats.students_checked_in;
+  }
+  if (stats.student_rate !== undefined) {
+    const el = document.getElementById('statStudentsRate');
+    if (el) el.textContent = stats.student_rate + '%';
+    const bar = document.getElementById('statStudentsBar');
+    if (bar) bar.style.width = Math.min(100, Math.max(0, stats.student_rate)) + '%';
+  }
+
+  if (stats.total_parents !== undefined) {
+    const el = document.getElementById('statParentsTotal');
+    if (el) el.textContent = stats.total_parents;
+  }
+  if (stats.parents_checked_in !== undefined) {
+    const el = document.getElementById('statParentsCheckedIn');
+    if (el) el.textContent = stats.parents_checked_in;
+  }
+  if (stats.parent_rate !== undefined) {
+    const el = document.getElementById('statParentsRate');
+    if (el) el.textContent = stats.parent_rate + '%';
+    const bar = document.getElementById('statParentsBar');
+    if (bar) bar.style.width = Math.min(100, Math.max(0, stats.parent_rate)) + '%';
+  }
+
+  if (stats.total_others !== undefined) {
+    const el = document.getElementById('statOthersTotal');
+    if (el) el.textContent = stats.total_others;
+  }
+  if (stats.others_checked_in !== undefined) {
+    const el = document.getElementById('statOthersCheckedIn');
+    if (el) el.textContent = stats.others_checked_in;
+  }
+
+  // Station activities (Booths, Seminars, Consultations)
+  if (stats.total_booth_visits !== undefined) {
+    const el = document.getElementById('statBoothVisits');
+    if (el) el.textContent = stats.total_booth_visits;
+  }
+  if (stats.unique_booth_visitors !== undefined) {
+    const el = document.getElementById('statBoothUnique');
+    if (el) el.textContent = stats.unique_booth_visitors;
+  }
+
+  if (stats.total_seminars !== undefined) {
+    const el = document.getElementById('statSeminars');
+    if (el) el.textContent = stats.total_seminars;
+  }
+  if (stats.unique_seminar_visitors !== undefined) {
+    const el = document.getElementById('statSeminarsUnique');
+    if (el) el.textContent = stats.unique_seminar_visitors;
+  }
+
+  if (stats.total_consultations !== undefined) {
+    const el = document.getElementById('statConsultations');
+    if (el) el.textContent = stats.total_consultations;
+  }
+  if (stats.unique_consultation_visitors !== undefined) {
+    const el = document.getElementById('statConsultationsUnique');
+    if (el) el.textContent = stats.unique_consultation_visitors;
+  }
+
+  // Personal Station Highlight Pill
+  const pillBooth = document.getElementById('statMyBoothPill');
+  const pillSem = document.getElementById('statMySeminarPill');
+  const pillCon = document.getElementById('statMyConsultPill');
+  if (pillBooth) pillBooth.style.display = 'none';
+  if (pillSem) pillSem.style.display = 'none';
+  if (pillCon) pillCon.style.display = 'none';
+
+  const cardBooth = document.getElementById('actCardBooth');
+  const cardSem = document.getElementById('actCardSeminar');
+  const cardCon = document.getElementById('actCardCounselling');
+  if (cardBooth) cardBooth.classList.remove('active-role');
+  if (cardSem) cardSem.classList.remove('active-role');
+  if (cardCon) cardCon.classList.remove('active-role');
+
+  if (currentMode === 'booth' && pillBooth && stats.station_count !== undefined) {
+    pillBooth.textContent = `My Booth: ${stats.station_count}`;
+    pillBooth.style.display = 'inline-block';
+    if (cardBooth) cardBooth.classList.add('active-role');
+  } else if (currentMode === 'seminar' && pillSem && stats.station_count !== undefined) {
+    pillSem.textContent = `My Session: ${stats.station_count}`;
+    pillSem.style.display = 'inline-block';
+    if (cardSem) cardSem.classList.add('active-role');
+  } else if ((currentMode === 'counselling' || currentMode === 'expert') && pillCon && stats.station_count !== undefined) {
+    pillCon.textContent = `My Desk: ${stats.station_count}`;
+    pillCon.style.display = 'inline-block';
+    if (cardCon) cardCon.classList.add('active-role');
   }
 }
 
 async function fetchStats() {
-  if (!currentUser) return;
+  const spinner = document.getElementById('statsRefreshSpinner');
+  if (spinner) spinner.classList.add('fa-spin');
   try {
     const tid = getTargetId();
     const sk = localStorage.getItem('knova_session_key') || '';
@@ -2219,8 +2856,11 @@ async function fetchStats() {
       headers: { 'X-Session-Key': sk }
     });
     const d = await res.json();
+    if (spinner) spinner.classList.remove('fa-spin');
     if (d.status === 'SUCCESS') updateStats(d);
-  } catch(e) {}
+  } catch(e) {
+    if (spinner) spinner.classList.remove('fa-spin');
+  }
 }
 
 function startCountdownBar() {
@@ -2464,6 +3104,10 @@ function getCookie(name) {
 // APP INITIALIZATION
 // =============================================================================
 window.addEventListener('DOMContentLoaded', () => {
+  if (INITIAL_CONFIG.initialStats) {
+    updateStats(INITIAL_CONFIG.initialStats);
+  }
+
   if (currentUser && currentUser.is_authenticated) {
     onLoginSuccess();
   } else {

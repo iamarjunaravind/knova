@@ -1473,52 +1473,114 @@ def mobile_checkin_api(request):
     return JsonResponse({'status': 'ERROR', 'message': 'Method not allowed'}, status=405)
 
 
+def _get_expo_statistics_summary(mode='gate', target_id=None):
+    """
+    Computes real-time numbers, totals, attendee breakdowns and station activity for the scanner.
+    """
+    from .models import Registration, BoothVisit, SeminarAttendance, ExpertConsultationAttendance
+
+    total_registered = Registration.objects.count()
+    total_checked_in = Registration.objects.filter(is_checked_in=True).count()
+    checkin_rate = round((total_checked_in / total_registered * 100), 1) if total_registered > 0 else 0.0
+
+    total_students = Registration.objects.filter(role__iexact='student').count()
+    students_checked_in = Registration.objects.filter(role__iexact='student', is_checked_in=True).count()
+    student_rate = round((students_checked_in / total_students * 100), 1) if total_students > 0 else 0.0
+
+    total_parents = Registration.objects.filter(role__iexact='parent').count()
+    parents_checked_in = Registration.objects.filter(role__iexact='parent', is_checked_in=True).count()
+    parent_rate = round((parents_checked_in / total_parents * 100), 1) if total_parents > 0 else 0.0
+
+    total_others = Registration.objects.exclude(role__in=['student', 'parent', 'Student', 'Parent']).count()
+    others_checked_in = Registration.objects.exclude(role__in=['student', 'parent', 'Student', 'Parent']).filter(is_checked_in=True).count()
+
+    total_gate_entries = total_checked_in
+    total_booth_visits = BoothVisit.objects.count()
+    unique_booth_visitors = BoothVisit.objects.values('student_id').distinct().count()
+
+    total_seminars = SeminarAttendance.objects.count()
+    unique_seminar_visitors = SeminarAttendance.objects.values('registration_id').distinct().count()
+
+    total_consultations = ExpertConsultationAttendance.objects.count()
+    unique_consultation_visitors = ExpertConsultationAttendance.objects.values('registration_id').distinct().count()
+
+    total_all_punches = total_gate_entries + total_booth_visits + total_seminars + total_consultations
+
+    station_count = 0
+    station_unique = 0
+    station_label = 'Checked In'
+    if mode == 'booth':
+        if target_id and str(target_id).isdigit():
+            station_count = BoothVisit.objects.filter(exhibitor_id=int(target_id)).count()
+            station_unique = BoothVisit.objects.filter(exhibitor_id=int(target_id)).values('student_id').distinct().count()
+        else:
+            station_count = total_booth_visits
+            station_unique = unique_booth_visitors
+        station_label = 'Booth Visits'
+    elif mode == 'seminar':
+        if target_id and str(target_id).isdigit():
+            station_count = SeminarAttendance.objects.filter(session_id=int(target_id)).count()
+            station_unique = SeminarAttendance.objects.filter(session_id=int(target_id)).values('registration_id').distinct().count()
+        else:
+            station_count = total_seminars
+            station_unique = unique_seminar_visitors
+        station_label = 'Session Attendees'
+    elif mode in ('counselling', 'expert'):
+        if target_id and str(target_id).isdigit():
+            station_count = ExpertConsultationAttendance.objects.filter(expert_id=int(target_id)).count()
+            station_unique = ExpertConsultationAttendance.objects.filter(expert_id=int(target_id)).values('registration_id').distinct().count()
+        else:
+            station_count = total_consultations
+            station_unique = unique_consultation_visitors
+        station_label = 'Consultations'
+    else:
+        station_count = total_checked_in
+        station_unique = total_checked_in
+        station_label = 'Hall Entries'
+
+    return {
+        'total_registered': total_registered,
+        'total_checked_in': total_checked_in,
+        'checkin_rate': checkin_rate,
+        'total_all_punches': total_all_punches,
+        'total_students': total_students,
+        'students_checked_in': students_checked_in,
+        'student_rate': student_rate,
+        'total_parents': total_parents,
+        'parents_checked_in': parents_checked_in,
+        'parent_rate': parent_rate,
+        'total_others': total_others,
+        'others_checked_in': others_checked_in,
+        'total_gate_entries': total_gate_entries,
+        'total_booth_visits': total_booth_visits,
+        'unique_booth_visitors': unique_booth_visitors,
+        'total_seminars': total_seminars,
+        'unique_seminar_visitors': unique_seminar_visitors,
+        'total_consultations': total_consultations,
+        'unique_consultation_visitors': unique_consultation_visitors,
+        'station_count': station_count,
+        'station_unique': station_unique,
+        'station_label': station_label,
+        'mode': mode,
+    }
+
+
 @_cors_allow_mobile
 @csrf_exempt
 def mobile_checkin_stats_api(request):
     """
     Real-time stats polling endpoint supporting all 4 modes.
+    Returns comprehensive expo numbers and total each.
     """
-    from .models import Registration, BoothVisit, SeminarAttendance, ExpertConsultationAttendance
     user = _get_user_from_request_or_session(request)
     role_info = _get_user_scanner_role_info(user) if user else {}
 
     mode = (request.GET.get('mode') or (role_info.get('default_mode') if role_info.get('is_locked') else 'gate')).lower()
     target_id = request.GET.get('target_id') or (role_info.get('station_id') if role_info.get('is_locked') else None)
 
-    total_checked_in = Registration.objects.filter(is_checked_in=True).count()
-    total_registered = Registration.objects.count()
-
-    data = {
-        'status': 'SUCCESS',
-        'total_checked_in': total_checked_in,
-        'total_registered': total_registered,
-        'mode': mode
-    }
-
-    if mode == 'booth':
-        if target_id and str(target_id).isdigit():
-            data['station_count'] = BoothVisit.objects.filter(exhibitor_id=int(target_id)).count()
-        else:
-            data['station_count'] = BoothVisit.objects.count()
-        data['station_label'] = 'Booth Visits'
-    elif mode == 'seminar':
-        if target_id and str(target_id).isdigit():
-            data['station_count'] = SeminarAttendance.objects.filter(session_id=int(target_id)).count()
-        else:
-            data['station_count'] = SeminarAttendance.objects.count()
-        data['station_label'] = 'Session Attendees'
-    elif mode in ('counselling', 'expert'):
-        if target_id and str(target_id).isdigit():
-            data['station_count'] = ExpertConsultationAttendance.objects.filter(expert_id=int(target_id)).count()
-        else:
-            data['station_count'] = ExpertConsultationAttendance.objects.count()
-        data['station_label'] = 'Students Consulted'
-    else:
-        data['station_count'] = total_checked_in
-        data['station_label'] = 'Checked In'
-
-    return JsonResponse(data)
+    summary = _get_expo_statistics_summary(mode, target_id)
+    summary['status'] = 'SUCCESS'
+    return JsonResponse(summary)
 
 
 @_cors_allow_mobile
@@ -1752,9 +1814,30 @@ def mobile_scanner_view(request):
         if param_mode in ('gate', 'booth', 'seminar', 'counselling'):
             default_mode = param_mode
 
+    stats_summary = _get_expo_statistics_summary(default_mode, role_info.get('station_id'))
+
     return render(request, 'core/mobile_scanner.html', {
-        'total_checked_in': total_checked_in,
-        'total_registered': total_registered,
+        'total_checked_in': stats_summary['total_checked_in'],
+        'total_registered': stats_summary['total_registered'],
+        'checkin_rate': stats_summary['checkin_rate'],
+        'total_all_punches': stats_summary['total_all_punches'],
+        'total_students': stats_summary['total_students'],
+        'students_checked_in': stats_summary['students_checked_in'],
+        'student_rate': stats_summary['student_rate'],
+        'total_parents': stats_summary['total_parents'],
+        'parents_checked_in': stats_summary['parents_checked_in'],
+        'parent_rate': stats_summary['parent_rate'],
+        'total_others': stats_summary['total_others'],
+        'others_checked_in': stats_summary['others_checked_in'],
+        'total_gate_entries': stats_summary['total_gate_entries'],
+        'total_booth_visits': stats_summary['total_booth_visits'],
+        'unique_booth_visitors': stats_summary['unique_booth_visitors'],
+        'total_seminars': stats_summary['total_seminars'],
+        'unique_seminar_visitors': stats_summary['unique_seminar_visitors'],
+        'total_consultations': stats_summary['total_consultations'],
+        'unique_consultation_visitors': stats_summary['unique_consultation_visitors'],
+        'stats': stats_summary,
+        'stats_json': json.dumps(stats_summary),
         'recent_logs': recent_logs,
         'event': upcoming_event,
         'exhibitors': exhibitors,
