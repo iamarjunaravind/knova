@@ -894,7 +894,7 @@ async function handleMobileLogin(e) {
   } catch (err) {
     btn.disabled = false;
     btn.innerHTML = '<span>Sign In & Open Scanner</span> <i class="fa-solid fa-arrow-right"></i>';
-    alertEl.textContent = 'Network error connecting to login server.';
+    alertEl.textContent = 'Connection error: ' + (err.message || err);
     alertEl.style.display = 'block';
   }
 }

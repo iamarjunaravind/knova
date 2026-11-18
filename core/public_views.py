@@ -1659,6 +1659,7 @@ def mobile_scanner_view(request):
         'sessions': sessions,
         'experts': experts,
         'role_info': role_info,
+        'role_info_json': json.dumps(role_info),
         'default_mode': default_mode,
         'default_exhibitor_id': default_exhibitor_id,
         'default_session_id': default_session_id,

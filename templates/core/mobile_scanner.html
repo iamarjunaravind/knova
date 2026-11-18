@@ -818,7 +818,7 @@
 <!-- DATA & RUNTIME SCRIPT -->
 <script>
 const INITIAL_CONFIG = {
-  roleInfo: {{ role_info|safe|default:"{}" }},
+  roleInfo: {{ role_info_json|safe|default:"{}" }},
   defaultMode: "{{ default_mode|default:'gate' }}",
   defaultExhibitorId: {{ default_exhibitor_id|default:"null" }},
   defaultSessionId: {{ default_session_id|default:"null" }},
@@ -886,7 +886,7 @@ async function handleMobileLogin(e) {
   } catch (err) {
     btn.disabled = false;
     btn.innerHTML = '<span>Sign In & Open Scanner</span> <i class="fa-solid fa-arrow-right"></i>';
-    alertEl.textContent = 'Network error connecting to login server.';
+    alertEl.textContent = 'Connection error: ' + (err.message || err);
     alertEl.style.display = 'block';
   }
 }
