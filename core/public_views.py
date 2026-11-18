@@ -1289,10 +1289,10 @@ def _authenticate_mobile_user(request, raw_username, password):
 
 def _get_scanner_stations_payload():
     from .models import Exhibitor, ProgrammeSession
-    exhibitors = [{'id': e.id, 'name': e.company_name, 'sub': e.hall_or_venue or 'Exhibition Floor'} for e in Exhibitor.objects.all().order_by('company_name')]
-    sessions = [{'id': s.id, 'name': s.title, 'sub': f"{s.hall_name or 'Keynote Hall'}"} for s in ProgrammeSession.objects.all().order_by('id')]
+    exhibitors = [{'id': e.id, 'name': e.company_name, 'sub': getattr(e, 'country', '') or 'Exhibition Floor'} for e in Exhibitor.objects.all().order_by('company_name')]
+    sessions = [{'id': s.id, 'name': s.title, 'sub': f"{getattr(s, 'hall_name', '') or 'Keynote Hall'}"} for s in ProgrammeSession.objects.all().order_by('id')]
     experts_list = _get_or_create_default_experts()
-    experts = [{'id': exp.id, 'name': exp.name, 'sub': exp.desk_name or 'Counselling Desk'} for exp in experts_list]
+    experts = [{'id': exp.id, 'name': exp.name, 'sub': getattr(exp, 'desk_name', '') or 'Counselling Desk'} for exp in experts_list]
     return {'exhibitors': exhibitors, 'sessions': sessions, 'experts': experts}
 
 

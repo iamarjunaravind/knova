@@ -825,7 +825,7 @@ const INITIAL_CONFIG = {
   defaultExpertId: {{ default_expert_id|default:"null" }},
   exhibitors: [
     {% for exh in exhibitors %}
-    { id: {{ exh.id }}, name: "{{ exh.company_name|escapejs }}", sub: "{{ exh.hall_or_venue|default:'Exhibition Floor'|escapejs }}" },
+    { id: {{ exh.id }}, name: "{{ exh.company_name|escapejs }}", sub: "{{ exh.country|default:'Exhibition Floor'|escapejs }}" },
     {% endfor %}
   ],
   sessions: [
