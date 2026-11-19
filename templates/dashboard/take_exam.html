@@ -1215,7 +1215,7 @@
                     <i class="fas fa-clipboard-list" style="color: #60a5fa;"></i>
                     {{ exam.title }} &bull; Instructions
                 </h3>
-                <button class="cbt-modal-close-btn" id="modalCloseX" onclick="if(examHasStarted){hideModal('instructionsModal');}" style="display:none; color:#ffffff;">&times;</button>
+                <button type="button" class="cbt-modal-close-btn" id="modalCloseX" onclick="closeInstructionsModal()" aria-label="Close" style="color:#ffffff; font-size:24px; line-height:1; cursor:pointer; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:50%; width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; transition:all 0.18s;">&times;</button>
             </div>
             <div class="cbt-modal-body" style="padding: 24px; font-size: 14px; line-height: 1.6; color: #1e293b; max-height: 65vh; overflow-y: auto;">
                 <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between;">
@@ -1264,13 +1264,18 @@
                     <li style="margin-bottom: 6px;"><span class="leg-circle-badge bg-leg-marked-ans" style="display:inline-flex; width:18px; height:18px; margin-right:8px;">#</span> <strong>Purple with Check:</strong> Marked and Answered (will be scored).</li>
                 </ul>
             </div>
-            <div class="cbt-modal-foot" style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; border-bottom-left-radius: 18px; border-bottom-right-radius: 18px;">
+            <div class="cbt-modal-foot" style="padding: 14px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; border-bottom-left-radius: 18px; border-bottom-right-radius: 18px; gap: 12px; flex-wrap: wrap;">
                 <div style="font-size: 12.5px; color: #64748b; font-weight: 600;">
                     <i class="fas fa-clock" style="color:#10b981;"></i> Timer begins immediately upon clicking Proceed
                 </div>
-                <button type="button" class="btn-cbt" id="btnProceedExam" onclick="startExamSession()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-weight: 800; font-size: 14.5px; padding: 12px 28px; border-radius: 10px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);">
-                    <i class="fas fa-play"></i> Proceed to Examination &rarr;
-                </button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button type="button" class="btn-cbt btn-cbt-default" id="btnCancelInstructions" onclick="closeInstructionsModal()" style="padding: 11px 18px; font-weight: 700; border-radius: 10px; font-size: 13.5px; color: #475569; background: #ffffff; border: 1.5px solid #cbd5e1; cursor: pointer;">
+                        <i class="fas fa-xmark"></i> Close
+                    </button>
+                    <button type="button" class="btn-cbt" id="btnProceedExam" onclick="startExamSession()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-weight: 800; font-size: 14.5px; padding: 12px 28px; border-radius: 10px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);">
+                        <i class="fas fa-play"></i> Proceed to Examination &rarr;
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1645,16 +1650,20 @@
         // Show total time on clock display initially (timer has not started yet)
         clockDigits.innerText = formatClock(remainingSeconds);
 
+        function closeInstructionsModal() {
+            if (examHasStarted) {
+                hideModal('instructionsModal');
+            } else {
+                startExamSession();
+            }
+        }
+
         function startExamSession() {
             if (examHasStarted) return;
             examHasStarted = true;
 
             // Close the instructions gate
             hideModal('instructionsModal');
-
-            // Allow the close 'X' button if student re-opens instructions during the exam
-            const closeX = document.getElementById('modalCloseX');
-            if (closeX) closeX.style.display = 'inline-block';
 
             const proceedBtn = document.getElementById('btnProceedExam');
             if (proceedBtn) {
