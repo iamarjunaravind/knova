@@ -740,9 +740,13 @@ def _perform_mobile_checkin(request, raw_code):
         },
         'stats': {
             'station_count': total_checked_in,
-            'station_label': 'Checked In',
+            'station_label': 'Hall Entry Punches',
+            'station_unique': Registration.objects.filter(role__iexact='student', is_checked_in=True).count(),
+            'station_sublabel': 'Students Checked In',
             'total_checked_in': total_checked_in,
-            'total_registered': total_registered,
+            'total_gate_entries': total_checked_in,
+            'students_checked_in': Registration.objects.filter(role__iexact='student', is_checked_in=True).count(),
+            'parents_checked_in': Registration.objects.filter(role__iexact='parent', is_checked_in=True).count(),
         }
     }
 
@@ -833,6 +837,7 @@ def _perform_booth_punch(request, raw_code, exhibitor_id=None, rating='Warm', no
     parts = (reg.full_name or 'A').split()
     initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
     total_booth_visits = BoothVisit.objects.filter(exhibitor=exhibitor).count()
+    unique_booth_students = BoothVisit.objects.filter(exhibitor=exhibitor).values('student_id').distinct().count()
 
     return {
         'status': status_label,
@@ -856,9 +861,11 @@ def _perform_booth_punch(request, raw_code, exhibitor_id=None, rating='Warm', no
         },
         'stats': {
             'station_count': total_booth_visits,
-            'station_label': 'Booth Visits',
-            'total_checked_in': Registration.objects.filter(is_checked_in=True).count(),
-            'total_registered': Registration.objects.count()
+            'station_label': 'Booth Punches',
+            'station_unique': unique_booth_students,
+            'station_sublabel': 'Unique Students',
+            'total_booth_visits': BoothVisit.objects.count(),
+            'unique_booth_visitors': BoothVisit.objects.values('student_id').distinct().count(),
         }
     }
 
@@ -928,6 +935,7 @@ def _perform_seminar_punch(request, raw_code, session_id=None, notes=''):
     parts = (reg.full_name or 'A').split()
     initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
     total_session_attendees = SeminarAttendance.objects.filter(session=session).count()
+    unique_session_attendees = SeminarAttendance.objects.filter(session=session).values('registration_id').distinct().count()
 
     return {
         'status': status_label,
@@ -951,9 +959,11 @@ def _perform_seminar_punch(request, raw_code, session_id=None, notes=''):
         },
         'stats': {
             'station_count': total_session_attendees,
-            'station_label': 'Session Attendees',
-            'total_checked_in': Registration.objects.filter(is_checked_in=True).count(),
-            'total_registered': Registration.objects.count()
+            'station_label': 'Seminar Punches',
+            'station_unique': unique_session_attendees,
+            'station_sublabel': 'Unique Attendees',
+            'total_seminars': SeminarAttendance.objects.count(),
+            'unique_seminar_visitors': SeminarAttendance.objects.values('registration_id').distinct().count(),
         }
     }
 
@@ -1024,6 +1034,7 @@ def _perform_counselling_punch(request, raw_code, expert_id=None, notes=''):
     parts = (reg.full_name or 'A').split()
     initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
     total_consulted = ExpertConsultationAttendance.objects.filter(expert=expert).count()
+    unique_consulted = ExpertConsultationAttendance.objects.filter(expert=expert).values('registration_id').distinct().count()
 
     return {
         'status': status_label,
@@ -1047,9 +1058,11 @@ def _perform_counselling_punch(request, raw_code, expert_id=None, notes=''):
         },
         'stats': {
             'station_count': total_consulted,
-            'station_label': 'Students Consulted',
-            'total_checked_in': Registration.objects.filter(is_checked_in=True).count(),
-            'total_registered': Registration.objects.count()
+            'station_label': 'Visitors Punched',
+            'station_unique': unique_consulted,
+            'station_sublabel': 'Students Advised',
+            'total_consultations': ExpertConsultationAttendance.objects.count(),
+            'unique_consultation_visitors': ExpertConsultationAttendance.objects.values('registration_id').distinct().count(),
         }
     }
 
@@ -1134,14 +1147,26 @@ def _get_user_scanner_role_info(user):
     if not user or not user.is_authenticated:
         return {'is_authenticated': False, 'has_scanner_access': False}
 
-    is_admin = user.is_superuser or user.is_staff or user.username.lower() in ('admin', 'gate_staff', 'staff')
+    is_gate_staff = user.username.lower() in ('gate_staff', 'gatestaff', 'gate') or (hasattr(user, 'groups') and user.groups.filter(name__icontains='Gate').exists())
+    is_admin = (user.is_superuser or user.is_staff or user.username.lower() in ('admin', 'staff')) and not is_gate_staff
 
-    # Check Exhibitor
+    # Check Exhibitor / University
     exhibitor = None
-    if hasattr(user, 'exhibitor_profile'):
+    if hasattr(user, 'exhibitor_profile') and user.exhibitor_profile:
         exhibitor = user.exhibitor_profile
-    elif hasattr(user, 'exhibitor_staff_profile'):
+    elif hasattr(user, 'exhibitor_staff_profile') and user.exhibitor_staff_profile:
         exhibitor = user.exhibitor_staff_profile.exhibitor
+    elif hasattr(user, 'university_staff') and user.university_staff:
+        uni = user.university_staff.university
+        exhibitor = getattr(uni, 'exhibitor', None) or Exhibitor.objects.filter(company_name__iexact=uni.name).first()
+        if not exhibitor:
+            from .models import EventLocation
+            default_loc = EventLocation.objects.first()
+            if default_loc:
+                exhibitor, _ = Exhibitor.objects.get_or_create(
+                    company_name=uni.name,
+                    defaults={'university': uni, 'event_location': default_loc}
+                )
 
     # Check Education Expert / Counsellor
     expert = getattr(user, 'education_expert', None)
@@ -1149,21 +1174,7 @@ def _get_user_scanner_role_info(user):
     # Check Seminar Staff
     seminar_staff = getattr(user, 'seminar_staff', None)
 
-    if is_admin:
-        return {
-            'is_authenticated': True,
-            'has_scanner_access': True,
-            'role': 'admin',
-            'role_display': 'Admin / Gate Staff',
-            'default_mode': 'gate',
-            'allowed_modes': ['gate', 'booth', 'seminar', 'counselling'],
-            'username': user.username,
-            'name': user.get_full_name() or user.username,
-            'station_name': 'All Expo Gates & Pavilions',
-            'station_id': None,
-            'is_locked': False
-        }
-    elif exhibitor:
+    if exhibitor:
         return {
             'is_authenticated': True,
             'has_scanner_access': True,
@@ -1175,6 +1186,20 @@ def _get_user_scanner_role_info(user):
             'name': exhibitor.company_name,
             'station_name': exhibitor.company_name,
             'station_id': exhibitor.id,
+            'is_locked': True
+        }
+    elif is_gate_staff:
+        return {
+            'is_authenticated': True,
+            'has_scanner_access': True,
+            'role': 'gate',
+            'role_display': 'Expo Gate Entry',
+            'default_mode': 'gate',
+            'allowed_modes': ['gate'],
+            'username': user.username,
+            'name': user.get_full_name() or user.username,
+            'station_name': 'Main Expo Turnstiles',
+            'station_id': None,
             'is_locked': True
         }
     elif expert:
@@ -1205,6 +1230,20 @@ def _get_user_scanner_role_info(user):
             'station_name': session.title if session else 'Keynote Hall',
             'station_id': session.id if session else None,
             'is_locked': True
+        }
+    elif is_admin:
+        return {
+            'is_authenticated': True,
+            'has_scanner_access': True,
+            'role': 'admin',
+            'role_display': 'Admin / Coordinator',
+            'default_mode': 'gate',
+            'allowed_modes': ['gate', 'booth', 'seminar', 'counselling'],
+            'username': user.username,
+            'name': user.get_full_name() or user.username,
+            'station_name': 'All Expo Gates & Pavilions',
+            'station_id': None,
+            'is_locked': False
         }
 
     return {
@@ -1491,23 +1530,19 @@ def mobile_checkin_api(request):
 
 def _get_expo_statistics_summary(mode='gate', target_id=None):
     """
-    Computes real-time numbers, totals, attendee breakdowns and station activity for the scanner.
+    Computes real-time numbers and pure punched statistics for the scanner.
+    Per user requirement:
+      - Only punched statistics are returned (no total registered database counts).
+      - Exhibitors: Booth punches only.
+      - Gate entry: Hall entry punches only.
+      - Seminars: Seminar session punches only.
+      - Academic counsellors: Visitors punches only.
     """
     from .models import Registration, BoothVisit, SeminarAttendance, ExpertConsultationAttendance
 
-    total_registered = Registration.objects.count()
     total_checked_in = Registration.objects.filter(is_checked_in=True).count()
-    checkin_rate = round((total_checked_in / total_registered * 100), 1) if total_registered > 0 else 0.0
-
-    total_students = Registration.objects.filter(role__iexact='student').count()
     students_checked_in = Registration.objects.filter(role__iexact='student', is_checked_in=True).count()
-    student_rate = round((students_checked_in / total_students * 100), 1) if total_students > 0 else 0.0
-
-    total_parents = Registration.objects.filter(role__iexact='parent').count()
     parents_checked_in = Registration.objects.filter(role__iexact='parent', is_checked_in=True).count()
-    parent_rate = round((parents_checked_in / total_parents * 100), 1) if total_parents > 0 else 0.0
-
-    total_others = Registration.objects.exclude(role__in=['student', 'parent', 'Student', 'Parent']).count()
     others_checked_in = Registration.objects.exclude(role__in=['student', 'parent', 'Student', 'Parent']).filter(is_checked_in=True).count()
 
     total_gate_entries = total_checked_in
@@ -1525,6 +1560,8 @@ def _get_expo_statistics_summary(mode='gate', target_id=None):
     station_count = 0
     station_unique = 0
     station_label = 'Checked In'
+    station_sublabel = 'Hall Entries'
+
     if mode == 'booth':
         if target_id and str(target_id).isdigit():
             station_count = BoothVisit.objects.filter(exhibitor_id=int(target_id)).count()
@@ -1532,7 +1569,8 @@ def _get_expo_statistics_summary(mode='gate', target_id=None):
         else:
             station_count = total_booth_visits
             station_unique = unique_booth_visitors
-        station_label = 'Booth Visits'
+        station_label = 'Booth Punches'
+        station_sublabel = 'Unique Students'
     elif mode == 'seminar':
         if target_id and str(target_id).isdigit():
             station_count = SeminarAttendance.objects.filter(session_id=int(target_id)).count()
@@ -1540,7 +1578,8 @@ def _get_expo_statistics_summary(mode='gate', target_id=None):
         else:
             station_count = total_seminars
             station_unique = unique_seminar_visitors
-        station_label = 'Session Attendees'
+        station_label = 'Seminar Punches'
+        station_sublabel = 'Unique Attendees'
     elif mode in ('counselling', 'expert'):
         if target_id and str(target_id).isdigit():
             station_count = ExpertConsultationAttendance.objects.filter(expert_id=int(target_id)).count()
@@ -1548,24 +1587,23 @@ def _get_expo_statistics_summary(mode='gate', target_id=None):
         else:
             station_count = total_consultations
             station_unique = unique_consultation_visitors
-        station_label = 'Consultations'
+        station_label = 'Visitors Punched'
+        station_sublabel = 'Students Advised'
     else:
         station_count = total_checked_in
-        station_unique = total_checked_in
-        station_label = 'Hall Entries'
+        station_unique = students_checked_in
+        station_label = 'Hall Entry Punches'
+        station_sublabel = 'Students Checked In'
 
     return {
-        'total_registered': total_registered,
+        'station_count': station_count,
+        'station_unique': station_unique,
+        'station_label': station_label,
+        'station_sublabel': station_sublabel,
+        'mode': mode,
         'total_checked_in': total_checked_in,
-        'checkin_rate': checkin_rate,
-        'total_all_punches': total_all_punches,
-        'total_students': total_students,
         'students_checked_in': students_checked_in,
-        'student_rate': student_rate,
-        'total_parents': total_parents,
         'parents_checked_in': parents_checked_in,
-        'parent_rate': parent_rate,
-        'total_others': total_others,
         'others_checked_in': others_checked_in,
         'total_gate_entries': total_gate_entries,
         'total_booth_visits': total_booth_visits,
@@ -1574,10 +1612,7 @@ def _get_expo_statistics_summary(mode='gate', target_id=None):
         'unique_seminar_visitors': unique_seminar_visitors,
         'total_consultations': total_consultations,
         'unique_consultation_visitors': unique_consultation_visitors,
-        'station_count': station_count,
-        'station_unique': station_unique,
-        'station_label': station_label,
-        'mode': mode,
+        'total_all_punches': total_all_punches,
     }
 
 
@@ -1829,7 +1864,6 @@ def mobile_scanner_view(request):
         role_info = {'is_authenticated': False, 'has_scanner_access': False, 'role': 'none'}
 
     total_checked_in = Registration.objects.filter(is_checked_in=True).count()
-    total_registered = Registration.objects.count()
     recent_logs = ExpoCheckInLog.objects.filter(is_duplicate=False).select_related('registration').order_by('-checked_in_at')[:15]
     upcoming_event = EventLocation.objects.filter(is_active=True, is_upcoming=True).first() or EventLocation.objects.first()
 
@@ -1852,16 +1886,9 @@ def mobile_scanner_view(request):
 
     return render(request, 'core/mobile_scanner.html', {
         'total_checked_in': stats_summary['total_checked_in'],
-        'total_registered': stats_summary['total_registered'],
-        'checkin_rate': stats_summary['checkin_rate'],
         'total_all_punches': stats_summary['total_all_punches'],
-        'total_students': stats_summary['total_students'],
         'students_checked_in': stats_summary['students_checked_in'],
-        'student_rate': stats_summary['student_rate'],
-        'total_parents': stats_summary['total_parents'],
         'parents_checked_in': stats_summary['parents_checked_in'],
-        'parent_rate': stats_summary['parent_rate'],
-        'total_others': stats_summary['total_others'],
         'others_checked_in': stats_summary['others_checked_in'],
         'total_gate_entries': stats_summary['total_gate_entries'],
         'total_booth_visits': stats_summary['total_booth_visits'],
