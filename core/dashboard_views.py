@@ -1368,8 +1368,10 @@ def exhibitor_update(request, pk):
 
 @login_required(login_url='/portal/login/')
 def exhibitor_delete(request, pk):
-    from .models import Exhibitor
+    from .models import Exhibitor, University, ExpoBooth
     from django.shortcuts import get_object_or_404
+    from django.db.models import Q
+    from django.contrib import messages
     exhibitor = get_object_or_404(Exhibitor, pk=pk)
 
     # Object Level Security
@@ -1378,8 +1380,24 @@ def exhibitor_delete(request, pk):
             from django.core.exceptions import PermissionDenied
             raise PermissionDenied("You do not have permission to delete this profile.")
     if request.method == 'POST':
-        exhibitor.delete()
+        company_name = exhibitor.company_name
+        uni = exhibitor.university or University.objects.filter(name__iexact=company_name).first()
 
+        # 1. Free and unassign any Expo Booth(s) allocated to this exhibitor or university
+        booth_filter = Q(exhibitor=exhibitor)
+        if uni:
+            booth_filter |= Q(university=uni)
+        ExpoBooth.objects.filter(booth_filter).update(exhibitor=None, university=None, status='AVAILABLE')
+
+        # 2. Remove from Exhibitor Cards & Hero (free slot and delete university record)
+        if uni:
+            uni.hero_priority = 0
+            uni.save(update_fields=['hero_priority'])
+            uni.delete()
+
+        # 3. Delete the exhibitor record
+        exhibitor.delete()
+        messages.success(request, f'Exhibitor "{company_name}" has been removed from Exhibitors, Booths, and Cards.')
         return redirect('dashboard_exhibitors')
 
     return render(request, 'dashboard/exhibitor_confirm_delete.html', {'exhibitor': exhibitor})
@@ -4443,8 +4461,9 @@ def university_update(request, pk=None):
 
 @login_required(login_url='/portal/login/')
 def university_delete(request, pk):
-    from .models import University
+    from .models import University, Exhibitor, ExpoBooth
     from django.shortcuts import get_object_or_404
+    from django.db.models import Q
     uni = get_object_or_404(University, pk=pk)
     if not (request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['Admin', 'admin']).exists()):
         messages.error(request, "Permission denied.")
@@ -4453,11 +4472,19 @@ def university_delete(request, pk):
     if request.method == 'POST':
         name = uni.name
         slot = uni.hero_priority
+
+        # 1. Free and unassign any Expo Booth(s) allocated to this university or exhibitor
+        ExpoBooth.objects.filter(Q(university=uni) | Q(exhibitor__company_name__iexact=name) | Q(exhibitor__university=uni)).update(exhibitor=None, university=None, status='AVAILABLE')
+
+        # 2. Remove related Exhibitor if any
+        Exhibitor.objects.filter(Q(university=uni) | Q(company_name__iexact=name)).delete()
+
+        # 3. Delete the university
         uni.delete()
         if slot and 1 <= slot <= 15:
-            messages.success(request, f'Exhibitor "{name}" has been deleted. Hero Card Slot #{slot} is now open — click "+ Add Exhibitor Card" to assign a replacement.')
+            messages.success(request, f'Exhibitor "{name}" has been deleted from Cards, Catalog, Exhibitors, and Booths. Hero Card Slot #{slot} is now open.')
         else:
-            messages.success(request, f'Exhibitor "{name}" has been removed.')
+            messages.success(request, f'Exhibitor "{name}" has been removed from Exhibitors, Booths, and Cards.')
 
         return redirect('dashboard_universities')
 
