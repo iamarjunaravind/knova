@@ -224,6 +224,24 @@ class UniversityForm(forms.ModelForm):
 
     why_choose_us = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), required=False, label="Why Choose Our University?")
 
+    booth_number = forms.ChoiceField(
+        required=False,
+        label="Allocated Booth Number",
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id_uni_booth_number', 'style': 'padding: 10px 14px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-weight: 600; width: 100%;'})
+    )
+    custom_booth_number = forms.CharField(
+        max_length=50,
+        required=False,
+        label="Or Custom Booth Code",
+        widget=forms.TextInput(attrs={'placeholder': 'e.g. Booth EXH-99 or T-01', 'class': 'form-control', 'style': 'padding: 10px 14px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-weight: 600; width: 100%;'})
+    )
+    booth_hall = forms.CharField(
+        max_length=100,
+        required=False,
+        label="Floor Hall / Pavilion",
+        widget=forms.TextInput(attrs={'placeholder': 'e.g. Hall 1 - Global Pavilion', 'class': 'form-control', 'style': 'padding: 10px 14px; border-radius: 8px; border: 1.5px solid #cbd5e1; font-weight: 600; width: 100%;'})
+    )
+
     class Meta:
 
         model = University
@@ -248,6 +266,25 @@ class UniversityForm(forms.ModelForm):
                 del self.fields['hero_priority']
             if 'is_approved' in self.fields:
                 del self.fields['is_approved']
+
+        from .models import ExpoBooth
+        current_booth = None
+        if self.instance and self.instance.pk:
+            current_booth = self.instance.allocated_booth
+
+        choices = [('', '-- No Booth (Unallocated) --')]
+        if current_booth:
+            choices.append((current_booth.booth_number, f"{current_booth.booth_number} (Current Allocation) - {current_booth.hall or 'Main Hall'}"))
+            self.fields['booth_number'].initial = current_booth.booth_number
+            self.fields['booth_hall'].initial = current_booth.hall
+
+        available_booths = ExpoBooth.objects.filter(status='AVAILABLE', is_active=True).order_by('hall', 'booth_number')
+        for b in available_booths:
+            if not current_booth or b.booth_number != current_booth.booth_number:
+                choices.append((b.booth_number, f"{b.booth_number} ({b.hall or 'Main Hall'})"))
+        choices.append(('__custom__', '+ Enter Custom Booth Code...'))
+        self.fields['booth_number'].choices = choices
+
         if self.instance and self.instance.pk:
             try:
                 profile = self.instance.profile
@@ -277,6 +314,58 @@ class UniversityForm(forms.ModelForm):
             self.fields['location_state_country'].initial = 'International'
             self.fields['university_type'].initial = 'Higher Education Institution'
             self.fields['established_year'].initial = 2000
+
+    def save(self, commit=True):
+        uni = super().save(commit=commit)
+        booth_num = self.cleaned_data.get('booth_number')
+        custom_booth = self.cleaned_data.get('custom_booth_number')
+        if booth_num == '__custom__' and custom_booth:
+            booth_num = custom_booth
+        elif booth_num in ['__custom__', '__none__']:
+            booth_num = ''
+
+        booth_hall = self.cleaned_data.get('booth_hall')
+        hall_name = booth_hall.strip() if booth_hall else 'Hall 1 - Global Pavilion'
+
+        if commit:
+            from .models import ExpoBooth, Exhibitor
+            from django.db.models import Q
+            exh = getattr(uni, 'exhibitor', None) or Exhibitor.objects.filter(company_name__iexact=uni.name).first()
+
+            old_booths_q = Q(university=uni)
+            if exh:
+                old_booths_q |= Q(exhibitor=exh)
+            old_booths = ExpoBooth.objects.filter(old_booths_q)
+            for old_b in old_booths:
+                if not booth_num or old_b.booth_number.strip().lower() != booth_num.strip().lower():
+                    old_b.exhibitor = None
+                    old_b.university = None
+                    old_b.status = 'AVAILABLE'
+                    old_b.save()
+
+            if booth_num and booth_num.strip():
+                booth_num = booth_num.strip()
+                target_booth = ExpoBooth.objects.filter(booth_number__iexact=booth_num).first()
+                if not target_booth:
+                    import uuid
+                    target_booth = ExpoBooth.objects.create(
+                        booth_number=booth_num,
+                        hall=hall_name,
+                        status='ASSIGNED',
+                        qr_code=f"BOOTH-{uuid.uuid4().hex[:8].upper()}"
+                    )
+                if target_booth.university and target_booth.university != uni:
+                    target_booth.university = None
+                if target_booth.exhibitor and target_booth.exhibitor != exh:
+                    target_booth.exhibitor = None
+
+                if hall_name:
+                    target_booth.hall = hall_name
+                target_booth.university = uni
+                target_booth.exhibitor = exh
+                target_booth.status = 'ASSIGNED'
+                target_booth.save()
+        return uni
 
 
 class ChatbotFAQForm(forms.ModelForm):

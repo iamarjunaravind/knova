@@ -1555,10 +1555,28 @@ class University(models.Model):
         return "International"
 
     @property
+    def allocated_booth(self):
+        try:
+            if hasattr(self, 'booth') and self.booth:
+                return self.booth
+        except Exception:
+            pass
+        try:
+            if hasattr(self, 'exhibitor') and self.exhibitor and hasattr(self.exhibitor, 'booth') and self.exhibitor.booth:
+                return self.exhibitor.booth
+        except Exception:
+            pass
+        return None
+
+    @property
     def booth_number(self):
-        if hasattr(self, 'booth') and self.booth:
-            return self.booth.booth_number
-        return "Main Pavilion"
+        b = self.allocated_booth
+        return b.booth_number if b else None
+
+    @property
+    def booth_hall(self):
+        b = self.allocated_booth
+        return b.hall if b else None
 
     def save(self, *args, **kwargs):
         from django.utils.text import slugify

@@ -1391,13 +1391,13 @@ def _sync_exhibitor_and_university(exhibitor=None, university=None, primary=None
         u_prof.save()
 
     # Sync ExpoBooth
-    booth = getattr(exhibitor, 'booth', None) or getattr(university, 'booth', None)
+    booth = ExpoBooth.objects.filter(Q(exhibitor=exhibitor) | Q(university=university)).first()
     if booth:
         booth_changed = False
-        if booth.exhibitor != exhibitor:
+        if booth.exhibitor_id != exhibitor.id:
             booth.exhibitor = exhibitor
             booth_changed = True
-        if booth.university != university:
+        if booth.university_id != university.id:
             booth.university = university
             booth_changed = True
         if booth.status != 'ASSIGNED':
@@ -1407,73 +1407,120 @@ def _sync_exhibitor_and_university(exhibitor=None, university=None, primary=None
             booth.save(update_fields=['exhibitor', 'university', 'status'])
 
 
+def _handle_booth_allocation(request, exhibitor=None, university=None):
+    from .models import Exhibitor, University, ExpoBooth
+    from django.db import transaction
+    from django.db.models import Q
+    from django.contrib import messages
+
+    if not exhibitor and not university:
+        return
+
+    # Ensure both are linked
+    if exhibitor and not university:
+        university = exhibitor.university or University.objects.filter(name__iexact=exhibitor.company_name).first()
+        if university and exhibitor.university != university:
+            exhibitor.university = university
+            exhibitor.save(update_fields=['university'])
+    elif university and not exhibitor:
+        exhibitor = getattr(university, 'exhibitor', None) or Exhibitor.objects.filter(company_name__iexact=university.name).first()
+        if not exhibitor:
+            from .models import EventLocation
+            loc = EventLocation.objects.filter(is_active=True).first() or EventLocation.objects.first()
+            if loc:
+                u_prof = getattr(university, 'profile', None)
+                exhibitor = Exhibitor.objects.create(
+                    university=university,
+                    company_name=university.name,
+                    event_location=loc,
+                    country=getattr(u_prof, 'location_state_country', '') or 'International',
+                    website=getattr(u_prof, 'website', '') or '',
+                    logo=getattr(u_prof, 'logo', None),
+                    is_verified=university.is_approved
+                )
+        elif exhibitor.university != university:
+            exhibitor.university = university
+            exhibitor.save(update_fields=['university'])
+
+    booth_num = request.POST.get('booth_number', '').strip()
+    custom_booth = request.POST.get('custom_booth_number', '').strip()
+    if booth_num == '__custom__' and custom_booth:
+        booth_num = custom_booth
+    elif booth_num in ['__custom__', '__none__']:
+        booth_num = ''
+
+    hall_name = request.POST.get('hall', '').strip()
+    inst_name = (exhibitor.company_name if exhibitor else None) or (university.name if university else 'Institution')
+
+    with transaction.atomic():
+        old_booths_q = Q()
+        if exhibitor:
+            old_booths_q |= Q(exhibitor=exhibitor)
+        if university:
+            old_booths_q |= Q(university=university)
+
+        old_booths = ExpoBooth.objects.filter(old_booths_q)
+        for old_b in old_booths:
+            if not booth_num or old_b.booth_number.strip().lower() != booth_num.strip().lower():
+                old_b.exhibitor = None
+                old_b.university = None
+                old_b.status = 'AVAILABLE'
+                old_b.save()
+
+        if booth_num:
+            target_booth = ExpoBooth.objects.filter(booth_number__iexact=booth_num).first()
+            if not target_booth:
+                import uuid
+                target_booth = ExpoBooth.objects.create(
+                    booth_number=booth_num,
+                    hall=hall_name or 'Hall 1 - Global Pavilion',
+                    status='ASSIGNED',
+                    qr_code=f"BOOTH-{uuid.uuid4().hex[:8].upper()}"
+                )
+
+            if target_booth.exhibitor and target_booth.exhibitor != exhibitor:
+                target_booth.exhibitor = None
+            if target_booth.university and target_booth.university != university:
+                target_booth.university = None
+
+            if hall_name:
+                target_booth.hall = hall_name
+            target_booth.exhibitor = exhibitor
+            target_booth.university = university
+            target_booth.status = 'ASSIGNED'
+            target_booth.save()
+            messages.success(request, f"Booth {target_booth.booth_number} ({target_booth.hall}) successfully allocated to {inst_name}.")
+        else:
+            messages.info(request, f"Booth allocation removed for {inst_name}.")
+
+        _sync_exhibitor_and_university(exhibitor=exhibitor, university=university)
+
+
 @login_required(login_url='/portal/login/')
 def exhibitor_allocate_booth(request, pk):
     if not (request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['admin', 'manager']).exists()):
         from django.core.exceptions import PermissionDenied
         raise PermissionDenied("Admin access required")
-    from .models import Exhibitor, ExpoBooth, University
+    from .models import Exhibitor
     from django.shortcuts import get_object_or_404, redirect
-    from django.contrib import messages
-    from django.db import transaction
-    from django.db.models import Q
-
     exhibitor = get_object_or_404(Exhibitor, pk=pk)
     if request.method == 'POST':
-        booth_num = request.POST.get('booth_number', '').strip()
-        custom_booth = request.POST.get('custom_booth_number', '').strip()
-        if booth_num == '__custom__' and custom_booth:
-            booth_num = custom_booth
-        elif booth_num == '__custom__':
-            booth_num = ''
+        _handle_booth_allocation(request, exhibitor=exhibitor)
+    next_url = request.POST.get('next') or request.GET.get('next') or request.META.get('HTTP_REFERER') or 'dashboard_exhibitors'
+    return redirect(next_url)
 
-        hall_name = request.POST.get('hall', '').strip()
 
-        with transaction.atomic():
-            # Ensure linked university is resolved
-            uni = exhibitor.university
-            if not uni:
-                uni = University.objects.filter(name__iexact=exhibitor.company_name).first()
-                if uni:
-                    exhibitor.university = uni
-                    exhibitor.save(update_fields=['university'])
-
-            # Unassign previous booth(s) for this exhibitor or university if different from target
-            old_booths_q = Q(exhibitor=exhibitor)
-            if uni:
-                old_booths_q |= Q(university=uni)
-            old_booths = ExpoBooth.objects.filter(old_booths_q)
-            for old_b in old_booths:
-                if not booth_num or old_b.booth_number.strip().lower() != booth_num.strip().lower():
-                    old_b.exhibitor = None
-                    old_b.university = None
-                    old_b.status = 'AVAILABLE'
-                    old_b.save()
-
-            if booth_num:
-                target_booth = ExpoBooth.objects.filter(booth_number__iexact=booth_num).first()
-                if not target_booth:
-                    import uuid
-                    target_booth = ExpoBooth.objects.create(
-                        booth_number=booth_num,
-                        hall=hall_name or 'Hall 1 - Global Pavilion',
-                        status='ASSIGNED',
-                        qr_code=f"BOOTH-{uuid.uuid4().hex[:8].upper()}"
-                    )
-
-                if hall_name:
-                    target_booth.hall = hall_name
-                target_booth.exhibitor = exhibitor
-                target_booth.university = uni
-                target_booth.status = 'ASSIGNED'
-                target_booth.save()
-                messages.success(request, f"Booth {target_booth.booth_number} ({target_booth.hall}) successfully allocated to {exhibitor.company_name}.")
-            else:
-                messages.info(request, f"Booth allocation removed for {exhibitor.company_name}.")
-
-            _sync_exhibitor_and_university(exhibitor=exhibitor)
-
-    next_url = request.POST.get('next') or request.GET.get('next') or 'dashboard_exhibitors'
+@login_required(login_url='/portal/login/')
+def university_allocate_booth(request, pk):
+    if not (request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['admin', 'manager']).exists()):
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required")
+    from .models import University
+    from django.shortcuts import get_object_or_404, redirect
+    university = get_object_or_404(University, pk=pk)
+    if request.method == 'POST':
+        _handle_booth_allocation(request, university=university)
+    next_url = request.POST.get('next') or request.GET.get('next') or request.META.get('HTTP_REFERER') or 'dashboard_universities'
     return redirect(next_url)
 
 
@@ -4233,6 +4280,8 @@ def dashboard_universities(request):
     page_obj = paginator.get_page(page_number)
 
     all_countries = sorted(list(set(UniversityProfile.objects.exclude(location_state_country='').values_list('location_state_country', flat=True))))
+    from .models import ExpoBooth
+    all_booths = ExpoBooth.objects.filter(is_active=True).select_related('exhibitor', 'university').order_by('hall', 'booth_number')
 
     context = {
         'role': 'admin',
@@ -4246,6 +4295,7 @@ def dashboard_universities(request):
         'catalog_pool': catalog_pool[:250],
         'catalog_universities': page_obj,
         'all_countries': all_countries,
+        'all_booths': all_booths,
         'query': query,
         'status_filter': status_filter,
         'country_filter': country_filter,
@@ -4264,6 +4314,7 @@ def university_add_hero(request):
     from django.shortcuts import get_object_or_404, redirect
     from django.contrib import messages
     from django.utils.text import slugify
+    from django.db.models import Q
     import uuid
 
     if not (request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['Admin', 'admin']).exists()):
@@ -4296,6 +4347,19 @@ def university_add_hero(request):
 
             # Sync Exhibitor
             _sync_exhibitor_and_university(university=uni, primary='university')
+
+            # Handle booth allocation from modal if provided
+            booth_choice = request.POST.get('booth_number', '').strip()
+            custom_code = request.POST.get('custom_booth_number', '').strip()
+            if booth_choice or custom_code:
+                _handle_booth_allocation(request, university=uni)
+            elif booth_choice != '__none__' and not ExpoBooth.objects.filter(Q(university=uni) | Q(exhibitor__university=uni)).exists():
+                avail = ExpoBooth.objects.filter(status='AVAILABLE', exhibitor__isnull=True, university__isnull=True).first()
+                if avail:
+                    avail.exhibitor = getattr(uni, 'exhibitor', None)
+                    avail.university = uni
+                    avail.status = 'ASSIGNED'
+                    avail.save()
 
             messages.success(request, f'"{uni.name}" is now placed on Hero Card Slot #{target_slot}!')
             return redirect('dashboard_universities')
@@ -4347,9 +4411,15 @@ def university_add_hero(request):
                 profile.logo = request.FILES['logo']
                 profile.save(update_fields=['logo'])
 
-            # Sync Exhibitor & allocate Booth
+            # Sync Exhibitor
             _sync_exhibitor_and_university(university=uni, primary='university')
-            if not ExpoBooth.objects.filter(Q(university=uni) | Q(exhibitor__university=uni)).exists():
+
+            # Handle booth allocation
+            booth_choice = request.POST.get('booth_number', '').strip()
+            custom_code = request.POST.get('custom_booth_number', '').strip()
+            if booth_choice or custom_code:
+                _handle_booth_allocation(request, university=uni)
+            elif booth_choice != '__none__':
                 avail_booth = ExpoBooth.objects.filter(status='AVAILABLE', exhibitor__isnull=True, university__isnull=True).first()
                 if avail_booth:
                     avail_booth.exhibitor = getattr(uni, 'exhibitor', None)
