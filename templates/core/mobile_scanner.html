@@ -8,10 +8,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="KNOVA Scan">
-  <meta name="theme-color" content="#070a12">
+  <meta name="theme-color" content="#071731">
   <link rel="manifest" href="/scanner/manifest.json">
-  <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
-  <link rel="apple-touch-icon" href="{% static 'images/logo.png' %}">
+  <link rel="icon" type="image/png" href="{% static 'assets/favicon.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'assets/apple-touch-icon.png' %}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -20,21 +20,26 @@
 
   <style>
     :root {
-      --bg: #070a12;
-      --card-bg: rgba(15, 23, 42, 0.92);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --mode-color: #38bdf8;
-      --mode-glow: rgba(56, 189, 248, 0.4);
-      --text-main: #f8fafc;
+      --bg: #071731;
+      --bg-surface: #0b1a33;
+      --card-bg: #0b1a33;
+      --card-bg-elevated: #0f2242;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --knova-blue: #1768ff;
+      --knova-blue-dark: #0f52cc;
+      --mode-color: #1768ff;
+      --mode-glow: transparent;
+      --text-main: #ffffff;
+      --text-secondary: #cbd5e1;
       --text-muted: #94a3b8;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
-    body.mode-gate { --mode-color: #38bdf8; --mode-glow: rgba(56, 189, 248, 0.4); }
-    body.mode-booth { --mode-color: #f59e0b; --mode-glow: rgba(245, 158, 11, 0.4); }
-    body.mode-seminar { --mode-color: #c084fc; --mode-glow: rgba(192, 132, 252, 0.4); }
-    body.mode-counselling { --mode-color: #34d399; --mode-glow: rgba(52, 211, 153, 0.4); }
+    body.mode-gate { --mode-color: #38bdf8; --mode-glow: transparent; }
+    body.mode-booth { --mode-color: #f59e0b; --mode-glow: transparent; }
+    body.mode-seminar { --mode-color: #a855f7; --mode-glow: transparent; }
+    body.mode-counselling { --mode-color: #10b981; --mode-glow: transparent; }
 
     * {
       box-sizing: border-box;
@@ -71,7 +76,7 @@
       position: absolute;
       inset: 0;
       z-index: 100;
-      background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #070a12 70%);
+      background: #071731;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -82,47 +87,58 @@
 
     .login-card {
       width: 100%;
-      max-width: 400px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 28px;
-      padding: 30px 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(99, 102, 241, 0.15);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      max-width: 380px;
+      background: #0b1a33;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 24px;
+      padding: 32px 24px 28px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
       text-align: center;
     }
 
-    .login-logo-wrap {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 16px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    .login-brand-header {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      color: white;
-      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .login-brand-logo {
+      height: 48px;
+      width: auto;
+      max-width: 180px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .login-brand-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: #60a5fa;
+      background: rgba(37, 99, 235, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      padding: 3px 10px;
+      border-radius: 999px;
     }
 
     .login-title {
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: #fff;
       margin-bottom: 6px;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.01em;
     }
 
     .login-subtitle {
-      font-size: 0.82rem;
-      color: var(--text-muted);
+      font-size: 0.8rem;
+      color: #94a3b8;
       margin-bottom: 22px;
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
-    .role-pills-row {
+    .role-badges-row {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -130,14 +146,22 @@
       margin-bottom: 22px;
     }
 
-    .role-pill-hint {
+    .role-badge-chip {
       font-size: 0.68rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 999px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 8px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--text-muted);
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .role-badge-chip i {
+      font-size: 0.72rem;
+      color: #60a5fa;
     }
 
     .login-input-group {
@@ -172,21 +196,21 @@
 
     .login-input {
       width: 100%;
-      height: 52px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1.5px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
       color: #fff;
-      font-size: 0.95rem;
-      padding: 0 46px 0 46px;
+      font-size: 0.92rem;
+      padding: 0 46px 0 44px;
       outline: none;
       transition: all 0.2s;
     }
 
     .login-input:focus {
-      border-color: #6366f1;
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+      border-color: #1768ff;
+      background: rgba(23, 104, 255, 0.05);
+      box-shadow: 0 0 0 3px rgba(23, 104, 255, 0.2);
     }
 
     .toggle-pwd-btn {
@@ -202,16 +226,16 @@
 
     .btn-login-submit {
       width: 100%;
-      height: 52px;
+      height: 50px;
       margin-top: 10px;
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      background: linear-gradient(135deg, #1768ff 0%, #0d55dc 100%);
       color: white;
       border: none;
-      border-radius: 14px;
-      font-size: 1rem;
-      font-weight: 800;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+      box-shadow: 0 4px 16px rgba(23, 104, 255, 0.35);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -219,7 +243,10 @@
       transition: all 0.2s;
     }
 
-    .btn-login-submit:active { transform: scale(0.98); }
+    .btn-login-submit:active {
+      transform: scale(0.98);
+      background: #1356d6;
+    }
 
     .login-alert {
       display: none;
@@ -318,7 +345,7 @@
     }
 
     /* ==========================================================================
-       APP HEADER / TOP MENUBAR WITH EXPLICIT LOGOUT BUTTON
+       APP HEADER / TOP MENUBAR WITH OFFICIAL BRAND LOGO
        ========================================================================== */
     .app-header {
       position: absolute;
@@ -330,10 +357,10 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      background: linear-gradient(180deg, rgba(7, 10, 18, 0.98) 0%, rgba(7, 10, 18, 0.90) 85%, transparent 100%);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(7, 23, 49, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .header-top-row {
@@ -343,37 +370,63 @@
       gap: 8px;
     }
 
-    .user-pill {
+    .header-brand-wrap {
       display: flex;
       align-items: center;
       gap: 7px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 5px 12px;
-      border-radius: 999px;
-      cursor: pointer;
-      max-width: 45%;
-    }
-
-    .user-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--mode-color);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--mode-color);
-      animation: pulseDot 1.8s infinite;
       flex-shrink: 0;
     }
 
-    @keyframes pulseDot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.35; transform: scale(0.85); }
+    .header-brand-logo {
+      height: 25px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .header-app-tag {
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 4px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      max-width: 38%;
+      overflow: hidden;
+    }
+
+    .user-status-dot {
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .user-dot {
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
     .user-name-title {
-      font-size: 0.76rem;
-      font-weight: 800;
-      letter-spacing: 0.04em;
+      font-size: 0.74rem;
+      font-weight: 700;
       color: #fff;
       white-space: nowrap;
       overflow: hidden;
@@ -387,41 +440,40 @@
     }
 
     .icon-btn {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: var(--text-main);
-      font-size: 0.85rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      font-size: 0.82rem;
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .icon-btn:active { transform: scale(0.92); }
     .icon-btn.active {
-      background: #f59e0b;
-      color: #070a12;
-      border-color: #f59e0b;
-      box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
+      background: #1768ff;
+      color: #ffffff;
+      border-color: #1768ff;
     }
     .icon-btn.muted { color: #ef4444; }
 
     /* EXPLICIT LOGOUT BUTTON ON MENUBAR */
     .menubar-logout-btn {
-      height: 34px;
+      height: 32px;
       display: flex;
       align-items: center;
       gap: 5px;
-      padding: 0 12px;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.35);
+      padding: 0 10px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.28);
       border-radius: 999px;
       color: #fca5a5;
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
@@ -429,7 +481,7 @@
 
     .menubar-logout-btn:active {
       transform: scale(0.94);
-      background: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.25);
       color: #fff;
     }
 
@@ -438,7 +490,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 5px;
-      background: rgba(15, 23, 42, 0.75);
+      background: #09172c;
       border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 3px;
       border-radius: 12px;
@@ -463,8 +515,8 @@
     .role-tab-btn.active { background: rgba(255, 255, 255, 0.12); color: #fff; }
     .role-tab-btn[data-mode="gate"].active { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); }
     .role-tab-btn[data-mode="booth"].active { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
-    .role-tab-btn[data-mode="seminar"].active { background: rgba(192, 132, 252, 0.2); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.35); }
-    .role-tab-btn[data-mode="counselling"].active { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.35); }
+    .role-tab-btn[data-mode="seminar"].active { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); }
+    .role-tab-btn[data-mode="counselling"].active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); }
 
     /* ==========================================================================
        VIEWS WRAPPER (MENU VIEW vs SCANNER VIEW)
@@ -489,7 +541,7 @@
       padding-left: 16px;
       padding-right: 16px;
       overflow-y: auto;
-      background: radial-gradient(circle at 50% 0%, rgba(30, 27, 75, 0.4) 0%, rgba(7, 10, 18, 0.95) 70%);
+      background: #071731;
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -497,13 +549,11 @@
 
     /* Station Banner Card */
     .menu-station-card {
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
+      background: linear-gradient(145deg, #0d203f 0%, #09172c 100%);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 18px;
       padding: 16px;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     }
 
     .station-meta-row {
@@ -514,16 +564,16 @@
     }
 
     .station-icon-bubble {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(23, 104, 255, 0.15);
+      border: 1px solid rgba(23, 104, 255, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
-      color: var(--mode-color);
+      font-size: 1.15rem;
+      color: #60a5fa;
       flex-shrink: 0;
     }
 
@@ -533,16 +583,16 @@
     }
 
     .station-type-tag {
-      font-size: 0.68rem;
-      font-weight: 700;
+      font-size: 0.65rem;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--mode-color);
+      letter-spacing: 0.06em;
+      color: #60a5fa;
       margin-bottom: 2px;
     }
 
     .station-primary-name {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: #fff;
       white-space: nowrap;
@@ -554,9 +604,9 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
       padding: 10px 14px;
     }
 
@@ -573,31 +623,32 @@
     }
 
     .stat-tile-label {
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: var(--text-muted);
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #94a3b8;
       text-transform: uppercase;
-      margin-top: 1px;
+      letter-spacing: 0.04em;
+      margin-top: 2px;
     }
 
     /* HERO SCAN BUTTON ON MENU */
     .action-scan-hero {
       width: 100%;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.28) 0%, rgba(56, 189, 248, 0.22) 100%);
-      border: 1.5px solid rgba(99, 102, 241, 0.45);
-      box-shadow: 0 12px 30px rgba(99, 102, 241, 0.25);
-      border-radius: 22px;
-      padding: 18px 18px;
+      background: linear-gradient(135deg, #1768ff 0%, #0d55dc 100%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      padding: 16px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
+      box-shadow: 0 4px 18px rgba(23, 104, 255, 0.35);
       transition: all 0.2s;
     }
 
     .action-scan-hero:active {
       transform: scale(0.98);
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.4) 0%, rgba(56, 189, 248, 0.3) 100%);
+      background: #1356d6;
     }
 
     .scan-hero-left {
@@ -607,20 +658,20 @@
     }
 
     .scan-hero-icon-box {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-      color: white;
-      font-size: 1.4rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      font-size: 1.35rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
     }
 
     .scan-hero-title {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: #fff;
     }
@@ -688,13 +739,12 @@
     }
 
     .expo-stats-section.pulse-highlight {
-      animation: sectionGlow 1.2s ease-in-out;
+      animation: sectionHighlight 0.6s ease-out;
     }
 
-    @keyframes sectionGlow {
-      0% { transform: scale(1); box-shadow: 0 0 0 rgba(99, 102, 241, 0); }
-      50% { transform: scale(1.015); box-shadow: 0 0 25px rgba(99, 102, 241, 0.45); }
-      100% { transform: scale(1); box-shadow: 0 0 0 rgba(99, 102, 241, 0); }
+    @keyframes sectionHighlight {
+      0% { opacity: 0.75; }
+      100% { opacity: 1; }
     }
 
     .stats-header-bar {
@@ -776,24 +826,14 @@
     }
 
     .stat-metric-card {
-      background: rgba(15, 23, 42, 0.75);
+      background: #0b1a33;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 12px 10px;
       display: flex;
       flex-direction: column;
       position: relative;
-      overflow: hidden;
-    }
-
-    .stat-metric-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent-border, #6366f1), transparent);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
     }
 
     .stat-metric-top {
@@ -910,7 +950,7 @@
       border-radius: 999px;
       transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .role-progress-fill.student { background: linear-gradient(90deg, #6366f1, #38bdf8); }
+    .role-progress-fill.student { background: linear-gradient(90deg, #1768ff, #38bdf8); }
     .role-progress-fill.parent { background: linear-gradient(90deg, #38bdf8, #34d399); }
     .role-progress-fill.other { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
 
@@ -1164,10 +1204,11 @@
 
     .reticle-box {
       position: relative;
-      width: 260px;
-      height: 260px;
-      border-radius: 24px;
-      box-shadow: 0 0 0 9999px rgba(7, 10, 18, 0.58);
+      width: 250px;
+      height: 250px;
+      border-radius: 20px;
+      box-shadow: 0 0 0 9999px rgba(7, 23, 49, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1175,32 +1216,31 @@
 
     .corner {
       position: absolute;
-      width: 32px;
-      height: 32px;
-      border: 4px solid var(--mode-color);
-      box-shadow: 0 0 12px var(--mode-glow);
+      width: 28px;
+      height: 28px;
+      border: 3px solid #1768ff;
       pointer-events: none;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      transition: border-color 0.2s;
     }
 
-    .corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; border-top-left-radius: 20px; }
-    .corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; border-top-right-radius: 20px; }
-    .corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; border-bottom-left-radius: 20px; }
-    .corner.br { bottom: 0; right: 0; border-left: none; border-top: none; border-bottom-right-radius: 20px; }
+    .corner.tl { top: -2px; left: -2px; border-right: none; border-bottom: none; border-top-left-radius: 18px; }
+    .corner.tr { top: -2px; right: -2px; border-left: none; border-bottom: none; border-top-right-radius: 18px; }
+    .corner.bl { bottom: -2px; left: -2px; border-right: none; border-top: none; border-bottom-left-radius: 18px; }
+    .corner.br { bottom: -2px; right: -2px; border-left: none; border-top: none; border-bottom-right-radius: 18px; }
 
-    .laser-line {
+    .reticle-center-cross {
+      width: 16px;
+      height: 16px;
+      position: relative;
+      opacity: 0.35;
+    }
+    .reticle-center-cross::before, .reticle-center-cross::after {
+      content: '';
       position: absolute;
-      top: 10%;
-      left: 10px;
-      right: 10px;
-      height: 3px;
-      background: linear-gradient(90deg, transparent 0%, var(--mode-color) 50%, transparent 100%);
-      box-shadow: 0 0 14px var(--mode-color);
-      border-radius: 50%;
-      animation: laserSweep 2s ease-in-out infinite alternate;
+      background: #ffffff;
     }
-
-    @keyframes laserSweep { 0% { top: 8%; opacity: 0.8; } 50% { opacity: 1; } 100% { top: 90%; opacity: 0.8; } }
+    .reticle-center-cross::before { top: 7px; left: 0; right: 0; height: 2px; }
+    .reticle-center-cross::after { left: 7px; top: 0; bottom: 0; width: 2px; }
 
     .reticle-hint {
       margin-top: 22px;
@@ -1244,9 +1284,9 @@
     }
 
     .pill-btn.primary {
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-      border-color: #6366f1;
-      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+      background: #1768ff;
+      border-color: #1768ff;
+      box-shadow: 0 4px 14px rgba(23, 104, 255, 0.35);
     }
 
     /* ==========================================================================
@@ -1260,10 +1300,8 @@
       z-index: 25;
       height: calc(var(--safe-bottom) + 60px);
       padding-bottom: var(--safe-bottom);
-      background: rgba(7, 10, 18, 0.95);
+      background: #071731;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       display: flex;
       align-items: center;
       justify-content: space-around;
@@ -1280,12 +1318,12 @@
       justify-content: center;
       background: transparent;
       border: none;
-      color: var(--text-muted);
+      color: #64748b;
       font-size: 0.68rem;
       font-weight: 700;
       gap: 3px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: color 0.15s ease;
     }
 
     .bottom-nav-item i {
@@ -1293,7 +1331,7 @@
     }
 
     .bottom-nav-item.active {
-      color: var(--mode-color);
+      color: #1768ff;
     }
 
     .bottom-nav-item.scan-center-item {
@@ -1305,15 +1343,15 @@
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+      background: #1768ff;
+      box-shadow: 0 4px 16px rgba(23, 104, 255, 0.4);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.3rem;
-      border: 3px solid #070a12;
-      transition: transform 0.2s;
+      font-size: 1.25rem;
+      border: 3px solid #071731;
+      transition: transform 0.15s;
     }
 
     .bottom-nav-item.scan-center-item:active .scan-fab {
@@ -1424,7 +1462,7 @@
     .manual-input { width: 100%; height: 50px; background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.15); border-radius: 12px; color: #fff; font-size: 1rem; font-family: 'JetBrains Mono', monospace; padding: 0 16px; outline: none; margin-bottom: 14px; text-transform: uppercase; }
     .modal-buttons { display: flex; gap: 10px; }
     .modal-btn-cancel { flex: 1; height: 46px; background: rgba(255, 255, 255, 0.08); color: var(--text-muted); border: none; border-radius: 999px; font-weight: 700; cursor: pointer; }
-    .modal-btn-submit { flex: 2; height: 46px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 999px; font-weight: 800; cursor: pointer; }
+    .modal-btn-submit { flex: 2; height: 46px; background: #1768ff; color: white; border: none; border-radius: 999px; font-weight: 800; cursor: pointer; }
 
     .modal-close-icon {
       width: 32px;
@@ -1461,14 +1499,14 @@
       width: 54px;
       height: 54px;
       border-radius: 16px;
-      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      background: linear-gradient(135deg, #1768ff 0%, #0d55dc 100%);
       color: white;
       font-size: 1.35rem;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+      box-shadow: 0 4px 14px rgba(23, 104, 255, 0.3);
       flex-shrink: 0;
     }
 
@@ -1604,10 +1642,11 @@
        ========================================================================= -->
   <div class="login-container" id="loginScreen" {% if role_info.is_authenticated and role_info.has_scanner_access %}style="display: none;"{% endif %}>
     <div class="login-card">
-      <div class="login-logo-wrap">
-        <i class="fa-solid fa-qrcode"></i>
+      <div class="login-brand-header">
+        <img src="{% static 'assets/logo.webp' %}" alt="KNOVA Logo" class="login-brand-logo">
+        <div class="login-brand-tag">STAFF ACCESS PORTAL</div>
       </div>
-      <h1 class="login-title">KNOVA Scanner</h1>
+      <h1 class="login-title">KNOVA 2027 Expo</h1>
       <p class="login-subtitle">Sign in with your staff, exhibitor, or counsellor account to activate mobile QR scanning.</p>
 
       {% if access_denied %}
@@ -1622,11 +1661,11 @@
       </div>
       {% endif %}
 
-      <div class="role-pills-row">
-        <span class="role-pill-hint">🚪 Gate Admin</span>
-        <span class="role-pill-hint">🏛️ Exhibitor</span>
-        <span class="role-pill-hint">🎤 Seminar</span>
-        <span class="role-pill-hint">🎓 Counsellor</span>
+      <div class="role-badges-row">
+        <span class="role-badge-chip"><i class="fa-solid fa-door-open"></i> Gate Entry</span>
+        <span class="role-badge-chip"><i class="fa-solid fa-store"></i> University Booth</span>
+        <span class="role-badge-chip"><i class="fa-solid fa-chalkboard-user"></i> Seminar</span>
+        <span class="role-badge-chip"><i class="fa-solid fa-user-graduate"></i> Counselling</span>
       </div>
 
       <form id="mobileLoginForm" onsubmit="handleMobileLogin(event)">
@@ -1662,6 +1701,12 @@
        ========================================================================= -->
   <header class="app-header" id="scannerHeader" {% if not role_info.is_authenticated or not role_info.has_scanner_access %}style="display: none;"{% endif %}>
     <div class="header-top-row">
+      <!-- BRAND LOGO -->
+      <div class="header-brand-wrap">
+        <img src="{% static 'assets/logo.webp' %}" alt="KNOVA Logo" class="header-brand-logo">
+        <span class="header-app-tag">SCANNER</span>
+      </div>
+
       <!-- USER CHIP / LOGOUT TRIGGER -->
       <div class="user-pill" onclick="openUserModal()">
         <div class="user-dot"></div>
@@ -1773,7 +1818,7 @@
         <div class="stats-header-bar">
           <div class="stats-title-wrap">
             <h2 class="stats-main-title">
-              <i class="fa-solid fa-chart-pie" style="color: #6366f1;"></i>
+              <i class="fa-solid fa-chart-pie" style="color: #1768ff;"></i>
               <span id="statsMainTitle">
                 {% if role_info.role == 'exhibitor' %}University Booth Punches
                 {% elif role_info.role == 'seminar' %}Seminar Session Punches
@@ -2047,7 +2092,7 @@
           <div class="reticle-box">
             <div class="corner tl"></div><div class="corner tr"></div>
             <div class="corner bl"></div><div class="corner br"></div>
-            <div class="laser-line"></div>
+            <div class="reticle-center-cross"></div>
           </div>
           <div class="reticle-hint" id="reticleHint">
             <i class="fa-solid fa-qrcode" style="margin-right: 5px;"></i>
