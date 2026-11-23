@@ -1228,6 +1228,185 @@ def dashboard_exhibitors(request):
     return render(request, 'dashboard/exhibitors.html', context)
 
 
+def _sync_exhibitor_and_university(exhibitor=None, university=None, primary=None):
+    """
+    Keep Exhibitor, University, UniversityProfile, and ExpoBooth data 100% synchronized.
+    primary: 'exhibitor' | 'university' | None
+    """
+    from .models import Exhibitor, University, UniversityProfile, ExpoBooth
+    from django.utils.text import slugify
+
+    if not exhibitor and not university:
+        return
+
+    if primary is None:
+        if exhibitor and not university:
+            primary = 'exhibitor'
+        elif university and not exhibitor:
+            primary = 'university'
+
+    if exhibitor and not university:
+        university = exhibitor.university
+        if not university:
+            university = University.objects.filter(name__iexact=exhibitor.company_name).first()
+        if not university:
+            base_slug = slugify(exhibitor.company_name) or f"exh-{exhibitor.id}"
+            slug = base_slug
+            c = 1
+            while University.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{c}"
+                c += 1
+            university = University.objects.create(
+                name=exhibitor.company_name,
+                slug=slug,
+                is_approved=exhibitor.is_verified
+            )
+        if exhibitor.university != university:
+            exhibitor.university = university
+            exhibitor.save(update_fields=['university'])
+
+    elif university and not exhibitor:
+        exhibitor = getattr(university, 'exhibitor', None)
+        if not exhibitor:
+            exhibitor = Exhibitor.objects.filter(company_name__iexact=university.name).first()
+        if not exhibitor:
+            from .models import EventLocation
+            loc = EventLocation.objects.filter(is_active=True).first() or EventLocation.objects.first()
+            if loc:
+                u_prof = getattr(university, 'profile', None)
+                exhibitor = Exhibitor.objects.create(
+                    university=university,
+                    company_name=university.name,
+                    event_location=loc,
+                    country=getattr(u_prof, 'location_state_country', '') or 'International',
+                    website=getattr(u_prof, 'website', '') or '',
+                    logo=getattr(u_prof, 'logo', None),
+                    is_verified=university.is_approved
+                )
+        elif exhibitor.university != university:
+            exhibitor.university = university
+            exhibitor.save(update_fields=['university'])
+
+    if not exhibitor or not university:
+        return
+
+    u_prof, _ = UniversityProfile.objects.get_or_create(university=university)
+    prof_updated = False
+    exh_updated_fields = []
+    uni_updated_fields = []
+
+    if primary == 'exhibitor':
+        # Exhibitor is primary source
+        if exhibitor.company_name and university.name != exhibitor.company_name:
+            university.name = exhibitor.company_name
+            uni_updated_fields.append('name')
+        if university.is_approved != exhibitor.is_verified:
+            university.is_approved = exhibitor.is_verified
+            uni_updated_fields.append('is_approved')
+        if exhibitor.country and u_prof.location_state_country != exhibitor.country:
+            u_prof.location_state_country = exhibitor.country
+            prof_updated = True
+        if exhibitor.website and u_prof.website != exhibitor.website:
+            u_prof.website = exhibitor.website
+            prof_updated = True
+        if exhibitor.logo and u_prof.logo != exhibitor.logo:
+            u_prof.logo = exhibitor.logo
+            prof_updated = True
+        if exhibitor.profile_description:
+            if u_prof.short_description != exhibitor.profile_description:
+                u_prof.short_description = exhibitor.profile_description
+                prof_updated = True
+            if not u_prof.about:
+                u_prof.about = exhibitor.profile_description
+                prof_updated = True
+    elif primary == 'university':
+        # University is primary source
+        if university.name and exhibitor.company_name != university.name:
+            exhibitor.company_name = university.name
+            exh_updated_fields.append('company_name')
+        if exhibitor.is_verified != university.is_approved:
+            exhibitor.is_verified = university.is_approved
+            exh_updated_fields.append('is_verified')
+        if u_prof.location_state_country and exhibitor.country != u_prof.location_state_country:
+            exhibitor.country = u_prof.location_state_country
+            exh_updated_fields.append('country')
+        if u_prof.website and exhibitor.website != u_prof.website:
+            exhibitor.website = u_prof.website
+            exh_updated_fields.append('website')
+        if u_prof.logo and exhibitor.logo != u_prof.logo:
+            exhibitor.logo = u_prof.logo
+            exh_updated_fields.append('logo')
+        uni_desc = u_prof.short_description or u_prof.about
+        if uni_desc and exhibitor.profile_description != uni_desc:
+            exhibitor.profile_description = uni_desc
+            exh_updated_fields.append('profile_description')
+    else:
+        # General / backfill bidirectional sync: whichever has non-empty fills the other
+        if exhibitor.company_name and not university.name:
+            university.name = exhibitor.company_name
+            uni_updated_fields.append('name')
+        elif university.name and not exhibitor.company_name:
+            exhibitor.company_name = university.name
+            exh_updated_fields.append('company_name')
+
+        if exhibitor.is_verified != university.is_approved:
+            university.is_approved = exhibitor.is_verified
+            uni_updated_fields.append('is_approved')
+
+        if exhibitor.country and not u_prof.location_state_country:
+            u_prof.location_state_country = exhibitor.country
+            prof_updated = True
+        elif u_prof.location_state_country and not exhibitor.country:
+            exhibitor.country = u_prof.location_state_country
+            exh_updated_fields.append('country')
+
+        if exhibitor.website and not u_prof.website:
+            u_prof.website = exhibitor.website
+            prof_updated = True
+        elif u_prof.website and not exhibitor.website:
+            exhibitor.website = u_prof.website
+            exh_updated_fields.append('website')
+
+        if exhibitor.logo and not u_prof.logo:
+            u_prof.logo = exhibitor.logo
+            prof_updated = True
+        elif u_prof.logo and not exhibitor.logo:
+            exhibitor.logo = u_prof.logo
+            exh_updated_fields.append('logo')
+
+        if exhibitor.profile_description and not u_prof.short_description:
+            u_prof.short_description = exhibitor.profile_description
+            if not u_prof.about:
+                u_prof.about = exhibitor.profile_description
+            prof_updated = True
+        elif (u_prof.short_description or u_prof.about) and not exhibitor.profile_description:
+            exhibitor.profile_description = u_prof.short_description or u_prof.about
+            exh_updated_fields.append('profile_description')
+
+    if uni_updated_fields:
+        university.save(update_fields=uni_updated_fields)
+    if exh_updated_fields:
+        exhibitor.save(update_fields=exh_updated_fields)
+    if prof_updated:
+        u_prof.save()
+
+    # Sync ExpoBooth
+    booth = getattr(exhibitor, 'booth', None) or getattr(university, 'booth', None)
+    if booth:
+        booth_changed = False
+        if booth.exhibitor != exhibitor:
+            booth.exhibitor = exhibitor
+            booth_changed = True
+        if booth.university != university:
+            booth.university = university
+            booth_changed = True
+        if booth.status != 'ASSIGNED':
+            booth.status = 'ASSIGNED'
+            booth_changed = True
+        if booth_changed:
+            booth.save(update_fields=['exhibitor', 'university', 'status'])
+
+
 @login_required(login_url='/portal/login/')
 def exhibitor_allocate_booth(request, pk):
     if not (request.user.is_superuser or request.user.is_staff or request.user.groups.filter(name__in=['admin', 'manager']).exists()):
@@ -1292,6 +1471,8 @@ def exhibitor_allocate_booth(request, pk):
             else:
                 messages.info(request, f"Booth allocation removed for {exhibitor.company_name}.")
 
+            _sync_exhibitor_and_university(exhibitor=exhibitor)
+
     next_url = request.POST.get('next') or request.GET.get('next') or 'dashboard_exhibitors'
     return redirect(next_url)
 
@@ -1306,35 +1487,9 @@ def exhibitor_create(request):
         form = ExhibitorForm(request.POST, request.FILES)
         if form.is_valid():
             exh = form.save()
-            # Synchronize with University model
-            from .models import University, UniversityProfile
-            from django.utils.text import slugify
-            uni = University.objects.filter(name__iexact=exh.company_name).first()
-            if not uni:
-                base_slug = slugify(exh.company_name) or f"exh-{exh.id}"
-                slug = base_slug
-                c = 1
-                while University.objects.filter(slug=slug).exists():
-                    slug = f"{base_slug}-{c}"
-                    c += 1
-                uni = University.objects.create(
-                    name=exh.company_name,
-                    slug=slug,
-                    is_approved=exh.is_verified
-                )
-            if not exh.university:
-                exh.university = uni
-                exh.save(update_fields=['university'])
-
-            u_prof, _ = UniversityProfile.objects.get_or_create(university=uni)
-            if exh.country and not u_prof.location_state_country:
-                u_prof.location_state_country = exh.country
-            if exh.website and not u_prof.website:
-                u_prof.website = exh.website
-            if exh.logo and not u_prof.logo:
-                u_prof.logo = exh.logo
-            u_prof.save()
-
+            _sync_exhibitor_and_university(exhibitor=exh, primary='exhibitor')
+            from django.contrib import messages
+            messages.success(request, f'Exhibitor & University Card for "{exh.company_name}" successfully created and synchronized!')
             return redirect('dashboard_exhibitors')
     else:
         form = ExhibitorForm()
@@ -1347,6 +1502,7 @@ def exhibitor_update(request, pk):
     from .forms import ExhibitorForm
     from .models import Exhibitor
     from django.shortcuts import get_object_or_404
+    from django.contrib import messages
     exhibitor = get_object_or_404(Exhibitor, pk=pk)
 
     # Object Level Security
@@ -1357,8 +1513,9 @@ def exhibitor_update(request, pk):
     if request.method == 'POST':
         form = ExhibitorForm(request.POST, request.FILES, instance=exhibitor)
         if form.is_valid():
-            form.save()
-
+            exhibitor = form.save()
+            _sync_exhibitor_and_university(exhibitor=exhibitor, primary='exhibitor')
+            messages.success(request, f'Exhibitor & University Card for "{exhibitor.company_name}" updated and synchronized!')
             return redirect('dashboard_exhibitors')
     else:
         form = ExhibitorForm(instance=exhibitor)
@@ -3939,8 +4096,8 @@ def toggle_verification(request, model_name, pk):
         from .models import University
         obj = get_object_or_404(Exhibitor, pk=pk)
         obj.is_verified = not obj.is_verified
-        obj.save()
-        University.objects.filter(name__iexact=obj.company_name).update(is_approved=obj.is_verified)
+        obj.save(update_fields=['is_verified'])
+        _sync_exhibitor_and_university(exhibitor=obj, primary='exhibitor')
     elif model_name == 'sponsor':
         obj = get_object_or_404(Sponsor, pk=pk)
         obj.is_verified = not obj.is_verified
@@ -3953,8 +4110,8 @@ def toggle_verification(request, model_name, pk):
         from .models import University, Exhibitor
         obj = get_object_or_404(University, pk=pk)
         obj.is_approved = not obj.is_approved
-        obj.save()
-        Exhibitor.objects.filter(company_name__iexact=obj.name).update(is_verified=obj.is_approved)
+        obj.save(update_fields=['is_approved'])
+        _sync_exhibitor_and_university(university=obj, primary='university')
         referer = request.META.get('HTTP_REFERER')
 
         return redirect(referer if referer else 'dashboard_universities')
@@ -4138,7 +4295,7 @@ def university_add_hero(request):
             uni.save(update_fields=['hero_priority', 'is_approved'])
 
             # Sync Exhibitor
-            Exhibitor.objects.filter(company_name__iexact=uni.name).update(is_verified=True)
+            _sync_exhibitor_and_university(university=uni, primary='university')
 
             messages.success(request, f'"{uni.name}" is now placed on Hero Card Slot #{target_slot}!')
             return redirect('dashboard_universities')
@@ -4191,20 +4348,11 @@ def university_add_hero(request):
                 profile.save(update_fields=['logo'])
 
             # Sync Exhibitor & allocate Booth
-            loc = EventLocation.objects.filter(is_active=True).first() or EventLocation.objects.first()
-            if loc:
-                exh = Exhibitor.objects.create(
-                    university=uni,
-                    company_name=uni.name,
-                    event_location=loc,
-                    country=country,
-                    website=website,
-                    logo=profile.logo,
-                    is_verified=True
-                )
+            _sync_exhibitor_and_university(university=uni, primary='university')
+            if not ExpoBooth.objects.filter(Q(university=uni) | Q(exhibitor__university=uni)).exists():
                 avail_booth = ExpoBooth.objects.filter(status='AVAILABLE', exhibitor__isnull=True, university__isnull=True).first()
                 if avail_booth:
-                    avail_booth.exhibitor = exh
+                    avail_booth.exhibitor = getattr(uni, 'exhibitor', None)
                     avail_booth.university = uni
                     avail_booth.status = 'ASSIGNED'
                     avail_booth.save()
@@ -4338,28 +4486,15 @@ def university_create(request):
             profile.save()
 
             # Auto-sync with Exhibitor model
-            from .models import Exhibitor, EventLocation, ExpoBooth
-            loc = EventLocation.objects.filter(is_active=True).first() or EventLocation.objects.first()
-            exh = Exhibitor.objects.filter(company_name__iexact=uni.name).first() or Exhibitor.objects.filter(university=uni).first()
-            if not exh and loc:
-                exh = Exhibitor.objects.create(
-                    university=uni,
-                    company_name=uni.name,
-                    event_location=loc,
-                    country=profile.location_state_country or "International",
-                    website=profile.website,
-                    logo=profile.logo,
-                    is_verified=uni.is_approved
-                )
-            elif exh and not exh.university:
-                exh.university = uni
-                exh.save(update_fields=['university'])
+            _sync_exhibitor_and_university(university=uni, primary='university')
 
             # Allocate an ExpoBooth if unallocated
-            if exh and not ExpoBooth.objects.filter(exhibitor=exh).exists() and not ExpoBooth.objects.filter(university=uni).exists():
+            from .models import ExpoBooth
+            from django.db.models import Q
+            if not ExpoBooth.objects.filter(Q(university=uni) | Q(exhibitor__university=uni)).exists():
                 available_booth = ExpoBooth.objects.filter(status='AVAILABLE', exhibitor__isnull=True, university__isnull=True).first()
                 if available_booth:
-                    available_booth.exhibitor = exh
+                    available_booth.exhibitor = getattr(uni, 'exhibitor', None)
                     available_booth.university = uni
                     available_booth.status = 'ASSIGNED'
                     available_booth.save()
@@ -4428,16 +4563,8 @@ def university_update(request, pk=None):
                 profile.cover_image = request.FILES['cover_image']
             profile.save()
 
-            # Also sync Exhibitor if exists
-            exh = Exhibitor.objects.filter(company_name__iexact=uni.name).first()
-            if exh:
-                if profile.short_description:
-                    exh.description = profile.short_description
-                if profile.website:
-                    exh.website = profile.website
-                if 'logo' in request.FILES:
-                    exh.logo = request.FILES['logo']
-                exh.save()
+            # Auto-sync with Exhibitor and Booth
+            _sync_exhibitor_and_university(university=uni, primary='university')
             messages.success(request, f'University "{uni.name}" profile and page content updated successfully!')
             next_url = request.POST.get('next')
             if next_url:
