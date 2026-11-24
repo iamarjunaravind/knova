@@ -4268,10 +4268,8 @@ def dashboard_universities(request):
             'is_empty': uni is None
         })
 
-    # Catalog universities not currently placed on hero cards (for the Quick-Add modal picker)
-    catalog_pool = University.objects.filter(
-        Q(hero_priority=0) | Q(hero_priority__gt=15) | Q(is_approved=False)
-    ).select_related('profile').order_by('name')
+    # All universities available in catalog/directory for the Quick-Add modal picker
+    catalog_pool = University.objects.select_related('profile').order_by('hero_priority', 'name')
 
     # Full Catalog view if user switches to '?view=all'
     all_unis_qs = University.objects.select_related('profile').annotate(
@@ -4354,10 +4352,39 @@ def university_add_hero(request):
 
         if mode == 'existing':
             uni_id = request.POST.get('university_id')
-            if not uni_id:
-                messages.error(request, "Please select an existing university from the catalog.")
+            typed_name = (request.POST.get('typed_university_name') or request.POST.get('name') or '').strip()
+
+            uni = None
+            if uni_id:
+                uni = University.objects.filter(pk=uni_id).first()
+
+            if not uni and typed_name:
+                uni = University.objects.filter(name__iexact=typed_name).first()
+                if not uni:
+                    base_slug = slugify(typed_name) or f"uni-{uuid.uuid4().hex[:6]}"
+                    slug = base_slug
+                    counter = 1
+                    while University.objects.filter(slug=slug).exists():
+                        slug = f"{base_slug}-{counter}"
+                        counter += 1
+                    uni = University.objects.create(
+                        name=typed_name,
+                        slug=slug,
+                        hero_priority=target_slot,
+                        is_approved=True
+                    )
+                    UniversityProfile.objects.create(
+                        university=uni,
+                        location_city='Global Campus',
+                        location_state_country='International',
+                        short_description=f"{uni.name} is an accredited university and featured exhibitor.",
+                        about=f"Welcome to {uni.name}. Explore undergraduate and postgraduate programs, scholarship opportunities, and meet with university admissions advisors at the booth."
+                    )
+
+            if not uni:
+                messages.error(request, "Please select an existing university from the catalog or enter a university name.")
                 return redirect('dashboard_universities')
-            uni = get_object_or_404(University, pk=uni_id)
+
             uni.hero_priority = target_slot
             uni.is_approved = True
             uni.save(update_fields=['hero_priority', 'is_approved'])

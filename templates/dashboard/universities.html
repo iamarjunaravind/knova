@@ -672,7 +672,7 @@
 
     <!-- FORM 1: SELECT EXISTING FROM CATALOG -->
     <div id="formSectionExisting">
-      <form action="{% url 'university_add_hero' %}" method="POST">
+      <form action="{% url 'university_add_hero' %}" method="POST" onsubmit="return validateAddHeroForm(this);">
         {% csrf_token %}
         <input type="hidden" name="mode" value="existing">
 
@@ -699,21 +699,22 @@
         <!-- Filter catalog search inside modal -->
         <div style="margin-bottom: 8px;">
           <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
-            Select Exhibitor from Catalog <span style="color: #dc2626;">*</span>
+            Select Institution from Directory or Enter Name <span style="color: #dc2626;">*</span>
           </label>
-          <input type="text" id="uniFilterInput" onkeyup="filterUniSelect()" placeholder="Type to filter catalog exhibitors..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px; font-size: 12px; color: #334155; margin-bottom: 8px; background: #f8fafc; box-sizing: border-box;">
+          <input type="text" name="typed_university_name" id="uniFilterInput" onkeyup="filterUniSelect()" placeholder="Search existing catalog or type new institution name..." style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #1e293b; margin-bottom: 8px; background: #ffffff; box-sizing: border-box;">
         </div>
 
         <div style="margin-bottom: 16px;">
-          <select name="university_id" id="modalUniSelect" size="8" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 6px; font-size: 12.5px; color: #1e293b; background: #ffffff; outline: none; height: 160px;">
+          <select name="university_id" id="modalUniSelect" size="8" ondblclick="this.form.submit()" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 6px; font-size: 12.5px; color: #1e293b; background: #ffffff; outline: none; height: 160px;">
             {% for u in catalog_pool %}
-              <option value="{{ u.pk }}">
-                {{ u.name }} ({{ u.profile.location_state_country|default:u.profile.location_city|default:'International' }})
+              <option value="{{ u.pk }}" {% if forloop.first %}selected{% endif %}>
+                {{ u.name }} ({{ u.profile.location_state_country|default:u.profile.location_city|default:'International' }}) {% if u.hero_priority and u.hero_priority <= 15 %}[Current: Slot #{{ u.hero_priority }}]{% else %}[Available]{% endif %}
               </option>
             {% endfor %}
           </select>
-          <div style="font-size: 11.5px; color: #64748b; margin-top: 4px;">
-            {{ catalog_pool|length }} institutions available in catalog. Click to select one.
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: #64748b; margin-top: 5px;">
+            <span>{{ catalog_pool|length }} institutions in directory. Click or double-click to select.</span>
+            <span style="color: #1768ff; font-weight: 700; cursor: pointer;" onclick="switchModalTab('new')">+ Full Details Create &rarr;</span>
           </div>
         </div>
 
@@ -922,8 +923,29 @@ function openAddModal(preferredSlot) {
       if (slotSel1) slotSel1.value = preferredSlot;
       if (slotSel2) slotSel2.value = preferredSlot;
     }
+    var sel = document.getElementById('modalUniSelect');
+    if (sel && sel.options.length > 0 && sel.selectedIndex === -1) {
+      sel.selectedIndex = 0;
+    }
+    var inp = document.getElementById('uniFilterInput');
+    if (inp) inp.value = '';
+    filterUniSelect();
     switchModalTab('existing');
   }
+}
+
+function validateAddHeroForm(form) {
+  var sel = form.querySelector('select[name="university_id"]');
+  var inp = form.querySelector('input[name="typed_university_name"]');
+  var selectedId = sel && sel.value ? sel.value : '';
+  var typedVal = inp && inp.value ? inp.value.trim() : '';
+
+  if (!selectedId && !typedVal) {
+    alert('Please click to select an institution from the catalog list, or type a new institution name.');
+    if (inp) inp.focus();
+    return false;
+  }
+  return true;
 }
 
 function openAddModalWithUni(uniId, uniName, preferredSlot) {
@@ -978,13 +1000,21 @@ function switchModalTab(tab) {
 
 function filterUniSelect() {
   var input = document.getElementById('uniFilterInput');
-  var filter = input ? input.value.toLowerCase() : '';
+  var filter = input ? input.value.toLowerCase().trim() : '';
   var select = document.getElementById('modalUniSelect');
   if (!select) return;
   var options = select.options;
+  var firstVisibleIdx = -1;
   for (var i = 0; i < options.length; i++) {
     var txt = options[i].text.toLowerCase();
-    options[i].style.display = txt.indexOf(filter) > -1 ? '' : 'none';
+    var match = txt.indexOf(filter) > -1;
+    options[i].style.display = match ? '' : 'none';
+    if (match && firstVisibleIdx === -1) {
+      firstVisibleIdx = i;
+    }
+  }
+  if (firstVisibleIdx !== -1 && (select.selectedIndex === -1 || (options[select.selectedIndex] && options[select.selectedIndex].style.display === 'none'))) {
+    select.selectedIndex = firstVisibleIdx;
   }
 }
 
