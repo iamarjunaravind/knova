@@ -1235,6 +1235,7 @@ def _sync_exhibitor_and_university(exhibitor=None, university=None, primary=None
     """
     from .models import Exhibitor, University, UniversityProfile, ExpoBooth
     from django.utils.text import slugify
+    from django.db.models import Q
 
     if not exhibitor and not university:
         return
