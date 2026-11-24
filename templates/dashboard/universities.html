@@ -701,11 +701,11 @@
           <label style="display: block; font-size: 12.5px; font-weight: 750; color: #0f172a; margin-bottom: 6px;">
             Select Institution from Directory or Enter Name <span style="color: #dc2626;">*</span>
           </label>
-          <input type="text" name="typed_university_name" id="uniFilterInput" onkeyup="filterUniSelect()" placeholder="Search existing catalog or type new institution name..." style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #1e293b; margin-bottom: 8px; background: #ffffff; box-sizing: border-box;">
+          <input type="text" name="typed_university_name" id="uniFilterInput" onkeyup="filterUniSelect()" onkeydown="if(event.key==='Enter'){event.preventDefault();this.form.submit();}" placeholder="Search existing catalog or type new institution name..." style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #1e293b; margin-bottom: 8px; background: #ffffff; box-sizing: border-box;">
         </div>
 
         <div style="margin-bottom: 16px;">
-          <select name="university_id" id="modalUniSelect" size="8" ondblclick="this.form.submit()" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 6px; font-size: 12.5px; color: #1e293b; background: #ffffff; outline: none; height: 160px;">
+          <select name="university_id" id="modalUniSelect" size="8" onclick="onSelectUniOption(this)" onchange="onSelectUniOption(this)" ondblclick="this.form.submit()" style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 6px; font-size: 12.5px; color: #1e293b; background: #ffffff; outline: none; height: 160px;">
             {% for u in catalog_pool %}
               <option value="{{ u.pk }}" {% if forloop.first %}selected{% endif %}>
                 {{ u.name }} ({{ u.profile.location_state_country|default:u.profile.location_city|default:'International' }}) {% if u.hero_priority and u.hero_priority <= 15 %}[Current: Slot #{{ u.hero_priority }}]{% else %}[Available]{% endif %}
@@ -713,7 +713,7 @@
             {% endfor %}
           </select>
           <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: #64748b; margin-top: 5px;">
-            <span>{{ catalog_pool|length }} institutions in directory. Click or double-click to select.</span>
+            <span id="modalCatalogCount"><strong>{{ catalog_pool|length }}</strong> institutions in directory. Click or double-click to select.</span>
             <span style="color: #1768ff; font-weight: 700; cursor: pointer;" onclick="switchModalTab('new')">+ Full Details Create &rarr;</span>
           </div>
         </div>
@@ -998,6 +998,17 @@ function switchModalTab(tab) {
   }
 }
 
+function onSelectUniOption(sel) {
+  if (sel && sel.selectedIndex >= 0) {
+    var opt = sel.options[sel.selectedIndex];
+    var input = document.getElementById('uniFilterInput');
+    if (opt && input) {
+      var cleanName = opt.text.replace(/\s*\(.*?\)/g, '').replace(/\s*\[.*?\]/g, '').trim();
+      input.value = cleanName;
+    }
+  }
+}
+
 function filterUniSelect() {
   var input = document.getElementById('uniFilterInput');
   var filter = input ? input.value.toLowerCase().trim() : '';
@@ -1005,16 +1016,32 @@ function filterUniSelect() {
   if (!select) return;
   var options = select.options;
   var firstVisibleIdx = -1;
+  var matchCount = 0;
   for (var i = 0; i < options.length; i++) {
     var txt = options[i].text.toLowerCase();
-    var match = txt.indexOf(filter) > -1;
+    var match = filter === '' || txt.indexOf(filter) > -1;
     options[i].style.display = match ? '' : 'none';
-    if (match && firstVisibleIdx === -1) {
-      firstVisibleIdx = i;
+    if (match) {
+      matchCount++;
+      if (firstVisibleIdx === -1) {
+        firstVisibleIdx = i;
+      }
     }
   }
-  if (firstVisibleIdx !== -1 && (select.selectedIndex === -1 || (options[select.selectedIndex] && options[select.selectedIndex].style.display === 'none'))) {
+  if (firstVisibleIdx !== -1) {
     select.selectedIndex = firstVisibleIdx;
+  } else {
+    select.selectedIndex = -1;
+  }
+  var countBadge = document.getElementById('modalCatalogCount');
+  if (countBadge) {
+    if (filter) {
+      countBadge.innerHTML = matchCount > 0 
+        ? '<strong>' + matchCount + '</strong> matching institutions found. Click or press Enter.' 
+        : 'No directory match. Press <strong>Add to Hero Cards</strong> to create as brand new.';
+    } else {
+      countBadge.innerHTML = '<strong>' + options.length + '</strong> institutions in directory. Click or double-click to select.';
+    }
   }
 }
 

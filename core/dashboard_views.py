@@ -1401,6 +1401,37 @@ def _sync_exhibitor_and_university(exhibitor=None, university=None, primary=None
                 uni_updated_fields.append('hero_priority')
                 break
 
+    # Auto-link User and UniversityStaff to Exhibitor
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    from .models import UniversityStaff, Registration
+
+    if exhibitor and not exhibitor.user:
+        user_match = None
+        staff = UniversityStaff.objects.filter(university=university).first()
+        if staff and staff.user:
+            user_match = staff.user
+        else:
+            u_slug = slugify(exhibitor.company_name)
+            reg = Registration.objects.filter(role__iexact='Exhibitor').filter(
+                Q(company_name__iexact=exhibitor.company_name) |
+                Q(full_name__iexact=exhibitor.company_name) |
+                Q(email__icontains=u_slug)
+            ).first()
+            if reg and reg.email:
+                user_match = User.objects.filter(email__iexact=reg.email).first()
+            if not user_match:
+                user_match = User.objects.filter(email__icontains=u_slug).first()
+        if user_match:
+            exhibitor.user = user_match
+            exh_updated_fields.append('user')
+
+    if exhibitor and exhibitor.user:
+        UniversityStaff.objects.get_or_create(
+            user=exhibitor.user,
+            defaults={'university': university, 'role': 'Representative'}
+        )
+
     if uni_updated_fields:
         university.save(update_fields=uni_updated_fields)
     if exh_updated_fields:
@@ -4355,12 +4386,20 @@ def university_add_hero(request):
             typed_name = (request.POST.get('typed_university_name') or request.POST.get('name') or '').strip()
 
             uni = None
-            if uni_id:
-                uni = University.objects.filter(pk=uni_id).first()
-
-            if not uni and typed_name:
+            if typed_name:
+                # 1. Exact match by name
                 uni = University.objects.filter(name__iexact=typed_name).first()
                 if not uni:
+                    # 2. Substring match
+                    candidates = list(University.objects.filter(name__icontains=typed_name))
+                    if len(candidates) == 1:
+                        uni = candidates[0]
+                    elif uni_id:
+                        selected_uni = University.objects.filter(pk=uni_id).first()
+                        if selected_uni and (typed_name.lower() in selected_uni.name.lower() or selected_uni.name.lower() in typed_name.lower()):
+                            uni = selected_uni
+                if not uni and not uni_id:
+                    # Brand new university typed by user
                     base_slug = slugify(typed_name) or f"uni-{uuid.uuid4().hex[:6]}"
                     slug = base_slug
                     counter = 1
@@ -4380,6 +4419,30 @@ def university_add_hero(request):
                         short_description=f"{uni.name} is an accredited university and featured exhibitor.",
                         about=f"Welcome to {uni.name}. Explore undergraduate and postgraduate programs, scholarship opportunities, and meet with university admissions advisors at the booth."
                     )
+            elif uni_id:
+                uni = University.objects.filter(pk=uni_id).first()
+
+            if not uni and typed_name:
+                # Fallback create if still not matched
+                base_slug = slugify(typed_name) or f"uni-{uuid.uuid4().hex[:6]}"
+                slug = base_slug
+                counter = 1
+                while University.objects.filter(slug=slug).exists():
+                    slug = f"{base_slug}-{counter}"
+                    counter += 1
+                uni = University.objects.create(
+                    name=typed_name,
+                    slug=slug,
+                    hero_priority=target_slot,
+                    is_approved=True
+                )
+                UniversityProfile.objects.create(
+                    university=uni,
+                    location_city='Global Campus',
+                    location_state_country='International',
+                    short_description=f"{uni.name} is an accredited university and featured exhibitor.",
+                    about=f"Welcome to {uni.name}. Explore undergraduate and postgraduate programs, scholarship opportunities, and meet with university admissions advisors at the booth."
+                )
 
             if not uni:
                 messages.error(request, "Please select an existing university from the catalog or enter a university name.")

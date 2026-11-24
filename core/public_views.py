@@ -2857,10 +2857,16 @@ def portal_register_exhibitor(request):
             defaults={'university': uni, 'role': 'Representative'}
         )
         # Keep Exhibitor record for backward compat (scanners, leads, etc.)
-        Exhibitor.objects.get_or_create(
+        exh, _ = Exhibitor.objects.get_or_create(
             user=user,
-            defaults={'company_name': company_name, 'event_location': loc}
+            defaults={'company_name': company_name, 'event_location': loc, 'university': uni}
         )
+        if not exh.university:
+            exh.university = uni
+            exh.save(update_fields=['university'])
+
+        from .dashboard_views import _sync_exhibitor_and_university
+        _sync_exhibitor_and_university(exhibitor=exh, university=uni)
         Registration.objects.get_or_create(
             email=email,
             defaults={
