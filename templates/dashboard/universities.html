@@ -286,10 +286,17 @@
 
               <!-- Column 5: Hero Display Status -->
               <td style="padding: 14px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;">
+                {% if item.university.is_approved %}
                 <span style="display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800;">
                   <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></span>
                   Active on Hero
                 </span>
+                {% else %}
+                <span style="display: inline-flex; align-items: center; gap: 6px; background: #fffbeb; color: #d97706; border: 1px solid #fde68a; padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800;">
+                  <span style="width: 6px; height: 6px; border-radius: 50%; background: #f59e0b;"></span>
+                  Pending Verification
+                </span>
+                {% endif %}
               </td>
 
               <!-- Column 6: Actions -->
@@ -320,8 +327,8 @@
                     <i data-feather="edit-2" style="width: 12px; height: 12px;"></i> Edit
                   </a>
 
-                  <!-- Remove from Hero Cards (Frees slot, keeps in catalog) -->
-                  <form action="{% url 'university_remove_hero' item.university.pk %}" method="post" onsubmit="return confirm('Remove {{ item.university.name }} from Hero Cards? This will free Slot #{{ item.slot }} while preserving the university profile and courses in your catalog.');" style="margin: 0; display: inline;">
+                  <!-- Remove from Hero Cards, Booths, and Exhibitor directory -->
+                  <form action="{% url 'university_remove_hero' item.university.pk %}" method="post" onsubmit="return confirm('Remove {{ item.university.name }} from Hero Cards, Booths, and Exhibitor directory? This will free Slot #{{ item.slot }} and unassign any allocated booth.');" style="margin: 0; display: inline;">
                     {% csrf_token %}
                     <button type="submit" title="Remove from Hero Cards" style="background: #ffffff; border: 1px solid #fed7aa; color: #c2410c; padding: 5px 9px; border-radius: 6px; font-weight: 750; font-size: 11.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;" onmouseover="this.style.background='#fff7ed';" onmouseout="this.style.background='#ffffff';">
                       <i data-feather="eye-off" style="width: 12px; height: 12px;"></i> Remove

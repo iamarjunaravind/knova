@@ -586,20 +586,79 @@
       flex-direction: column;
     }
 
-    /* VIEW A: MENU / DASHBOARD VIEW (LIGHT THEME) */
-    .menu-view-screen {
+    /* DEDICATED FULL-HEIGHT NO-PAGE-SCROLL TAB PANELS */
+    .app-tab-screen {
       position: absolute;
       inset: 0;
       z-index: 10;
-      padding-top: calc(var(--safe-top) + 64px);
-      padding-bottom: calc(var(--safe-bottom) + 76px);
-      padding-left: 16px;
-      padding-right: 16px;
-      overflow-y: auto;
+      padding-top: calc(var(--safe-top) + 60px);
+      padding-bottom: calc(var(--safe-bottom) + 70px);
+      padding-left: 14px;
+      padding-right: 14px;
+      overflow: hidden;
       background: #f8fafc;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      box-sizing: border-box;
+    }
+
+    .app-tab-screen.active {
+      display: flex;
+    }
+
+    /* Tab 1: Station Dashboard (fits 100% viewport, zero vertical scrolling) */
+    #tabScreenStation {
+      overflow: hidden;
+      justify-content: flex-start;
+      gap: 12px;
+    }
+
+    /* Tab 2: Live Statistics (clean role panels) */
+    #tabScreenStats {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      gap: 12px;
+      padding-top: calc(var(--safe-top) + 64px);
+    }
+
+    /* Tab 3: Recent Punches (header fixed, internal list scrolls smoothly) */
+    #tabScreenRecent {
+      overflow: hidden;
+      padding-top: calc(var(--safe-top) + 64px);
+      gap: 10px;
+    }
+
+    .recent-tab-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      overflow: hidden;
+    }
+
+    .recent-tab-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      flex-shrink: 0;
+    }
+
+    .recent-tab-list {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 2px;
     }
 
     /* Station Banner Card */
@@ -1884,8 +1943,8 @@
        ========================================================================= -->
   <div class="views-wrapper" id="viewsWrapper" style="display: none;">
 
-    <!-- VIEW A: MENU / DASHBOARD VIEW (Default upon login) -->
-    <section class="menu-view-screen" id="menuViewScreen">
+    <!-- TAB 1: STATION & QUICK ACTIONS (100% fits screen, zero page scrolling) -->
+    <section class="app-tab-screen active" id="tabScreenStation">
       
       <!-- Station Context & Punch Summary Card -->
       <div class="menu-station-card">
@@ -1937,16 +1996,16 @@
           <i class="fa-solid fa-repeat"></i>
           <span>Change Booth</span>
         </div>
-        <div class="quick-action-btn" onclick="fetchStats()">
-          <i class="fa-solid fa-chart-line"></i>
-          <span>Refresh Stats</span>
+        <div class="quick-action-btn" onclick="switchAppTab('stats')">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Live Stats</span>
         </div>
       </div>
+    </section>
 
-      <!-- =====================================================================
-           EXPO STATISTICS & TOTAL NUMBERS SECTION
-           ===================================================================== -->
-      <section class="expo-stats-section" id="expoStatsSection">
+    <!-- TAB 2: LIVE STATISTICS SECTION (Dedicated Full-Screen View) -->
+    <section class="app-tab-screen" id="tabScreenStats">
+      <div class="expo-stats-section" id="expoStatsSection" style="margin-bottom: 0;">
         <div class="stats-header-bar">
           <div class="stats-title-wrap">
             <h2 class="stats-main-title">
@@ -2176,14 +2235,15 @@
             </div>
           </div>
         </div>
-      </section>
+    </section>
 
-      <!-- RECENT PUNCHED FEED SECTION -->
-      <div class="recent-punched-section">
-        <div class="recent-section-header">
+    <!-- TAB 3: RECENT PUNCHES FEED SECTION (Dedicated Full-Screen View) -->
+    <section class="app-tab-screen" id="tabScreenRecent">
+      <div class="recent-tab-card">
+        <div class="recent-tab-header">
           <div class="recent-section-title">
             <i class="fa-solid fa-clock-rotate-left"></i>
-            <span>Recent Punched</span>
+            <span>Recent Punched Badges</span>
           </div>
           <button class="recent-refresh-link" onclick="loadRecentPunches()">
             <i class="fa-solid fa-rotate-right" id="recentRefreshSpinner"></i>
@@ -2191,14 +2251,13 @@
           </button>
         </div>
 
-        <div class="recent-punched-list" id="recentPunchedFeed">
+        <div class="recent-tab-list" id="recentPunchedFeed">
           <div class="recent-empty-placeholder">
             <i class="fa-solid fa-spinner fa-spin" style="font-size:1.4rem; opacity:0.5; margin-bottom:8px; display:block;"></i>
             Loading recent punches...
           </div>
         </div>
       </div>
-
     </section>
 
     <!-- VIEW B: CAMERA SCANNER VIEW (Active when scanning) -->
@@ -2242,22 +2301,22 @@
   </div>
 
   <!-- =========================================================================
-       4. BOTTOM NAVIGATION BAR (Menu | Scan | Stats | Recent | Logout)
+       4. BOTTOM NAVIGATION BAR (Station | Stats | Scan | Recent | Logout)
        ========================================================================= -->
   <nav class="app-bottom-nav" id="appBottomNav" style="display: none;">
-    <button class="bottom-nav-item active" id="navItemMenu" onclick="openMenuView()">
-      <i class="fa-solid fa-table-cells-large"></i>
-      <span>Menu</span>
+    <button class="bottom-nav-item active" id="navItemStation" onclick="switchAppTab('station')">
+      <i class="fa-solid fa-id-card-clip"></i>
+      <span>Station</span>
+    </button>
+    <button class="bottom-nav-item" id="navItemStats" onclick="switchAppTab('stats')">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>Stats</span>
     </button>
     <button class="bottom-nav-item scan-center-item" id="navItemScan" onclick="openScannerView()">
       <div class="scan-fab"><i class="fa-solid fa-qrcode"></i></div>
       <span style="margin-top: 2px;">Scan</span>
     </button>
-    <button class="bottom-nav-item" id="navItemStats" onclick="scrollToStatsSection()">
-      <i class="fa-solid fa-chart-pie"></i>
-      <span>Stats</span>
-    </button>
-    <button class="bottom-nav-item" id="navItemRecent" onclick="scrollToRecentPunches()">
+    <button class="bottom-nav-item" id="navItemRecent" onclick="switchAppTab('recent')">
       <i class="fa-solid fa-clock-rotate-left"></i>
       <span>Recent</span>
     </button>
@@ -2550,10 +2609,15 @@ async function handleMobileLogout(skipConfirm = false) {
   } catch(e) {}
 
   currentUser = null;
+  currentAppTab = 'station';
   localStorage.removeItem('knova_session_key');
   localStorage.removeItem('knova_user_info');
   closeUserModal();
   stopScanner();
+
+  document.querySelectorAll('.app-tab-screen').forEach(tab => tab.classList.remove('active'));
+  const targetStation = document.getElementById('tabScreenStation');
+  if (targetStation) targetStation.classList.add('active');
 
   document.getElementById('scannerHeader').style.display = 'none';
   document.getElementById('viewsWrapper').style.display = 'none';
@@ -2602,31 +2666,53 @@ function dismissResultSheetImmediate() {
   isProcessingScan = false;
 }
 
-function openMenuView() {
-  activeView = 'menu';
+let currentAppTab = 'station'; // 'station' | 'stats' | 'recent'
+
+function switchAppTab(tabName) {
+  currentAppTab = tabName;
+  activeView = 'tab';
   stopScanner();
 
-  // Close all sheets & modals so they never linger on the menu
+  // Close all sheets & modals so they never linger
   dismissResultSheetImmediate();
   closeStationPicker();
   closeManualModal();
   closeUserModal();
   closeStudentModal();
 
-  document.getElementById('menuViewScreen').style.display = 'flex';
-  document.getElementById('scannerViewScreen').style.display = 'none';
-
-  // Toggle Menubar hardware buttons
+  // Hide scanner view and camera action buttons
+  const scannerScreen = document.getElementById('scannerViewScreen');
+  if (scannerScreen) scannerScreen.style.display = 'none';
   document.querySelectorAll('.cam-action').forEach(b => b.style.display = 'none');
 
-  // Bottom nav highlight
-  document.getElementById('navItemMenu').classList.add('active');
-  document.getElementById('navItemScan').classList.remove('active');
-  const navStats = document.getElementById('navItemStats');
-  if (navStats) navStats.classList.remove('active');
-  document.getElementById('navItemRecent').classList.remove('active');
+  // Activate selected tab screen and deactivate others
+  document.querySelectorAll('.app-tab-screen').forEach(tab => tab.classList.remove('active'));
+  const targetId = 'tabScreen' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
+  const targetTab = document.getElementById(targetId);
+  if (targetTab) {
+    targetTab.classList.add('active');
+  }
 
-  loadRecentPunches();
+  // Update bottom nav highlights
+  const navStation = document.getElementById('navItemStation');
+  const navStats = document.getElementById('navItemStats');
+  const navRecent = document.getElementById('navItemRecent');
+  const navScan = document.getElementById('navItemScan');
+
+  if (navStation) navStation.classList.toggle('active', tabName === 'station');
+  if (navStats) navStats.classList.toggle('active', tabName === 'stats');
+  if (navRecent) navRecent.classList.toggle('active', tabName === 'recent');
+  if (navScan) navScan.classList.remove('active');
+
+  if (tabName === 'stats') {
+    fetchStats();
+  } else if (tabName === 'recent') {
+    loadRecentPunches();
+  }
+}
+
+function openMenuView() {
+  switchAppTab('station');
 }
 
 function openScannerView() {
@@ -2639,56 +2725,33 @@ function openScannerView() {
   closeUserModal();
   closeStudentModal();
 
-  document.getElementById('menuViewScreen').style.display = 'none';
-  document.getElementById('scannerViewScreen').style.display = 'flex';
+  document.querySelectorAll('.app-tab-screen').forEach(tab => tab.classList.remove('active'));
+  const scannerScreen = document.getElementById('scannerViewScreen');
+  if (scannerScreen) scannerScreen.style.display = 'flex';
 
   // Toggle Menubar hardware buttons
   document.querySelectorAll('.cam-action').forEach(b => b.style.display = 'flex');
 
   // Bottom nav highlight
-  document.getElementById('navItemMenu').classList.remove('active');
-  document.getElementById('navItemScan').classList.add('active');
+  const navStation = document.getElementById('navItemStation');
   const navStats = document.getElementById('navItemStats');
+  const navRecent = document.getElementById('navItemRecent');
+  const navScan = document.getElementById('navItemScan');
+
+  if (navStation) navStation.classList.remove('active');
   if (navStats) navStats.classList.remove('active');
-  document.getElementById('navItemRecent').classList.remove('active');
+  if (navRecent) navRecent.classList.remove('active');
+  if (navScan) navScan.classList.add('active');
 
   startScanner();
 }
 
 function scrollToStatsSection() {
-  if (activeView !== 'menu') {
-    openMenuView();
-  }
-  setTimeout(() => {
-    const el = document.getElementById('expoStatsSection');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      el.classList.add('pulse-highlight');
-      setTimeout(() => el.classList.remove('pulse-highlight'), 1200);
-    }
-  }, 100);
-
-  document.getElementById('navItemMenu').classList.remove('active');
-  document.getElementById('navItemScan').classList.remove('active');
-  const navStats = document.getElementById('navItemStats');
-  if (navStats) navStats.classList.add('active');
-  document.getElementById('navItemRecent').classList.remove('active');
+  switchAppTab('stats');
 }
 
 function scrollToRecentPunches() {
-  if (activeView !== 'menu') {
-    openMenuView();
-  }
-  setTimeout(() => {
-    const el = document.querySelector('.recent-punched-section');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  }, 100);
-
-  document.getElementById('navItemMenu').classList.remove('active');
-  document.getElementById('navItemScan').classList.remove('active');
-  const navStats = document.getElementById('navItemStats');
-  if (navStats) navStats.classList.remove('active');
-  document.getElementById('navItemRecent').classList.add('active');
+  switchAppTab('recent');
 }
 
 // =============================================================================
@@ -3453,7 +3516,11 @@ function handleAppBackButton() {
     return true;
   }
   if (activeView === 'scanner') {
-    openMenuView();
+    switchAppTab(currentAppTab || 'station');
+    return true;
+  }
+  if (currentAppTab !== 'station') {
+    switchAppTab('station');
     return true;
   }
   return false;
@@ -3466,7 +3533,7 @@ window.addEventListener('popstate', () => {
 if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
   window.Capacitor.Plugins.App.addListener('backButton', () => {
     const handled = handleAppBackButton();
-    if (!handled && activeView === 'menu') {
+    if (!handled && currentAppTab === 'station') {
       window.Capacitor.Plugins.App.exitApp();
     }
   });

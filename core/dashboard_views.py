@@ -1256,10 +1256,19 @@ def _sync_exhibitor_and_university(exhibitor=None, university=None, primary=None
             while University.objects.filter(slug=slug).exists():
                 slug = f"{base_slug}-{c}"
                 c += 1
+
+            occupied_slots = set(University.objects.filter(hero_priority__gte=1, hero_priority__lte=15).values_list('hero_priority', flat=True))
+            next_slot = 0
+            for s in range(1, 16):
+                if s not in occupied_slots:
+                    next_slot = s
+                    break
+
             university = University.objects.create(
                 name=exhibitor.company_name,
                 slug=slug,
-                is_approved=exhibitor.is_verified
+                is_approved=exhibitor.is_verified,
+                hero_priority=next_slot
             )
         if exhibitor.university != university:
             exhibitor.university = university
@@ -1382,6 +1391,14 @@ def _sync_exhibitor_and_university(exhibitor=None, university=None, primary=None
         elif (u_prof.short_description or u_prof.about) and not exhibitor.profile_description:
             exhibitor.profile_description = u_prof.short_description or u_prof.about
             exh_updated_fields.append('profile_description')
+
+    if university and university.hero_priority == 0:
+        occupied_slots = set(University.objects.filter(hero_priority__gte=1, hero_priority__lte=15).values_list('hero_priority', flat=True))
+        for s in range(1, 16):
+            if s not in occupied_slots:
+                university.hero_priority = s
+                uni_updated_fields.append('hero_priority')
+                break
 
     if uni_updated_fields:
         university.save(update_fields=uni_updated_fields)
@@ -4217,11 +4234,10 @@ def dashboard_universities(request):
     status_filter = request.GET.get('status', '').strip()
     country_filter = request.GET.get('country', '').strip()
 
-    # Active Hero Cards displayed on homepage (Slots 1 to 15, approved)
+    # Active Hero Cards displayed on homepage (Slots 1 to 15)
     hero_qs = University.objects.filter(
         hero_priority__gte=1,
-        hero_priority__lte=15,
-        is_approved=True
+        hero_priority__lte=15
     ).select_related('profile').annotate(
         courses_count=Count('courses', distinct=True),
         scholarships_count=Count('scholarships', distinct=True)
@@ -4445,11 +4461,25 @@ def university_remove_hero(request, pk):
         return redirect('dashboard_index')
 
     if request.method == 'POST':
+        from .models import Exhibitor, ExpoBooth
+        from django.db.models import Q
         uni = get_object_or_404(University, pk=pk)
+        name = uni.name
         slot = uni.hero_priority
         uni.hero_priority = 0
         uni.save(update_fields=['hero_priority'])
-        messages.success(request, f'"{uni.name}" removed from Hero Cards. Its profile and courses remain safe in the catalog. Slot #{slot} is now open — click "+ Add Exhibitor Card" to fill it.')
+
+        # 1. Free and unassign any Expo Booth(s) allocated to this university or exhibitor
+        ExpoBooth.objects.filter(
+            Q(university=uni) | Q(exhibitor__university=uni) | Q(exhibitor__company_name__iexact=name)
+        ).update(exhibitor=None, university=None, status='AVAILABLE')
+
+        # 2. Remove corresponding Exhibitor profile
+        Exhibitor.objects.filter(
+            Q(university=uni) | Q(company_name__iexact=name)
+        ).delete()
+
+        messages.success(request, f'Exhibitor "{name}" removed from Hero Cards, Booth allocations, and Exhibitor directory. Slot #{slot} is now open.')
 
     return redirect('dashboard_universities')
 
