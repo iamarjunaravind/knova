@@ -808,12 +808,12 @@
 
     /* QUICK ACTIONS GRID */
     .menu-quick-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
       gap: 8px;
     }
 
     .quick-action-btn {
+      flex: 1;
       height: 50px;
       background: #ffffff;
       border: 1px solid #e2e8f0;
@@ -1909,19 +1909,11 @@
         <span class="header-app-tag">SCANNER</span>
       </div>
 
-      <!-- USER CHIP / LOGOUT TRIGGER -->
-      <div class="user-pill" onclick="openUserModal()">
-        <div class="user-dot"></div>
-        <span class="user-name-title" id="userNameTitle">{{ role_info.name|default:"Gate Staff" }}</span>
-        <i class="fa-solid fa-angle-down" style="font-size: 0.65rem; color: var(--text-muted);"></i>
-      </div>
-
       <!-- HARDWARE & LOGOUT CONTROLS -->
       <div class="header-actions">
         <!-- Torch & Camera Flip: only active when inside camera scanner view -->
         <button class="icon-btn cam-action" id="btnTorch" title="Torch" onclick="toggleTorch()" style="display: none;"><i class="fa-solid fa-bolt"></i></button>
         <button class="icon-btn cam-action" id="btnFlipCam" title="Flip Camera" onclick="flipCamera()" style="display: none;"><i class="fa-solid fa-camera-rotate"></i></button>
-        <button class="icon-btn" id="btnSound" title="Sound" onclick="toggleSound()"><i class="fa-solid fa-volume-high"></i></button>
 
         <!-- EXPLICIT ONE-TAP LOGOUT BUTTON ON MENUBAR -->
         <button class="menubar-logout-btn" onclick="handleMobileLogout()" title="Log Out">
@@ -2006,10 +1998,6 @@
         <button class="quick-action-btn" id="btnSwitchStationMenu" onclick="handleStationBarClick()" {% if role_info.is_locked %}style="display: none;"{% endif %}>
           <i class="fa-solid fa-arrows-rotate"></i>
           <span>Switch Station</span>
-        </button>
-        <button class="quick-action-btn" onclick="switchAppTab('stats')">
-          <i class="fa-solid fa-chart-pie"></i>
-          <span>Live Stats</span>
         </button>
       </div>
     </section>
@@ -2605,7 +2593,8 @@ function onLoginSuccess() {
   document.getElementById('viewsWrapper').style.display = 'flex';
   document.getElementById('appBottomNav').style.display = 'flex';
 
-  document.getElementById('userNameTitle').textContent = currentUser.name || currentUser.username;
+  const userTitleEl = document.getElementById('userNameTitle');
+  if (userTitleEl) userTitleEl.textContent = currentUser.name || currentUser.username;
   currentMode = currentUser.default_mode || 'gate';
 
   const roleTabsNav = document.getElementById('roleTabsNav');
@@ -3036,8 +3025,11 @@ function playChime(freq1, freq2) {
 
 function toggleSound() {
   soundEnabled = !soundEnabled;
-  document.getElementById('btnSound').innerHTML = soundEnabled ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
-  document.getElementById('btnSound').classList.toggle('muted', !soundEnabled);
+  const btn = document.getElementById('btnSound');
+  if (btn) {
+    btn.innerHTML = soundEnabled ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
+    btn.classList.toggle('muted', !soundEnabled);
+  }
 }
 
 // =============================================================================
