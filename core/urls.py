@@ -137,6 +137,11 @@ urlpatterns = [
     path('registrations/<int:pk>/edit/', dashboard_views.registration_update, name='registration_update'),
     path('registrations/<int:pk>/delete/', dashboard_views.registration_delete, name='registration_delete'),
 
+    path('punch-users/', dashboard_views.dashboard_punch_users, name='dashboard_punch_users'),
+    path('punch-users/new/', dashboard_views.punch_user_create, name='punch_user_create'),
+    path('punch-users/<int:pk>/edit/', dashboard_views.punch_user_update, name='punch_user_update'),
+    path('punch-users/<int:pk>/delete/', dashboard_views.punch_user_delete, name='punch_user_delete'),
+
 
     path('countries/', dashboard_views.dashboard_countries, name='dashboard_countries'),
     path('countries/new/', dashboard_views.country_create, name='country_create'),

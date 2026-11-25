@@ -1927,6 +1927,9 @@
       <button class="role-tab-btn" data-mode="counselling" onclick="switchScannerMode('counselling')">
         <i class="fa-solid fa-user-graduate"></i><span>Advisory</span>
       </button>
+      <button class="role-tab-btn" data-mode="activity" onclick="switchScannerMode('activity')">
+        <i class="fa-solid fa-bolt"></i><span>Activity</span>
+      </button>
     </nav>
   </header>
 
@@ -1960,6 +1963,16 @@
             <span class="stat-tile-label" id="menuStationUniqueLabel">Unique Attendees</span>
           </div>
         </div>
+      </div>
+
+      <!-- ACTIVITY PUNCH ON EXPO ENTRY (Shown in Gate mode when Activity is allowed) -->
+      <div id="gateActivityWrap" style="display: none; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 10px 12px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
+        <label for="gateActivitySelect" style="display: flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 750; color: #0f172a; margin-bottom: 5px;">
+          <i class="fa-solid fa-bolt" style="color: #0ea5e9;"></i> Punch Activity on Expo Entry (Optional)
+        </label>
+        <select id="gateActivitySelect" onchange="selectedGateActivityId = this.value || null" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 9px; padding: 8px 10px; font-size: 0.78rem; font-weight: 600; color: #1e293b; background: #f8fafc; outline: none;">
+          <option value="">-- Gate Entry Only (No Activity) --</option>
+        </select>
       </div>
 
       <!-- MAIN ACTION HERO: SCAN ATTENDEE QR -->
@@ -2492,7 +2505,8 @@ function openServerConfig() {
 let stationsData = {
   exhibitors: [],
   sessions: [],
-  experts: []
+  experts: [],
+  activities: []
 };
 
 let currentUser = null;
@@ -2501,6 +2515,8 @@ let activeView = 'menu';
 let selectedExhibitorId = null;
 let selectedSessionId = null;
 let selectedExpertId = null;
+let selectedActivityId = null;
+let selectedGateActivityId = null;
 
 // =============================================================================
 // LOGIN & LOGOUT HANDLERS
@@ -2562,15 +2578,38 @@ function onLoginSuccess() {
 
   const roleTabsNav = document.getElementById('roleTabsNav');
   const btnSwitchStation = document.getElementById('btnSwitchStationMenu');
+  const allowedModes = (currentUser.allowed_modes && currentUser.allowed_modes.length) ? currentUser.allowed_modes : [currentMode];
 
-  if (currentUser.is_locked) {
+  // Populate Expo Entry Activity dropdown
+  const gateActSel = document.getElementById('gateActivitySelect');
+  if (gateActSel) {
+    const acts = (stationsData && stationsData.activities) ? stationsData.activities : [];
+    gateActSel.innerHTML = '<option value="">-- Gate Entry Only (No Activity) --</option>' +
+      acts.map(a => `<option value="${a.id}">${escapeHtml(a.name)}</option>`).join('');
+    if (currentUser.station_id && (currentUser.role === 'gate_activity' || currentUser.role === 'activity')) {
+      gateActSel.value = String(currentUser.station_id);
+      selectedGateActivityId = String(currentUser.station_id);
+      selectedActivityId = currentUser.station_id;
+    } else if (acts.length && !selectedActivityId) {
+      selectedActivityId = acts[0].id;
+    }
+  }
+
+  document.querySelectorAll('.role-tab-btn').forEach(btn => {
+    const m = btn.getAttribute('data-mode');
+    btn.style.display = allowedModes.includes(m) ? 'flex' : 'none';
+  });
+
+  if (currentUser.is_locked || allowedModes.length <= 1) {
     roleTabsNav.style.display = 'none';
-    if (btnSwitchStation) btnSwitchStation.style.display = 'none';
+    if (btnSwitchStation) btnSwitchStation.style.display = (currentUser.role === 'activity' && !currentUser.is_station_locked) ? 'flex' : 'none';
     if (currentUser.role === 'exhibitor') selectedExhibitorId = currentUser.station_id;
     if (currentUser.role === 'seminar') selectedSessionId = currentUser.station_id;
     if (currentUser.role === 'counselling') selectedExpertId = currentUser.station_id;
+    if (currentUser.role === 'activity' && currentUser.station_id) selectedActivityId = currentUser.station_id;
   } else {
     roleTabsNav.style.display = 'grid';
+    roleTabsNav.style.gridTemplateColumns = `repeat(${allowedModes.length}, 1fr)`;
     if (btnSwitchStation) btnSwitchStation.style.display = 'flex';
   }
 
@@ -2741,6 +2780,9 @@ function scrollToRecentPunches() {
 // MODE & STATION LOGIC
 // =============================================================================
 function switchScannerMode(mode) {
+  if (currentUser && currentUser.allowed_modes && !currentUser.allowed_modes.includes(mode)) {
+    return;
+  }
   if (currentUser && currentUser.is_locked && currentUser.default_mode !== mode) {
     return; // Role is locked
   }
@@ -2786,8 +2828,26 @@ function updateStationUI() {
   const exhibitorsList = (typeof stationsData !== 'undefined' && stationsData.exhibitors) ? stationsData.exhibitors : [];
   const sessionsList = (typeof stationsData !== 'undefined' && stationsData.sessions) ? stationsData.sessions : [];
   const expertsList = (typeof stationsData !== 'undefined' && stationsData.experts) ? stationsData.experts : [];
+  const activitiesList = (typeof stationsData !== 'undefined' && stationsData.activities) ? stationsData.activities : [];
 
-  if (currentMode === 'booth') {
+  const gateActWrap = document.getElementById('gateActivityWrap');
+  const canDoActivity = !currentUser || !currentUser.allowed_modes || currentUser.allowed_modes.includes('activity');
+  if (gateActWrap) {
+    gateActWrap.style.display = (currentMode === 'gate' && canDoActivity && activitiesList.length > 0) ? 'block' : 'none';
+  }
+
+  if (currentMode === 'activity') {
+    stationIcon.className = 'fa-solid fa-bolt';
+    roleTitle = 'Expo Activity Zone';
+    const act = activitiesList.find(a => a.id == selectedActivityId);
+    stationName = (currentUser && currentUser.is_station_locked && currentUser.station_name) ? currentUser.station_name : (act ? act.name : 'Select Activity Zone');
+    scanHeroSub.textContent = 'Tap to punch activity participation & award +20 XP';
+    hint.textContent = 'Point at student badge to punch activity (+20 XP)';
+    if (countLabel) countLabel.textContent = 'Activity Punches';
+    if (uniqueLabel) uniqueLabel.textContent = 'Unique Participants';
+    if (statsMainTitle) statsMainTitle.textContent = 'Activity Zone Punches';
+    if (panelGate) panelGate.style.display = 'block';
+  } else if (currentMode === 'booth') {
     stationIcon.className = 'fa-solid fa-store';
     roleTitle = 'University Exhibitor';
     const exh = exhibitorsList.find(e => e.id == selectedExhibitorId);
@@ -2872,6 +2932,11 @@ function openStationPicker() {
     sub.textContent = 'Choose education expert desk:';
     items = stationsData.experts;
     selectedId = selectedExpertId;
+  } else if (currentMode === 'activity') {
+    title.textContent = 'Select Activity Zone';
+    sub.textContent = 'Choose expo floor activity zone:';
+    items = stationsData.activities || [];
+    selectedId = selectedActivityId;
   }
 
   renderPickerItems(items, selectedId);
@@ -2906,6 +2971,7 @@ function filterPickerItems() {
   if (currentMode === 'booth') { pool = stationsData.exhibitors; selectedId = selectedExhibitorId; }
   else if (currentMode === 'seminar') { pool = stationsData.sessions; selectedId = selectedSessionId; }
   else if (currentMode === 'counselling') { pool = stationsData.experts; selectedId = selectedExpertId; }
+  else if (currentMode === 'activity') { pool = stationsData.activities || []; selectedId = selectedActivityId; }
   const filtered = pool.filter(p => p.name.toLowerCase().includes(q) || (p.sub && p.sub.toLowerCase().includes(q)));
   renderPickerItems(filtered, selectedId);
 }
@@ -2914,6 +2980,7 @@ function selectStationItem(id) {
   if (currentMode === 'booth') selectedExhibitorId = id;
   else if (currentMode === 'seminar') selectedSessionId = id;
   else if (currentMode === 'counselling') selectedExpertId = id;
+  else if (currentMode === 'activity') selectedActivityId = id;
 
   closeStationPicker();
   updateStationUI();
@@ -3073,6 +3140,7 @@ function getTargetId() {
   if (currentMode === 'booth') return selectedExhibitorId;
   if (currentMode === 'seminar') return selectedSessionId;
   if (currentMode === 'counselling') return selectedExpertId;
+  if (currentMode === 'activity') return selectedActivityId;
   return null;
 }
 
@@ -3085,6 +3153,9 @@ async function dispatchCheckIn(code) {
     mode: currentMode,
     target_id: targetId
   };
+  if (currentMode === 'gate' && selectedGateActivityId) {
+    payload.activity_id = selectedGateActivityId;
+  }
 
   try {
     const res = await fetch(`${API_HOST}/api/mobile-checkin/`, {

@@ -7431,3 +7431,164 @@ def chatbot_faq_toggle_active(request, pk):
     status_str = "activated" if faq.is_active else "deactivated"
     messages.success(request, f'Chatbot question "{faq.question}" has been {status_str}.')
     return redirect('dashboard_chatbot_faq')
+
+
+# ---------------------------------------------------------
+# EXPO ENTRY & ACTIVITY PUNCH STAFF MANAGEMENT (ADMIN)
+# ---------------------------------------------------------
+
+@login_required(login_url='/portal/login/')
+def dashboard_punch_users(request):
+    from .models import ScannerStaff, FloorActivityZone, ActivityPunch
+    from django.contrib import messages
+    is_admin = request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') == 'admin'
+    if not is_admin:
+        messages.error(request, "Access restricted to Administrators.")
+        return redirect('dashboard_index')
+
+    staff_list = ScannerStaff.objects.select_related('user', 'activity_zone').all()
+    activity_zones = FloorActivityZone.objects.filter(is_active=True).order_by('order', 'name')
+    recent_activity_punches = ActivityPunch.objects.select_related('registration', 'activity_zone', 'punched_by')[:20]
+
+    return render(request, 'dashboard/punch_users.html', {
+        'staff_list': staff_list,
+        'activity_zones': activity_zones,
+        'recent_activity_punches': recent_activity_punches,
+        'total_activity_punches': ActivityPunch.objects.count(),
+    })
+
+
+@login_required(login_url='/portal/login/')
+def punch_user_create(request):
+    if request.method != 'POST':
+        return redirect('dashboard_punch_users')
+    from .models import ScannerStaff, FloorActivityZone
+    from django.contrib.auth.models import User
+    from django.contrib import messages
+    import re
+
+    is_admin = request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') == 'admin'
+    if not is_admin:
+        messages.error(request, "Access restricted to Administrators.")
+        return redirect('dashboard_index')
+
+    full_name = request.POST.get('full_name', '').strip()
+    username = request.POST.get('username', '').strip()
+    email = request.POST.get('email', '').strip()
+    password = request.POST.get('password', '').strip()
+    role_type = request.POST.get('role_type', 'gate_activity').strip()
+    zone_id = request.POST.get('activity_zone_id', '').strip()
+
+    if not full_name:
+        messages.error(request, "Full Name is required.")
+        return redirect('dashboard_punch_users')
+
+    if role_type not in ('gate_activity', 'gate', 'activity'):
+        role_type = 'gate_activity'
+
+    if not username:
+        clean = re.sub(r'[^a-zA-Z0-9]', '', full_name.lower())[:12]
+        base_u = f"entry_{clean}" if clean else "entry_staff"
+        username = base_u
+        suffix = 1
+        while User.objects.filter(username__iexact=username).exists():
+            username = f"{base_u}_{suffix}"
+            suffix += 1
+    elif User.objects.filter(username__iexact=username).exists():
+        messages.error(request, f"Username '{username}' already exists. Choose a different username.")
+        return redirect('dashboard_punch_users')
+
+    if not password:
+        password = 'entry' + str(ScannerStaff.objects.count() + 101)
+
+    zone = FloorActivityZone.objects.filter(pk=zone_id).first() if zone_id.isdigit() else None
+
+    try:
+        parts = full_name.split()
+        user = User.objects.create_user(
+            username=username,
+            email=email or f"{username}@knovaexpo.com",
+            password=password,
+            first_name=parts[0] if parts else '',
+            last_name=' '.join(parts[1:]) if len(parts) > 1 else '',
+            is_active=True,
+        )
+        ScannerStaff.objects.create(
+            user=user,
+            full_name=full_name,
+            role_type=role_type,
+            activity_zone=zone,
+            raw_password=password,
+            is_active=True,
+            created_by=request.user,
+        )
+        messages.success(request, f"Punch Entry User '{full_name}' created! Username: {username} | Password: {password}")
+    except Exception as e:
+        messages.error(request, f"Failed to create Punch Entry User: {str(e)}")
+
+    return redirect('dashboard_punch_users')
+
+
+@login_required(login_url='/portal/login/')
+def punch_user_update(request, pk):
+    if request.method != 'POST':
+        return redirect('dashboard_punch_users')
+    from .models import ScannerStaff, FloorActivityZone
+    from django.shortcuts import get_object_or_404
+    from django.contrib import messages
+
+    is_admin = request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') == 'admin'
+    if not is_admin:
+        messages.error(request, "Access restricted to Administrators.")
+        return redirect('dashboard_index')
+
+    staff = get_object_or_404(ScannerStaff, pk=pk)
+    full_name = request.POST.get('full_name', '').strip()
+    email = request.POST.get('email', '').strip()
+    password = request.POST.get('password', '').strip()
+    role_type = request.POST.get('role_type', '').strip()
+    zone_id = request.POST.get('activity_zone_id', '').strip()
+    is_active = request.POST.get('is_active') == 'on'
+
+    if full_name:
+        staff.full_name = full_name
+        parts = full_name.split()
+        staff.user.first_name = parts[0] if parts else ''
+        staff.user.last_name = ' '.join(parts[1:]) if len(parts) > 1 else ''
+    if email:
+        staff.user.email = email
+    if role_type in ('gate_activity', 'gate', 'activity'):
+        staff.role_type = role_type
+    staff.activity_zone = FloorActivityZone.objects.filter(pk=zone_id).first() if zone_id.isdigit() else None
+    staff.is_active = is_active
+    staff.user.is_active = is_active
+
+    if password:
+        staff.raw_password = password
+        staff.user.set_password(password)
+
+    staff.user.save()
+    staff.save()
+    messages.success(request, f"Updated Punch Entry User '{staff.full_name}'.")
+    return redirect('dashboard_punch_users')
+
+
+@login_required(login_url='/portal/login/')
+def punch_user_delete(request, pk):
+    from .models import ScannerStaff
+    from django.shortcuts import get_object_or_404
+    from django.contrib import messages
+
+    is_admin = request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') == 'admin'
+    if not is_admin:
+        messages.error(request, "Access restricted to Administrators.")
+        return redirect('dashboard_index')
+
+    staff = get_object_or_404(ScannerStaff, pk=pk)
+    user = staff.user
+    name = staff.full_name
+    staff.delete()
+    if user:
+        user.delete()
+    messages.success(request, f"Deleted Punch Entry User '{name}'.")
+    return redirect('dashboard_punch_users')

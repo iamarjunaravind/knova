@@ -1067,6 +1067,103 @@ def _perform_counselling_punch(request, raw_code, expert_id=None, notes=''):
     }
 
 
+def _perform_activity_punch(request, raw_code, activity_id=None, notes=''):
+    """
+    Expo Floor Activity Zone attendance punch (+20 XP).
+    """
+    from django.utils import timezone
+    from .models import FloorActivityZone, ActivityPunch, StudentChallengePassport
+
+    reg, extra = _resolve_attendee(raw_code)
+    if not reg:
+        return {
+            'status': 'NOT_FOUND',
+            'message': f"No attendee found matching '{raw_code}'. Please verify the QR code or badge ID.",
+            'scanned_code': raw_code
+        }
+
+    zone = None
+    if activity_id and str(activity_id).isdigit():
+        zone = FloorActivityZone.objects.filter(id=int(activity_id), is_active=True).first()
+    if not zone:
+        zone = FloorActivityZone.objects.filter(is_active=True).order_by('order', 'id').first()
+    if not zone:
+        return {'status': 'NOT_FOUND', 'message': 'No active Expo Activity Zone found.'}
+
+    now = timezone.now()
+    existing = ActivityPunch.objects.filter(registration=reg, activity_zone=zone).first()
+    is_duplicate = bool(existing)
+    status_label = 'ALREADY_PUNCHED' if is_duplicate else 'SUCCESS'
+
+    pts_awarded = 0
+    if not is_duplicate:
+        user = _get_user_from_request_or_session(request) if request else None
+        ActivityPunch.objects.create(
+            registration=reg,
+            activity_zone=zone,
+            punched_by=user if (user and user.is_authenticated) else None,
+            notes=notes,
+            xp_awarded=20,
+        )
+        pts_awarded = 20
+        try:
+            passport = StudentChallengePassport.objects.filter(
+                Q(registration=reg) | Q(student_email__iexact=reg.email)
+            ).first()
+            if passport:
+                passport.add_activity(f"Activity Zone: {zone.name}", 20)
+                z_lower = zone.name.lower()
+                if 'tech' in z_lower or 'ai' in z_lower or 'coding' in z_lower:
+                    passport.tech_challenge_completed = True
+                elif 'counsell' in z_lower or 'career' in z_lower:
+                    passport.counselling_completed = True
+                elif 'aptitude' in z_lower or 'exam' in z_lower or 'diagnostic' in z_lower:
+                    passport.aptitude_test_completed = True
+                passport.check_passport_completion()
+                passport.save()
+        except Exception:
+            pass
+        msg = f"Activity punched: {reg.full_name} @ {zone.name}"
+    else:
+        prev_time = existing.attended_at.strftime("%I:%M %p") if existing.attended_at else "earlier"
+        msg = f"{reg.full_name} already punched for {zone.name} (at {prev_time})."
+
+    parts = (reg.full_name or 'A').split()
+    initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+    total_zone_punches = ActivityPunch.objects.filter(activity_zone=zone).count()
+    unique_zone_visitors = ActivityPunch.objects.filter(activity_zone=zone).values('registration_id').distinct().count()
+
+    return {
+        'status': status_label,
+        'mode': 'activity',
+        'message': msg,
+        'is_already_checked_in': is_duplicate,
+        'station_name': zone.name,
+        'badge_reward': f"+{pts_awarded} XP • {zone.name}" if pts_awarded else f"Activity Recorded ({zone.name})",
+        'attendee': {
+            'id': reg.id,
+            'full_name': reg.full_name,
+            'role': reg.role or 'Student',
+            'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+            'email': reg.email,
+            'phone': reg.phone or '',
+            'school_or_org': extra.get('school_or_org', '') if extra else '',
+            'target_program': extra.get('target_program', '') if extra else '',
+            'initials': initials,
+            'checked_in_time': now.strftime("%I:%M %p"),
+            'checked_in_date': now.strftime("%d %b %Y"),
+        },
+        'stats': {
+            'station_count': total_zone_punches,
+            'station_label': 'Activity Punches',
+            'station_unique': unique_zone_visitors,
+            'station_sublabel': 'Unique Participants',
+            'total_activities': ActivityPunch.objects.count(),
+            'unique_activity_visitors': ActivityPunch.objects.values('registration_id').distinct().count(),
+        }
+    }
+
+
 @csrf_exempt
 def check_in_api(request):
     """
@@ -1174,6 +1271,56 @@ def _get_user_scanner_role_info(user):
     # Check Seminar Staff
     seminar_staff = getattr(user, 'seminar_staff', None)
 
+    # Check Admin-managed Expo Entry / Activity Punch Staff
+    scanner_staff = getattr(user, 'scanner_staff', None)
+
+    if scanner_staff and scanner_staff.is_active:
+        rt = scanner_staff.role_type
+        if rt == 'gate_activity':
+            return {
+                'is_authenticated': True,
+                'has_scanner_access': True,
+                'role': 'gate_activity',
+                'role_display': 'Expo Entry & Activity Staff',
+                'default_mode': 'gate',
+                'allowed_modes': ['gate', 'activity'],
+                'username': user.username,
+                'name': scanner_staff.full_name or user.get_full_name() or user.username,
+                'station_name': 'Expo Entry & Activity Punch',
+                'station_id': scanner_staff.activity_zone_id,
+                'is_locked': False,
+                'is_station_locked': bool(scanner_staff.activity_zone_id),
+            }
+        elif rt == 'activity':
+            return {
+                'is_authenticated': True,
+                'has_scanner_access': True,
+                'role': 'activity',
+                'role_display': 'Activity Zone Staff',
+                'default_mode': 'activity',
+                'allowed_modes': ['activity'],
+                'username': user.username,
+                'name': scanner_staff.full_name or user.get_full_name() or user.username,
+                'station_name': scanner_staff.activity_zone.name if scanner_staff.activity_zone else 'All Activity Zones',
+                'station_id': scanner_staff.activity_zone_id,
+                'is_locked': bool(scanner_staff.activity_zone_id),
+                'is_station_locked': bool(scanner_staff.activity_zone_id),
+            }
+        else:
+            return {
+                'is_authenticated': True,
+                'has_scanner_access': True,
+                'role': 'gate',
+                'role_display': 'Expo Gate Entry',
+                'default_mode': 'gate',
+                'allowed_modes': ['gate'],
+                'username': user.username,
+                'name': scanner_staff.full_name or user.get_full_name() or user.username,
+                'station_name': 'Main Expo Turnstiles',
+                'station_id': None,
+                'is_locked': True
+            }
+
     if exhibitor:
         return {
             'is_authenticated': True,
@@ -1192,15 +1339,15 @@ def _get_user_scanner_role_info(user):
         return {
             'is_authenticated': True,
             'has_scanner_access': True,
-            'role': 'gate',
-            'role_display': 'Expo Gate Entry',
+            'role': 'gate_activity',
+            'role_display': 'Expo Gate & Activity Entry',
             'default_mode': 'gate',
-            'allowed_modes': ['gate'],
+            'allowed_modes': ['gate', 'activity'],
             'username': user.username,
             'name': user.get_full_name() or user.username,
             'station_name': 'Main Expo Turnstiles',
             'station_id': None,
-            'is_locked': True
+            'is_locked': False
         }
     elif expert:
         return {
@@ -1238,7 +1385,7 @@ def _get_user_scanner_role_info(user):
             'role': 'admin',
             'role_display': 'Admin / Coordinator',
             'default_mode': 'gate',
-            'allowed_modes': ['gate', 'booth', 'seminar', 'counselling'],
+            'allowed_modes': ['gate', 'booth', 'seminar', 'counselling', 'activity'],
             'username': user.username,
             'name': user.get_full_name() or user.username,
             'station_name': 'All Expo Gates & Pavilions',
@@ -1328,12 +1475,13 @@ def _authenticate_mobile_user(request, raw_username, password):
 
 
 def _get_scanner_stations_payload():
-    from .models import Exhibitor, ProgrammeSession
+    from .models import Exhibitor, ProgrammeSession, FloorActivityZone
     exhibitors = [{'id': e.id, 'name': e.company_name, 'sub': getattr(e, 'country', '') or 'Exhibition Floor'} for e in Exhibitor.objects.all().order_by('company_name')]
     sessions = [{'id': s.id, 'name': s.title, 'sub': f"{getattr(s, 'hall_name', '') or 'Keynote Hall'}"} for s in ProgrammeSession.objects.all().order_by('id')]
     experts_list = _get_or_create_default_experts()
     experts = [{'id': exp.id, 'name': exp.name, 'sub': getattr(exp, 'desk_name', '') or 'Counselling Desk'} for exp in experts_list]
-    return {'exhibitors': exhibitors, 'sessions': sessions, 'experts': experts}
+    activities = [{'id': z.id, 'name': z.name, 'sub': z.hall_location or 'Expo Activity Zone'} for z in FloorActivityZone.objects.filter(is_active=True).order_by('order', 'name')]
+    return {'exhibitors': exhibitors, 'sessions': sessions, 'experts': experts, 'activities': activities}
 
 
 def _cors_allow_mobile(view_func):
@@ -1478,6 +1626,7 @@ def mobile_checkin_api(request):
         raw_code = ''
         mode = 'gate'
         target_id = None
+        activity_id = None
         notes = ''
         rating = 'Warm'
 
@@ -1488,6 +1637,7 @@ def mobile_checkin_api(request):
                     raw_code = data.get('code') or data.get('qr_data') or data.get('badge_id') or ''
                     mode = (data.get('mode') or 'gate').lower().strip()
                     target_id = data.get('target_id')
+                    activity_id = data.get('activity_id')
                     notes = data.get('notes', '')
                     rating = data.get('rating', 'Warm')
             except Exception:
@@ -1497,6 +1647,7 @@ def mobile_checkin_api(request):
             raw_code = request.POST.get('code') or request.POST.get('qr_data') or request.POST.get('badge_id') or ''
             mode = (request.POST.get('mode') or 'gate').lower().strip()
             target_id = request.POST.get('target_id')
+            activity_id = request.POST.get('activity_id')
 
         if not raw_code:
             raw_code = request.GET.get('code') or request.GET.get('qr_data') or request.GET.get('badge_id') or ''
@@ -1504,24 +1655,43 @@ def mobile_checkin_api(request):
                 mode = request.GET.get('mode', 'gate').lower().strip()
             if request.GET.get('target_id'):
                 target_id = request.GET.get('target_id')
+            if request.GET.get('activity_id'):
+                activity_id = request.GET.get('activity_id')
 
         if not raw_code:
             return JsonResponse({'status': 'INVALID_QR', 'message': 'No QR code or badge ID provided.'}, status=400)
 
-        # Enforce role boundaries: Exhibitors locked to their booth, etc.
-        if role_info.get('is_locked'):
-            mode = role_info.get('default_mode')
-            target_id = role_info.get('station_id')
+        # Enforce role boundaries: Exhibitors locked to their booth, Gate/Activity restricted to allowed_modes, etc.
+        allowed_modes = role_info.get('allowed_modes') or ['gate']
+        if role_info.get('is_locked') or mode not in allowed_modes:
+            if mode not in allowed_modes:
+                mode = role_info.get('default_mode', 'gate')
+            if role_info.get('is_locked') and role_info.get('station_id'):
+                target_id = role_info.get('station_id')
 
-        # Route to appropriate 1 of 4 mode handlers
+        # Route to appropriate mode handler
         if mode == 'booth':
             result = _perform_booth_punch(request, raw_code, target_id, rating=rating, notes=notes)
         elif mode == 'seminar':
             result = _perform_seminar_punch(request, raw_code, target_id, notes=notes)
         elif mode in ('counselling', 'expert'):
             result = _perform_counselling_punch(request, raw_code, target_id, notes=notes)
-        else: # 'gate'
+        elif mode == 'activity':
+            result = _perform_activity_punch(request, raw_code, target_id or activity_id, notes=notes)
+        else:  # 'gate'
             result = _perform_mobile_checkin(request, raw_code)
+            # Optional simultaneous activity punch on Expo Entry
+            if activity_id and str(activity_id).isdigit() and 'activity' in allowed_modes and result.get('status') in ('SUCCESS', 'ALREADY_CHECKED_IN'):
+                act_res = _perform_activity_punch(request, raw_code, activity_id, notes=notes)
+                if act_res.get('status') in ('SUCCESS', 'ALREADY_PUNCHED'):
+                    result['activity_punched'] = True
+                    result['activity_name'] = act_res.get('station_name', '')
+                    result['activity_status'] = act_res.get('status')
+                    result['message'] = f"{result.get('message', '')} • Activity: {act_res.get('station_name', '')}"
+                    if act_res.get('status') == 'SUCCESS':
+                        result['badge_reward'] = f"{result.get('badge_reward', 'Expo Entry')} + {act_res.get('badge_reward', '')}"
+                        if result.get('status') == 'ALREADY_CHECKED_IN':
+                            result['status'] = 'SUCCESS'
 
         http_code = 200 if result.get('status') in ('SUCCESS', 'ALREADY_CHECKED_IN', 'ALREADY_PUNCHED') else 404
         return JsonResponse(result, status=http_code)
@@ -1539,7 +1709,7 @@ def _get_expo_statistics_summary(mode='gate', target_id=None):
       - Seminars: Seminar session punches only.
       - Academic counsellors: Visitors punches only.
     """
-    from .models import Registration, BoothVisit, SeminarAttendance, ExpertConsultationAttendance
+    from .models import Registration, BoothVisit, SeminarAttendance, ExpertConsultationAttendance, ActivityPunch
 
     total_checked_in = Registration.objects.filter(is_checked_in=True).count()
     students_checked_in = Registration.objects.filter(role__iexact='student', is_checked_in=True).count()
@@ -1556,7 +1726,10 @@ def _get_expo_statistics_summary(mode='gate', target_id=None):
     total_consultations = ExpertConsultationAttendance.objects.count()
     unique_consultation_visitors = ExpertConsultationAttendance.objects.values('registration_id').distinct().count()
 
-    total_all_punches = total_gate_entries + total_booth_visits + total_seminars + total_consultations
+    total_activities = ActivityPunch.objects.count()
+    unique_activity_visitors = ActivityPunch.objects.values('registration_id').distinct().count()
+
+    total_all_punches = total_gate_entries + total_booth_visits + total_seminars + total_consultations + total_activities
 
     station_count = 0
     station_unique = 0
@@ -1590,6 +1763,15 @@ def _get_expo_statistics_summary(mode='gate', target_id=None):
             station_unique = unique_consultation_visitors
         station_label = 'Visitors Punched'
         station_sublabel = 'Students Advised'
+    elif mode == 'activity':
+        if target_id and str(target_id).isdigit():
+            station_count = ActivityPunch.objects.filter(activity_zone_id=int(target_id)).count()
+            station_unique = ActivityPunch.objects.filter(activity_zone_id=int(target_id)).values('registration_id').distinct().count()
+        else:
+            station_count = total_activities
+            station_unique = unique_activity_visitors
+        station_label = 'Activity Punches'
+        station_sublabel = 'Unique Participants'
     else:
         station_count = total_checked_in
         station_unique = students_checked_in
@@ -1613,6 +1795,8 @@ def _get_expo_statistics_summary(mode='gate', target_id=None):
         'unique_seminar_visitors': unique_seminar_visitors,
         'total_consultations': total_consultations,
         'unique_consultation_visitors': unique_consultation_visitors,
+        'total_activities': total_activities,
+        'unique_activity_visitors': unique_activity_visitors,
         'total_all_punches': total_all_punches,
     }
 
@@ -1641,7 +1825,7 @@ def mobile_checkin_recent_api(request):
     """
     Returns recent scans for the slide-up scans drawer for the active mode.
     """
-    from .models import ExpoCheckInLog, BoothVisit, SeminarAttendance, ExpertConsultationAttendance
+    from .models import ExpoCheckInLog, BoothVisit, SeminarAttendance, ExpertConsultationAttendance, ActivityPunch
     user = _get_user_from_request_or_session(request)
     role_info = _get_user_scanner_role_info(user) if user else {}
 
@@ -1716,6 +1900,28 @@ def mobile_checkin_recent_api(request):
                 'date': c.attended_at.strftime("%d %b"),
                 'initials': initials,
                 'station': c.expert.name if c.expert else 'Counsellor'
+            })
+    elif mode == 'activity':
+        qs = ActivityPunch.objects.select_related('registration', 'activity_zone').order_by('-attended_at')
+        if target_id and str(target_id).isdigit():
+            qs = qs.filter(activity_zone_id=int(target_id))
+        for a in qs[:20]:
+            reg = a.registration
+            parts = (reg.full_name or 'A').split()
+            initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else '')).upper()
+            extra = _get_attendee_extra_info(reg) if reg else {}
+            items.append({
+                'id': reg.id,
+                'name': reg.full_name,
+                'role': reg.role,
+                'badge_id': reg.registration_id or f"KNOVA-REG-{reg.id}",
+                'email': reg.email or '',
+                'phone': reg.phone or '',
+                'school': extra.get('school_or_org', '') or '',
+                'time': a.attended_at.strftime("%I:%M %p"),
+                'date': a.attended_at.strftime("%d %b"),
+                'initials': initials,
+                'station': a.activity_zone.name if a.activity_zone else 'Activity Zone'
             })
     else:
         # Gate checkin logs
@@ -1842,7 +2048,7 @@ def mobile_scanner_view(request):
       3. Seminars: Keynote & seminar session attendance (+25 XP).
       4. Academic Counsellors: Education expert 1-on-1 counseling (+40 XP).
     """
-    from .models import Registration, ExpoCheckInLog, EventLocation, Exhibitor, ProgrammeSession, EducationExpert
+    from .models import Registration, ExpoCheckInLog, EventLocation, Exhibitor, ProgrammeSession, EducationExpert, FloorActivityZone
     user = _get_user_from_request_or_session(request)
     raw_role_info = _get_user_scanner_role_info(user) if user else {'is_authenticated': False, 'has_scanner_access': False}
 
@@ -1871,16 +2077,18 @@ def mobile_scanner_view(request):
     exhibitors = Exhibitor.objects.all().order_by('company_name')
     sessions = ProgrammeSession.objects.all().order_by('id')
     experts = _get_or_create_default_experts()
+    activities = FloorActivityZone.objects.filter(is_active=True).order_by('order', 'name')
 
     default_mode = role_info.get('default_mode') or 'gate'
     default_exhibitor_id = role_info.get('station_id') if role_info.get('role') == 'exhibitor' else (exhibitors.first().id if exhibitors.exists() else None)
     default_session_id = role_info.get('station_id') if role_info.get('role') == 'seminar' else (sessions.first().id if sessions.exists() else None)
     default_expert_id = role_info.get('station_id') if role_info.get('role') == 'counselling' else (experts[0].id if experts else None)
+    default_activity_id = role_info.get('station_id') if role_info.get('role') in ('activity', 'gate_activity') and role_info.get('station_id') else (activities.first().id if activities.exists() else None)
 
     # Query param override if admin
     if role_info.get('role') == 'admin':
         param_mode = request.GET.get('mode', '').lower().strip()
-        if param_mode in ('gate', 'booth', 'seminar', 'counselling'):
+        if param_mode in ('gate', 'booth', 'seminar', 'counselling', 'activity'):
             default_mode = param_mode
 
     stats_summary = _get_expo_statistics_summary(default_mode, role_info.get('station_id'))
@@ -1905,6 +2113,7 @@ def mobile_scanner_view(request):
         'exhibitors': exhibitors,
         'sessions': sessions,
         'experts': experts,
+        'activities': activities,
         'role_info': role_info,
         'role_info_json': json.dumps(role_info),
         'access_denied': access_denied,
@@ -1913,6 +2122,7 @@ def mobile_scanner_view(request):
         'default_exhibitor_id': default_exhibitor_id,
         'default_session_id': default_session_id,
         'default_expert_id': default_expert_id,
+        'default_activity_id': default_activity_id,
     })
 
 

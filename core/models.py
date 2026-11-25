@@ -2606,3 +2606,48 @@ def auto_provision_seminar_coordinator(sender, instance, created, **kwargs):
         )
     except Exception as e:
         print(f"Error auto-provisioning seminar coordinator: {e}")
+
+
+class ActivityPunch(models.Model):
+    """Records an attendee punch at an Expo Floor Activity Zone."""
+    registration = models.ForeignKey(Registration, on_delete=models.CASCADE, related_name='activity_punches')
+    activity_zone = models.ForeignKey(FloorActivityZone, on_delete=models.CASCADE, related_name='punches')
+    punched_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='activity_punches_made')
+    attended_at = models.DateTimeField(auto_now_add=True)
+    notes = models.TextField(blank=True)
+    xp_awarded = models.IntegerField(default=20)
+
+    class Meta:
+        ordering = ['-attended_at']
+
+    def __str__(self):
+        return f"{self.registration.full_name} @ {self.activity_zone.name}"
+
+
+class ScannerStaff(models.Model):
+    """Admin-managed staff accounts for Expo Entry (Gate) and Activity Punching."""
+    ROLE_CHOICES = [
+        ('gate_activity', 'Expo Entry & Activity Punch'),
+        ('gate', 'Expo Entry (Gate Only)'),
+        ('activity', 'Activity Zone Punch Only'),
+    ]
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='scanner_staff')
+    full_name = models.CharField(max_length=150)
+    role_type = models.CharField(max_length=30, choices=ROLE_CHOICES, default='gate_activity')
+    activity_zone = models.ForeignKey(
+        FloorActivityZone,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="Optional: lock staff user to a specific activity zone"
+    )
+    raw_password = models.CharField(max_length=128, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_scanner_staff')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.full_name} ({self.get_role_type_display()})"
