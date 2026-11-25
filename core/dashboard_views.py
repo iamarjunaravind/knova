@@ -7439,22 +7439,20 @@ def chatbot_faq_toggle_active(request, pk):
 
 @login_required(login_url='/portal/login/')
 def dashboard_punch_users(request):
-    from .models import ScannerStaff, FloorActivityZone, ActivityPunch
+    from .models import ScannerStaff, ExpoCheckInLog, Registration
     from django.contrib import messages
     is_admin = request.user.is_superuser or request.user.is_staff or getattr(request.user, 'role', '') == 'admin'
     if not is_admin:
         messages.error(request, "Access restricted to Administrators.")
         return redirect('dashboard_index')
 
-    staff_list = ScannerStaff.objects.select_related('user', 'activity_zone').all()
-    activity_zones = FloorActivityZone.objects.filter(is_active=True).order_by('order', 'name')
-    recent_activity_punches = ActivityPunch.objects.select_related('registration', 'activity_zone', 'punched_by')[:20]
+    staff_list = ScannerStaff.objects.select_related('user').all()
+    recent_gate_punches = ExpoCheckInLog.objects.filter(is_duplicate=False).select_related('registration').order_by('-checked_in_at')[:20]
 
     return render(request, 'dashboard/punch_users.html', {
         'staff_list': staff_list,
-        'activity_zones': activity_zones,
-        'recent_activity_punches': recent_activity_punches,
-        'total_activity_punches': ActivityPunch.objects.count(),
+        'recent_gate_punches': recent_gate_punches,
+        'total_gate_punches': Registration.objects.filter(is_checked_in=True).count(),
     })
 
 
@@ -7462,7 +7460,7 @@ def dashboard_punch_users(request):
 def punch_user_create(request):
     if request.method != 'POST':
         return redirect('dashboard_punch_users')
-    from .models import ScannerStaff, FloorActivityZone
+    from .models import ScannerStaff
     from django.contrib.auth.models import User
     from django.contrib import messages
     import re
@@ -7476,19 +7474,14 @@ def punch_user_create(request):
     username = request.POST.get('username', '').strip()
     email = request.POST.get('email', '').strip()
     password = request.POST.get('password', '').strip()
-    role_type = request.POST.get('role_type', 'gate_activity').strip()
-    zone_id = request.POST.get('activity_zone_id', '').strip()
 
     if not full_name:
         messages.error(request, "Full Name is required.")
         return redirect('dashboard_punch_users')
 
-    if role_type not in ('gate_activity', 'gate', 'activity'):
-        role_type = 'gate_activity'
-
     if not username:
         clean = re.sub(r'[^a-zA-Z0-9]', '', full_name.lower())[:12]
-        base_u = f"entry_{clean}" if clean else "entry_staff"
+        base_u = f"gate_{clean}" if clean else "gate_staff"
         username = base_u
         suffix = 1
         while User.objects.filter(username__iexact=username).exists():
@@ -7499,9 +7492,7 @@ def punch_user_create(request):
         return redirect('dashboard_punch_users')
 
     if not password:
-        password = 'entry' + str(ScannerStaff.objects.count() + 101)
-
-    zone = FloorActivityZone.objects.filter(pk=zone_id).first() if zone_id.isdigit() else None
+        password = 'gate' + str(ScannerStaff.objects.count() + 101)
 
     try:
         parts = full_name.split()
@@ -7516,13 +7507,13 @@ def punch_user_create(request):
         ScannerStaff.objects.create(
             user=user,
             full_name=full_name,
-            role_type=role_type,
-            activity_zone=zone,
+            role_type='gate',
+            activity_zone=None,
             raw_password=password,
             is_active=True,
             created_by=request.user,
         )
-        messages.success(request, f"Punch Entry User '{full_name}' created! Username: {username} | Password: {password}")
+        messages.success(request, f"Main Gate Punch User '{full_name}' created! Username: {username} | Password: {password}")
     except Exception as e:
         messages.error(request, f"Failed to create Punch Entry User: {str(e)}")
 
@@ -7533,7 +7524,7 @@ def punch_user_create(request):
 def punch_user_update(request, pk):
     if request.method != 'POST':
         return redirect('dashboard_punch_users')
-    from .models import ScannerStaff, FloorActivityZone
+    from .models import ScannerStaff
     from django.shortcuts import get_object_or_404
     from django.contrib import messages
 
@@ -7546,8 +7537,6 @@ def punch_user_update(request, pk):
     full_name = request.POST.get('full_name', '').strip()
     email = request.POST.get('email', '').strip()
     password = request.POST.get('password', '').strip()
-    role_type = request.POST.get('role_type', '').strip()
-    zone_id = request.POST.get('activity_zone_id', '').strip()
     is_active = request.POST.get('is_active') == 'on'
 
     if full_name:
@@ -7557,9 +7546,8 @@ def punch_user_update(request, pk):
         staff.user.last_name = ' '.join(parts[1:]) if len(parts) > 1 else ''
     if email:
         staff.user.email = email
-    if role_type in ('gate_activity', 'gate', 'activity'):
-        staff.role_type = role_type
-    staff.activity_zone = FloorActivityZone.objects.filter(pk=zone_id).first() if zone_id.isdigit() else None
+    staff.role_type = 'gate'
+    staff.activity_zone = None
     staff.is_active = is_active
     staff.user.is_active = is_active
 
@@ -7569,7 +7557,7 @@ def punch_user_update(request, pk):
 
     staff.user.save()
     staff.save()
-    messages.success(request, f"Updated Punch Entry User '{staff.full_name}'.")
+    messages.success(request, f"Updated Main Gate Punch User '{staff.full_name}'.")
     return redirect('dashboard_punch_users')
 
 
