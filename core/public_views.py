@@ -3610,10 +3610,23 @@ def public_scholarships(request):
         'funding_pool': '$0' if total_schs == 0 else '$2.5M+',
     }
 
+    # Check if student has earned 35+ marks in the Aptitude Test to unlock Scholarship Apply
+    has_qualified_exam_score = False
+    common_attempt = None
+    if request.user.is_authenticated and hasattr(request.user, 'student_profile'):
+        from .models import ExamAttempt
+        common_attempt = ExamAttempt.objects.filter(
+            registration__student=request.user.student_profile,
+            status='Completed'
+        ).order_by('-score', '-id').first()
+        has_qualified_exam_score = bool(common_attempt and (common_attempt.score or 0) >= 35)
+
     return render(request, 'core/scholarships.html', {
         'site_config': config,
         'scholarships': page_obj,
         'hero_stats': hero_stats,
+        'has_qualified_exam_score': has_qualified_exam_score,
+        'common_attempt': common_attempt,
         'all_countries': all_countries,
         'all_universities': all_universities,
         'all_fields': all_fields,

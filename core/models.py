@@ -2059,11 +2059,13 @@ class StudentChallengePassport(models.Model):
                 exam_title = getattr(latest_exam.registration.exam, 'title', 'Online Aptitude Exam')
                 score_str = f"Score: {latest_exam.score}" if latest_exam.score is not None else "Completed"
                 self.add_activity(f"Completed {exam_title} ({score_str})", 30)
-                self.save()
+            self.check_passport_completion()
+            self.save()
             return True, latest_exam
         else:
-            if self.aptitude_test_completed:
+            if self.aptitude_test_completed or self.passport_completed:
                 self.aptitude_test_completed = False
+                self.passport_completed = False
                 if self.total_points >= 30:
                     self.total_points -= 30
                 if isinstance(self.activity_log, list):
@@ -2148,19 +2150,10 @@ class StudentChallengePassport(models.Model):
     @property
     def is_elite_pass(self):
         """
-        True if student has completed all 6 KNOVA Challenge tasks or passport_completed is True.
-        Unlocks the Elite Pass and grants unlimited university booth visits.
+        True if student has completed the Aptitude Test or passport_completed is True.
+        Unlocks the Elite Pass and completes the KNOVA Challenge.
         """
-        if self.passport_completed:
-            return True
-        return (
-            self.universities_visited_count >= 3 and
-            self.aptitude_test_completed and
-            self.seminars_attended_count >= 1 and
-            (self.expert_meeting_completed or self.counselling_completed) and
-            self.tech_challenge_completed and
-            self.puzzle_completed
-        )
+        return bool(self.passport_completed or self.aptitude_test_completed)
 
     @property
     def can_visit_more_booths(self):
@@ -2179,24 +2172,16 @@ class StudentChallengePassport(models.Model):
         return "3 Booths (Standard Pass Limit)"
 
     def check_passport_completion(self):
-        if not self.passport_completed:
-            if (
-                self.universities_visited_count >= 3 and
-                self.aptitude_test_completed and
-                self.seminars_attended_count >= 1 and
-                (self.expert_meeting_completed or self.counselling_completed) and
-                self.tech_challenge_completed and
-                self.puzzle_completed
-            ):
-                self.passport_completed = True
-                self.total_points += 100
-                if not isinstance(self.activity_log, list):
-                    self.activity_log = []
-                self.activity_log.insert(0, {
-                    'title': 'Grand Achievement: Full KNOVA Challenge Completed! Elite Pass Unlocked (Unlimited Booth Visits Active)',
-                    'points': 100,
-                    'timestamp': 'Just now'
-                })
+        if not self.passport_completed and self.aptitude_test_completed:
+            self.passport_completed = True
+            self.total_points += 100
+            if not isinstance(self.activity_log, list):
+                self.activity_log = []
+            self.activity_log.insert(0, {
+                'title': 'Grand Achievement: KNOVA Challenge Completed! Aptitude Test Verified & Elite Pass Unlocked',
+                'points': 100,
+                'timestamp': 'Just now'
+            })
 
     @property
     def completed_missions_count(self):

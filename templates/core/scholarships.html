@@ -1348,9 +1348,21 @@
 
             <!-- Action Buttons -->
             <div class="sch-card-actions">
-                <a href="{% if request.user.is_authenticated %}{% url 'scholarship_exam_booking' %}?scholarship_id={{ scholarship.id }}{% else %}{% url 'portal_login' %}?next={% url 'scholarship_exam_booking' %}?scholarship_id={{ scholarship.id }}{% endif %}" class="btn-sch-primary">
-                    <i class="ti ti-bolt"></i> Apply &bull; Book
+                {% if request.user.is_authenticated and request.user.student_profile %}
+                    {% if has_qualified_exam_score %}
+                    <a href="{% url 'scholarship_exam_booking' %}?scholarship_id={{ scholarship.id }}" class="btn-sch-primary">
+                        <i class="ti ti-bolt"></i> Apply &bull; Book
+                    </a>
+                    {% else %}
+                    <a href="{% url 'dashboard_scholarships' %}" class="btn-sch-primary" style="background: #f59e0b; border-color: #f59e0b;" title="Earn 35+ marks in the Aptitude Test to unlock">
+                        <i class="ti ti-lock"></i> 35+ Marks to Apply
+                    </a>
+                    {% endif %}
+                {% else %}
+                <a href="{% url 'portal_login' %}?next={% url 'dashboard_scholarships' %}" class="btn-sch-primary">
+                    <i class="ti ti-lock"></i> Score 35+ to Apply
                 </a>
+                {% endif %}
                 <a href="{% url 'university_detail' scholarship.university.slug %}" class="btn-sch-secondary" title="View University Profile">
                     Uni <i class="ti ti-arrow-up-right"></i>
                 </a>

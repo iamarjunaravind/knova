@@ -3228,6 +3228,7 @@ def dashboard_scholarships(request):
     common_exam = ScholarshipExam.objects.filter(is_active=True).first()
     common_attempt = None
     has_completed_common_exam = False
+    has_qualified_exam_score = False
     from .models import SavedScholarship, UniversityApplication
     if profile:
         common_attempt = ExamAttempt.objects.filter(
@@ -3235,6 +3236,7 @@ def dashboard_scholarships(request):
             status='Completed'
         ).order_by('-score', '-id').first()
         has_completed_common_exam = (common_attempt is not None)
+        has_qualified_exam_score = (common_attempt is not None and (common_attempt.score or 0) >= 35)
     applied_scholarship_ids = set()
     if profile:
         applied_scholarship_ids = set(SavedScholarship.objects.filter(student=profile).values_list('scholarship_id', flat=True))
@@ -3258,6 +3260,7 @@ def dashboard_scholarships(request):
         'common_exam': common_exam,
         'common_attempt': common_attempt,
         'has_completed_common_exam': has_completed_common_exam,
+        'has_qualified_exam_score': has_qualified_exam_score,
         'query': query
     })
 
@@ -3273,16 +3276,21 @@ def dashboard_apply_scholarship(request, scholarship_id):
     from django.shortcuts import get_object_or_404
     sch = get_object_or_404(Scholarship, id=scholarship_id)
 
-    # Check if student has completed the Central Common Exam
+    # Check if student has completed the Central Common Exam with 35+ marks
     completed_attempt = ExamAttempt.objects.filter(
         registration__student=profile,
         status='Completed'
     ).order_by('-score', '-id').first()
-    if not completed_attempt:
+    if not completed_attempt or (completed_attempt.score or 0) < 35:
+        msg = (
+            f"You scored {completed_attempt.score} marks. You need 35+ marks in the Aptitude Test to unlock scholarship applications."
+            if completed_attempt else
+            "You must complete the Aptitude Test and earn 35+ marks to unlock scholarship applications."
+        )
         return JsonResponse({
             'success': False,
             'requires_exam': True,
-            'message': 'You must complete the Central Common Examination to submit your scholarship application.'
+            'message': msg
         }, status=400)
 
     # Record the scholarship application
