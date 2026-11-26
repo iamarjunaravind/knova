@@ -16,7 +16,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 24px 20px 24px;
+    padding: 80px 24px 20px 24px;
     box-sizing: border-box;
     background: #ffffff;
     position: relative;
@@ -42,11 +42,11 @@
   }
 
   .portal-reg-container {
-    max-width: 918px;
+    max-width: 936px;
     width: 90%;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 432px;
+    grid-template-columns: 1fr 450px;
     gap: 0;
     align-items: center;
     position: relative;
@@ -59,7 +59,7 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
-    padding-right: 28px;
+    padding-right: 32px;
     box-sizing: border-box;
   }
   .reg-showcase-kicker {
@@ -183,7 +183,7 @@
     box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
     border: 1px solid #e2e8f0;
     width: 100%;
-    max-width: 432px;
+    max-width: 450px;
     margin: 0;
     box-sizing: border-box;
     position: relative;
@@ -191,10 +191,41 @@
   .card-top-bar {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-bottom: 12px;
-    padding-bottom: 10px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
     border-bottom: 1px solid #f1f5f9;
+  }
+  .role-selector {
+    display: flex;
+    gap: 5px;
+    background: #f8fafc;
+    padding: 3px;
+    border-radius: 9px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 12px;
+  }
+  .role-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 5.5px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    margin: 0;
+  }
+  .role-option.active {
+    background: #0f172a;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.2);
   }
   .role-header-badge {
     display: inline-flex;
@@ -484,6 +515,18 @@
                 <h2>Create Exhibitor Account</h2>
                 <p class="subhead">Register your institution, capture qualified leads &amp; manage booth presence</p>
             </div>
+
+            <div class="role-selector">
+                <a href="{% url 'portal_register_student' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="role-option">
+                    <i class="ti ti-school"></i> Student
+                </a>
+                <a href="{% url 'portal_register_parent' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="role-option">
+                    <i class="ti ti-users"></i> Parent
+                </a>
+                <a href="{% url 'portal_register_exhibitor' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="role-option active">
+                    <i class="ti ti-building"></i> Exhibitor
+                </a>
+            </div>
             
             {% if error %}
                 <div style="background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; padding: 9px 12px; border-radius: 8px; margin-bottom: 13px; text-align: center; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
@@ -558,16 +601,6 @@
                     Create Exhibitor Account &rarr;
                 </button>
             </form>
-
-            <div class="switch-roles-strip">
-                <span>Register as:</span>
-                <a href="{% url 'portal_register_student' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="switch-role-link">
-                    <i class="ti ti-school"></i> Student
-                </a>
-                <a href="{% url 'portal_register_parent' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="switch-role-link">
-                    <i class="ti ti-users"></i> Parent
-                </a>
-            </div>
 
             <p style="text-align: center; margin-top: 12px; margin-bottom: 0; color: #64748b; font-size: 12px;">
                 Already have an account? <a href="{% url 'portal_login' %}{% if next %}?next={{ next|urlencode }}{% endif %}" style="color: #0f172a; font-weight: 800; text-decoration: underline;">Login here</a>

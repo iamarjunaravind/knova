@@ -5685,8 +5685,8 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Left Showcase Subtitle</label>
-              <textarea name="register_showcase_subtitle" class="form-control" rows="2">{{ config.register_showcase_subtitle|default:'Where aspirations meet opportunities.
-Connect with leading universities, explore scholarships and discover the possibilities that shape your future.' }}</textarea>
+              <textarea name="register_showcase_subtitle" class="form-control" rows="2">{% if config.register_showcase_subtitle and '{{' not in config.register_showcase_subtitle %}{{ config.register_showcase_subtitle }}{% else %}Where aspirations meet opportunities.
+Connect with leading universities, explore scholarships and discover the possibilities that shape your future.{% endif %}</textarea>
             </div>
             <div class="form-group">
               <label class="form-label">Right Form Subtitle / Badge Notice</label>

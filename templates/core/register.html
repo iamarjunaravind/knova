@@ -498,7 +498,7 @@
                 {% endif %}
             </h1>
             <p class="reg-showcase-sub">
-                {% if site_config.register_showcase_subtitle %}
+                {% if site_config.register_showcase_subtitle and '{{' not in site_config.register_showcase_subtitle %}
                     {{ site_config.register_showcase_subtitle|linebreaksbr }}
                 {% else %}
                     Where aspirations meet opportunities.<br>

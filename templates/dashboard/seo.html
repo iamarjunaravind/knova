@@ -601,12 +601,12 @@
             <span>Dynamic robots.txt Content</span>
             <span style="font-size:11px; color:#64748b; font-weight:normal;">Served directly at /robots.txt</span>
           </label>
-          <textarea name="robots_txt_content" class="form-control" rows="6" style="font-family:Consolas, Monaco, monospace; font-size:12.5px;">{{ config.robots_txt_content|default:"User-agent: *
+          <textarea name="robots_txt_content" class="form-control" rows="6" style="font-family:Consolas, Monaco, monospace; font-size:12.5px;">{% if config.robots_txt_content %}{{ config.robots_txt_content }}{% else %}User-agent: *
 Allow: /
 Disallow: /dashboard/
 Disallow: /admin/
 
-Sitemap: https://knovaexpo.com/sitemap.xml" }}</textarea>
+Sitemap: https://knovaexpo.com/sitemap.xml{% endif %}</textarea>
           <div style="font-size:11px; color:#94a3b8; margin-top:4px;">Use standard robots.txt directives (User-agent, Disallow, Allow, Sitemap).</div>
         </div>
       </div>
