@@ -91,6 +91,15 @@ def _is_phone_registered(phone, exclude_user=None):
 
 
 def public_register(request):
+    if request.method == 'GET':
+        role = (request.GET.get('role') or 'student').lower().strip()
+        next_url = request.GET.get('next')
+        suffix = f"?next={next_url}" if next_url else ""
+        if role == 'parent':
+            return redirect(f"{reverse('portal_register_parent')}{suffix}")
+        elif role == 'exhibitor':
+            return redirect(f"{reverse('portal_register_exhibitor')}{suffix}")
+        return redirect(f"{reverse('portal_register_student')}{suffix}")
     if request.method == 'POST':
         full_name = request.POST.get('full_name')
         email = request.POST.get('email')
