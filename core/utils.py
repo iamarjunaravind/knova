@@ -101,3 +101,108 @@ def get_top_matches_for_exhibitor(exhibitor: Exhibitor, limit=20):
             
     matches.sort(key=lambda x: x[1], reverse=True)
     return matches[:limit]
+
+
+def send_registration_welcome_email(request, registration, matches=None, sync=False):
+    """
+    Sends a rich welcome & profile completion email to a newly registered candidate,
+    including their profile link, registration details, and Digital ID Card QR code.
+    Uses live SMTP settings from SiteConfiguration when configured.
+    """
+    if not registration or not registration.email:
+        return False
+
+    import io
+    import threading
+    from email.mime.image import MIMEImage
+    import qrcode
+    from django.conf import settings
+    from django.core.mail import EmailMultiAlternatives, get_connection
+    from django.template.loader import render_to_string
+    from django.urls import reverse
+    from django.utils.html import strip_tags
+    from .models import SiteConfiguration
+
+    role_lower = (registration.role or 'student').lower()
+    if 'exhibitor' in role_lower:
+        profile_route = 'dashboard_exhibitor_profile'
+    elif 'parent' in role_lower:
+        profile_route = 'dashboard_parent_profile'
+    else:
+        profile_route = 'dashboard_student_profile'
+
+    def _abs(route_name, args=None):
+        path = reverse(route_name, args=args)
+        if request is not None:
+            return request.build_absolute_uri(path)
+        return f"https://knovaexpo.com{path}"
+
+    badge_id = registration.registration_id or f"KNOVA-REG-{registration.id}"
+    badge_url = _abs('digital_badge', args=[registration.pk])
+    profile_url = _abs(profile_route)
+    login_url = _abs('portal_login')
+    event = registration.event_location
+
+    # Generate QR Code PNG bytes for ID Card
+    qr = qrcode.make(badge_id)
+    qr_buf = io.BytesIO()
+    qr.save(qr_buf, format='PNG')
+    qr_bytes = qr_buf.getvalue()
+
+    html_message = render_to_string('core/email_confirmation.html', {
+        'registration': registration,
+        'event': event,
+        'badge_id': badge_id,
+        'badge_url': badge_url,
+        'profile_url': profile_url,
+        'login_url': login_url,
+        'matches': matches or [],
+    })
+    plain_message = strip_tags(html_message)
+    subject = f"Welcome to KNOVA EXPO 2027 — Complete Your Profile & Download Your ID Card ({badge_id})"
+
+    def _dispatch():
+        try:
+            config = SiteConfiguration.objects.first()
+            conn = None
+            from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@knovaexpo.com')
+            if config and config.smtp_user and config.smtp_password:
+                conn = get_connection(
+                    backend='django.core.mail.backends.smtp.EmailBackend',
+                    host=config.smtp_host or 'smtp.gmail.com',
+                    port=config.smtp_port or 587,
+                    username=config.smtp_user,
+                    password=config.smtp_password,
+                    use_tls=config.smtp_use_tls,
+                    timeout=20,
+                )
+                from_email = config.smtp_user
+
+            msg = EmailMultiAlternatives(
+                subject=subject,
+                body=plain_message,
+                from_email=from_email,
+                to=[registration.email],
+                connection=conn,
+            )
+            msg.attach_alternative(html_message, "text/html")
+
+            # Inline QR image for Digital ID Card in email body
+            inline_qr = MIMEImage(qr_bytes)
+            inline_qr.add_header('Content-ID', '<id_card_qr>')
+            inline_qr.add_header('Content-Disposition', 'inline', filename=f'{badge_id}.png')
+            msg.attach(inline_qr)
+
+            # Downloadable ID Card QR attachment
+            msg.attach(f'KNOVA_ID_Card_{badge_id}.png', qr_bytes, 'image/png')
+
+            msg.send(fail_silently=False)
+            return True
+        except Exception as exc:
+            print(f"[KNOVA Email Error] Failed sending registration email to {registration.email}: {exc}")
+            return False
+
+    if sync:
+        return _dispatch()
+    threading.Thread(target=_dispatch, daemon=True).start()
+    return True

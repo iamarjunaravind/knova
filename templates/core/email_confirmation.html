@@ -1,47 +1,99 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .container { padding: 20px; max-width: 600px; margin: auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 20px; }
-        .badge-link { color: #d6336c; font-weight: bold; text-decoration: none; }
-        .normal-link { color: #1768ff; font-weight: bold; text-decoration: none; }
-    </style>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #1e293b; background: #f8fafc; margin: 0; padding: 20px; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; }
+    .header { background: #0f172a; color: #ffffff; padding: 22px 26px; display: flex; justify-content: space-between; align-items: center; }
+    .content { padding: 26px; }
+    .id-card { border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 18px; background: #f8fafc; margin: 20px 0; }
+    .btn-primary { display: inline-block; background: #1768ff; color: #ffffff !important; font-weight: 700; text-decoration: none; padding: 11px 20px; border-radius: 10px; font-size: 14px; }
+    .btn-dark { display: inline-block; background: #0f172a; color: #ffffff !important; font-weight: 700; text-decoration: none; padding: 11px 20px; border-radius: 10px; font-size: 14px; }
+    .detail-row { font-size: 13.5px; color: #475569; margin: 4px 0; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2 style="color: #1768ff; margin: 0;">KNOVA</h2>
-            <span style="color: #d4af37; font-weight: bold;">Free Visitor Pass - Confirmation</span>
-        </div>
-        
-        <p>Hi {{ registration.full_name }},</p>
-        
-        <p>You are now registered to attend <strong>{{ event.name }}</strong>, taking place at the <strong>{{ event.venue }}</strong> in <strong>{{ event.city }}</strong> on <strong>{{ event.start_date|date:"j" }} - {{ event.end_date|date:"j F Y" }}</strong>.</p>
-        
-        <p>Kindly <a href="{{ badge_url }}" class="badge-link">click here</a> to save your <span style="color: #d6336c; font-weight: bold;">Digital Badge</span>. Please print or save this on your mobile device, as you will need to present it at the venue to enter the event.</p>
-        
-        {% if matches %}
-        <div style="margin-top: 20px; margin-bottom: 20px; border-left: 4px solid #1768ff; padding: 15px; background: #f8fafc;">
-            <h3 style="margin-top: 0; color: #0b2d58;">✨ Your Top Exhibitor Matches</h3>
-            <p style="font-size: 14px; color: #475569;">Based on your preferences, we highly recommend you visit these booths at the event:</p>
-            <ul style="margin-bottom: 0; padding-left: 20px;">
-                {% for exhibitor, score in matches %}
-                <li style="margin-bottom: 8px;">
-                    <strong>{{ exhibitor.company_name }}</strong> 
-                    <span style="color: #0369a1; font-weight: bold; font-size: 12px; margin-left: 5px;">{{ score }}% Match</span>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
-
-        <p>If you have any questions about the event or your registration, please email us at <a href="mailto:connect@knovaexpo.com">connect@knovaexpo.com</a>.</p>
-        
-        <p>We look forward to welcoming you there!</p>
-        
-        <p>Best regards,<br>The KNOVA Team</p>
+  <div class="container">
+    <div class="header">
+      <div>
+        <div style="font-size: 20px; font-weight: 800; letter-spacing: 0.5px;">KNOVA EXPO 2027</div>
+        <div style="font-size: 12px; color: #94a3b8;">Profile, Registration &amp; Digital ID Card</div>
+      </div>
     </div>
+
+    <div class="content">
+      <p style="margin-top: 0; font-size: 15px;">Hi <strong>{{ registration.full_name }}</strong>,</p>
+
+      <p style="font-size: 14px; color: #334155;">
+        Welcome to <strong>KNOVA Education Expo 2027</strong>! Your portal account has been created as a <strong>{{ registration.role|default:"Student" }}</strong>.
+        Please complete your profile details to finalize your registration and unlock personalized university &amp; scholarship matching.
+      </p>
+
+      {% if event %}
+      <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 16px; margin: 16px 0; font-size: 13.5px; color: #1e3a8a;">
+        <strong>Event:</strong> {{ event.name }}<br>
+        <strong>Venue:</strong> {{ event.venue }}, {{ event.city }}<br>
+        <strong>Dates:</strong> {{ event.start_date|date:"j" }} - {{ event.end_date|date:"j F Y" }}
+      </div>
+      {% endif %}
+
+      <!-- Complete Profile CTA -->
+      <div style="margin: 20px 0; padding: 18px; border-radius: 12px; background: #f0fdf4; border: 1px solid #bbf7d0;">
+        <div style="font-size: 14.5px; font-weight: 800; color: #065f46; margin-bottom: 6px;">Step 1: Complete Your Profile Details</div>
+        <p style="margin: 0 0 14px 0; font-size: 13px; color: #047857;">
+          Add your academic background, preferred study destination, and contact details to complete your registration.
+        </p>
+        <a href="{{ profile_url }}" class="btn-primary">Complete Your Profile &rarr;</a>
+      </div>
+
+      <!-- Digital ID Card -->
+      <div class="id-card">
+        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #1768ff; margin-bottom: 8px;">
+          KNOVA Digital ID Card
+        </div>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="vertical-align: top; padding-right: 14px;">
+              <div style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">{{ registration.full_name }}</div>
+              <div class="detail-row"><strong>Role:</strong> {{ registration.role|default:"Student" }}</div>
+              <div class="detail-row"><strong>ID Number:</strong> <span style="font-family: monospace; font-weight: 700; color: #0f172a;">{{ badge_id }}</span></div>
+              <div class="detail-row"><strong>Email:</strong> {{ registration.email }}</div>
+              {% if registration.phone %}
+              <div class="detail-row"><strong>Phone:</strong> {{ registration.phone }}</div>
+              {% endif %}
+            </td>
+            <td style="width: 115px; text-align: right; vertical-align: middle;">
+              <img src="cid:id_card_qr" alt="ID Card QR" style="width: 105px; height: 105px; border: 1px solid #cbd5e1; border-radius: 8px; background: #ffffff; padding: 4px;">
+            </td>
+          </tr>
+        </table>
+        <div style="margin-top: 14px;">
+          <a href="{{ badge_url }}" class="btn-dark">View &amp; Print Full ID Card &rarr;</a>
+        </div>
+      </div>
+
+      {% if matches %}
+      <div style="margin-top: 20px; border-left: 4px solid #1768ff; padding: 14px 16px; background: #f8fafc; border-radius: 6px;">
+        <h3 style="margin: 0 0 6px 0; font-size: 14.5px; color: #0f172a;">Top University Matches</h3>
+        <ul style="margin: 0; padding-left: 18px; font-size: 13px; color: #475569;">
+          {% for exhibitor, score in matches %}
+          <li style="margin-bottom: 4px;"><strong>{{ exhibitor.company_name }}</strong> ({{ score }}% Match)</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <p style="font-size: 13px; color: #64748b; margin-top: 22px;">
+        Your Digital ID Card QR code is also attached to this email as <strong>KNOVA_ID_Card_{{ badge_id }}.png</strong>. Present it at the Expo Gate and university booths for instant check-in.
+      </p>
+
+      <p style="font-size: 13px; color: #64748b; margin-bottom: 0;">
+        Need help? Contact us at <a href="mailto:connect@knovaexpo.com" style="color: #1768ff;">connect@knovaexpo.com</a>.<br><br>
+        Best regards,<br>
+        <strong>The KNOVA Team</strong>
+      </p>
+    </div>
+  </div>
 </body>
 </html>

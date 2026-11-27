@@ -2108,7 +2108,9 @@ def registration_create(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
+            reg = form.save()
+            from .utils import send_registration_welcome_email
+            send_registration_welcome_email(request, reg)
 
             return redirect('dashboard_registrations')
     else:

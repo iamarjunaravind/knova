@@ -216,24 +216,9 @@ def public_register(request):
                     if role == 'Student':
                         student_matches = get_top_matches_for_student(reg, limit=3)
 
-                    # Send confirmation email
-                    badge_url = request.build_absolute_uri(reverse('digital_badge', args=[reg.pk]))
-                    subject = f'Registration Confirmation for {event_location.name}'
-                    html_message = render_to_string('core/email_confirmation.html', {
-                        'registration': reg,
-                        'event': event_location,
-                        'badge_url': badge_url,
-                        'matches': student_matches
-                    })
-                    plain_message = strip_tags(html_message)
-                    send_mail(
-                        subject,
-                        plain_message,
-                        'noreply@knova.com',
-                        [reg.email],
-                        html_message=html_message,
-                        fail_silently=True,
-                    )
+                    # Send confirmation email with profile link & Digital ID Card
+                    from .utils import send_registration_welcome_email
+                    send_registration_welcome_email(request, reg, matches=student_matches)
 
                 if role == 'Exhibitor':
                     if user:
@@ -2970,7 +2955,7 @@ def portal_register_student(request):
         user = User.objects.create_user(username=email, email=email, password=password, first_name=full_name)
         StudentProfile.objects.create(user=user, mobile=phone, preferred_country=preferred_country)
         loc = EventLocation.objects.filter(is_active=True).first()
-        Registration.objects.get_or_create(
+        reg, created = Registration.objects.get_or_create(
             email=email,
             defaults={
                 'full_name': full_name,
@@ -2981,6 +2966,8 @@ def portal_register_student(request):
                 'status': 'Confirmed'
             }
         )
+        from .utils import send_registration_welcome_email
+        send_registration_welcome_email(request, reg)
         login(request, user)
         if next_url:
             return redirect(next_url)
@@ -3014,7 +3001,7 @@ def portal_register_parent(request):
         user = User.objects.create_user(username=email, email=email, password=password, first_name=full_name)
         ParentProfile.objects.create(user=user, mobile=phone)
         loc = EventLocation.objects.filter(is_active=True).first()
-        Registration.objects.get_or_create(
+        reg, created = Registration.objects.get_or_create(
             email=email,
             defaults={
                 'full_name': full_name,
@@ -3024,6 +3011,8 @@ def portal_register_parent(request):
                 'status': 'Confirmed'
             }
         )
+        from .utils import send_registration_welcome_email
+        send_registration_welcome_email(request, reg)
         login(request, user)
         if next_url:
             return redirect(next_url)
@@ -3086,7 +3075,7 @@ def portal_register_exhibitor(request):
 
         from .dashboard_views import _sync_exhibitor_and_university
         _sync_exhibitor_and_university(exhibitor=exh, university=uni)
-        Registration.objects.get_or_create(
+        reg, created = Registration.objects.get_or_create(
             email=email,
             defaults={
                 'full_name': full_name,
@@ -3096,6 +3085,8 @@ def portal_register_exhibitor(request):
                 'status': 'Confirmed'
             }
         )
+        from .utils import send_registration_welcome_email
+        send_registration_welcome_email(request, reg)
         login(request, user)
         if next_url:
             return redirect(next_url)
