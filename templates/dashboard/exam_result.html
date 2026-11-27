@@ -48,32 +48,38 @@
         </div>
 
         {% if attempt.status == 'Completed' %}
-            {% if attempt.is_passed %}
-            <!-- KNOVA Challenge 2 Completion Banner (Passed >= 35%) -->
+            {% if percentage >= 35 or attempt.is_passed %}
+            <!-- Passed >= 35%: Challenge Completed + Scholarship Apply Unlocked -->
             <div style="background: linear-gradient(135deg, #ecfdf5, #d1fae5); border: 1px solid #a7f3d0; border-radius: 12px; padding: 16px 20px; max-width: 750px; margin: 0 auto 26px auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div style="width: 44px; height: 44px; border-radius: 10px; background: #059669; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                         <i class="fas fa-trophy"></i>
                     </div>
                     <div style="text-align: left;">
-                        <div style="font-weight: 800; font-size: 15px; color: #065f46;">Challenge 2 Verified! (+30 Pts)</div>
-                        <div style="font-size: 13px; color: #047857;">Congratulations! You scored {{ percentage }}% (minimum 35% required) and completed the examination.</div>
+                        <div style="font-weight: 800; font-size: 15px; color: #065f46;">KNOVA Challenge Completed &amp; Scholarship Apply Unlocked!</div>
+                        <div style="font-size: 13px; color: #047857;">You scored {{ percentage }}% (35%+ achieved). Your KNOVA Challenge is complete and you can now apply for scholarships!</div>
                     </div>
                 </div>
-                <a href="{% url 'knova_challenge' %}" class="btn" style="background: #059669; color: #fff; font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(5,150,105,0.3);">
-                    <span>View Challenge Passport</span> &rarr;
+                <a href="{% url 'dashboard_scholarships' %}" class="btn" style="background: #059669; color: #fff; font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(5,150,105,0.3);">
+                    <span>Apply for Scholarships</span> &rarr;
                 </a>
             </div>
             {% else %}
-            <!-- KNOVA Challenge 2 Not Passed (< 35%) Banner -->
+            <!-- < 35% Banner: 35% Mark Needed to Apply for Scholarship -->
             <div style="background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 1px solid #fed7aa; border-radius: 12px; padding: 16px 20px; max-width: 750px; margin: 0 auto 26px auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div style="width: 44px; height: 44px; border-radius: 10px; background: #ea580c; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
                     <div style="text-align: left;">
-                        <div style="font-weight: 800; font-size: 15px; color: #9a3412;">35% Mark Needed to Complete Examination</div>
-                        <div style="font-size: 13px; color: #c2410c;">You scored {{ percentage }}% (minimum 35% required). Retake the exam to achieve at least 35% and unlock Challenge 2 (+30 pts).</div>
+                        <div style="font-weight: 800; font-size: 15px; color: #9a3412;">35% Mark Needed to Apply for Scholarship</div>
+                        <div style="font-size: 13px; color: #c2410c;">
+                            {% if total_correct > 0 or total_incorrect > 0 %}
+                                You scored {{ percentage }}%. Your KNOVA Challenge exam task is completed, but you need at least 35% marks to unlock the Scholarship Apply option.
+                            {% else %}
+                                You scored {{ percentage }}% (0 questions attended). Attend the questions to complete the KNOVA Challenge task, and score 35%+ to apply for scholarships.
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
                 <a href="{% url 'dashboard_take_exam' exam.id %}?retake=1" class="btn" style="background: #ea580c; color: #fff; font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(234,88,12,0.3);">

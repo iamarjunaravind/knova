@@ -2024,29 +2024,21 @@ class StudentChallengePassport(models.Model):
 
     def get_latest_completed_exam(self):
         from .models import ExamAttempt
-        # 35% mark (is_passed=True) is needed to complete the examination and qualify
+        # Completing the exam by attending at least 1 question completes the KNOVA Challenge task
+        base_qs = ExamAttempt.objects.filter(
+            status='Completed',
+            answers__selected_choice__isnull=False
+        ).distinct().order_by('-id')
         if self.user:
-            attempt = ExamAttempt.objects.filter(
-                registration__student__user=self.user,
-                status='Completed',
-                is_passed=True
-            ).order_by('-id').first()
+            attempt = base_qs.filter(registration__student__user=self.user).first()
             if attempt:
                 return attempt
         if self.student_email:
-            attempt = ExamAttempt.objects.filter(
-                registration__student__user__email__iexact=self.student_email,
-                status='Completed',
-                is_passed=True
-            ).order_by('-id').first()
+            attempt = base_qs.filter(registration__student__user__email__iexact=self.student_email).first()
             if attempt:
                 return attempt
         if self.registration and self.registration.email:
-            attempt = ExamAttempt.objects.filter(
-                registration__student__user__email__iexact=self.registration.email,
-                status='Completed',
-                is_passed=True
-            ).order_by('-id').first()
+            attempt = base_qs.filter(registration__student__user__email__iexact=self.registration.email).first()
             if attempt:
                 return attempt
         return None
