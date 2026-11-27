@@ -1216,6 +1216,12 @@ class SiteConfiguration(models.Model):
     smtp_password = models.CharField(max_length=255, blank=True, default="")
     smtp_use_tls = models.BooleanField(default=True)
 
+    # Admin-Configurable Notification & Reply-To Email IDs
+    registration_sender_email = models.EmailField(default="connect@knovaexpo.com", blank=True, help_text="Email ID shown/used as Reply-To for Registration & ID Card emails")
+    registration_admin_notify_email = models.TextField(default="", blank=True, help_text="Optional admin email(s) to receive a copy/alert on new candidate registrations")
+    forgot_password_sender_email = models.EmailField(default="support@knovaexpo.com", blank=True, help_text="Email ID shown/used as Reply-To for Forgot Password emails")
+    challenge_updates_email = models.EmailField(default="challenge@knovaexpo.com", blank=True, help_text="Email ID shown/used as Reply-To for KNOVA Challenge update emails")
+
     class Meta:
         verbose_name = "Site Configuration"
 

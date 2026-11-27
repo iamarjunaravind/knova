@@ -4120,6 +4120,19 @@ def dashboard_save_backup_settings(request):
         cfg.smtp_use_tls = request.POST.get('smtp_use_tls') == 'on' or 'smtp_use_tls' in request.POST
         if cfg.smtp_port == 587 or 'gmail' in cfg.smtp_host.lower():
             cfg.smtp_use_tls = True
+
+        # Admin-Configurable Notification & Reply-To Email IDs
+        reg_email = request.POST.get('registration_sender_email', '').strip()
+        if reg_email:
+            cfg.registration_sender_email = reg_email
+        cfg.registration_admin_notify_email = request.POST.get('registration_admin_notify_email', '').strip()
+        fp_email = request.POST.get('forgot_password_sender_email', '').strip()
+        if fp_email:
+            cfg.forgot_password_sender_email = fp_email
+        ch_email = request.POST.get('challenge_updates_email', '').strip()
+        if ch_email:
+            cfg.challenge_updates_email = ch_email
+
         cfg.save()
 
         # If user also requested an instant test email

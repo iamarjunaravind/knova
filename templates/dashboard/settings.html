@@ -404,6 +404,38 @@
         </div>
       </div>
 
+      <!-- Platform Notification & Reply-To Email IDs -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px 18px; margin-bottom:18px;">
+        <div style="font-size:12.5px; font-weight:800; color:#0f172a; margin-bottom:4px; display:flex; align-items:center; gap:7px;">
+          <i data-feather="mail" style="width:15px; height:15px; color:#1768ff;"></i> Platform Email IDs (Registration, Forgot Password &amp; KNOVA Challenge)
+        </div>
+        <p style="font-size:11.5px; color:#64748b; margin:0 0 12px 0;">
+          Customize the Reply-To / notification email addresses used for Registration Details &amp; ID Cards, Forgot Password resets, and KNOVA Challenge updates.
+        </p>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap:14px;">
+          <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#334155; text-transform:uppercase; margin-bottom:4px;">Registration Details &amp; ID Card Email</label>
+            <input type="email" name="registration_sender_email" value="{{ config.registration_sender_email|default:'connect@knovaexpo.com' }}"
+                   style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; background:#ffffff; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#334155; text-transform:uppercase; margin-bottom:4px;">Forgot Password Email</label>
+            <input type="email" name="forgot_password_sender_email" value="{{ config.forgot_password_sender_email|default:'support@knovaexpo.com' }}"
+                   style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; background:#ffffff; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#334155; text-transform:uppercase; margin-bottom:4px;">KNOVA Challenge Updates Email</label>
+            <input type="email" name="challenge_updates_email" value="{{ config.challenge_updates_email|default:'challenge@knovaexpo.com' }}"
+                   style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; background:#ffffff; box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#334155; text-transform:uppercase; margin-bottom:4px;">Admin Registration Alert Copy (Optional)</label>
+            <input type="text" name="registration_admin_notify_email" value="{{ config.registration_admin_notify_email|default:'' }}" placeholder="e.g. admin@knovaexpo.com"
+                   style="width:100%; height:38px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; background:#ffffff; box-sizing:border-box;">
+          </div>
+        </div>
+      </div>
+
       <!-- Advanced SMTP Details Accordion (Pre-filled defaults) -->
       <details style="border-top:1px dashed #e2e8f0; padding-top:14px; margin-bottom:18px;">
         <summary style="font-size:12.5px; font-weight:700; color:#64748b; cursor:pointer; display:inline-flex; align-items:center; gap:6px; user-select:none;">

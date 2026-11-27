@@ -2917,6 +2917,59 @@ def portal_login(request):
     return render(request, 'core/portal_login.html', {'next': next_url})
 
 
+def portal_forgot_password(request):
+    from django.contrib.auth.tokens import default_token_generator
+    from django.utils.http import urlsafe_base64_encode
+    from django.utils.encoding import force_bytes
+    from .utils import send_password_reset_email
+
+    if request.method == 'POST':
+        identifier = (request.POST.get('identifier') or '').strip()
+        if not identifier:
+            return render(request, 'core/portal_forgot_password.html', {'error': 'Please enter your email address or username.'})
+        user = User.objects.filter(email__iexact=identifier).first() or User.objects.filter(username__iexact=identifier).first()
+        if user and user.email:
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            reset_path = reverse('portal_reset_password', kwargs={'uidb64': uid, 'token': token})
+            reset_url = request.build_absolute_uri(reset_path)
+            send_password_reset_email(request, user, reset_url)
+        return render(request, 'core/portal_forgot_password.html', {
+            'success': 'If an account matches that email or username, a password reset link has been sent.'
+        })
+    return render(request, 'core/portal_forgot_password.html')
+
+
+def portal_reset_password(request, uidb64, token):
+    from django.contrib.auth.tokens import default_token_generator
+    from django.utils.http import urlsafe_base64_decode
+    from django.utils.encoding import force_str
+
+    user = None
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except Exception:
+        user = None
+
+    if not user or not default_token_generator.check_token(user, token):
+        return render(request, 'core/portal_reset_password.html', {'invalid_link': True})
+
+    if request.method == 'POST':
+        pwd1 = request.POST.get('password') or ''
+        pwd2 = request.POST.get('confirm_password') or ''
+        if pwd1 != pwd2:
+            return render(request, 'core/portal_reset_password.html', {'error': 'Passwords do not match.'})
+        pwd_err = _validate_password_strength(pwd1)
+        if pwd_err:
+            return render(request, 'core/portal_reset_password.html', {'error': pwd_err})
+        user.set_password(pwd1)
+        user.save()
+        return render(request, 'core/portal_reset_password.html', {'success': 'Your password has been reset successfully. You can now log in.'})
+
+    return render(request, 'core/portal_reset_password.html')
+
+
 def portal_register(request):
     next_url = request.GET.get('next')
     role = (request.GET.get('role') or 'student').lower()
@@ -3755,10 +3808,19 @@ def knova_challenge(request):
     from .models import University, ProgrammeSession, FloorActivityZone
     passport = get_or_create_challenge_passport(request)
 
+    was_completed = passport.passport_completed
     # Sync Mission 2 (Aptitude Test) with actual exam attempt
     is_exam_completed, latest_exam = passport.sync_exam_challenge_status()
     # Sync Mission 1 (University booth punches) and Mission 3 (Seminar attendance punches)
     passport.sync_attendance_status()
+    if not was_completed and passport.passport_completed:
+        from .utils import send_challenge_update_email
+        send_challenge_update_email(
+            request,
+            passport,
+            title="KNOVA Challenge Completed & Elite Pass Unlocked!",
+            detail="Congratulations! You have completed the KNOVA Challenge by attending the Aptitude Test and unlocked your Elite Pass (+100 bonus XP)."
+        )
 
     # Generate QR Code for this passport badge
     qr = qrcode.make(passport.badge_id)
